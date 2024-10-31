@@ -27,8 +27,10 @@ These competencies are covered throughout this semester.
 # Content
 This semester will be divided into two projects, *loosely* aimed at being completed each term.
 
-## Project 1
+## Project 4
 
+# Individual Tasks
 
-## Project 2
+[[Task 7 PHP Site Database Planning Report]]
 
+[[Task 8 Group Project]]

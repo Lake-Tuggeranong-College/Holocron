@@ -26,14 +26,14 @@ This setup will allow you to develop and test your website locally, and then eas
 | -------------- | ------------ | ----------------------------- |
 |                | PHP Website  | [[Task 4 Project Highlights]] |
 
-## Competencies
+## Task 3 Competencies
 
-| Unit Code      | Unit Title                                  | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| -------------- | ------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| ICTPRG302	<br> | Apply introductory programming techniques   |              |                  |       ✅       |                   |
-| CUADIG211      | Maintain interactive content                |              |        ✅         |               |         ✅         |
-| CUADIG303      | Produce and prepare photo images (possibly) |              |        ✅         |               |         ✅         |
-
+| Unit Code      | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| -------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| ICTPRG302	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
+| CUADIG211      | Maintain interactive content              |              |        ✅         |               |         ✅         |
+| CUADIG303      | Produce and prepare photo images          |              |        ✅         |               |         ✅         |
+| BSBTEC101      | Operate digital devices                   |              |        ✅         |               |                   |
 
 # Task
 

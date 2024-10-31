@@ -24,12 +24,12 @@ dev -->|deploy| prod
 | ==2==           | 1) Docker Container<br> | [[Task 2 - Server Installation Report]] |
 
 
-## Competencies
+## Task 1 Competencies
 
 | Unit Code      | Unit Title                                  | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | -------------- | ------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | ICTICT213	<br> | Use computer operating systems and hardware |      ✅       |                  |               |         ✅         |
-
+| ICTICT223      | Install software applications               |              |        ✅         |               |                   |
 
 # Task
 

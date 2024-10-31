@@ -7,12 +7,14 @@
 | -------------- | ------------ | ------------------------------- |
 |                |              | [[Task 5 Website Design]]       |
 
-## Competencies
+## Task 6 Competencies
 
-| Unit Code | Unit Title | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------- | ---------- | :----------: | :--------------: | :-----------: | :---------------: |
-|           |            |              |                  |               |                   |
-
+| Unit Code     | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| ICTWEB304<br> | Build simple web pages                            |              |                  |               |         ✅         |
+| ICTWEB431     | Create and style simple markup language documents |              |                  |               |         ✅         |
+| BSBXTW301     | Work in a team                                    |              |                  |       ✅       |                   |
+| ICTSAS305     | Provide ICT advice to clients                     |              |                  |       ✅       |                   |
 
 # Task
 

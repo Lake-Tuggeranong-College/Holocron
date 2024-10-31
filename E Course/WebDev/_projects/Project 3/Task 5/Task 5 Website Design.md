@@ -7,12 +7,15 @@
 | -------------- | ------------ | ------------------------------- |
 |                |              | [[Task 6 PHP Website]]          |
 
-## Competencies
+## Task 5 Competencies
 
-| Unit Code | Unit Title | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------- | ---------- | :----------: | :--------------: | :-----------: | :---------------: |
-|           |            |              |                  |               |                   |
-
+| Unit Code     | Unit Title                                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------- | ----------------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| BSBXCS303<br> | Securely manage personally identifiable information and workplace |              |        ✅         |       ✅       |                   |
+| ICTICT221     | Identify and use specific industry standard technologies          |              |        ✅         |               |         ✅         |
+| ICTICT309     | Create ICT user documentation                                     |              |                  |               |         ✅         |
+| BSBCRT301     | Develop and apply thinking and problem solving skills             |              |                  |       ✅       |                   |
+| ICTICT313     | Identify IP, ethics and privacy policies in ICT environments      |              |                  |       ✅       |                   |
 
 # Task
 

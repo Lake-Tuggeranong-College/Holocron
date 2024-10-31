@@ -13,11 +13,12 @@ Create a spreadsheet with data to compare using Docker containers with having a 
 | --------------- | ------------ | -------------------------------- |
 | 2               | Manual       | [[Task 1 - Server Installation]] |
 
-## Competencies
+## Task 2 Competencies
 
 | Unit Code | Unit Title                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------- | ------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | ICTICT214 | Operate application software packages |      ✅       |                  |               |         ✅         |
+| BSBTEC201 | Use business software applications    |              |        ✅         |               |         ✅         |
 
 # Task
 

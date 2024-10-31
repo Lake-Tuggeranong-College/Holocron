@@ -7,11 +7,12 @@
 | -------------- | ------------ | ------------------------------- |
 |                |              | [[Task 3 - PHP Practical]]      |
 
-## Competencies
+## Task 4 Competencies
 
-| Unit Code | Unit Title | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------- | ---------- | :----------: | :--------------: | :-----------: | :---------------: |
-|           |            |              |                  |               |                   |
+| Unit Code     | Unit Title                                       | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------- | ------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
+| ICTICT215<br> | Operate digital media technology packages        |      ✅       |                  |               |         ✅         |
+| ICTICT216     | Design and create basic organisational documents |              |        ✅         |               |         ✅         |
 
 
 # Task

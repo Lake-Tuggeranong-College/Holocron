@@ -9,3 +9,28 @@ There are no prerequisites for this course.
 
 # Development Environment
 The underlying goal of this unit is to allow all development to be achieved online with a chromebook. It will be possible to develop locally on a PC/laptop environment.
+
+
+
+# Skills Focus
+
+There is a strong focus on the following work-ready skills:
+- Website Development
+- Team work
+- Documentation
+
+```mermaid
+mindmap
+	Skills
+	  Website Development
+		  PHP
+		  SQL - Database
+		  HTML
+		  CSS
+	  Team Work
+		  Code Collaboration
+	  Documentation
+		  Technical Reports
+		  Work Preparedness
+
+```

@@ -1,4 +1,3 @@
-# Details
 
 | Estimated Hours | Deliverables            | Related Task (if applicable)            |
 | --------------- | ----------------------- | --------------------------------------- |
@@ -13,8 +12,12 @@ During the remainder of the course, you will be developing the sites and then de
 
 ```mermaid
 flowchart LR
-	dev[Development\nVSCode w/Docker or GitHub/CodeSpaces]
-	prod[Production\nDocker Container on LTC server]
+	dev["`**Development** 
+	VSCode w/Docker 
+	or GitHub/CodeSpaces`"]
+	prod["`**Production**
+	Docker Container 
+	on LTC server`"]
 dev -->|deploy| prod
 ```
 

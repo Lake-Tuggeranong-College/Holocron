@@ -17,3 +17,13 @@
 
 # Task
 
+
+# Marking Scheme
+
+The marking scheme for this task can be found on Google Classroom.
+
+# Task Conditions
+
+![[Competency Task Conditions#Conditions]]
+
+![[Competency Task Conditions#Instructions]]

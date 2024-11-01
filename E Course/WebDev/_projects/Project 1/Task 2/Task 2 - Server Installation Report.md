@@ -47,3 +47,12 @@ Both deliverables need to be submitted in their original format (e.g. Google Doc
 1. Word Processed Report
 2. Timesheet Spreadsheet
 
+# Marking Scheme
+
+The marking scheme for this task can be found on Google Classroom.
+
+# Task Conditions
+
+![[Competency Task Conditions#Conditions]]
+
+![[Competency Task Conditions#Instructions]]

@@ -42,4 +42,8 @@ dev -->|deploy| prod
 
 The marking scheme for this task can be found on Google Classroom.
 
-![[Competency Task Conditions]]
+# Task Conditions
+
+![[Competency Task Conditions#Conditions]]
+
+![[Competency Task Conditions#Instructions]]

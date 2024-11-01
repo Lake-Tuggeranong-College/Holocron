@@ -1,4 +1,6 @@
 
+# Conditions
+
 | Topic                                | Detail                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Safety checks before starting        | You are completing a VET assessment in an Information Technology practical workspace.<br>A safety check of the equipment has taken place before your assessment. <br>You are to inspect the equipment and report any faults before you attempt the task.<br>If *any* of the equipment fails while you are attempting this task – please let your instructor know immediately so you can access alternative equipment. |

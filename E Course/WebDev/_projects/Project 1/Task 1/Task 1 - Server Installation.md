@@ -33,7 +33,7 @@ dev -->|deploy| prod
 
 # Task
 
-1. [[Docker - What is it?]] 
+1. [[Docker - What is it]] 
 2. [[Docker - Installation]]
 
 

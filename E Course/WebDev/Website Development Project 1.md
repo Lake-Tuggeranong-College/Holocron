@@ -13,7 +13,7 @@ These competencies are covered throughout this semester.
 
 ![[Task 1 - Server Installation#Task 1 Competencies]]
 
-![[Task 2 - Server Installation Report#Task 2 Competencies]]
+![[Task 2 - Server Installation Manual#Task 2 Competencies]]
 # Content
 This semester will cover two project comprised of a number of tasks.
 
@@ -27,7 +27,7 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 [[Task 1 - Server Installation]]
 
-[[Task 2 - Server Installation Report]]
+[[Task 2 - Server Installation Manual]]
 
 
 

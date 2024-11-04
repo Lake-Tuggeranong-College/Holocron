@@ -1,7 +1,7 @@
 # Task Overview
 
-
-# Project Details
+==Add Details==
+# Details
 
 | Estimated Time | Deliverables | Related Project (if applicable) |
 | -------------- | ------------ | ------------------------------- |
@@ -15,4 +15,12 @@
 
 
 # Task
+
+==Insert Link==
+# Task Conditions
+
+![[Competency Task Conditions#Conditions]]
+
+![[Competency Task Conditions#Instructions]]
+
 

@@ -1,8 +1,6 @@
 
 
 
-  
-
 This is an example of how the project will run once implemented.
 
   

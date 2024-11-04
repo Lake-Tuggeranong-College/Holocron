@@ -1,28 +1,18 @@
 
 ## Options Implementation
 
-  
-
 ## Scene Creation
-
-  
 
 With the Space Invaders project open, Create a new scene.
 
 ![[optionsNewScene.png]]  
 
 
-  
-
 When the choice appears, choose User Interface out of the four options.
-
-  
 
 <aside>
 
 ✔️ It is possible to also create it as a 2D Scene.
-
-  
 
 </aside>
 
@@ -30,15 +20,11 @@ When the choice appears, choose User Interface out of the four options.
 ![[optionsRootNode.png]]
 
 
-  
-
 Rename the scene `OptionsMenu`.
 
   
 ![[optionsRootNodeRename.png]]
 
-
-  
 
 Add a VBoxContainer node as a child of `OptionsMenu`. Rename the node as `Layout`
 
@@ -46,15 +32,11 @@ Add a VBoxContainer node as a child of `OptionsMenu`. Rename the node as `Layout
 ![[optionsNodeLayout.png]]
 
 
-  
-
 Create a CheckButton node as a child of Layout. Rename this to `RapidFireSelect`.
 
   ![[optionsAddButton.png]]
 
 
-
-  
 
 Set the text property of this box to Rapid Fire.
 
@@ -62,14 +44,10 @@ Set the text property of this box to Rapid Fire.
 ![[optionsSetText.png]]
 
 
-  
-
 As another child of `Layout`, create a Button, renamed to `ReturnToMainMenu`.
 
   ![[optionsCreateButton.png]]
 
-
-  
 
 Set the text property of `ReturnToMainMenu` button to “Return to the Main Menu”
 
@@ -82,15 +60,11 @@ Save the Scene as OptionsMenu, saving it in a folder called Options in the root 
 
 
 
-  
-
 At the end of this process, your Scene and FileSystem should appear similar to this.
 
   ![[optionsFinal.png]]
 
 
-
-  
 
 ### Button Functionality
 
@@ -102,8 +76,6 @@ Right-click on the `ReturnToMainMenu` button and choose Attach Script.
 
 
 
-  
-
 Leave the settings and just click Create.
 
   ![[optionsButtonCreateScript.png]]
@@ -113,8 +85,6 @@ Leave the script for the moment, and select the `ReturnToMainMenu` button in the
   ![[optionsButtonSignalPressed.png]]
 
 
-
-  
 
 The Connect a Signal to a Method dialog appears. Leave all the values as is, and click Connect. This will take you back to the script with a new function created.
 
@@ -129,18 +99,12 @@ Change the pass command to the code shown, Godot will assist you by showing a me
   ![[optionsReturnToMainMenuScript.gif]]
 
 
-  
-
 ### Link from the Main Menu
-
-  
 
 Open the main menu scene.
 
   ![[optionsMainMenu.png]]
 
-
-  
 
 Right Click on the `OptionsMenu.tscn` and choose Copy Path.
 
@@ -153,8 +117,6 @@ Select the Options Button in the hierarchy and set the Scene To Load variable in
 
 ### Test the Buttons
 
-  
-
 Run the project, and check to make sure you can navigate from the Main Menu to the Options menu and back again.
 
   ![[optionsTestButton.gif]]
@@ -163,21 +125,13 @@ Run the project, and check to make sure you can navigate from the Main Menu to t
 
 ## Rapid Fire Implementation
 
-  
-
 ### Global Variable
 
-  
-
 Open Global.gd and create a new variable called rapidFire and set it to `false`.
-
-  
 
 ```gdscript
 var rapidFire = false
 ```
-
-  
 
 Save the script.
 
@@ -186,25 +140,15 @@ Save the script.
 
 ### Options Menu functionality
 
-  
-
 Now that the scene has been created, successfully linked and the global variable set, it’s now time to implement the Rapid Fire option.
-
-  
 
 <aside>
 
 ✔️ Remember: This can be done for any option that will be used throughout the game. For instance, this could be used to set the difficulty setting, audio volume etc.
 
-  
-
 </aside>
 
-  
-
 Open the OptionsMenu Scene.
-
-  
 
 Right click on RapidFireSelect and choose Attach Script.
 
@@ -212,11 +156,7 @@ Right click on RapidFireSelect and choose Attach Script.
 
 
 
-  
-
 Leave the settings on the dialog box and choose Create.
-
-  
 
 You do not need to make any changes to the code at this stage.
 
@@ -224,15 +164,11 @@ You do not need to make any changes to the code at this stage.
 
 
 
-  
-
 With the button selected, change to the Node view and double click on the toggled signal.
 
   
 ![[optionsRapidFireToggled.png]]
 
-
-  
 
 Leave all the settings as default and click on the Connect button.
 
@@ -250,8 +186,6 @@ Replace the pass code with code to set the `rapidFire` variable in the Global sc
 
 ‼️ This code works because the value that the check button is set to (on or off) equates to `true` or `false` which can set the rapidFire value in the global script.
 
-  
-
 </aside>
 
   ![[optionsRapidFireSignalCode.png]]
@@ -268,8 +202,6 @@ GlobalVariables.rapidFire = button_pressed
 This has now completed this section as the collection and storage of the options through the menu. The next stage is to use this within the rest of the game.
 
 In this case, the `rapidFire` variable can be used in the Player.gd script to modify the functionality for the firing process.
-
-  
 
 Code
 

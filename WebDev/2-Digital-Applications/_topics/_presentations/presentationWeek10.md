@@ -33,7 +33,7 @@ Goals for this week:
 ---
 # Assessment Documentation
 
-[Assessment 2 Information](/WebDev/2-Digital-Applications/2024S2/assessment2-2024S2.md)
+[Assessment 2 Information](WebDev/2-Digital-Applications/2024S2/Assessment%202.md)
 - This document has been fully updated to include scaffolds for each section of the assessment. It should serve as a guide to make writing your assessment easy and carefree.
 - Still start as early as you can (it should have been started already)
 - There are only 3 weeks left (not including school holidays) until assessments are due. Ensure you are on track to hand in. A good point to be is that at the end of this week 2 of the sections have been completely written.

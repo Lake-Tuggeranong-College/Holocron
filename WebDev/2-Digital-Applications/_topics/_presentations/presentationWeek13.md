@@ -7,7 +7,7 @@ css: css/holocronSlides.css
 
 **The Assessment is Due This Friday!**
 
-Read the [[assessment2-2024S2|Assessment 2]] for details:
+Read the [[WebDev/2-Digital-Applications/2024S2/Assessment 2|Assessment 2]] for details:
 - on what to cover in each section.
 - Suggestions for how to approach the sections.
 

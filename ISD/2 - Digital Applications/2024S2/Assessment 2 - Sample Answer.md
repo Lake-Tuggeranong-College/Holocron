@@ -1,3 +1,7 @@
+---
+yearSemester:
+  - 2024S2
+---
 
 # Project Overview
 

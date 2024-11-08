@@ -69,7 +69,7 @@ tags:
 > [!info]- Week 7
 > ![[semesterCalendarS2#School Events - Week 7]]
 > #### Class Tasks
-> -  [Assessment 2 - 2024S2](Robotics/4%20-%20Project/2024S2/Assessment%202%20-%202024S2.md)
+> -  [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md)
 > #### Theory
 > N/A
 > #### Practical
@@ -94,7 +94,7 @@ tags:
 > #### Class Tasks
 >  - [VET Competencies](https://classroom.google.com/c/NjQ5OTU4MzU4NjY5/a/NzExMjY0MDk4MTUw/details)
 > 	 - By the end of this week this competency should be entirely complete. Ensure you have all of your evidence added and are tagging Ryan in the document so that he can confirm that the **Client only** sections have been completed. 
->  - [Assessment 2 - 2024S2](Robotics/4%20-%20Project/2024S2/Assessment%202%20-%202024S2.md)
+>  - [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md)
 > 	 - You should have the development process section drafted and ready to submit at the end of this week. Jacob will be reviewing and providing feedback on this section.
 > #### Theory
 > N/A
@@ -106,7 +106,7 @@ tags:
 > #### Class Tasks
 > - VET Competency
 > 	- Ensure that you have at least done competency [# ICTSAS305 Provide ICT advice to clients](https://classroom.google.com/c/NjQ5OTU4MzU4NjY5/a/NzExMjY0MDk4MTUw/details) by the end of term. There are more competencies on the Google Classroom that will help you towards your Cert III. At this stage in your college career you are more than capable of providing evidence for every single one.
-> - [Assessment 2 - 2024S2](Robotics/4%20-%20Project/2024S2/Assessment%202%20-%202024S2.md)
+> - [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md)
 > 	- You should be able to access the feedback on your development process section now. Review these and have a look at the feedback.
 > 	- The assessment documentation scaffold page has been populated for each section now. These should make it very easy to write up your assessment well before the due date. The whole document is due in week 12. With 3 weeks left (not including the school holidays) you have plenty of time to work through the linked page and write up your assessment documentation.
 > #### Theory
@@ -128,7 +128,7 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 12]]
 > 
 > #### Class Tasks
-> - [[Robotics/4 - Project/2024S2/Assessment 2 - 2024S2|Assessment 2 - 2024S2]]
+> - [[Robotics/4 - Project/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
@@ -137,7 +137,7 @@ tags:
 > [!danger]- Week 13
 > ![[semesterCalendarS2#School Events - Week 13]]
 >- Finalise Project
-> - [Assessment 2 - 2024S2](Robotics/4%20-%20Project/2024S2/Assessment%202%20-%202024S2.md)
+> - [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md)
 >
 > **Assessment Due**
 > The task will be due Friday 11:59pm.
@@ -147,7 +147,7 @@ tags:
 > [!info]- Week 14
 > ![[semesterCalendarS2#School Events - Week 14]]
 > #### Class Tasks
-> - [[Robotics/4 - Project/2024S2/Assessment 3 - 2024S2|Assessment 3 - 2024S2]]
+> - [[Robotics/4 - Project/2024S2/Assessment 3|Assessment 3]]
 > #### Theory
 > N/A
 > #### Practical
@@ -183,8 +183,8 @@ tags:
 | Unit Outline     | Assessments                                                                           |
 | ---------------- | ------------------------------------------------------------------------------------- |
 | Google Classroom | Assessment 1 - 25 %                                                                   |
-|                  | [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202%20-%202024S2.md) - 50 % |
-|                  | [[Robotics/4 - Project/2024S2/Assessment 3 - 2024S2\|Assessment 3]] - 25 %            |
+|                  | [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md) - 50 % |
+|                  | [[Robotics/4 - Project/2024S2/Assessment 3\|Assessment 3]] - 25 %            |
 
 # Contact Details
 

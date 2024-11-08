@@ -17,7 +17,7 @@
 - [[presentationWeek08]]
 # Class Tasks
 
-- [[assessment2-2024S2]]
+- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
 
 # Theory
 

@@ -1,11 +1,11 @@
 
-Enemy Group Movement
+# Enemy Group Movement
 
 ![https://youtu.be/Hav91wHl3JA](https://youtu.be/Hav91wHl3JA)
 
 In this video, you're shown how to group the enemy instances together and script them to "bounce" off the sides of the game window when the first collision occurs.
 
-## `Enemies.gd`
+# `Enemies.gd`
 
 ```GDScript
 
@@ -20,13 +20,13 @@ func _ready():
 
 ```
 
-## Enemies Firing
+# Enemies Firing
 
 ![https://youtu.be/9XiSX3SM428](https://youtu.be/9XiSX3SM428)
 
 In this first video, you're shown the configuration of the enemy bullets, and walked through the changes that need to be made to the `global.gd`, `enemy.gd` scripts and the creation of the `enemy-bullets.gd` script.
 
-## Bullet-enemy.gd
+# Bullet-enemy.gd
 
 ```GDScript
 
@@ -53,7 +53,7 @@ func _physics_process(delta):
 		print("Enemy Bullets: ", GlobalVariables.enemyBulletInstanceCount)
 ```
 
-## Enemy.gd
+# Enemy.gd
 
 ```GDScript
 
@@ -88,7 +88,7 @@ func _process(delta):
 		get_tree().get_root().add_child(bulletInstance)
 
 ```
-## Global.gd
+# Global.gd
 
 ``` GDScript
 

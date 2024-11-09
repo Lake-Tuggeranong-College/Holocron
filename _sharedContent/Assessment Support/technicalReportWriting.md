@@ -79,7 +79,7 @@ Sketch the interfaces for:
 
 These sketches can be done on paper, or digitally through [diagrams.net](https://app.diagrams.net) or similar.
 
-More Information here: [Website Wireframes](Design%206dd970530a3f4a668fb5adcecdfac517/Website%20Wireframes%20c6e8595356884137a4719d62dfd9ebb9.md) 
+More Information here: [[Wireframes]]
 
 ## Databases - Jetbrains Products
 

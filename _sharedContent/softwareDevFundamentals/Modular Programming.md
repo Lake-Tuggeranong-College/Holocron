@@ -12,7 +12,7 @@ Modular programming is a software design technique that involves separating the 
 
 ## Class Notes
 
-[Presentation - Modularisation.pdf](Presentation_-_Modularisation.pdf)
+[[Presentation - Modularisation.pdf]]
 
 ## Summary
 
@@ -61,7 +61,7 @@ Functions are one approach to reducing repeated code. Repeated code is undesirab
 
 ## Function Parameters / Arguments
 
-Functions have three main parts to it (discussed later in [IPO Charts](Software%20Development%20Fundamentals%20Course%20Theory.md)), which can be simplified into Input, Processing, and Output. Some functions don't require any input to run, such as a function which loads a set file each time the program starts. However some functions require some form of input in order to start, such as a function to find the average of three numbers - the function requires the three numbers before it can calculate the result.
+Functions have three main parts to it (discussed later in [[#IPO Charts]]), which can be simplified into Input, Processing, and Output. Some functions don't require any input to run, such as a function which loads a set file each time the program starts. However some functions require some form of input in order to start, such as a function to find the average of three numbers - the function requires the three numbers before it can calculate the result.
 
 
 > [!info] Functions **do not** require input as a rule, but they all require processing and some form of output.

@@ -213,7 +213,5 @@ Add code to create the HTML form below the H1 tag and about the footer() output.
 
 # Review
 
-[Untitled](Untitled%20a79c78a0a0d54f64934b6ce0c4430652.csv)
-
 ---
 

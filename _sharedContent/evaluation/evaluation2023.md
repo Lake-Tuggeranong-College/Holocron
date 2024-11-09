@@ -121,11 +121,8 @@ In the final column provide insight for each criteria, with more focus on the on
 
 ### Completed Examples
 
-<aside>
-‼️ The format shown are just examples and do not need to be followed exactly.
+> [!info] The format shown are just examples and do not need to be followed exactly.
 
-</aside>
+![[evalComplete1.jpg]]
 
-![image2.jpg](Evaluation%206914bd1d7492452e8e3964c229956911/image2.jpg)
-
-![Untitled.jpg](Evaluation%206914bd1d7492452e8e3964c229956911/Untitled.jpg)
+![[evalComplete2.jpg]]

@@ -16,7 +16,7 @@ tags:
 > - [Discussion Points](Robotics/4%20-%20Project/_projects/CyberRange/Discussion%20Points.md)
 > #### Theory
 > - [Project Goals](Robotics/4%20-%20Project/_projects/CyberRange/Project%20Goals.md)
-> - [User Centred Design](_sharedContent/User%20Centred%20Design.md)
+> - [[User Centered Design]]
 > #### Practical
 > - [Project Status Breakdown](Robotics/4%20-%20Project/_projects/CyberRange/Project%20Status%20Breakdown.md)
 

@@ -72,12 +72,12 @@ tags:
 > [!info]- Week 5
 > ![[semesterCalendarS2#School Events - Week 5]]
 > #### Class Tasks
-> - [ ] [Assessment Documentation](ISD/2%20-%20Digital%20Applications/_topics/theory/Assessment%20Documentation.md)
+> - [[ISD/2 - Digital Applications/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Raycasting](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Raycasting.md)
-> - [ ] [Shooting Bullet Instances](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Shooting%20Bullet%20Instances.md)
+> - [[Raycasting]]
+> - [[Shooting Bullet Instances]]
 
 > [!info]- Week 6
 > ![[semesterCalendarS2#School Events - Week 6]]
@@ -100,7 +100,7 @@ tags:
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
 > #### Class Tasks
-> [Assessment Documentation](obsidian://open?vault=Holocron&file=ISD%2F2%20-%20Digital%20Applications%2F2024S2%2FAssessment%202%20-%202024S2)
+> [[ISD/2 - Digital Applications/2024S2/Assessment 2|Assessment 2]]
 > Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
 > Development Process should be fully written by end of week 9 so start now and get ahead
 > #### Theory 

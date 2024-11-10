@@ -2,7 +2,6 @@
 
 [[Archived bb9f31bdadcb4831907f8eee3ac9afa3|Archived]]
 
-# 2023 S2 - Hotel Monitoring System
 
 ## Software installation
 

@@ -46,11 +46,7 @@ See [[Course|Course]] for details on the course
 
 [[Website Development Project 4|Click here for details on the semester.]]
 
-![[Website Development Project 4#Overview]]
-
-![[Website Development Project 4#Competencies]]
-
-
+This is aimed to be a 'catch-up' semester for students who need to complete previous tasks and/or competencies.
 
 
 

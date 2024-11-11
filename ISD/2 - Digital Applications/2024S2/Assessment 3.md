@@ -10,6 +10,8 @@ You have been hired as a game developer in the company below. Your role is to *d
 
 [[Technical Analysis - First Person Shooters]]
 
+Examples
+
 - Godot 4.2.2
 	- New syntax for v4.x of GDscript from previous project/s.
 - Version Control (GitHub)

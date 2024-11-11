@@ -4,7 +4,7 @@
 
 Modular programming is a software design technique that involves separating the functionality of a program into independent, interchangeable modules that can be used in different combinations to create multiple applications.
 
-![modularProgramming](_sharedContent/softwareDevFundamentals/_images/modularProgramming.png)
+![modularProgramming](functionsModularProgramming.png)
 
 ## Video
 
@@ -53,7 +53,7 @@ Another example of abstraction
 
 ## DRY vs WET
 
-![[_sharedContent/softwareDevFundamentals/_images/dryWet.png]]
+![[functionsDryWet.png]]
 
 Functions are one approach to reducing repeated code. Repeated code is undesirable in code as it can be harder to maintain (I.e. update and fix in the future) as the developer will have to change multiple parts of the code to solve one problem.
 
@@ -112,7 +112,7 @@ The flowchart here shows that being done twice, and uses a function to calculate
 
 You can see the flow of the logic here:
 
-![[_sharedContent/softwareDevFundamentals/_images/parameterFlowchart.gif]]
+![[functionsParameterFlowchart.gif]]
 
 ## Return Data
 
@@ -165,7 +165,7 @@ One method to start designing function is to determine and document their Inputs
 
 This can be done using an IPO (Input Process Output) Chart.
 
-![[_sharedContent/softwareDevFundamentals/_images/ipoChart.jpeg]]
+![[functionsIPOChart.jpeg]]
 
 ## Implementation Hiding
 
@@ -209,7 +209,7 @@ Coupling is the measure of the strength of connection between two functions - as
 
 **Loose coupling** is where functions do not rely on each other at all, or very minimal.
 
-![[_sharedContent/softwareDevFundamentals/_images/couplingCohesion.png]]
+![[functionsCouplingCohesion.png]]
 
 ![https://www.youtube.com/watch?v=e25ZjHaiSlE](https://www.youtube.com/watch?v=e25ZjHaiSlE)
 

@@ -2,15 +2,10 @@
 language: PHP
 ---
 
-$\color{black} \fcolorbox{lightgreen}{lightgreen}  {Overview}$
-
-The goals for this topic are:
-
-- Understand how to break software into modules
-- Delve into the benefits of the divide-and-conquer approach.
 ---
+# Theory
 
-![[_sharedContent/softwareDevFundamentals/Modular Programming#General|Modular Programming]]
+![[Theory#Algorithm Design - Modularisation]]
 
 # PHP Implementation
 

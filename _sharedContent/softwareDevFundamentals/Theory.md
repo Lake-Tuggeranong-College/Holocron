@@ -1010,7 +1010,7 @@ Modularisation is the process of splitting a large computer program into smaller
 
 A function is a small subset of code which can be run (called) at different times during the execution of a program. The use of functions allow you to modularise your code to solve different, smaller problems in order to solve the overall problem.
 
-# Functions
+## Functions
 
 Functions are used to break the larger program into smaller, more manageable sections. This allows you, the developer, to focus on different parts of the program in different sections at different times.
 

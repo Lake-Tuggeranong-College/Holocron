@@ -46,7 +46,7 @@ tags:
 > [!info]- Week 4
 > ![[semesterCalendarS2#School Events - Week 4]]
 > #### Class Tasks
-> - [ ] [Task Allocation](Cyber/1%20-%20Networking%20and%20Cyber%20Systems/_topics/Task%20Allocation.md)
+> - [ ] [Task Allocation](Task%20Allocation.md)
 > - [ ] [Project Plan](Cyber/2%20-%20Network%20Administration%20and%20Security/Projects/BACTA/Project%20Plan.md)
 > #### Theory
 > N/A

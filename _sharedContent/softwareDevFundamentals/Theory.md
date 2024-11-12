@@ -263,7 +263,7 @@ Depending on the setup, you may use Github in different methods. Choose the opti
 
 
 
-# **What is Computational Thinking?**
+# What is Computational Thinking?
 
 [https://www.bbc.com/bitesize/guides/zp92mp3/revision/1](https://www.google.com/url?q=https%3A%2F%2Fwww.bbc.com%2Fbitesize%2Fguides%2Fzp92mp3%2Frevision%2F1&sa=D&sntz=1&usg=AFQjCNFLFykzM1LBBM1Ie3VSRI-JuGUp0w)
 
@@ -330,7 +330,7 @@ Then approach each individual task separately. For example.
 
 ![[computationalTopDown2.png|top-down 2.png]]
 
-![[_images/top-down_3.png|I really want pancakes.]]
+![[computationalTopDown3.png]]
 
 I really want pancakes.
 

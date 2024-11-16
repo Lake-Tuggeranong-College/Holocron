@@ -1,3 +1,10 @@
+---
+tags:
+  - Flask
+  - WebDev
+---
+
+> [!important] This project, while functional, is not structured in an ideal manner. Would require redesign to deliver again.
 
 
 # Flask Structure Overview
@@ -6,7 +13,7 @@ This video gives you an overview of a sample Flask project.
 
 It shows the folder structure, a brief overview on the HTML files, the static folder, app.py and how to use the database.
 
-[https://youtu.be/9PpYrltX_Rk](https://youtu.be/9PpYrltX_Rk)
+![https://youtu.be/9PpYrltX_Rk](https://youtu.be/9PpYrltX_Rk)
 
 # Project Configuration
 
@@ -14,7 +21,7 @@ It shows the folder structure, a brief overview on the HTML files, the static fo
 
 Open Pycharm, and you’re greeted with the Project Browser. Click New Project in the top of the window.
 
-![Screen Shot 2022-06-15 at 10.45.46 am.png](_images/Screen_Shot_2022-06-15_at_10.45.46_am.png)
+![Screen Shot 2022-06-15 at 10.45.46 am.png](configCreateProject.png)
 
 Choose the Flask option on the lefthand side, and then set the location of the project to be stored on the local drive.
 

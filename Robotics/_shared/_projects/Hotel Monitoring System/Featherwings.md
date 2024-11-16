@@ -1628,12 +1628,10 @@ The file is formatted as a Comma Separated Values (CSV) file. This format is a t
 
 The data logged is formatted in the following way - `YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, DATA`.
 
-<aside>
-‼️ CSV files are useful to store data in as they can be easily opened in a spreadsheet application.
 
-![[Screen_Shot_2022-10-09_at_9.35.51_pm.png|Screen Shot 2022-10-09 at 9.35.51 pm.png]]
+> [!info] CSV files are useful to store data in as they can be easily opened in a spreadsheet application.
+> ![[Screen_Shot_2022-10-09_at_9.35.51_pm.png]]
 
-</aside>
 
 ## What to Log?
 

@@ -1,6 +1,9 @@
 ---
 yearSemester:
   - 2024S2
+tags:
+  - Cyber
+  - yr11
 ---
 # Project Goals
 

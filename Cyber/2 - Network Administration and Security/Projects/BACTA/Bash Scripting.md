@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 >[!info] Written by Google Gemini
 # Overview
 **What is Bash Scripting?**

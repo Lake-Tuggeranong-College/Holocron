@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 > [!tip]- Required Software
 > In order to complete the installation of the Virtual Operating systems, you will need to have VirtualBox installed on your workstation. 
 > [Download it from here](https://www.virtualbox.org/wiki/Downloads).

@@ -2,6 +2,8 @@
 tags:
   - S2
   - DigitalTechnologies/DigitalApplications
+  - ISD
+  - yr11
 ---
 > [!info]- Project Overview
 > Welcome to this tutorial on building a First-Person Shooter (FPS) game using Godot

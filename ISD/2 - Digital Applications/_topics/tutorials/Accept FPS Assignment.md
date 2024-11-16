@@ -2,6 +2,9 @@
 versionTested:
   - 4.2.2
   - "4.3"
+tags:
+  - ISD
+  - yr11
 ---
 
 > [!tip] Sign into GitHub in the browser, before proceeding.

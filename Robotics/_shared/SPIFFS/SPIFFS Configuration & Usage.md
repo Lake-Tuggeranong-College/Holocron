@@ -1,3 +1,8 @@
+---
+tags:
+  - Robotics/esp32
+tag: Robotics
+---
 
 # What is SPIFFS?
 

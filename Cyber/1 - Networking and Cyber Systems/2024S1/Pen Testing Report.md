@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 Your task is to prepare a report which details the devices and vulnerabilities on the Cyber Range network. This network is ‘airgapped’ (not connected to the internet), with numerous devices attached. The devices could range from PCs and laptops to Raspberry PI and Arduino-based devices. 
 
 # Goal

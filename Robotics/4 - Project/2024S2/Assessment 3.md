@@ -1,6 +1,7 @@
 ---
 yearSemester:
   - 2024S2
+tag: Robotics
 ---
 # Project Goals
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 **Types of Networking Topologies**
 
 A network topology describes the physical arrangement of computers, devices, and cables in a network. Here are some common topologies:

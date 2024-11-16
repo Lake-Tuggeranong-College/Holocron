@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 domain: bacta.gov.au
 DNS Server: 192.168.1.4
 

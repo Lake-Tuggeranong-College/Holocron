@@ -3,6 +3,9 @@ author: Ryan Cather
 date: 2024-06-09
 priority: 1
 order: 13
+tags:
+  - ISD
+  - yr11
 ---
 > [!info]- Goal - How does the player win the game?
 > Certain conditions need to be met before the player can win. These may be 

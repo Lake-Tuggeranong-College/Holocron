@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Servo Motor
 
 Servos are more complicated motors than the standard DC motors. There are two types of servos - standard and continuous (or 360°).

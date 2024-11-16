@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Motor Module - L298N (DC Motors)
 
 This module allows you to connect 2 DC motors and control them individually.

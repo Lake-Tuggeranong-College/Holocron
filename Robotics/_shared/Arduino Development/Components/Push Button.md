@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Push Button
 
 The crash sensor used acts as a simple button, but with a wire protruding from the front. This type of sensor can be used in Robots to detect if the robot has collided with another object.

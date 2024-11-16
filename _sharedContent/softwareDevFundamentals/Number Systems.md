@@ -73,7 +73,7 @@ Hexadecimal, often shortened to "hex," is a numbering system that bridges the ga
 
 - **Conciseness:** Hex makes large binary numbers easier to read and work with.
 - **Computer usage:** Hex is commonly used in programming, web development, and computer hardware.
-- **Color codes:** Many color codes, like #FF0000 for red, are written in hex.
+- **Color codes:** Many color codes, like `#FF0000` for red, are written in hex.
 
 **Conversion:**
 

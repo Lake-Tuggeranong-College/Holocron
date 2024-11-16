@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 ![[Theory#Style Guide]]
 
 
@@ -22,7 +25,7 @@ Avoid single letter variable names. Make them descriptive
 
 Avoid variable names like `val` or `pin`. Be more descriptive, like `buttonState` or `switchPin`
 
-If you want to define pin names and other quantities which won't change, use const ints. They're less messy than #defines, yet still give you a way to teach the difference between a variable and a constant.
+If you want to define pin names and other quantities which won't change, use const ints. They're less messy than `#define`s, yet still give you a way to teach the difference between a variable and a constant.
 
 Use the wiring/Processing-style variable types, e.g. 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 Follow the instructions below to configure the servers in packet tracer.
 
 # Email 

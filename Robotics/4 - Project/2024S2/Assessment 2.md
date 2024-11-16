@@ -1,6 +1,7 @@
 ---
 yearSemester:
   - 2024S2
+tag: Robotics
 ---
 
 > [!important] View the assessment on Google Classroom for specific details.

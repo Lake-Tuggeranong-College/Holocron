@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 # **What is Cryptography?**
     
 Cryptography is taking some readable data and converting it into unreadable data through a cryptographic algorithm. Obviously, there is little point converting the data unless there was some method to convert it back into readable data.

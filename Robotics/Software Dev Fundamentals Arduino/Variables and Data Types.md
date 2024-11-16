@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 
 ![[Theory#Variables and Data Types]]
 

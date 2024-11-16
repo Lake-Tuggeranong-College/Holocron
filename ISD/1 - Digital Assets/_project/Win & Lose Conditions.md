@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 
 ## Win & Lose Conditions
 

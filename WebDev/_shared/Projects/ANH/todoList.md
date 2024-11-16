@@ -1,3 +1,6 @@
+---
+tags: ANH
+---
 > [!info]- Goal
 > The goal of this tutorial is to:
 > - Implement a simple 'mini' app into the flask project

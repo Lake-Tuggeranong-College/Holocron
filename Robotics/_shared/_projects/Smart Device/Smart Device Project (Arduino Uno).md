@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 
 
 Create a Google Doc to document these, and future, topics.
@@ -260,7 +263,7 @@ To code this project, you’ll be approaching each section at a time, starting w
 
 Afterwards, then it’s the setup() function, then loop() then finally the Custom Functions.
 
-![[Robotics/_shared/_projects/Smart Device/_images/Structure_of_an_Arduino_Sketch_example_with_code.png]]
+![[Structure_of_an_Arduino_Sketch_example_with_code.png]]
 
 <aside>
 ‼️ The pin numbers listed in this section must be individually confirmed to ensure they match your wiring diagram and other requirements.

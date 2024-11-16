@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # SPI
 
 # Theory

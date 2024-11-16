@@ -2,6 +2,8 @@
 tags:
   - S1
   - DigitalTechnologies
+  - ISD
+  - yr11
 ---
 > [!note]- Project Overview
 > The project will be explained in due time...

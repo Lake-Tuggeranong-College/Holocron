@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 Network and Host IDs
 ![[ipAddress.png]]
 

@@ -1,3 +1,6 @@
+---
+tags: ANH
+---
 > [!tip]- Goal
 > The goal of this tutorial is to develop a standalone web-app for users to build a resume. Users will be able to add Work or Educational Experience to their resume. Users will also be able to edit those entries.
 > Users will be able to produce, and print, a resume from the website as well.

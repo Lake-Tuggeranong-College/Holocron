@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 The project will have the following technical requirements
 
 - [ ] Raspberry Pi Servers

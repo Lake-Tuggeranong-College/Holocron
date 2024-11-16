@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 # Resources
 https://krunker.io
 http://browser-doom.io/?page=game&game=doom&profile=Doom%20(Shareware)

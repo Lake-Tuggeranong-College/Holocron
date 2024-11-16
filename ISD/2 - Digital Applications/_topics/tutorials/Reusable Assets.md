@@ -3,6 +3,9 @@ author: Ryan Cather
 date: 2024-06-09
 priority: 1
 order: 3
+tags:
+  - ISD
+  - yr11
 ---
 
 One of the areas of game development that can save you a lot of work in the long run is building assets that you can reuse throughout your game.

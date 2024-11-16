@@ -3,6 +3,9 @@ author: Ryan Cather
 date: 2024-06-09
 priority: 1
 order: 4
+tags:
+  - ISD
+  - yr11
 ---
 
 There are numerous ways to implement shooting in an FPS (or other type of) game. 

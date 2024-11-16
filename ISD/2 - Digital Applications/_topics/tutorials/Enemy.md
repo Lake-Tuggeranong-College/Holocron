@@ -3,6 +3,9 @@ author: Ryan Cather
 date: 2024-06-09
 priority: 1
 order: 6
+tags:
+  - ISD
+  - yr11
 ---
 
 Every FPS needs an enemy!

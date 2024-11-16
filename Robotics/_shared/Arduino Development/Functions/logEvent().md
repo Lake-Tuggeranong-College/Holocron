@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # logEvent()
 
 The follow code can be used to write event data to a [[SD Card Module 358798e6d09c425f8b2ad20e846bcec0.md|SD card]] connected to an Arduino Uno. 

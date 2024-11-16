@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 ![[Theory#Course Overview]]
 
 ## Arduino Implementation

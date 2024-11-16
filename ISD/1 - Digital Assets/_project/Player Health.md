@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 
 To enable health in the player, a few scripts need to be updated. Open `Player.gd` and add a new function at the bottom of the script to reduce the health of the player.
 

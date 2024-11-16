@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 
  ![[playerHealthHeartsFull.png]]
 

@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Stepper Motors
 
 These motors are used for greater control over how far the motor turns. Using high amounts of torque, it can 'step' to the next position.

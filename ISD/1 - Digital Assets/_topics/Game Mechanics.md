@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 
 
 [From Zero to Pitch: A Walkthrough for Game Designers](https://gamedevelopment.tutsplus.com/tutorials/from-zero-to-pitch-a-walkthrough-for-game-designers--gamedev-6121)

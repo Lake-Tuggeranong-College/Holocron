@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Ultrasonic Sensor (HC SR04)
 
 ```arduino

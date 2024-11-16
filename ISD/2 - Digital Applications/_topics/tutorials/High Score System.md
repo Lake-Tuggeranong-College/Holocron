@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 # Saving the Score
 
 > [!info] The data stored on HDD/SSD, is referred as `persistent data`.

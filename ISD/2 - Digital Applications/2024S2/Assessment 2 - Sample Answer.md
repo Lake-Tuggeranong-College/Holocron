@@ -1,6 +1,9 @@
 ---
 yearSemester:
   - 2024S2
+tags:
+  - ISD
+  - yr11
 ---
 
 # Project Overview

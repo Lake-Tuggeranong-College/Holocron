@@ -1,3 +1,8 @@
+---
+tags:
+  - Cyber
+  - yr11
+---
 > [!tip] The goal of this stage is to document the implementation of the project.
 
 # Open Repository

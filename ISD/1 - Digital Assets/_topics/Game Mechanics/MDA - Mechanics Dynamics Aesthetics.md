@@ -1,3 +1,8 @@
+---
+tags:
+  - ISD
+  - yr11
+---
 > [!info] Google Gemini, 7 Oct 2024
 
 **Game Development: Mechanics, Dynamics, Aesthetics (MDA)**

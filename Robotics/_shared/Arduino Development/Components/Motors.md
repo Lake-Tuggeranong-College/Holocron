@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Motors
 
 [There are different types of motors which can be used for different projects](https://www.google.com/url?q=https%3A%2F%2Flearn.sparkfun.com%2Ftutorials%2Fmotors-and-selecting-the-right-one&sa=D&sntz=1&usg=AFQjCNEUPlpTwx9lqZL46oPp61ErnwjNeA). There are three main categories of motors - DC Motors, Servos and Steppers

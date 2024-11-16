@@ -1,3 +1,6 @@
+---
+tag: Robotics
+---
 # Components
 
 These pages introduce you to the individual components, how to wire them to an Arduino and how to code them. 

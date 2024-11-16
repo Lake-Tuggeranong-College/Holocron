@@ -1,21 +1,3 @@
-$\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
-
-The goals for this topic are:
-
-- Develop template.html
-- Add additional Routes on the server.
-
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
-
-$\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
-
-In the Google Classroom Assignment, submit the following:
-
-- Document with screenshot of the website working for a number of pages.
-
----
 
 # Video
 
@@ -23,14 +5,14 @@ Watch the video/s supplied to understand the topics for this week.
 
 This first video focuses on modifications made to files, and then `git commits`. This is an important part of development, particularly on GitHub.
 
-[https://youtu.be/6RduPVA3c2E?si=wbW3A3FMmbobNchu](https://youtu.be/6RduPVA3c2E?si=wbW3A3FMmbobNchu)
+![https://youtu.be/6RduPVA3c2E?si=wbW3A3FMmbobNchu](https://youtu.be/6RduPVA3c2E?si=wbW3A3FMmbobNchu)
 
 This video will focus on
 
 - The Flask file structure
 - `base.html` and it’s importance to Flask projects.
 
-[https://youtu.be/7z648EtAEQc?si=VNXyx1ELk7PhemHL](https://youtu.be/7z648EtAEQc?si=VNXyx1ELk7PhemHL)
+![https://youtu.be/7z648EtAEQc?si=VNXyx1ELk7PhemHL](https://youtu.be/7z648EtAEQc?si=VNXyx1ELk7PhemHL)
 
 ---
 
@@ -46,9 +28,9 @@ Read/watch the following information.
 
 ## Model View Controller
 
-[https://youtu.be/DUg2SWWK18I?si=gqhHvVMOAFrzkygn](https://youtu.be/DUg2SWWK18I?si=gqhHvVMOAFrzkygn)
+![https://youtu.be/DUg2SWWK18I?si=gqhHvVMOAFrzkygn](https://youtu.be/DUg2SWWK18I?si=gqhHvVMOAFrzkygn)
 
-![Model view controller.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/74ed01d1-bfe3-43b1-9e68-18a1aff53ced/Model_view_controller.png)
+![[Model view controller.png]]
 
 ---
 

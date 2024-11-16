@@ -29,7 +29,7 @@ Watch the video/s supplied to understand the topics for this week.
 
   
 
-[https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather](https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather)
+![https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather](https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather)
 
   
   
@@ -164,7 +164,7 @@ Then, apply for a Student discount
 
   
 
-[](https://education.github.com/discount_requests/application)
+[https://education.github.com/discount_requests/applicatio](https://education.github.com/discount_requests/application)
 
   
 
@@ -176,7 +176,7 @@ After signing up to Github, join the assignment by clicking on the link.
 
   
 
-[](https://classroom.github.com/a/2p7G1LbL)
+[Classroom](https://classroom.github.com/a/2p7G1LbL)
 
   
 

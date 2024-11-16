@@ -1,19 +1,3 @@
-$\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
-
-The goals for this topic are:
-
-- Implement Bootstrap Grid Layout
-
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
-
-$\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
-
-In the Google Classroom Assignment, submit the following:
-
-- Updated Code Screenshots
-- Screenshots showing Site Running.
 
 ---
 
@@ -23,50 +7,25 @@ Watch the video/s supplied to understand the topics for this week.
 
 ## Assessment 1 Feedback
 
-[https://youtu.be/6YpfWG-R_L8](https://youtu.be/6YpfWG-R_L8)
+![https://youtu.be/6YpfWG-R_L8](https://youtu.be/6YpfWG-R_L8)
 
 ## This weeks Tasks
 
-[https://youtu.be/4Vhvc-bD8Pk](https://youtu.be/4Vhvc-bD8Pk)
+![https://youtu.be/4Vhvc-bD8Pk](https://youtu.be/4Vhvc-bD8Pk)
 
 ---
 
 # Resources
 
-- Bootstrap Resources
-    
-    [Grid system](https://getbootstrap.com/docs/5.3/layout/grid/)
-    
-    [Bootstrap Grid Examples](https://www.w3schools.com/bootstrap/bootstrap_grid_examples.asp)
-    
-- Presentation Tips
-    
-    # Presentation Tips
-    
-    ## Text
-    
-    A good guide to follow when designing slides is the 1-6-6 rule.
-    
-    The goal is to minimise the amount of clutter on each slide and have an impactful presentation.
-    
-    [The 6 by 6 Rule for Presentations Explained | Presentation Training Institute](https://www.presentationtraininginstitute.com/the-6-by-6-rule-for-presentations-explained/)
-    
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/789f5dff-9a29-42ff-bc81-cce2ed79559c/Untitled.png)
-    
-    Any additional information (such as references or specifics) can be put in the slide notes.
-    
-    ## Graphics
-    
-    Use graphics to add to the story.
-    
-    ![https://www.student.unsw.edu.au/design-tips](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/772b893a-a131-463f-b528-43b4cac33226/Untitled.png)
-    
-    [https://www.student.unsw.edu.au/design-tips](https://www.student.unsw.edu.au/design-tips)
-    
-    ## Bad Example
-    
-    [https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan](https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan)
-    
+## Bootstrap Resources
+
+[Grid system](https://getbootstrap.com/docs/5.3/layout/grid/)
+
+[Bootstrap Grid Examples](https://www.w3schools.com/bootstrap/bootstrap_grid_examples.asp)
+
+## Presentation Tips
+
+![[presentationTips]]
 
 ## Presentation
 

@@ -8,16 +8,15 @@ Watch the video/s supplied to understand the topics for this week.
 
   
 
-![https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather](https://www.youtube.com/watch?v=SvqHV8lKAJ8&ab_channel=RyanCather)
 
+![https://www.youtube.com/watch?v=uphcYdYcmf0&feature=youtu.be&ab_channel=RyanCather](https://www.youtube.com/watch?v=uphcYdYcmf0&feature=youtu.be&ab_channel=RyanCather)
   
-  
+![https://www.youtube.com/watch?v=cwuwJ1jkIlc&ab_channel=RyanCather](https://www.youtube.com/watch?v=cwuwJ1jkIlc&ab_channel=RyanCather)
 
 # Resources
 
-  
+[https://docs.google.com/presentation/d/1h_3-4q71VpecoxKtWewhRf-ak3shrkohYYoxFMqwTH4/edit?usp=sharing](https://docs.google.com/presentation/d/1h_3-4q71VpecoxKtWewhRf-ak3shrkohYYoxFMqwTH4/edit?usp=sharing)
 
-[https://docs.google.com/presentation/d/1M9pfihh77OqGmxOz0baYZee9ay5-8zJdAkH2uD5z8-I/edit?usp=sharing](https://docs.google.com/presentation/d/1M9pfihh77OqGmxOz0baYZee9ay5-8zJdAkH2uD5z8-I/edit?usp=sharing)
 
   
 
@@ -27,7 +26,7 @@ Watch the video/s supplied to understand the topics for this week.
 
 # Theory
 
-  
+  N/A
 
 
   

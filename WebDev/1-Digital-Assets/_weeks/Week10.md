@@ -1,18 +1,4 @@
-$\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
 
-The goals for this topic are:
-
-- Welcome new students.
-    - And Catch up on work
-- Complete VET competencies
-
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
-
-$\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
-
-In the Google Classroom Assignment, submit the following:
 
 # New Student?
 
@@ -41,7 +27,7 @@ Complete the instructions below, focusing on VET Competencies.
 
 Watch the video/s supplied to understand the topics for this week.
 
-[https://www.youtube.com/watch?v=GFxNiAdJeeo&ab_channel=RyanCather](https://www.youtube.com/watch?v=GFxNiAdJeeo&ab_channel=RyanCather)
+![https://www.youtube.com/watch?v=GFxNiAdJeeo&ab_channel=RyanCather](https://www.youtube.com/watch?v=GFxNiAdJeeo&ab_channel=RyanCather)
 
 ---
 
@@ -55,62 +41,8 @@ The VET competencies are posted to Google Classroom. The ones to focus on for Ta
 
 Additionally, catch up on outstanding VET Competencies.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/f85038ab-0bec-4ddf-a02d-6b06c13d3973/Untitled.png)
 
-- VET Competency Information
-    
-    # Introduction
-    
-    VET Competencies from the assessment/work just completed will be documented.
-    
-    The competencies targeted in this sessions will/may be:
-    
-    |Competency Code|Competency Name|Certificate Level|Core/Elective|
-    |---|---|---|---|
-    |ICTWEB304|Build simple web pages|ICT30120|Elective|
-    |ICTWEB305|Produce digital images for the web|ICT30120|Elective|
-    |ICTWEB431|Create and style simple markup language documents|ICT30120|Elective|
-    
-    The worksheets for these competencies can be found on Google Classroom.
-    
-    # Student Competency Worksheets
-    
-    In Google Classroom, there will be a number of VET Competency Worksheets that apply to recent work (possibly assessments).
-    
-    These documents are where you competency in tasks are **recorded** as evidence.
-    
-    For each Competency, there are a number of Performance Criteria.
-    
-    For each Performance Criteria you will need to enter some form of **evidence.** Follow the instructions.
-    
-    The evidence could be one or many of the following options:
-    
-    - Screenshot
-    - Photo
-    - Explanation (short response / dot points)
-    - Etc.
-    
-    Once entered you’ve entered the evidence,
-    
-    - Set the completed date to the current date.
-    - Set the completion status to “Complete”
-    
-    ## Sample Form
-    
-    The forms are complex, however you only need to focus on a few sections.
-    
-    Green highlight - Lists the evidence you need to supply.
-    
-    Blue Highlight - Where you put your evidence.
-    
-    Yellow Highlight - Mark with the current date and set as complete.
-    
-    ![VET - Student Evidence Guide.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/5434f553-f24c-416c-a0b5-a7aee0834910/VET_-_Student_Evidence_Guide.png)
-    
-    ## Example Entry
-    
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/0023c01c-df45-4cc2-a4e9-29295b4c6213/Untitled.png)
-    
+![[VET]]
 
 ---
 

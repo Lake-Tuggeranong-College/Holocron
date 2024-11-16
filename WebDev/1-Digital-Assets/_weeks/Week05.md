@@ -1,19 +1,4 @@
-$\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
 
-The goals for this topic are:
-
-- Complete the assessment task.
-- Due **FRIDAY**.
-
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
-
-$\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
-
-In the Google Classroom Assignment, submit the following:
-
-- The assessment is the only submission for this week.
 
 ---
 
@@ -21,17 +6,19 @@ In the Google Classroom Assignment, submit the following:
 
 Watch the video/s supplied to understand the topics for this week.
 
-[](https://www.youtube.com/watch?v=lx0YizmIRMY&feature=youtu.be&ab_channel=RyanCather)
+![](https://www.youtube.com/watch?v=lx0YizmIRMY&feature=youtu.be&ab_channel=RyanCather)
 
 This video covers the requirements and details for the project plan component of the assessment.
 
-[https://www.youtube.com/watch?v=_pMQxV8b0Bo&ab_channel=RyanCather](https://www.youtube.com/watch?v=_pMQxV8b0Bo&ab_channel=RyanCather)
+![https://www.youtube.com/watch?v=_pMQxV8b0Bo&ab_channel=RyanCather](https://www.youtube.com/watch?v=_pMQxV8b0Bo&ab_channel=RyanCather)
 
 ---
 
 You can read below, focusing on the Pitch section, to understand the level that you should be aiming for.
 
 # Assessment Examples
+
+![[Assessment Support]]
 
 ---
 

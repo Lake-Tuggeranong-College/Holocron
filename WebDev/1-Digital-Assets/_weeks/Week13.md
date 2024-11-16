@@ -1,22 +1,4 @@
-$\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
 
-The goals for this topic are:
-
-- User eXperience (UX) Updates including:
-    - Flash Messages
-    - Error Handling
-    - Current User
-    - Navbar Updates
-
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
-
-$\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
-
-In the Google Classroom Assignment, submit the following:
-
-- Record video of functionality implemented
 
 ---
 
@@ -24,7 +6,7 @@ In the Google Classroom Assignment, submit the following:
 
 Watch the video/s supplied to understand the topics for this week.
 
-[https://youtu.be/9Rq9TR5569I](https://youtu.be/9Rq9TR5569I)
+![https://youtu.be/9Rq9TR5569I](https://youtu.be/9Rq9TR5569I)
 
 ---
 

@@ -224,7 +224,7 @@ This structure, and others similar to it, will be used throughout the developmen
 
 Open `Global.gd`. This script will hold any code and/or variables that are required throughout the whole project, rather than relating on a specific node.
 
-![[_images/Untitled.png|Untitled]]
+![[ISD/Software Dev Fundamentals - GodotV3/_images/Untitled.png|Untitled]]
 
 Start by adding the first line of any GDScript file, which is identifying what type of object this script is attached to. In this case it’s `Node` as it’s not attached to any specific node.
 

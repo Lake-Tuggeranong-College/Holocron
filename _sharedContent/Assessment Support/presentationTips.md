@@ -23,4 +23,4 @@ Use graphics to add to the story.
 
 ## Bad Example
 
-[https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan](https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan)
+![https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan](https://www.youtube.com/watch?v=lpvgfmEU2Ck&ab_channel=DonMcMillan)

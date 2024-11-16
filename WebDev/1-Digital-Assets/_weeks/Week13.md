@@ -36,7 +36,7 @@ Luckily the project being built allows for a easy implementation of a flash mess
 
 Open `app.py` and add `flash` to the `from flask import….` line of code.
 
-![[Screen_Shot_2022-08-09_at_9.50.41_am.png]]
+![[flashImport.png]]
 # Update Routes
 
 Update routes where feedback is important to the user. For instance, the password reset route. It would be useful for the user to get confirmation that the password has been changed.
@@ -47,7 +47,7 @@ To add a flash message, the command is: `flash("Message")`.
 
 
 
-![[Screen_Shot_2022-08-09_at_9.52.45_am.png]]
+![[flashSetMessage.png]]
 
 Add appropriate messages to other routes, such as `loggout`, `contact`, and `User Registration`.
 
@@ -76,7 +76,7 @@ Wherever the messages are to appear in your code, add the following code block.
 
 This example shows that messages will appears just below the navbar.
 
-![[Screen_Shot_2022-08-09_at_10.18.13_am.png]]
+![[flashMessageCode.png]]
 # Flash CSS
 
 Currently, the messages appear very simply, as a dot list. Ideally the messages need to draw the users attention, so should stand out.

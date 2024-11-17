@@ -1305,7 +1305,8 @@ Modify the code (Arduino or HTML) to display the temperature **without** the dec
 
 ![[Screen_Shot_2022-09-13_at_10.27.51_am.png|Screen Shot 2022-09-13 at 10.27.51 am.png]]
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
+
 
 ## Opening and closing the safe
 
@@ -1404,7 +1405,7 @@ Update the website to additional show the current status of the safe - Locked or
 
 ![[2022-09-13_15-55-32.2022-09-13_15_55_49.gif|2022-09-13 15-55-32.2022-09-13 15_55_49.gif]]
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 ## Controlling the Fan
 

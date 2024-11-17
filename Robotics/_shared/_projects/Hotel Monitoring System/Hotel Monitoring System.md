@@ -441,8 +441,7 @@ else {
 ```
 
 Try it out!
-
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 ## `logout.php`
 

@@ -262,7 +262,7 @@ var enemyBulletInstanceCount = 0
 
 Save the File.
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 Open `Bullet/Bullet.gd` . In this script, the `_ready()` function executes each time a bullet is instantiated in the game. This can be used to also increase the count of bullet instances through `Global.gd`. 
 
@@ -276,7 +276,7 @@ This done through accessing the `GlobalVariables` object which is a single insta
 GlobalVariables.bulletInstanceCount += 1
 ```
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 Open [Player.gd](http://Player.gd)
 
@@ -303,7 +303,7 @@ decisionBullet --> |No|terminalEnd
 if GlobalVariables.bulletInstanceCount < 3:
 ```
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 Run the game and test to make sure the game only can create three bullets.
 

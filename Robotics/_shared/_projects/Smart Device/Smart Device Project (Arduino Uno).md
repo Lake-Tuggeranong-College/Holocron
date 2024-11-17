@@ -256,7 +256,7 @@ Start by creating a new Arduino sketch in the IDE, naming it after you project -
 
 ![[Screen_Shot_2022-05-20_at_2.55.05_pm.png|Screen Shot 2022-05-20 at 2.55.05 pm.png]]
 
-$* \normalsize \mathcal {\color{black} \colorbox {orange}  {Save, Commit and Push Changes to Github!}}$ 
+![[commonBlocks#Commit & Push]]
 
 ## Coding
 

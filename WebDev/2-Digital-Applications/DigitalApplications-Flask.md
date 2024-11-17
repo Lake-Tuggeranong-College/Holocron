@@ -130,7 +130,7 @@ N/A
 
 
 #### Class Tasks
-- [[assessment2Preparation]]
+
 #### Theory
 - [[presentationWeek07]]
 #### Practical

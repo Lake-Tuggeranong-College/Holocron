@@ -671,7 +671,7 @@ match [condition]:
 		[block]
 ```
 
-There are different, and more complex ways of using match blocks, which can be read [[https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html#match]], however a simple example given on that page is this.
+There are different, and more complex ways of using match blocks, which can be read [https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html#match](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html#match), however a simple example given on that page is this.
 
 In this situation, the value stored in the variable being checked - x - is compared to each of the sections. 
 
@@ -788,8 +788,8 @@ If the user has pressed the left arrow button, the first if statement will be tr
 
 The offical definition of `move_and_collide` is:
 
-> This method takes one parameter: a [[https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2]] indicating the body's relative movement. Typically, this is your velocity vector multiplied by the frame timestep (`delta`). If the engine detects a collision anywhere along this vector, the body will immediately stop moving. If this happens, the method will return a [[https://docs.godotengine.org/en/stable/classes/class_kinematiccollision2d.html#class-kinematiccollision2d]] object.
-[[https://docs.godotengine.org/en/stable/tutorials/physics/using_kinematic_body_2d.html#move-and-collide](https://docs.godotengine.org/en/stable/tutorials/physics/using_kinematic_body_2d.html#move-and-collide]]
+> This method takes one parameter: a [https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2) indicating the body's relative movement. Typically, this is your velocity vector multiplied by the frame timestep (`delta`). If the engine detects a collision anywhere along this vector, the body will immediately stop moving. If this happens, the method will return a [https://docs.godotengine.org/en/stable/classes/class_kinematiccollision2d.html#class-kinematiccollision2d](https://docs.godotengine.org/en/stable/classes/class_kinematiccollision2d.html#class-kinematiccollision2d) object.
+[https://docs.godotengine.org/en/stable/tutorials/physics/using_kinematic_body_2d.html#move-and-collide](https://docs.godotengine.org/en/stable/tutorials/physics/using_kinematic_body_2d.html#move-and-collide)
 > 
 
 This complex answer can be cut down to - move the node by `movement_speed`, defined earlier, along the x axis. The higher the number, the faster it moves. `Vector2` has two parameters - x and y. The code given only impacts the x value (the other be `0`), meaning that the node only moves along that axis. In effect, the player (at this stage) is limited to only moving left and right and **cannot** move up and down. This functionality may be added later.

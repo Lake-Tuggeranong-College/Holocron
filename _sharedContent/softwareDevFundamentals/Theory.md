@@ -2,7 +2,7 @@
 
 # Course Contents
 
-
+[[Glossary]]
 
 ## Course Overview
 
@@ -579,7 +579,7 @@ Each one of these boxes can be given a unique name.
 Variables can be named *almost* anything. Generally, they cannot start with a number. 
 
 
-> [!info] The way you name variables is called the **naming convention.** Each programming language has its own standard naming convention. This is discussed in [[Software Development Fundamentals Course Theory d7b47926fb2a42dc85c32b286f178735.md|Style Guide]]
+> [!info] The way you name variables is called the **naming convention.** Each programming language has its own standard naming convention. This is discussed in [[Style Guide]]
 
 
 Now that variables have been named, you can store data in the box. For instance, you may set the following data to the four variables in the example:
@@ -902,7 +902,7 @@ Computers are really good at repetitive tasks, whereas humans are, *well human*,
 A loop structure allows us to code a block of code which will execute any number of times, including zero. 
 
 
-> [!info] Loops, similar to decisions, rely heavily on [[Software Development Fundamentals Course Theory d7b47926fb2a42dc85c32b286f178735.md|conditions]] as part of their structure.
+> [!info] Loops, similar to decisions, rely heavily on  as part of their structure.
 
 
 There are a number of general loop structures that are available in (almost) all languages.
@@ -1049,7 +1049,7 @@ Functions are one approach to reducing repeated code. Repeated code is undesirab
 
 ## Function Parameters / Arguments
 
-Functions have three main parts to it (discussed later in [[Software Development Fundamentals Course Theory d7b47926fb2a42dc85c32b286f178735.md|IPO Charts]]), which can be simplified into Input, Processing, and Output. Some functions don't require any input to run, such as a function which loads a set file each time the program starts. However some functions require some form of input in order to start, such as a function to find the average of three numbers - the function requires the three numbers before it can calculate the result.
+Functions have three main parts to it (discussed later in [[#IPO Charts]]), which can be simplified into Input, Processing, and Output. Some functions don't require any input to run, such as a function which loads a set file each time the program starts. However some functions require some form of input in order to start, such as a function to find the average of three numbers - the function requires the three numbers before it can calculate the result.
 
 
 > [!info] Functions **do not** require input as a rule, but they all require processing and some form of output.
@@ -1217,7 +1217,7 @@ Variables, constants etc that are declared within a function, are only accessibl
 
 ### Flowcharts
 
-[[https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax]]
+[Mermaid](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax)
 
 [Flowcharts](https://www.notion.so/Flowcharts-aefdd8293cdb46a1a4aa96ca5a3f9f48?pvs=21)
 
@@ -1276,9 +1276,9 @@ This example is a quick demonstration of three different flowcharts, one for eac
 
 This page is a tutorial on how to write/make tutorials: [https://www.lucidchart.com/pages/what-is-a-flowchart-tutorial](https://www.google.com/url?q=https%3A%2F%2Fwww.lucidchart.com%2Fpages%2Fwhat-is-a-flowchart-tutorial&sa=D&sntz=1&usg=AFQjCNHWnPrmDeScQr3b3ceOtgWZWRPl7g)
 
-[https://www.youtube.com/watch?v=AjoSfSd-5Nw](https://www.youtube.com/watch?v=AjoSfSd-5Nw)
+![https://www.youtube.com/watch?v=AjoSfSd-5Nw](https://www.youtube.com/watch?v=AjoSfSd-5Nw)
 
-![[flowchartCheatSheet.png|Software%20Development%20Fundamentals%20Course%20Theory%20d7b47926fb2a42dc85c32b286f178735/https_lh3.google.comu0pAF1QipMz36NJBUiv4FIOlZNfo9vWrePgJAfwwTGW3ADHw1008-h1344.png]]
+![[flowchartCheatSheet.png]]
 
 ## Mermaid
 

@@ -27,7 +27,7 @@ This module, much like other motor controller options, is best suited with an ex
 
 A DC motor is a simple device which accepts power and can turn in either direction. Actually, it doesn't matter which pin you attached to positive or negative, the motor will work either way.
 
-Using [[PWM)](https://www.google.com/url?q=https%3A%2F%2Flearn.sparkfun.com%2Ftutorials%2Fpulse-width-modulation&sa=D&sntz=1&usg=AFQjCNFDruJOqV0l6D7qa3pQRNiEKFt9-A|Pulse Width Modulation (PWM)]] you can adjust the speed that the motor turns by passing it a value between 0 and 255.
+Using [PWM](https://www.google.com/url?q=https%3A%2F%2Flearn.sparkfun.com%2Ftutorials%2Fpulse-width-modulation&sa=D&sntz=1&usg=AFQjCNFDruJOqV0l6D7qa3pQRNiEKFt9-A) you can adjust the speed that the motor turns by passing it a value between 0 and 255.
 
 The blue and red cables connect to the Green OUT terminals on the motor module (above).
 

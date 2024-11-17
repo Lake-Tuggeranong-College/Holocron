@@ -48,7 +48,7 @@ When opened, you can add a new source, and choose Screen Capture to record the s
 
 Click Start Recording when ready to begin.
 
-![[_sharedContent/videoProduction/_images/exampleOBS.png]]
+![[videoProdExampleOBS.png]]
 
 # Audio
 
@@ -82,7 +82,7 @@ Include headings (video title and chapter titles) as appropriate. Credits, if yo
 
 > [!tip] To install, go to the download page and choose the correct option for your OS. If you're running this on Linux, then choose the AppImage version. Then you’ll need to right-click and click Properties. On the Permissions tab, you’ll need to set it as an executable.
 >
-> ![[_sharedContent/videoProduction/_images/downloadAppImage.png]]
+> ![[videoProdDownloadAppImage.png]]
 
 
 ### Getting Started with kdenlive
@@ -95,7 +95,7 @@ Include headings (video title and chapter titles) as appropriate. Credits, if yo
 
 kdenlive is a video editing piece of software. It's much like other video editing software in terms of the approach and functions. 
 
-![[_sharedContent/videoProduction/_images/exampleKDEnlive.png]]
+![[videoProdExampleKDEnlive.png]]
 
 Here you'll see the window layout. 
 

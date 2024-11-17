@@ -1,5 +1,10 @@
 # Evaluation
 
+
+[https://www.lucidchart.com/pages/what-is-swot-analysis](https://www.lucidchart.com/pages/what-is-swot-analysis)
+
+[[evaluationChecklist]]
+
 # Project Evaluation
 
 > A project evaluation is a formative aspect of the project management process, wherein an organization gathers data to measure whether or not it achieved its goals and why.

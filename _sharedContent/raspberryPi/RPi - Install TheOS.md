@@ -30,7 +30,7 @@ Click Write.
 
 When the Imager is open, Click “Choose OS”.
 
-![Screen Shot 2022-03-09 at 10.16.07 am.png](rpiImagerChooseOS2.png)
+![[rpiImagerOS.png]]
 
 Choose General Purpose OS.
 

@@ -17,7 +17,7 @@
 - [[presentationWeek07]]
 # Class Tasks
 
-- [[assessment2Preparation]]
+
 # Theory
 
 

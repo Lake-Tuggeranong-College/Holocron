@@ -23,7 +23,7 @@ Some more Information:
 
 You will need one of these options in order to use DC motors
 
-[[DC Motors)](Motor Module - L298N (DC Motors|Motor Module - L298N (DC Motors)]]%204a017b7200c643b98222ea6bae61edc4.md)
+[[Motor Module - L298N (DC Motors)]]
 
 ## Servos
 

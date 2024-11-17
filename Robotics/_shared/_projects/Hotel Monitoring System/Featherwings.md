@@ -2,7 +2,6 @@
 tag: Robotics
 ---
 
-
 # Featherwings
 
 The goal of this section is to test all the different modules to ensure they’re working correctly with the sample code.
@@ -34,17 +33,13 @@ To do this, use the links provided above.
 1. Install any libraries (if necessary)
 2. Run specific Sample Code
 
-<aside>
-‼️ **Note**: The sample code for the mini TFT featherwing appears to be incorrect. Look for the code for the ESP32 and change the pins to be shown like this:
-
-```arduino
+> [!info] **Note**: The sample code for the mini TFT featherwing appears to be incorrect. Look for the code for the ESP32 and change the pins to be shown like this:
+> ```arduino
 #define TFT_CS   14
 #define TFT_DC   32
-```
+> ```
+> ![[Screen_Shot_2022-08-27_at_2.11.17_pm.png|Screen Shot 2022-08-27 at 2.11.17 pm.png]]
 
-![[Screen_Shot_2022-08-27_at_2.11.17_pm.png|Screen Shot 2022-08-27 at 2.11.17 pm.png]]
-
-</aside>
 
 ## Combine Code
 
@@ -735,8 +730,6 @@ The servo will need to be wired to VCC, GND and Pin 12 as per the diagram.
 
 </aside>
 
-![[Work/temp units/_workKeep/Robotics and Mechatronics/ESP32 Feather Project/Archived bb9f31bdadcb4831907f8eee3ac9afa3/Untitled.png|Untitled.png]]
-
 ## Library
 
 Using a servo motor with the ESP32 chip is a little different than using one with an Arduino Uno and requires an additional library - `ESP32Servo`.
@@ -1155,8 +1148,6 @@ To update the Arduino with the latest web code, you will need to Select Tools �
 ## Route Analysis
 
 The default `/dashboard.html` route is:
-
-![[Screen_Shot_2022-09-13_at_9.42.17_am.png|Screen Shot 2022-09-13 at 9.42.17 am.png]]
 
 This contains a lot of information in the few short lines. Let’s analyse it.
 
@@ -1651,7 +1642,7 @@ The more information that is logged, the better for diagnosing issues. You could
 This extensive Logging Cheat Sheet is maintained by [Open Web Application Security Project®
  (OWASP)](https://owasp.org/)
 
-[[https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Logging_Cheat_Sheet.md#event-attributes]]
+[Cheat Sheet](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Logging_Cheat_Sheet.md#event-attributes)
 
 # Adafruit MiniTFT Updates
 

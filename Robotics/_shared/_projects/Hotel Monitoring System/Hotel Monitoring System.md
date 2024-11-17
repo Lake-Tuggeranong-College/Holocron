@@ -14,11 +14,11 @@ tag: Robotics
 
 Go to the following site and create a Jetbrains account **using your school Google Account.**
 
-[](https://account.jetbrains.com/)
+[Jetbrains](https://account.jetbrains.com/)
 
 Once done, visit the following page and apply for a free educational account. 
 
-[[https://www.jetbrains.com/community/education/#students]]
+[Jetbrains Education](https://www.jetbrains.com/community/education/#students)
 
 #### Install Jetbrains Toolbox
 

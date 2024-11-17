@@ -3,7 +3,7 @@ tag: Robotics
 ---
 # SD Card Module
 
-Unlike other components, the SD card module uses [[SPI)](SPI f22a74da520349d290428dc5c53ae8c2.md|Serial Peripheral Interface (SPI)]] to communicate with the Arduino. This means that it's not so simple to wire the component, you will need to use the SPI pins on the Arduino Uno.
+Unlike other components, the SD card module uses [[SPI]] to communicate with the Arduino. This means that it's not so simple to wire the component, you will need to use the SPI pins on the Arduino Uno.
 
 ![[componentSDCardPinout.jpeg|SD%20Card%20Module%20358798e6d09c425f8b2ad20e846bcec0/ds3231-sd-module-pinout_palMCsePit.jpeg]]
 

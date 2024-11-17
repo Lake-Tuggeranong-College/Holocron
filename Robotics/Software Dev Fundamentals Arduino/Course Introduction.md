@@ -92,4 +92,3 @@ Congratulations - you've (potentially) written your first Arduino Sketch!
 8. What do you use to display data sent from the Arduino?
 9. What types of pins does an Arduino Uno have?
 
-[[Untitled dd51e3cdbb39460293e6a0c2d98426cd.csv|Untitled]]

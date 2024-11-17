@@ -11,7 +11,7 @@ Read the [[WebDev/2-Digital-Applications/2024S2/Assessment 2|Assessment 2]] for 
 - on what to cover in each section.
 - Suggestions for how to approach the sections.
 
-https://publish.obsidian.md/holocron/WebDev/2-Digital-Applications/2024S2/assessment2-2024S2
+[[WebDev/2-Digital-Applications/2024S2/Assessment 2|Assessment 2]]
 
 Stay focused on the topic/s listed.
 
@@ -21,7 +21,7 @@ The web version of the Holocron is now the preferred method to access the conten
 ---
 # Assessment 2
 
-![[WebDev/2-Digital-Applications/_topics/_images/assessment2Topics.png]]
+![[WebDev/2-Digital-Applications/2024S2/_images/assessment2Topics.png]]
 
 Stay focused on the topic/s listed.
 

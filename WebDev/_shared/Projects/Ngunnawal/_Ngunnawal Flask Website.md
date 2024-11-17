@@ -1535,11 +1535,11 @@ Attempt to access the URL without logging in, and it should redirect you to the 
 
 Attempt to access the URL logged in as a user with an access level set to 1.
 
-![Untitled](_images/Untitled%201.png)
+![Untitled](WebDev/_shared/Projects/Ngunnawal/_images/Untitled%201.png)
 
 Attempt to access the URL logged in as a user with an access level set to 2.
 
-![Untitled](_images/Untitled%202.png)
+![Untitled](WebDev/_shared/Projects/Ngunnawal/_images/Untitled%202.png)
 
 ## Continue Implementing Access Control
 

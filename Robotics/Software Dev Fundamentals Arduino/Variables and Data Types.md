@@ -104,7 +104,7 @@ Start updating the code by declaring a few constants to store the pins used by t
 
 </aside>
 
-![[Untitled 1.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 1.png|Untitled]]
 
 ```arduino
 const int pinLED = 9;
@@ -119,7 +119,7 @@ On the Arduino Uno, pin A0 can also be referred to as pin 14. Try updating the c
 
 </aside>
 
-![[Untitled 2.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 2.png|Untitled]]
 
 This has the benefit of future maintainability - if the circuit needed to be changed and the devices must change pins, the **only** section of code you would need to change is the constants at the start of the code. The remainder of the code wouldn’t need to be changed.
 

@@ -1,5 +1,7 @@
 ---
-tags: ISD
+tags:
+  - ISD
+  - archived
 ---
 
 This course introduces you to software development with a focus on GDScript and Godot as the environment through the process of making a simple game.
@@ -239,7 +241,7 @@ Declare a new variable to store the number of bullets currently in the scene.
 
 </aside>
 
-![[_images/Untitled 1.png|Untitled]]
+![[ISD/Software Dev Fundamentals - GodotV3/_images/Untitled 1.png|Untitled]]
 
 ```
 var bulletInstanceCount = 0 # Keeps track of how many bullet instances are current
@@ -252,7 +254,7 @@ Declare another variable for the number of enemy bullet currently in the scene.
 
 </aside>
 
-![[_images/Untitled 2.png|Untitled]]
+![[ISD/Software Dev Fundamentals - GodotV3/_images/Untitled 2.png|Untitled]]
 
 ```
 var enemyBulletInstanceCount = 0
@@ -1527,14 +1529,11 @@ In your Github repository for the project, create a new file called `logic.md`.
 
 Open the file with Visual Studio Code. 
 
-<aside>
-‼️
 
-If it’s not installed, install the extension called “**Markdown Preview Mermaid Support”**. This allows you to render Markdown files, including mermaid in Visual Studio code. You can activate the preview by pressing this button.
+> [!important] If it’s not installed, install the extension called “**Markdown Preview Mermaid Support”**. This allows you to render Markdown files, including mermaid in Visual Studio code. You can activate the preview by pressing this button.
+> ![[_images/Untitled 8.png|Untitled]]
 
-![[_images/Untitled 8.png|Untitled]]
 
-</aside>
 
 Using Mermaid, write the flowchart for the various scripts at this stage.
 
@@ -1560,6 +1559,6 @@ flowchart TD
 	terminalEnd([End])
 
 ```
-```
+
 
 ![[_images/Untitled 9.png|Untitled]]

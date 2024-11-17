@@ -1,5 +1,6 @@
 ---
 tag: Robotics
+tags: archived
 ---
 # ESP32 Feather Project
 
@@ -758,7 +759,7 @@ $$
 
 </aside>
 
-![[_images/Untitled 2.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 2.png|Untitled]]
 
 [https://www.w3schools.com/js/js_json_intro.asp](https://www.w3schools.com/js/js_json_intro.asp)
 
@@ -1226,7 +1227,7 @@ Add a short delay into `loop()`. This will give the ESP32 a regular amount of ti
 
 </aside>
 
-![[_images/Untitled 1.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 1.png|Untitled]]
 
 - Adding New Functionality
 

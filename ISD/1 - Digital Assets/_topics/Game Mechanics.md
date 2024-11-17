@@ -51,3 +51,9 @@ In this exercise, you will develop a game in a short amount of time.
 	1. Expand on your explanation by adding technical details.
 5. What is the best programming language to learn? Why?
 6. What makes a game fun?
+
+# Mechanics, Dynamics and Aesthetics (MDA)
+
+An approach to game design
+
+![[MDA.pdf]]

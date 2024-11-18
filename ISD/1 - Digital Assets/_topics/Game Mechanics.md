@@ -13,7 +13,7 @@ The game development process is a complex one with many interconnected parts to 
 
 There is the coding, asset development, game testing, planning, sound engineering and many more.
 
-[https://www.youtube.com/watch?v=7C92ZCnlmQo](https://www.youtube.com/watch?v=7C92ZCnlmQo)
+![https://www.youtube.com/watch?v=7C92ZCnlmQo](https://www.youtube.com/watch?v=7C92ZCnlmQo)
 
 # Practical Exercises
 

@@ -1,5 +1,9 @@
 # Task Overview
 
+| Estimated Hours | Deliverables              | Related Task (if applicable)     |
+| --------------- | ------------------------- | -------------------------------- |
+| ==2==           | 1) Technical Document<br> | [[Task 1 - Server Installation]] |
+
 For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container.
 
 
@@ -9,9 +13,8 @@ Create a spreadsheet with data to compare using Docker containers with having a 
 
 # Project Details
 
-| Estimated Hours | Deliverables | Related Task (if applicable)     |
-| --------------- | ------------ | -------------------------------- |
-| 2               | Manual       | [[Task 1 - Server Installation]] |
+
+
 
 ## Task 2 Competencies
 

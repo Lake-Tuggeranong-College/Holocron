@@ -3,6 +3,43 @@ theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
 ---
+# Docker
+
+```mermaid 
+graph LR
+subgraph Development Environment
+    A[Student 1]
+    B[Student 2]
+    C[Student 3]
+    D[Local Git Repository 1]
+    E[Local Git Repository 2]
+    F[Local Git Repository 3]
+end
+subgraph GitHub
+    G[GitHub]
+end
+subgraph Docker Production Server
+    H[Docker Container]
+    I[Production Server]
+end
+A --> D
+B --> E
+C --> F
+D --Push Changes --> G
+E --Push Changes --> G
+F --Push Changes --> G
+G --Pull Changes --> H
+H --> I
+```
+
+Core feature of the course infrastructure.
+
+note:
+
+**This document is designed to be viewed through the Advanced Slides plugin with Obsidian.**
+
+---
+
 # What is Docker?
 
 **Docker** is a containerisation platform that allows developers to package, deploy, and run applications in isolated environments called **containers**.

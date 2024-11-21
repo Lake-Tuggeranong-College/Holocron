@@ -19,13 +19,13 @@ There are many benefits to using Docker, including:
 
 **How does Docker work?**
 
-Docker uses a technology called virtualization to create isolated containers. Virtualization allows you to run multiple operating systems and applications on a single physical machine.
+Docker uses a technology called virtualisation to create isolated containers. Virtualisation allows you to run multiple operating systems and applications on a single physical machine.
 
 When you create a Docker container, you specify the operating system and software that you want to run inside the container. Docker then creates a virtual environment for the container, complete with its own files, resources, and network configuration.
 
 **Who uses Docker?**
 
-Docker is used by a wide variety of organizations, including:
+Docker is used by a wide variety of organisations, including:
 
 - **Developers:** Docker makes it easier for developers to develop, test, and deploy their applications.
 - **System administrators:** Docker can be used to manage and deploy complex systems and applications.

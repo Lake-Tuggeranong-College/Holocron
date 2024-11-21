@@ -32,7 +32,7 @@ note:
 
 ```mermaid
 graph LR
-subgraph Host Operating System
+subgraph Host OS e.g. Windows
     A[Applications A]
     B[Libraries B]
     C[Kernel C]
@@ -46,6 +46,7 @@ C --> F
 F --> D
 F --> E
 ```
+
 
 
 note:

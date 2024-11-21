@@ -3,7 +3,175 @@ theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
 ---
-# Docker
+# Project 1
+
+Welcome to the first project.
+
+Two different, but linked tasks:
+
+- Build a Docker container
+- Write an Installation Manual for the process.
+
+---
+
+# Development Environment
+
+
+| PC/Laptop          | Chromebook        |
+| ------------------ | ----------------- |
+| Visual Studio Code | GitHub Codespaces |
+| Docker             |                   |
+| PHP                |                   |
+
+---
+
+# Website Development
+
+Software development, focusing on Website Development technologies:
+
+- PHP
+- MySQL/MariaDB
+- SQL
+- Bootstrap
+
+
+note:
+NOT website design.
+Focus on programming skills with a strong emphasis on backend development.
+
+--
+
+# Typical Sequence
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant WebServer as PHP Webserver
+    participant Database
+
+    Client->>WebServer: HTTP Request
+    WebServer->>Database: Query Database
+    Database-->>WebServer: Return Data
+    WebServer-->>Client: HTTP Response
+```
+--
+# Front-End vs Back-End Development
+
+## Front-End Development
+
+- **Focus**: User Interface (UI) and User Experience (UX)
+- **Technologies**: HTML, CSS, JavaScript
+- **Frameworks/Libraries**: React, Angular, Vue.js
+- **Responsibilities**:
+  - Designing and implementing the visual aspects of a website
+  - Ensuring responsiveness and performance
+  - Enhancing user interaction and experience
+
+--
+
+## Back-End Development
+
+- **Focus**: Server-side logic and database management
+- **Technologies**: PHP, Node.js, Python, Ruby, Java
+- **Frameworks**: Laravel, Express, Django, Ruby on Rails, Spring
+- **Responsibilities**:
+  - Managing server, application, and database
+  - Handling business logic and data processing
+  - Ensuring security and data integrity
+
+--
+
+## Key Differences
+
+| Aspect            | Front-End Development           | Back-End Development            |
+|-------------------|---------------------------------|---------------------------------|
+| **Focus**         | User Interface and Experience   | Server-Side Logic and Database  |
+| **Technologies**  | HTML, CSS, JavaScript           | PHP, Node.js, Python, Java      |
+| **Frameworks**    | React, Angular, Vue.js          | Laravel, Express, Django        |
+| **Responsibilities** | Visual Design, UX, Performance | Data Management, Business Logic, Security |
+
+--
+
+## Conclusion
+
+- **Front-End**: What users see and interact with
+- **Back-End**: Behind-the-scenes functionality and data management
+- Both are essential for a fully functional web application
+
+
+---
+# Typical Process
+
+You'll code in VS Code or Codespaces, working towards the goal.
+
+When you finish a feature, you'll commit changes to your GitHub repository.
+
+---
+
+# GitHub
+
+## What is Version Control?
+
+- **Version Control** is a system that records changes to a file or set of files over time.
+- It allows you to revert files to a previous state, compare changes over time, and collaborate with others.
+
+--
+
+## What is Git?
+
+- **Git** is a distributed version control system.
+- It allows multiple people to work on a project simultaneously without overwriting each other's changes.
+- Git tracks changes and helps in merging different versions of a project.
+
+--
+
+## What is GitHub?
+
+- **GitHub** is a web-based platform that uses Git for version control.
+- It provides a collaborative environment for developers to share and manage code.
+- GitHub hosts repositories, which are collections of files and their revision history.
+
+--
+
+## Key Concepts in Git
+
+### Commit
+
+- A **commit** is a snapshot of your repository at a specific point in time.
+- It records changes made to the files.
+- Each commit has a unique ID (hash) and a message describing the changes.
+
+--
+
+## Key Concepts in Git
+### Push
+
+- **Push** is the process of sending your committed changes to a remote repository.
+- It updates the remote repository with your local changes.
+
+--
+
+## Key Concepts in Git
+### Pull
+
+- **Pull** is the process of fetching changes from a remote repository and merging them into your local repository.
+- It ensures your local repository is up-to-date with the remote repository.
+
+--
+
+## Workflow Example
+
+1. **Clone** a repository from GitHub to your local machine.
+2. Make changes to the files in your local repository.
+3. **Commit** your changes with a descriptive message.
+4. **Push** your commits to the remote repository on GitHub.
+5. **Pull** any new changes from the remote repository to keep your local repository updated.
+
+
+--
+
+
+# Development Workflow
 
 ```mermaid 
 graph LR
@@ -36,7 +204,6 @@ Core feature of the course infrastructure.
 
 note:
 
-**This document is designed to be viewed through the Advanced Slides plugin with Obsidian.**
 
 ---
 
@@ -44,12 +211,14 @@ note:
 
 **Docker** is a containerisation platform that allows developers to package, deploy, and run applications in isolated environments called **containers**.
 
+[Docker Video](https://youtu.be/_dfLOzuIg2o?si=HSy74yep4VaeVCSp)
+
 note:
 A way to package your application and its dependencies together so that it can run on any computer, regardless of the operating system or software that is installed. 
 
 It also keeps your application isolated from other applications, so they don't interfere with each other.
 
----
+--
 # How Docker is Used
 
 - Application development and testing
@@ -64,7 +233,8 @@ note:
 - **Microservices architecture:** Supports the development and deployment of independent, reusable microservices that can communicate with each other.
 
 
----
+--
+
 # Docker and Host OS
 
 ```mermaid
@@ -92,8 +262,9 @@ note:
 - Docker creates a container that includes the application (D), its necessary libraries (E), and the Docker runtime (F).
 - The Docker runtime acts as a bridge between the container and the host OS, allowing the container to access the host's kernel and resources.
 
----
+--
 # Docker vs. Other Virtualisation
+
 
 |Feature|Docker|Virtual Machines|
 |---|---|---|
@@ -107,7 +278,7 @@ Notes:
 - Docker containers share the host's kernel, reducing overhead and improving resource utilization.
 - Virtual machines have their own isolated kernel, which incurs more resource consumption and slower startup times.
 
----
+--
 
 # What is a Kernel?
 
@@ -134,7 +305,7 @@ Without a kernel, an operating system would be like an orchestra without a condu
 - It manages hardware resources, provides low-level services, and controls the execution of applications.
 - The kernel ensures that all components work together smoothly and efficiently.
 
----
+--
 
 
 
@@ -152,7 +323,7 @@ Without a kernel, an operating system would be like an orchestra without a condu
 - Containers can be quickly stopped and started, minimising downtime during application updates.
 - Docker integrates with CI/CD pipelines, automating the build, deployment, and testing processes.
 
----
+--
 
 # Benefits of Docker
 
@@ -170,6 +341,12 @@ Without a kernel, an operating system would be like an orchestra without a condu
 - Easy deployment and scaling simplifies the deployment process.
 - Isolation of applications from the host system enhances security.
 - More efficient use of resources leads to reduced infrastructure costs.
+
+---
+
+# Task
+
+Follow the steps in the project instructions
 
 
 ---

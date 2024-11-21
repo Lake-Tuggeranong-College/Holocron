@@ -92,3 +92,21 @@ Very important you commit **and then** push changes to GitHub, otherwise changes
 echo "Hello World";
 
 ```
+
+--- 
+
+# Workshops
+
+Workshops hosted at LTC on set days
+See Schedule for details
+
+Purpose
+- Explain project
+- Cover any theory
+- Development Time
+- Written work
+
+note:
+If you don't finish the work in time, then that's homework.
+
+What you miss out on, you have to catch up.  Workplace rules.

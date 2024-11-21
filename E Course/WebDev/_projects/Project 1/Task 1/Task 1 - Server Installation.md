@@ -33,13 +33,11 @@ dev -->|deploy| prod
 
 # Presentation Slides
 
-
+[[Project 1 - Theory]]
 
 # Task
 
-1. [[Docker - What is it]] 
-2. [[Docker - Installation]]
-
+1. [[Software Installation]]
 
 
 # Marking Scheme

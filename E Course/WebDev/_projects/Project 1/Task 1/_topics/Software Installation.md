@@ -19,6 +19,19 @@ If Docker isn't installed, install it here - https://www.docker.com/products/doc
 
 ![[docker.png]]
 
+After downloading the installer, install Docker Desktop and open it to confirm it installed correctly. Accept the service agreement (after reading the terms).
+
+Use the recommended settings
+
+![[dockerSettings.png]]
+
+
+Authenticate with Docker using your schools Google credentials.
+
+![[dockerAuthentication.png]]
+
+
+
 ## Visual Studio Code
 
 Install from here

@@ -121,3 +121,11 @@ https://code.visualstudio.com/
 These steps should help you get PHP up and running on your system. If you encounter any issues or need further assistance, feel free to ask!
 
 
+# Docker Configuration
+
+
+
+## `.devcontainer` file
+
+This file configures the container so when it starts up, it automatically configures software to work for our project and environment.
+

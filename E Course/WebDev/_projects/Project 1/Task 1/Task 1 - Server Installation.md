@@ -37,7 +37,7 @@ dev -->|deploy| prod
 
 # Task
 
-1. [[Software Installation]]
+1. [[Software Installation & Configuration]]
 
 
 # Marking Scheme

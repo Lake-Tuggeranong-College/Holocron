@@ -12,7 +12,7 @@ In this course, you will be installing, configuring and managing a Windows serve
 
 This will all be managed through a Virtual Machine.
 
-![softwareVirtualbox](Cyber/2%20-%20Network%20Administration%20and%20Security/Projects/BACTA/_images/softwareVirtualbox.png)
+![[Cyber/2 - Network Administration and Security/Projects/BACTA/_images/softwareVirtualbox.png]]
 
 ## Virtualisation
 Virtualisation is a technology that allows multiple operating systems and applications to run simultaneously on a single physical server or computer. This is achieved by creating virtual machines (VMs), which are isolated containers that emulate the hardware of a physical computer. Each VM has its own dedicated resources and operates independently of other VMs running on the same physical machine.

@@ -98,7 +98,7 @@ Save the scene.
 
 Using the steps above, the enemy will end up aiming towards the closest position on the navmesh to the player. Effectively, this means the enemies will aim down towards the player's feet.
 
-![pathfindingEnemyFaceDown](pathfindingEnemyFaceDown.png)
+![[pathfindingEnemyFaceDown.png]]
 
 
 This may not be the intended outcome, as the enemy will fire projectiles in that direction. 
@@ -107,7 +107,7 @@ To change the enemy's direction, the `look_at` command needs to point to the pla
 
 To fix this, open `enemy.gd`, and create a new global variable named `root_node`.
 
-![pathfindingRootNodeVariable](pathfindingRootNodeVariable.png)
+![[pathfindingRootNodeVariable.png]]
 
 ```gdscript
 var root_node
@@ -115,18 +115,18 @@ var root_node
 
 Create (or edit) the `_ready()` function to set the `root_node` variable to the scene's parent node.
 
-![pathfindingEnemyReadyFunction](pathfindingEnemyReadyFunction.png)
+![[pathfindingEnemyReadyFunction.png]]
 
 > [!tip] This may need to be modified to match the exact specifications of your project.
 
 Update the `_physics_process()` function to find the Player node's position and update the `look_at` command.
 
-![pathfindingLookAtPlayer](pathfindingLookAtPlayer.png)
+![[pathfindingLookAtPlayer.png]]
 
 
 Your Enemy objects should now face the exact position of the player.
 
-![pathfindingLookingAtPlayer](pathfindingLookingAtPlayer.png)
+![[pathfindingLookingAtPlayer.png]]
 
 ![[commonBlocks#Commit & Push]]
 

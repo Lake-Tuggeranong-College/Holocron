@@ -9,7 +9,7 @@ tags:
 
 In GitHub Desktop, access your BACTA repository
 
-![gitHubOpenInVSCode](Cyber/2%20-%20Network%20Administration%20and%20Security/Projects/BACTA/_images/gitHubOpenInVSCode.png)
+![[Cyber/2 - Network Administration and Security/Projects/BACTA/_images/gitHubOpenInVSCode.png]]
 
 In the repository, open `manual.md`. This will be the documentation file used for assessment 2.
 
@@ -47,7 +47,7 @@ Images can be included. The image files need to be stored in the `images` direct
 
 The document can be previewed by clicking the Preview button in the toolbar.
 
-![markdownPreview](Cyber/2%20-%20Network%20Administration%20and%20Security/Projects/BACTA/_images/markdownPreview.png)
+![[Cyber/2 - Network Administration and Security/Projects/BACTA/_images/markdownPreview.png]]
 
 
 

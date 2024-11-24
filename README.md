@@ -6,18 +6,18 @@ It is suggested that you fork this repository and view it in Obsidian.
 
 Fork the repository, this creates a copy of the repository into your GitHub account. You can make changes to the repository in your account.
 
-![Fork the Repository](repoFork.png)
+![[repoFork.png|Fork the Repository]]
 
 Clone the repository to your computer using GitHub Desktop (or any method).
 
-![Clone the repository](repoClone.png)
+![[repoClone.png|Clone the repository]]
 > Note the directory that you cloned the repository into. 
 
 Open Obsidian, and open the repository folder as a vault.
 
-![Open in Obsidian](repoOpen.png)
+![[repoOpen.png|Open in Obsidian]]
 
-![Opened in Obsidian](repoOpened.png)
+![[repoOpened.png|Opened in Obsidian]]
 
 ## Update your fork
 
@@ -29,11 +29,11 @@ First, make and save changes within Obsidian.
 
 Select the files you wish to commit, add a comment to explain the changes, then press `Commit To Main`.
 
-![Commit Changes](repoGithubCommitPush.png)
+![[repoGithubCommitPush.png|Commit Changes]]
 
 Then push the changes to your GitHub repository
 
-![Push Changes to GitHub](repoGithubPush.png)
+![[repoGithubPush.png|Push Changes to GitHub]]
 
 ## Update the Main documentation
 

@@ -134,9 +134,9 @@ In the final column provide insight for each criteria, with more focus on the on
 
 </aside>
 
-![evaluationCompleted](_sharedContent/_images/evaluationCompleted.jpg)
+![[_sharedContent/_images/evaluationCompleted.jpg]]
 
-![evaluationCompleted2](_sharedContent/_images/evaluationCompleted2.jpg)
+![[_sharedContent/_images/evaluationCompleted2.jpg]]
 
 ## Project Management Evaluation
 

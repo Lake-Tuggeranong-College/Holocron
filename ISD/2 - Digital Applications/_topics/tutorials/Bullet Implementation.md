@@ -25,7 +25,7 @@ Create a new Scene (Scene→New Scene).
 
 Set the Root Node as `Area3D` by selecting Other Node and search for Area3D.
 
-![Untitled](bulletRootNode.png)
+![[bulletRootNode.png|Untitled]]
 
 Create your bullet model. You can create your own mesh, or you can follow the instructions shown below.
 
@@ -33,42 +33,42 @@ Create your bullet model. You can create your own mesh, or you can follow the in
 
 For a simple bullet shape, this can be done by creating a `CSGCylinder3D` and a `CSGSphere3D` and manipulating (move and rotate) them into a bullet shape.
 
-![Screen Shot 2022-10-04 at 9.47.38 pm.png](bulletPositionNodes.png)
+![[bulletPositionNodes.png|Screen Shot 2022-10-04 at 9.47.38 pm.png]]
 
 Ensure that both of these CSG objects have Union Operation selected.
 
-![Screen Shot 2022-10-04 at 9.45.55 pm.png](bulletUnionOperation.png)
+![[bulletUnionOperation.png|Screen Shot 2022-10-04 at 9.45.55 pm.png]]
 
 Then place them as children of a `CSGCombiner3D`. Name the new node as appropriate.
 
-![Untitled](bulletCombiner.png)
+![[bulletCombiner.png|Untitled]]
 
 Texture the object as you would normally.
 
 > [!note] Search for "Metallic texture seamless" to find a metal texture for a bullet.
 
 
-![Screen Shot 2022-10-04 at 9.51.14 pm.png](bulletTextured.png)
+![[bulletTextured.png|Screen Shot 2022-10-04 at 9.51.14 pm.png]]
 
 Attach a `CollisionShape3D` node as a child of the scene root.
 
-![Untitled](bulletCollisionShape3D.png)
+![[bulletCollisionShape3D.png|Untitled]]
 
 With the `CollisionShape3D` selected, set the Shape to be `CapsuleShape3D`.
 
-![Screen Shot 2022-10-04 at 9.55.49 pm.png](bulletSetCollisionShape.png)
+![[bulletSetCollisionShape.png|Screen Shot 2022-10-04 at 9.55.49 pm.png]]
 
 Manipulate the Capsule shape, using the transform options, so that it completely surrounds the mesh.
 
-![Untitled](bulletManipulateCapsule.png)
+![[bulletManipulateCapsule.png|Untitled]]
 
 Rename the Scene Root as `Bullet`.
 
-![Screen Shot 2022-10-04 at 9.59.07 pm.png](bulletRenameRoot.png)
+![[bulletRenameRoot.png|Screen Shot 2022-10-04 at 9.59.07 pm.png]]
 
 Save the scene as `Bullet.tscn`.
 
-![Untitled](bulletSaveScene.png)
+![[bulletSaveScene.png|Untitled]]
 
 ![[commonBlocks#Commit & Push]]
 
@@ -76,9 +76,9 @@ Save the scene as `Bullet.tscn`.
 
 Still in the Bullet scene, attach a new script to the root node (Bullet) and name it `Bullet.gd`.
 
-![Untitled](bulletAttachScript1.png)
+![[bulletAttachScript1.png|Untitled]]
 
-![Untitled](bulletAttachScript2.png)
+![[bulletAttachScript2.png|Untitled]]
 
 Add two new variables to control how fast the bullet will travel, and how much damage it will inflict on the object it collides with (if configured to take damage). 
 
@@ -113,13 +113,13 @@ Save the Script.
 
 Select the root node (Bullet) and change to the Node tab. 
 
-![Untitled](bulletChangeToNode.png)
+![[bulletChangeToNode.png|Untitled]]
 
 Double click on `body_entered`. Press **Connect.**
 
 This code will be used to detect when the bullet instance has collided with another object - when the bullet collider enters another node’s collider.
 
-![Untitled](bulletSignal.png)
+![[bulletSignal.png|Untitled]]
 
 In order to only destroy objects that need to be destroyed, this code will first check if the other collider has a function called `take_damage` in its script. This means that a script attached to the enemy objects can have that function, and will take damage, however a wall doesn't need that function, so it won’t be destroyed.
 
@@ -148,11 +148,11 @@ A potential problem with creating instances of bullets is that the player could 
 
 In the bullet scene, create a **Timer** child node of the root note
 
-![Screen Shot 2022-10-04 at 10.22.24 pm.png](bulletCreateTimerNode.png)
+![[bulletCreateTimerNode.png|Screen Shot 2022-10-04 at 10.22.24 pm.png]]
 
 Set the wait time to something appropriate, and Autostart to On.
 
-![Untitled](bulletTimerSettings.png)
+![[bulletTimerSettings.png|Untitled]]
 
 Change to the Node tab and double-click on the `timeout()` signal. 
 
@@ -163,9 +163,9 @@ Set the Receiver Method to `destroy`.
 
 Select Connect.
 
-![Untitled](bulletTimerSignal.png)
+![[bulletTimerSignal.png|Untitled]]
 
-![Untitled](bulletTimerSignalConnect.png)
+![[bulletTimerSignalConnect.png|Untitled]]
 
 Save the Bullet Scene.
 
@@ -175,11 +175,11 @@ Save the Bullet Scene.
 Before the bullet can be instantiated (spawned), you need to define where it will be instantiated. 
 Right click on the Camera3D node, add child node. Select Node3D.
 
-![bulletPlayerAddSpawnPoint](bulletPlayerAddSpawnPoint.png)
+![[bulletPlayerAddSpawnPoint.png]]
 
 Rename the node to `bulletSpawn`.
 
-![bulletPlayerRenameSpawn](bulletPlayerRenameSpawn.png)
+![[bulletPlayerRenameSpawn.png]]
 
 
 # Update Player Script
@@ -189,7 +189,7 @@ Open `Player.gd`.
 
 Add the following variables at the top of the script.
 
-![bulletPlayerVariables](bulletPlayerVariables.png)
+![[bulletPlayerVariables.png]]
 
 ```gdscript
 var bulletScene = preload("res://Scenes - Other/bullet.tscn")
@@ -200,13 +200,13 @@ var player_health = 100
 
 Update the `_ready` function to link the bulletSpawn variable to the bulletSpawn node.
 
-![bulletPlayerScriptLinkSpawnPoint](bulletPlayerScriptLinkSpawnPoint.png)
+![[bulletPlayerScriptLinkSpawnPoint.png]]
 
 ```gdscript
 bulletSpawn = get_node("Camera3D/bulletSpawn")
 ```
 
-![bulletPlayerCheckShoot](bulletPlayerCheckShoot.png)
+![[bulletPlayerCheckShoot.png]]
 
 ```gdscript
 	if Input.is_action_just_pressed("player_shoot"):
@@ -215,7 +215,7 @@ bulletSpawn = get_node("Camera3D/bulletSpawn")
 
 Add the `shoot()` function. This function creates an instance of the bullet at the `bulletSpawn` point.
 
-![bulletPlayerShoot](bulletPlayerShoot.png)
+![[bulletPlayerShoot.png]]
 
 ```gdscript
 func shoot ():

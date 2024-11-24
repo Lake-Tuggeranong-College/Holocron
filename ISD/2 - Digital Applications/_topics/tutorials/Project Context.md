@@ -8,4 +8,4 @@ You have been hired as a game developer in the company below. Your role is to *d
 ---
 
 
-![KyberSpark](_sharedContent/orgs/KyberSpark.md)
+![[_sharedContent/orgs/KyberSpark.md]]

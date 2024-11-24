@@ -21,7 +21,7 @@ These tables need to be separated to keep the data stored effectively. `shopping
 
 **Example**
 
-![shoppingListDatabaseExample](shoppingListDatabaseExample.png)
+![[shoppingListDatabaseExample.png]]
 
 ## `shopping_lists`
 
@@ -63,7 +63,7 @@ Create the table with the following fields.
 
 Open `models.py` and create the three new classes to match the database tables just created.
 
-![shoppingListModel](shoppingListModel.png)
+![[shoppingListModel.png]]
 
 Save the file.
 

@@ -17,7 +17,7 @@ For suggestions on how to structure your report, see this page:
 
 These are the details you are to cover in the topics in Assessment 2. More Specific Details will be added later in the document.
 
-![assessment2Topics](ISD/4%20-%20Project/2024S2/_images/assessment2Topics.png)
+![[ISD/4 - Project/2024S2/_images/assessment2Topics.png]]
 
 ![[Task 2#Project Overview|Task 2]]
 

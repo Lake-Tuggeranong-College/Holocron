@@ -1644,7 +1644,7 @@ The more information that is logged, the better for diagnosing issues. You could
 This extensive Logging Cheat Sheet is maintained by [Open Web Application Security Project®
  (OWASP)](https://owasp.org/)
 
-[Cheat Sheet](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Logging_Cheat_Sheet.md#event-attributes)
+[[https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Logging_Cheat_Sheet.md#event-attributes]]
 
 # Adafruit MiniTFT Updates
 

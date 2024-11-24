@@ -37,18 +37,18 @@ With RayCast3D selected, set the Enabled option to be true in the Inspector. Add
 
 Create a `MeshInstance3D` as a child of the Player root node, calling it **HitPoint**.
 
-![raycastHitPoint](raycastHitPoint.png)
+![[raycastHitPoint.png]]
 
 In the inspector, Create a new SphereMesh, and change the radius and height to 0.1 and 0.2 respectively. 
 
 Set the colour of the mesh to red (or any other colour) to make it stand out in the game.
 
-![raycastHitPointColour](raycastHitPointColour.png)
+![[raycastHitPointColour.png]]
 
 
 Move the sphere along the Z axis to represent where the raycast is aiming towards. Notice the blue line to represent the raycast.
 
-![raycastHitPointPosition](raycastHitPointPosition.png)
+![[raycastHitPointPosition.png]]
 
 Save the `Player.tscn` file.
 

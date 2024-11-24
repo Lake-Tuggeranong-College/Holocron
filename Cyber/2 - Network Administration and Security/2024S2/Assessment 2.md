@@ -7,7 +7,7 @@ tags:
 > [!important] View the assessment on Google Classroom for specific details.
 
 
-See [Sample Task](Cyber/2%20-%20Network%20Administration%20and%20Security/2024S2/Sample%20Task.md) for an example response for this assessment.
+See [[Cyber/2 - Network Administration and Security/2024S2/Sample Task.md]] for an example response for this assessment.
 
 # Technical Report
 
@@ -20,7 +20,7 @@ For suggestions on how to structure your report, see this page:
 
 These are the details you are to cover in the topics in Assessment 2. More Specific Details will be added later in the document.
 
-![assessment2Topics](Cyber/2%20-%20Network%20Administration%20and%20Security/2024S2/_images/assessment2Topics.png)
+![[Cyber/2 - Network Administration and Security/2024S2/_images/assessment2Topics.png]]
 
 
 ![[Task 2#Project Overview|Task 2]]

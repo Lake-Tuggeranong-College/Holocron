@@ -42,9 +42,9 @@ For the assessment task, you are required to include Use Case Diagrams to explai
 
 ### Examples
 
-![techWritingERD1](/_sharedContent/_images/techWritingERD1.png)
+![[/_sharedContent/_images/techWritingERD1.png]]
 
-![techWritingERD2.png](techWritingERD2.png)
+![[techWritingERD2.png]]
 
 ### How to Create your own Use Case Diagrams
 
@@ -65,7 +65,7 @@ A Use Case model can be developed by following the steps below.
 
 ### Resources
 
-[Use Case Diagram Tutorial ( Guide with Examples ) - Creately Blog](https://creately.com/blog/diagrams/use-case-diagram-tutorial/)
+[[ Guide with Examples ) - Creately Blog](https://creately.com/blog/diagrams/use-case-diagram-tutorial/|Use Case Diagram Tutorial ( Guide with Examples ) - Creately Blog]]
 
 [https://www.youtube.com/watch?v=quS39HW_bVg](https://www.youtube.com/watch?v=quS39HW_bVg)
 
@@ -87,17 +87,17 @@ If you’re developing in a Jetbrains product, PHPStorm, Pycharm etc, and you’
 
 In the database tab, right-click on the database and then select `Diagrams → Show Diagram`
 
-![techWritingDBDiagram](/_sharedContent/_images/techWritingDBDiagram.png)
+![[/_sharedContent/_images/techWritingDBDiagram.png]]
 
 Once the diagram appears, right-click on the background and choose `Export Diagram → Export to Image`.
 
 Save the Image.
 
-![techWritingDBExport](/_sharedContent/_images/techWritingDBExport.png)
+![[/_sharedContent/_images/techWritingDBExport.png]]
 
 The diagram can then be used in any document that is required.
 
-![techWritingBushtuckerERD](/_sharedContent/_images/techWritingBushtuckerERD.png)
+![[/_sharedContent/_images/techWritingBushtuckerERD.png]]
 
 ## Mindmap
 

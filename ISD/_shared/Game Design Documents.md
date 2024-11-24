@@ -26,7 +26,7 @@ Consider the enemy’s purpose (e.g. kill the player)
 
 Craft the narrative of the game based on this interaction and then add more detail to “round out” the story.
 
-[How to write a game design document (with examples)](https://gamedevbeginner.com/how-to-write-a-game-design-document-with-examples/)
+[[with examples)](https://gamedevbeginner.com/how-to-write-a-game-design-document-with-examples/|How to write a game design document (with examples)]]
 
 [From Zero to Pitch: A Walkthrough for Game Designers](https://gamedevelopment.tutsplus.com/tutorials/from-zero-to-pitch-a-walkthrough-for-game-designers--gamedev-6121)
 

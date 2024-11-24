@@ -22,11 +22,11 @@ notes:
 
 - This week's Focus - **BSBXCS303**
 
-![digitalApplicationsVETCompetencies](/WebDev/2-Digital-Applications/_topics/_images/digitalApplicationsVETCompetencies.png)
+![[/WebDev/2-Digital-Applications/_topics/_images/digitalApplicationsVETCompetencies.png]]
 
 ---
 
-![BSBXCS303](/WebDev/2-Digital-Applications/_topics/_images/BSBXCS303.png)
+![[/WebDev/2-Digital-Applications/_topics/_images/BSBXCS303.png]]
 
 ---
 
@@ -37,7 +37,7 @@ notes:
 - **U**pdate Shopping Items
 - **D**elete Shopping Items
 
-![shoppingListDatabaseExample](shoppingListDatabaseExample.png)
+![[shoppingListDatabaseExample.png]]
 
 ---
 # Practical
@@ -46,7 +46,7 @@ notes:
 - Create model
 - Create form
 
-Follow instructions in [Shopping List Part 1](/WebDev/_shared/Projects/ANH/shoppingListPart1.md)
+Follow instructions in [[/WebDev/_shared/Projects/ANH/shoppingListPart1.md|Shopping List Part 1]]
 
 ---
 

@@ -3,7 +3,7 @@ tags:
   - Cyber
   - yr11
 ---
->[!tip] This is an example of how to complete sections for [Assessment 2](Cyber/2%20-%20Network%20Administration%20and%20Security/2024S2/Assessment%202.md)
+>[[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md|!tip]]
 
 
 

@@ -8,10 +8,10 @@ Consider the following un’normalised’ data from the website.
 
 | First Name | Second Name | Address         | Email Address                           | Phone Number     | Darth Vader Helmet | Grogu Plush | ROTJ Jigsaw | Aftermath | Aftermath Squadron |
 | ---------- | ----------- | --------------- | --------------------------------------- | ---------------- | ------------------ | ----------- | ----------- | --------- | ------------------ |
-| Ryan       | Cather      | 123 Fake St     | [fake@email.com](mailto:fake@email.com) | 0412 123 123     | 1                  | 0           | 0           | 0         | 0                  |
-| Ryan       | Cather      | 123 Fake St     | [fake@email.com](mailto:fake@email.com) | 0412 123 123     | 0                  | 2           | 0           | 0         | 0                  |
-| Ryan       | Cather      | 123 Fake Street | [fake@email.com](mailto:fake@email.com) | 0412 123 123     | 0                  | 0           | 0           | 0         | 1                  |
-| Ty         | Yorrick     | 99 Nine Ave     | [ty@yorrick.com](mailto:ty@yorrick.com) | 0111223111222141 | 0                  | 11          | 0           | 0         | 0                  |
+| Ryan       | Cather      | 123 Fake St     | [[mailto:fake@email.com|fake@email.com]] | 0412 123 123     | 1                  | 0           | 0           | 0         | 0                  |
+| Ryan       | Cather      | 123 Fake St     | [[mailto:fake@email.com|fake@email.com]] | 0412 123 123     | 0                  | 2           | 0           | 0         | 0                  |
+| Ryan       | Cather      | 123 Fake Street | [[mailto:fake@email.com|fake@email.com]] | 0412 123 123     | 0                  | 0           | 0           | 0         | 1                  |
+| Ty         | Yorrick     | 99 Nine Ave     | [[mailto:ty@yorrick.com|ty@yorrick.com]] | 0111223111222141 | 0                  | 11          | 0           | 0         | 0                  |
 
 This data has some issues and needs to be normalised.
 

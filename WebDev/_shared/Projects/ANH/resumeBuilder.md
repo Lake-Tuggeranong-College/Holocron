@@ -11,7 +11,7 @@ Before modifying the rest of the code, create the two links that will be used th
 
 Open `base.html` in the templates directory. Add the two links below into the section of code for users who are logged in.
 
-![resumeNavbar](resumeNavbar.png)
+![[resumeNavbar.png]]
 
 ```html
 <a class="nav-link" href="/resumeBuild">Build Resume</a>
@@ -46,11 +46,11 @@ The database will contain a small number of fields.
 | `experienceWork`        | Boolean, if `true`, then it was a job. If `false`, then it was education. |
 The Entity Relationship Diagram (ERD) would look like this.
 
-![resumeERD](resumeERD.png)
+![[resumeERD.png]]
 
 Create the table by opening the Database view, and clicking on the `+` to create a new table.
 
-![todoNewTable](todoNewTable.png)
+![[todoNewTable.png]]
 
 Enter the following SQL and run.
 
@@ -68,12 +68,12 @@ CREATE TABLE resume_experience(
 
 Your table should be created in the database.
 
-![resumeTableCreated](resumeTableCreated.png)
+![[resumeTableCreated.png]]
 ## Model
 
 Open `models.py` and create a new class entry to match the table just created.
 
-![resumeModelDefine](resumeModelDefine.png)
+![[resumeModelDefine.png]]
 
 ```python
 class ResumeExperience(db.Model):
@@ -88,7 +88,7 @@ class ResumeExperience(db.Model):
 
 Open `app.py` and add the new class to the import statement.
 
-![resumeImportModel](resumeImportModel.png)
+![[resumeImportModel.png]]
 
 Save the file.
 
@@ -110,7 +110,7 @@ Save the file.
 
 Open `app.py` and import the newly created form.
 
-![resumeImportForm](resumeImportForm.png)
+![[resumeImportForm.png]]
 
 Save the file.
 
@@ -120,7 +120,7 @@ Create a new route to build the resume.
 
 > [!tip] This code will generate errors at this stage, as the variables haven't been defined yet.
 
-![resumeBuildNewRoute](resumeBuildNewRoute.png)
+![[resumeBuildNewRoute.png]]
 
 ```python
 @app.route("/resumeBuild", methods=["POST", "GET"])
@@ -130,7 +130,7 @@ def resumeBuild():
 
 To prepare for displaying the page, you will need to first load the `ResumeForm` form.
 
-![resumeLoadForm](resumeLoadForm.png)
+![[resumeLoadForm.png]]
 
 ```python
 form=ResumeForm()
@@ -138,7 +138,7 @@ form=ResumeForm()
 
 And then load any resume entries made by the user (if any).
 
-![resumeLoadCurrentDetails](resumeLoadCurrentDetails.png)
+![[resumeLoadCurrentDetails.png]]
 
 ```python
 resume_details = ResumeExperience.query.filter_by(userID=current_user.id).all()
@@ -148,7 +148,7 @@ The HTML page will not only display the current resume entries, but it will also
 
 In order for this to occur, the code needs to test for when the user submits the form - this is done through a `POST` request. This `if` statement will be executed when the user presses submit. 
 
-![resumePOSTTest](resumePOSTTest.png)
+![[resumePOSTTest.png]]
 
 For each form field, the code will get the form data and store it in a variable. Then it will create a new database record, and commit that record back to the database.
 
@@ -157,7 +157,7 @@ Note the code highlighted with the green square is one line of code. This line i
 > [!important] The line of code `experienceWork=False if request.form.get('experienceWork') == None else True` is a little complex. This focuses on the value of a check box in the form. If the checkbox is ticked, then it stores `True` into the database, indicating the entry is a Work Experience entry. If the checkbox is not ticked (i.e. the `experienceWork == None`, then it will write `False` into the database.)
 
 
-![resumeNewEntry](resumeNewEntry.png)
+![[resumeNewEntry.png]]
 
 ```python
 if request.method == "POST":
@@ -168,7 +168,7 @@ if request.method == "POST":
 
 The final route code should appear as:
 
-![resumeBuildFinalRoute](resumeBuildFinalRoute.png)
+![[resumeBuildFinalRoute.png]]
 ## Interface - HTML
 
 The last step in this stage of the development is to build the HTML template to:
@@ -177,7 +177,7 @@ The last step in this stage of the development is to build the HTML template to:
 
 In the `templates` folder, create a new file called `resumeBuild.html`.
 
-![resumeNewTemplate](resumeNewTemplate.png)
+![[resumeNewTemplate.png]]
 
 Replace any default code with the following. This includes some CSS to help display the resume entries - each alternating line in the *table* will have a different background colour. This is done to make it easier to distinguish between each line. 
 
@@ -215,7 +215,7 @@ Replace any default code with the following. This includes some CSS to help disp
 
 Edit the `rowTwoColTwoContents` section to create a table structure, using Bootstraps `container-fluid` class.
 
-![resumeBuildTemplateHeadings](resumeBuildTemplateHeadings.png)
+![[resumeBuildTemplateHeadings.png]]
 
 ```html
 <div class="container-fluid">
@@ -243,7 +243,7 @@ Instead of outputting a `True` or `False` for the Work field, a check is done. I
 
 >[!tip] You may notice that the `experienceTitle` has been defined as a link. This is done to link to the edit page, which will be created later.
 
-![resumeBuildTemplateLoop](resumeBuildTemplateLoop.png)
+![[resumeBuildTemplateLoop.png]]
 
 ```python
 {% for resume in resume_data %}
@@ -268,13 +268,13 @@ Save the file.
 
 At this stage, the site should be able to display a page (with nothing on it). It will show the structure of the page.
 
-![resumeBuildFirstExample](resumeBuildFirstExample.png)
+![[resumeBuildFirstExample.png]]
 
 ## Add the form
 
 **After** the `{% endfor %}` line, add the following code. This displays the form for the user to add a new entry in the database.
 
-![resumeBuildTemplateForm](resumeBuildTemplateForm.png)
+![[resumeBuildTemplateForm.png]]
 
 ```html
 <div class="container-fluid">
@@ -315,13 +315,13 @@ Save the file.
 
 The Resume Build page should load again, however now with a form.
 
-![resumeBuildTemplateFormExample](resumeBuildTemplateFormExample.png)
+![[resumeBuildTemplateFormExample.png]]
 
 Create a new Entry, and press `Add/Update Experience`. The new field should appear on the page. 
 
 Test creating new entries, for both Work and Education.
 
-![resumeBuildTemplateFormEntry](resumeBuildTemplateFormEntry.png)
+![[resumeBuildTemplateFormEntry.png]]
 
 ![[commonBlocks#Commit & Push]]
 # Edit Resume Entries
@@ -339,13 +339,13 @@ for example:
 
 The goal is to have a form load with the current details, the user can edit the details and submit to update the database. The page will look like
 
-![resumeEditPreview](resumeEditPreview.png)
+![[resumeEditPreview.png]]
 
 ## Interface - HTML
 
 Create a new file in the `templates` directory called `resumeEdit.html`.
 
-![resumeEditTemplateFile](resumeEditTemplateFile.png)
+![[resumeEditTemplateFile.png]]
 
 The template code for this page will be very similar to the code to create new entries on `resumeBuild.html`. 
 
@@ -433,7 +433,7 @@ Create the route for editing the resume entries. This code creates the route, an
 
 Additionally, it loads the details of the resume entry identified by the `<resume_id>` in the URL. These details are sent to the template through the `resume_data` variable so the form can pre-populate the data.
 
-![resumeEditRouteV1](resumeEditRouteV1.png)
+![[resumeEditRouteV1.png]]
 
 ```python
 @app.route("/resume_edit/<resume_id>", methods=["POST", "GET"])
@@ -458,7 +458,7 @@ Step1(User Presses 'Add/Update Experience')
 
 Update the code to perform these steps.
 
-![resumeEditRouteV2](resumeEditRouteV2.png)
+![[resumeEditRouteV2.png]]
 
 ```python
 if request.method == "POST":
@@ -479,7 +479,7 @@ Save the file.
 
 Run the site and edit a record! Test all the fields and confirm that each field gets updated.
 
-![resumeEditDemo](resumeEditDemo.gif)
+![[resumeEditDemo.gif]]
 
 # Resume Display
 
@@ -493,7 +493,7 @@ The final step in the resume-building process is creating a dedicated page on yo
 
 Create a new template in the `templates` directory. Name the file `resumeDisplay.html`.
 
-![resumeDisplayFile](resumeDisplayFile.png)
+![[resumeDisplayFile.png]]
 
 
 Add the default code to the file.
@@ -523,7 +523,7 @@ At this stage, the page will only contain two sections, one for the Work experie
 
 Each section will involve looping over the data and displaying each field. In the first stage, the data will just be 'dumped' on the page. Later, the interface will be improved.
 
-![resumeDisplayTemplateData](resumeDisplayTemplateData.png)
+![[resumeDisplayTemplateData.png]]
 
 ```jinja2
 <h2>Work Experience</h2>
@@ -554,7 +554,7 @@ Save the file.
 
 The route for this is relatively simple. The route loads the user's resume details, first only the work experience, and then the education experience. The two variables are then sent separately to the template.
 
-![resumeDisplayRoute](resumeDisplayRoute.png)
+![[resumeDisplayRoute.png]]
 
 ```python
 @app.route("/resumeDisplay")
@@ -573,7 +573,7 @@ Save the file.
 
 Run the site and access the page to display your resume. The page will be rendered similar to this.
 
-![resumeDisplayExample](resumeDisplayExample.png)
+![[resumeDisplayExample.png]]
 
 
 # Resume Display Improvement
@@ -584,7 +584,7 @@ Use the official [bootstrap documentation](https://getbootstrap.com/docs/5.3/get
 
 One such method would be to use bootstrap's [cards](https://getbootstrap.com/docs/5.3/components/card/) to display each entry. This could be rendered like this:
 
-![resumeDisplayCardExample](resumeDisplayCardExample.png)
+![[resumeDisplayCardExample.png]]
 
 
-![resumeDisplayCardExample2](resumeDisplayCardExample2.png)
+![[resumeDisplayCardExample2.png]]

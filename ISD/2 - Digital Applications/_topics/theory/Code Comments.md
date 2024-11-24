@@ -19,7 +19,7 @@ Outputs:
 
 ## Example
 
-![commentsFunction](commentsFunction.png)
+![[commentsFunction.png]]
 
 # Inline Comments
 
@@ -27,7 +27,7 @@ The other type of code comments is "inline" comments. These are used to explain 
 
 ## Example
 
-![commentsInline](commentsInline.png)
+![[commentsInline.png]]
 
 
 # MORE INFORMATION

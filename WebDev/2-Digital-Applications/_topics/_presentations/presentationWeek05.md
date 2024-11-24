@@ -12,7 +12,7 @@ You'll add:
 - User Photos
 - User Contact Details
 
-![resumeImprovementsFinal](resumeImprovementsFinal.png)
+![[resumeImprovementsFinal.png]]
 
 ---
 

@@ -81,7 +81,7 @@ Consider how changes and additions iterate on the project. The development proce
 The use of screenshots and diagrams is highly encouraged in order to show how the components of the project come together and how testing was done. For example you could include a diagram that illustrates how you new additions were implemented. You could also include screenshots of what the product (games, website, etc.) looks like after an example of implementation.
 
 As an example this kind of description is a bare minimum starting point but it utilises a flow chart diagram of the development process very well:
-![assessmentExampleDevProcess](/_sharedContent/_images/assessmentExampleDevProcess.png)
+![[/_sharedContent/_images/assessmentExampleDevProcess.png]]
 If I was providing feedback on this development process I would be advising the student to include an example of how this process was applied in the creation of their project and asking for them to reflect upon alternative implementation tools/processes.
 
 Once you have identified, described, and explained how the development process works in your project, choose and analyse how this process was used to create a component or two of your project.

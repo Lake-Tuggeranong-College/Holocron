@@ -26,18 +26,18 @@ tags:
 > [!info]- Week 1
 > ![[semesterCalendarS2#School Events - Week 1]]
 > #### Class Tasks
-> - [ ] [CloneHolocron](_sharedContent/CloneHolocron.md)
-> - [ ] [Technical Analysis - First Person Shooters](ISD/2%20-%20Digital%20Applications/_topics/theory/Technical%20Analysis%20-%20First%20Person%20Shooters.md)
-> - [ ] [Project Timeline](ISD/2%20-%20Digital%20Applications/_topics/theory/Project%20Timeline.md)
+> - [[_sharedContent/CloneHolocron.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/theory/Technical Analysis - First Person Shooters.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/theory/Project Timeline.md| ]]
 > #### Theory
-> - [ ] [3D Worlds](ISD/2%20-%20Digital%20Applications/_topics/theory/3D%20Worlds.md)
-> - [ ] [Code Comments](ISD/2%20-%20Digital%20Applications/_topics/theory/Code%20Comments.md)
-> - [ ] [Project Context](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Project%20Context.md)
+> - [[ISD/2 - Digital Applications/_topics/theory/3D Worlds.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/theory/Code Comments.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Project Context.md| ]]
 > #### Practical
-> - [ ] [Accept FPS Assignment](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Accept%20FPS%20Assignment.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Accept FPS Assignment.md| ]]
 > - [ ] Open Game in Godot 4.2.2
-> - [ ] [Building The Environment](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Building%20The%20Environment.md)
-> - [ ] [Reusable Assets](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Reusable%20Assets.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Building The Environment.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Reusable Assets.md| ]]
 
 > [!info]- Week 2
 > ![[semesterCalendarS2#School Events - Week 2]] 
@@ -45,15 +45,15 @@ tags:
 > N/A
 > #### Theory
 >- [ ] [[ISD/2 - Digital Applications/_topics/theory/Vectors|Vectors]]
->- [ ] [State Design Pattern](ISD/2%20-%20Digital%20Applications/_topics/theory/State%20Design%20Pattern.md)
+>- [[ISD/2 - Digital Applications/_topics/theory/State Design Pattern.md| ]]
 > #### Practical
-> - [ ] [First Person Controller](ISD/2%20-%20Digital%20Applications/_topics/tutorials/First%20Person%20Controller.md)
-> - [ ] [Bullet Implementation](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Bullet%20Implementation.md) 
+> - [[ISD/2 - Digital Applications/_topics/tutorials/First Person Controller.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Bullet Implementation.md| ]] 
 
 > [!danger]- Week 3
 > ![[semesterCalendarS2#School Events - Week 3]]
 > 
-> [Assessment Assistance](Task1.md)
+> [[Task1.md|Assessment Assistance]]
 > 
 > **Assessment Week**
 > You will be given your assessment/topic Monday morning. The task will be due Friday 11:59pm.
@@ -65,7 +65,7 @@ tags:
 > #### Class Tasks
 > N/A
 > #### Theory
-> - [ ] [Pathfinding](ISD/2%20-%20Digital%20Applications/_topics/theory/Pathfinding.md)
+> - [[ISD/2 - Digital Applications/_topics/theory/Pathfinding.md| ]]
 > #### Practical
 > - [ ] [[ISD/2 - Digital Applications/_topics/tutorials/Enemy|Enemy]]
 > - [ ] [[ISD/2 - Digital Applications/_topics/tutorials/Enemy Pathfinding|Enemy Pathfinding]]
@@ -88,7 +88,7 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Objects Taking Damage](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Objects%20Taking%20Damage.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Objects Taking Damage.md| ]]
 
 > [!info]- Week 7
 > ![[semesterCalendarS2#School Events - Week 7]]
@@ -97,7 +97,7 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Points](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Points.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Points.md| ]]
 
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
@@ -108,29 +108,29 @@ tags:
 > #### Theory 
 > N/A
 > #### Practical
-> - [ ] [Win Conditions](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Win%20Conditions.md)
-> - [ ] [Lose Conditions](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Lose%20Conditions.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Win Conditions.md| ]]
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Lose Conditions.md| ]]
 
 > [!info]- Week 9
 > ![[semesterCalendarS2#School Events - Week 9]]
 > #### Class Tasks
 > - [ ] [ VET Competencies](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
 > 	- This week we will begin working through a VET Competency as well as working on Assessment documentation and the finishing touches of your games. You should aim to have this competency fully complete at the end of Week 10. Completing the competency is really simple and just takes a bit of time. Jacob will be going over how to complete the competency in great detail in Mondays class.
-> - [ ] [Assessment 2](ISD/2%20-%20Digital%20Applications/2024S2/Assessment%202.md)
+> - [[ISD/2 - Digital Applications/2024S2/Assessment 2.md| ]]
 > 	- You should have the development process section drafted and ready to submit at the end of this week. Jacob will be reviewing and providing feedback on this section.
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Player Health](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Player%20Health.md)
+> - [[ISD/2 - Digital Applications/_topics/tutorials/Player Health.md| ]]
 
 > [!info]- Week 10
 > ![[semesterCalendarS2#School Events - Week 10]]
 > #### Class Tasks
-> - [ ] [VET](sharedContent/VET.md)
+> - [[sharedContent/VET.md| ]]
 > 	- Info about VET
 > - [ ] [VET Competency](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
 > 	- Complete this VET Competency by end of this week
->  - [ ] [Assessment 2](Robotics/4%20-%20Project/2024S2/Assessment%202.md)
+>  - [[Robotics/4 - Project/2024S2/Assessment 2.md| ]]
 > 	- You should be able to access the feedback on your development process section now. Review these and have a look at the feedback.
 > 	- The assessment documentation scaffold page has been populated for each section now. These should make it very easy to write up your assessment well before the due date. The whole document is due in week 12. With 3 weeks left (not including the school holidays) you have plenty of time to work through the linked page and write up your assessment documentation.
 > #### Theory
@@ -168,7 +168,7 @@ tags:
 
 > [!danger]- Week 13
 > ![[semesterCalendarS2#School Events - Week 13]]
-> - [ ] [Assessment 2](ISD/2%20-%20Digital%20Applications/2024S2/Assessment%202.md)
+> - [[ISD/2 - Digital Applications/2024S2/Assessment 2.md| ]]
 > **Assessment Due**
 > The task will be due Friday 11:59pm.
 > Worth 50%.
@@ -177,7 +177,7 @@ tags:
 > [!info]- Week 14
 > ![[semesterCalendarS2#School Events - Week 14]]
 > #### Class Tasks
-> - [ ] [Interview Preparation](ISD/2%20-%20Digital%20Applications/_topics/theory/Interview%20Preparation.md)
+> - [[ISD/2 - Digital Applications/_topics/theory/Interview Preparation.md| ]]
 > #### Theory
 > N/A
 > #### Practical
@@ -213,7 +213,7 @@ tags:
 | Unit Outline     | Assessments                                                                                     |
 | ---------------- | ----------------------------------------------------------------------------------------------- |
 | Google Classroom | Assessment 1 - 25 %                                                                             |
-|                  | [Assessment 2](ISD/2%20-%20Digital%20Applications/2024S2/Assessment%202.md) - 50 % |
+|                  | [[ISD/2 - Digital Applications/2024S2/Assessment 2.md]] - 50 % |
 |                  | [[ISD/2 - Digital Applications/2024S2/Assessment 3\|Assessment 3]] - 25 %                       |
 
 ![[commonBlocks#Contact Details]]

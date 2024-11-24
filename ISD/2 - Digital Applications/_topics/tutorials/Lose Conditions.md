@@ -32,7 +32,7 @@ No timer is currently implemented in the game, however, this is easy to include.
 ## Option 1: Pure Code
 One of the easiest methods is a similar approach to how it was implemented in Space Invaders, through a `while` loop in the main game script.
 
-![countDownTimer](countDownTimer.png)
+![[countDownTimer.png]]
 
 ```gdscript
 var current_timer = 50
@@ -58,22 +58,22 @@ func _ready():
 
 First, add a `Timer` child node to the main game scene.
 
-![countdownTimerNode](countdownTimerNode.png)
+![[countdownTimerNode.png]]
 
 Set the `Wait Time` setting to however many seconds you wish the game to run for. The timer will start at that time, and count down.
 Set the `One Shot` and `Autostart` settings to **On**.
 
-![countdownTimerInspector](countdownTimerInspector.png)
+![[countdownTimerInspector.png]]
 
 
 Change to the Node tab for the Timer and double click on the `timeout()` signal. Accept the default settings and click Connect.
 
-![countTimerSignalSettings](countTimerSignalSettings.png)
+![[countTimerSignalSettings.png]]
 
 
 This will create the function for you. Add the code to change to the Lose Scene once the timer has finished. You may also wish to add code to update the Countdown Timer on the HUD for the player to see.
 
-![countdownTimerCode](countdownTimerCode.png)
+![[countdownTimerCode.png]]
 
 ```gdscript
 func _process(delta):
@@ -91,5 +91,5 @@ func _on_timer_timeout():
 
 # No Health
 
-This is covered in [Player Health](ISD/2%20-%20Digital%20Applications/_topics/tutorials/Player%20Health.md).
+This is covered in [[ISD/2 - Digital Applications/_topics/tutorials/Player Health.md]].
 

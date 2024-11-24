@@ -70,9 +70,9 @@ The rule of thumb for academic reports: Only state a fact with references.
 ## Example Ministerial Briefs
 
 
-![2019-Quarter-2-Minister-for-Police-and-Emergency-Services](2019-Quarter-2-Minister-for-Police-and-Emergency-Services.pdf) [^1]
+![[2019-Quarter-2-Minister-for-Police-and-Emergency-Services.pdf]] [^1]
 
-![2019-Quarter-2-Minister-for-Corrections-and-Justice-Health](2019-Quarter-2-Minister-for-Corrections-and-Justice-Health.pdf) [^1]
+![[2019-Quarter-2-Minister-for-Corrections-and-Justice-Health.pdf]] [^1]
 
 
 
@@ -81,6 +81,6 @@ The rule of thumb for academic reports: Only state a fact with references.
 
 ## Example Reports
 
-![Task 1 - Research & Development](Task%201%20-%20Research%20&%20Development.pdf)
+![[Task 1 - Research & Development.pdf]]
 
-![Digital Assets_ Tutorial Assignment 25_03_22](Digital%20Assets_%20Tutorial%20Assignment%2025_03_22.pdf)
+![[Digital Assets_ Tutorial Assignment 25_03_22.pdf]]

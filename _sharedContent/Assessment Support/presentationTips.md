@@ -9,7 +9,7 @@ The goal is to minimise the amount of clutter on each slide and have an impactfu
 
 [The 6 by 6 Rule for Presentations Explained | Presentation Training Institute](https://www.presentationtraininginstitute.com/the-6-by-6-rule-for-presentations-explained/)
 
-![presentationText](_sharedContent/_images/presentationText.png)
+![[_sharedContent/_images/presentationText.png]]
 
 Any additional information (such as references or specifics) can be put in the slide notes.
 
@@ -17,7 +17,7 @@ Any additional information (such as references or specifics) can be put in the s
 
 Use graphics to add to the story.
 
-![presentationGraphics](_sharedContent/_images/presentationGraphics.png)
+![[_sharedContent/_images/presentationGraphics.png]]
 
 [https://www.student.unsw.edu.au/design-tips](https://www.student.unsw.edu.au/design-tips)
 

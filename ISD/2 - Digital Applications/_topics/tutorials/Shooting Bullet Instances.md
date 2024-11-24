@@ -18,13 +18,13 @@ First, the code will need to know **where** to create the bullet instances.
 
 Open `Player.tscn` and create a `Node3D` node as a child of the Camera. Name it `bulletSpawn`.  
 
-![Untitled](bulletShooting-bulletSpawn.png)
+![[bulletShooting-bulletSpawn.png|Untitled]]
 
 In 3d mode, move `bulletSpawn` to be in front of the camera. 
 
 > [!note] It might take some experimentation to make it look correct during game play. You may need to change the position a number of times.
 
-![Untitled](bulletShooting-bulletSpawnPosition.png)
+![[bulletShooting-bulletSpawnPosition.png|Untitled]]
 
 Open `Player.gd` and add the code to preload the bullet and configure the spawn point.
 
@@ -58,7 +58,7 @@ Create a new function - `shoot()`- which will run when the shoot input is detect
 > [!note] Change `/Root/Doom` to the name of your root node in the game scene. E.g. `/Root/MainGame`
 
 
-![Untitled](bulletShooting-RootGame.png)
+![[bulletShooting-RootGame.png|Untitled]]
 
 ![[bulletShooting-ScriptShoot.png]]
 ```gdscript

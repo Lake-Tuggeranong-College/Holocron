@@ -16,7 +16,7 @@ Use the project goals and objectives to guide this list.
 
 Here is an example from an assessment from a previous year.
 
-![evaluationCompleted3](_sharedContent/_images/evaluationCompleted3.png)
+![[_sharedContent/_images/evaluationCompleted3.png]]
 
 On the left, there is a list of **goals**, as headings. The **notes** column on the right lists the details under which that goal will be evaluated, or the details of what that Goal covers. The **status** column is one that would have been filled out at the end of the project.
 

@@ -12,7 +12,7 @@ The ultimate goal of UCD is to create products and services that meet the specif
 
 ![https://www.youtube.com/watch?v=dKziavNRuis](https://www.youtube.com/watch?v=dKziavNRuis)
 
-![userCentredDesign](_sharedContent/_images/userCentredDesign.png)
+![[_sharedContent/_images/userCentredDesign.png]]
 
 ![https://www.youtube.com/watch?v=WHo3QkaArCc](https://www.youtube.com/watch?v=WHo3QkaArCc)
 
@@ -39,7 +39,7 @@ Decide who will be using your product. Using the supplied Persona template, crea
 
 You can find more information regarding personas here.
 
-[Personas](_sharedContent/Design/Personas.md)
+[[_sharedContent/Design/Personas.md]]
 
 ### Define the Scope
 

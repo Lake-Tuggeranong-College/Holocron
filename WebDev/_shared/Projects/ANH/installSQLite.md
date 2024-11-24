@@ -11,4 +11,4 @@ Once the project is open, go to the Terminal Tab and enter the following command
 
 Hitting enter after each command.
 
-![sqliteInstall](sqliteInstall.png)
+![[sqliteInstall.png]]

@@ -21,37 +21,37 @@ It shows the folder structure, a brief overview on the HTML files, the static fo
 
 Open Pycharm, and you’re greeted with the Project Browser. Click New Project in the top of the window.
 
-![Screen Shot 2022-06-15 at 10.45.46 am.png](configCreateProject.png)
+![[configCreateProject.png|Screen Shot 2022-06-15 at 10.45.46 am.png]]
 
 Choose the Flask option on the lefthand side, and then set the location of the project to be stored on the local drive.
 
 Click Ok.
 
-![Screen Shot 2022-06-15 at 10.46.41 am.png](_images/Screen_Shot_2022-06-15_at_10.46.41_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.46.41_am.png|Screen Shot 2022-06-15 at 10.46.41 am.png]]
 
 The configured project opens and you’re presented with a barebones Flask project.
 
-![Screen Shot 2022-06-15 at 10.50.21 am.png](_images/Screen_Shot_2022-06-15_at_10.50.21_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.50.21_am.png|Screen Shot 2022-06-15 at 10.50.21 am.png]]
 
 You can test the project by clicking the Run button in the top toolbar, and then clicking the link in the Console at the bottom.
 
-![Screen Shot 2022-06-15 at 10.51.10 am.png](_images/Screen_Shot_2022-06-15_at_10.51.10_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.51.10_am.png|Screen Shot 2022-06-15 at 10.51.10 am.png]]
 
-![Screen Shot 2022-06-15 at 10.53.03 am.png](_images/Screen_Shot_2022-06-15_at_10.53.03_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.53.03_am.png|Screen Shot 2022-06-15 at 10.53.03 am.png]]
 
 ## Configure Python Environment (Requirements.txt)
 
 Right click on your project name, choose New→ File.
 
-![Screen Shot 2022-06-15 at 10.20.10 am.png](_images/Screen_Shot_2022-06-15_at_10.20.10_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.20.10_am.png|Screen Shot 2022-06-15 at 10.20.10 am.png]]
 
 Enter `Requirements.txt` as the file name. The spelling is important - if you’re not sure, copy and paste the name.
 
-![Screen Shot 2022-06-15 at 10.20.19 am.png](_images/Screen_Shot_2022-06-15_at_10.20.19_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.20.19_am.png|Screen Shot 2022-06-15 at 10.20.19 am.png]]
 
 If Pycharm asks you to add the file to Git, then click Ok.
 
-![Screen Shot 2022-06-15 at 10.20.25 am.png](_images/Screen_Shot_2022-06-15_at_10.20.25_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.20.25_am.png|Screen Shot 2022-06-15 at 10.20.25 am.png]]
 
 Enter the following text into the file and Save the file.
 
@@ -92,15 +92,15 @@ Click Install Requirements on this popup.
 
 This may take a while to install.
 
-![mr-bean-waiting.gif](_images/mr-bean-waiting.gif)
+![[_images/mr-bean-waiting.gif|mr-bean-waiting.gif]]
 
-![Screen Shot 2022-06-15 at 10.23.17 am.png](_images/Screen_Shot_2022-06-15_at_10.23.17_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.23.17_am.png|Screen Shot 2022-06-15 at 10.23.17 am.png]]
 
-![Screen Shot 2022-06-15 at 10.34.28 am.png](_images/Screen_Shot_2022-06-15_at_10.34.28_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.34.28_am.png|Screen Shot 2022-06-15 at 10.34.28 am.png]]
 
 Eventually, it will show a popup indicating that all the packages were installed successfully.
 
-![Screen Shot 2022-06-15 at 10.35.55 am.png](_images/Screen_Shot_2022-06-15_at_10.35.55_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.35.55_am.png|Screen Shot 2022-06-15 at 10.35.55 am.png]]
 
 <aside>
 ‼️ At this stage, the project is only stored locally. As you would be aware this is not ideal, so the next step involves publishing the project to Github.
@@ -111,11 +111,11 @@ Eventually, it will show a popup indicating that all the packages were installed
 
 In Pycharm, choose “Enable Version Control Integration” under the VCS menu
 
-![Screen Shot 2022-06-15 at 10.57.28 am.png](_images/Screen_Shot_2022-06-15_at_10.57.28_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.57.28_am.png|Screen Shot 2022-06-15 at 10.57.28 am.png]]
 
 Leave the system as Git and click Ok.
 
-![Screen Shot 2022-06-15 at 10.57.32 am.png](_images/Screen_Shot_2022-06-15_at_10.57.32_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.57.32_am.png|Screen Shot 2022-06-15 at 10.57.32 am.png]]
 
 After a moment, Pycharm will create a popup along the bottom indicating that the repository has been created. 
 
@@ -124,7 +124,7 @@ After a moment, Pycharm will create a popup along the bottom indicating that the
 
 </aside>
 
-![Screen Shot 2022-06-15 at 10.58.04 am.png](_images/Screen_Shot_2022-06-15_at_10.58.04_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.58.04_am.png|Screen Shot 2022-06-15 at 10.58.04 am.png]]
 
 Add the `app.py` and requirements.txt files to the repository. Right click on the files and choose Git→ Add.
 
@@ -135,25 +135,25 @@ Do the same for the static and templates folders.
 
 </aside>
 
-![Screen Shot 2022-06-15 at 10.58.51 am.png](_images/Screen_Shot_2022-06-15_at_10.58.51_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.58.51_am.png|Screen Shot 2022-06-15 at 10.58.51 am.png]]
 
-![Screen Shot 2022-06-15 at 11.01.57 am.png](_images/Screen_Shot_2022-06-15_at_11.01.57_am.png)
+![[_images/Screen_Shot_2022-06-15_at_11.01.57_am.png|Screen Shot 2022-06-15 at 11.01.57 am.png]]
 
 Commit the changes with “init” as the message.
 
-![Screen Shot 2022-06-15 at 10.59.06 am.png](_images/Screen_Shot_2022-06-15_at_10.59.06_am.png)
+![[_images/Screen_Shot_2022-06-15_at_10.59.06_am.png|Screen Shot 2022-06-15 at 10.59.06 am.png]]
 
 Now it’s time to publish to Github.
 
 Under the Git (previously VCS) menu, choose Git→Share Project on Github.
 
-![Screen Shot 2022-06-15 at 11.04.57 am.png](_images/Screen_Shot_2022-06-15_at_11.04.57_am.png)
+![[_images/Screen_Shot_2022-06-15_at_11.04.57_am.png|Screen Shot 2022-06-15 at 11.04.57 am.png]]
 
 Accept the default there and click Share.
 
 After a moment Pycharm will inform you that the project has been uploaded to Github.
 
-![Screen Shot 2022-06-15 at 11.04.42 am.png](_images/Screen_Shot_2022-06-15_at_11.04.42_am.png)
+![[_images/Screen_Shot_2022-06-15_at_11.04.42_am.png|Screen Shot 2022-06-15 at 11.04.42 am.png]]
 
 ## Import Previous Project Files
 
@@ -166,7 +166,7 @@ Drag those files into the **static folder** in your project.
 
 </aside>
 
-![2022-06-15 11-14-45.2022-06-15 11_23_50.gif](_images/2022-06-15_11-14-45.2022-06-15_11_23_50.gif)
+![[_images/2022-06-15_11-14-45.2022-06-15_11_23_50.gif|2022-06-15 11-14-45.2022-06-15 11_23_50.gif]]
 
 $\utilde {\color{black} \fcolorbox{darkorange}{darkorange}  {Commit and Push to Github}}$
 
@@ -180,7 +180,7 @@ To access a database, you need to configure the project to have the correct info
 
 Create a new Python file in the root of the project called `config.py`.
 
-![2022-06-24 13-32-09.2022-06-24 13_32_54.gif](_images/2022-06-24_13-32-09.2022-06-24_13_32_54.gif)
+![[_images/2022-06-24_13-32-09.2022-06-24_13_32_54.gif|2022-06-24 13-32-09.2022-06-24 13_32_54.gif]]
 
 Copy this code into the file and save.
 
@@ -202,7 +202,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 ```
 
-![Screen Shot 2022-06-24 at 1.35.05 pm.png](_images/Screen_Shot_2022-06-24_at_1.35.05_pm.png)
+![[_images/Screen_Shot_2022-06-24_at_1.35.05_pm.png|Screen Shot 2022-06-24 at 1.35.05 pm.png]]
 
 Further down `app.py`, after `app = Flask(__name__)`  configure the app to use the database that you configured.
 
@@ -215,15 +215,15 @@ db = SQLAlchemy(app)            # creates the db object using the configuration
 
 Click on the database tab on the right-hand side of Pycharm window.
 
-![Screen Shot 2022-06-21 at 10.53.36 pm.png](_images/Screen_Shot_2022-06-21_at_10.53.36_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.53.36_pm.png|Screen Shot 2022-06-21 at 10.53.36 pm.png]]
 
 Click the + icon to create a new database.
 
-![Screen Shot 2022-06-21 at 10.55.55 pm.png](_images/Screen_Shot_2022-06-21_at_10.55.55_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.55.55_pm.png|Screen Shot 2022-06-21 at 10.55.55 pm.png]]
 
 In the dropdown, choose **Data Source** → **SQLite.**
 
-![Screen Shot 2022-06-21 at 10.56.31 pm.png](_images/Screen_Shot_2022-06-21_at_10.56.31_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.56.31_pm.png|Screen Shot 2022-06-21 at 10.56.31 pm.png]]
 
 - Why SQLite?
 
@@ -238,19 +238,19 @@ SQLite is not recommended in a production environment due to scaling issues (it 
 
 Click the + icon to create a new database file.
 
-![Screen Shot 2022-06-21 at 11.21.10 pm.png](_images/Screen_Shot_2022-06-21_at_11.21.10_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_11.21.10_pm.png|Screen Shot 2022-06-21 at 11.21.10 pm.png]]
 
 Name the file `ngunnawal.db` and click Save.
 
-![Screen Shot 2022-06-21 at 11.22.38 pm.png](_images/Screen_Shot_2022-06-21_at_11.22.38_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_11.22.38_pm.png|Screen Shot 2022-06-21 at 11.22.38 pm.png]]
 
 You **may** need to install some SQLite drivers. If, on your screen, it tells you to install or update drivers in the indicated spot, do so.
 
-![Screen Shot 2022-06-21 at 11.24.49 pm.png](_images/Screen_Shot_2022-06-21_at_11.24.49_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_11.24.49_pm.png|Screen Shot 2022-06-21 at 11.24.49 pm.png]]
 
 Click Test Connection.
 
-![Screen Shot 2022-06-21 at 11.26.30 pm.png](_images/Screen_Shot_2022-06-21_at_11.26.30_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_11.26.30_pm.png|Screen Shot 2022-06-21 at 11.26.30 pm.png]]
 
 Click Ok.
 
@@ -262,7 +262,7 @@ Each route has an associated function.
 
 In this example, “`/`” is the route and `hello_world()` is the associated function.
 
-![Screen Shot 2022-06-21 at 10.28.21 am.png](_images/Screen_Shot_2022-06-21_at_10.28.21_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.28.21_am.png|Screen Shot 2022-06-21 at 10.28.21 am.png]]
 
 ## How does this work?
 
@@ -279,7 +279,7 @@ When the browser access that route, it will run the associated function. This fu
 
 In the templates folder open the HTML file called `template.html`.
 
-![Screen Shot 2022-06-16 at 4.22.55 pm.png](_images/Screen_Shot_2022-06-16_at_4.22.55_pm.png)
+![[_images/Screen_Shot_2022-06-16_at_4.22.55_pm.png|Screen Shot 2022-06-16 at 4.22.55 pm.png]]
 
 This file will be used by all the other pages of our website to contain any common code, such as the 
 
@@ -300,11 +300,11 @@ Copy the contents of the `index.html` from the previous iteration of the site an
 
 As can be seen in the screenshot, the CSS file is not loading correctly.
 
-![Screen Shot 2022-06-16 at 4.23.47 pm.png](_images/Screen_Shot_2022-06-16_at_4.23.47_pm.png)
+![[_images/Screen_Shot_2022-06-16_at_4.23.47_pm.png|Screen Shot 2022-06-16 at 4.23.47 pm.png]]
 
 Change the link from `ngunnawal.css` to `/static/ngunnawal.css` and save the changes. The preview should update with the CSS loaded.
 
-![2022-06-16 16-26-55.2022-06-16 16_27_37.gif](_images/2022-06-16_16-26-55.2022-06-16_16_27_37.gif)
+![[_images/2022-06-16_16-26-55.2022-06-16_16_27_37.gif|2022-06-16 16-26-55.2022-06-16 16_27_37.gif]]
 
 In the HTML, remove the content from the cells and leave them blank.
 
@@ -321,7 +321,7 @@ Include code in each cell such as:
 
 </aside>
 
-![Screen Shot 2022-06-21 at 10.19.49 am.png](_images/Screen_Shot_2022-06-21_at_10.19.49_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.19.49_am.png|Screen Shot 2022-06-21 at 10.19.49 am.png]]
 
 ```python
 <div class="grid-container"> <!-- Overall Layout -->
@@ -346,13 +346,13 @@ In Flask, the pages can be created as a hierarchy, with one or some being the pa
 
 The child pages will inherit everything from template.html and modify only the sections of the page that are ‘allowed’. 
 
-![Flask Parent Child Pages (1).png](_images/Flask_Parent_Child_Pages_(1).png)
+![[1).png](_images/Flask_Parent_Child_Pages_(1|Flask Parent Child Pages (1).png]].png)
 
 ## Update Images
 
 Update the links for the Logo and Banner by including `/static/` at the start of the path.
 
-![Screen Shot 2022-06-16 at 9.37.59 pm.png](_images/Screen_Shot_2022-06-16_at_9.37.59_pm.png)
+![[_images/Screen_Shot_2022-06-16_at_9.37.59_pm.png|Screen Shot 2022-06-16 at 9.37.59 pm.png]]
 
 ## Page Title
 
@@ -362,7 +362,7 @@ This will allow us to define the title in the python code, specific for each ind
 
 It has the added advantage that the Heading on the page will always be exactly the same as the page title that appears in the tab.
 
-![Screen Shot 2022-06-16 at 4.57.54 pm.png](_images/Screen_Shot_2022-06-16_at_4.57.54_pm.png)
+![[_images/Screen_Shot_2022-06-16_at_4.57.54_pm.png|Screen Shot 2022-06-16 at 4.57.54 pm.png]]
 
 ## Internal CSS Block
 
@@ -370,7 +370,7 @@ At this stage, there is no need for internal CSS on the template file, as it’s
 
 To make it easier in the future, create an empty block called `pageStyle` in the head section to be used if needed.
 
-![Screen Shot 2022-07-01 at 10.40.41 am.png](_images/Screen_Shot_2022-07-01_at_10.40.41_am.png)
+![[_images/Screen_Shot_2022-07-01_at_10.40.41_am.png|Screen Shot 2022-07-01 at 10.40.41 am.png]]
 
 ```python
 {% block pageStyle %}
@@ -480,15 +480,15 @@ To make it easier in the future, create an empty block called `pageStyle` in the
 
 Go to [https://getbootstrap.com/](https://getbootstrap.com/) and click on the Read Installation docs link.
 
-![Screen Shot 2022-07-27 at 2.32.15 pm.png](_images/Screen_Shot_2022-07-27_at_2.32.15_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.32.15_pm.png|Screen Shot 2022-07-27 at 2.32.15 pm.png]]
 
 Download the Compiled CSS & JS.
 
-![Screen Shot 2022-07-27 at 2.33.25 pm.png](_images/Screen_Shot_2022-07-27_at_2.33.25_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.33.25_pm.png|Screen Shot 2022-07-27 at 2.33.25 pm.png]]
 
 Unzip (Extract) the zip file and copy the `CSS` and `JS` folders into the `static` folder in your project.
 
-![Screen Shot 2022-07-27 at 2.34.59 pm.png](_images/Screen_Shot_2022-07-27_at_2.34.59_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.34.59_pm.png|Screen Shot 2022-07-27 at 2.34.59 pm.png]]
 
 # Add Bootstrap into Template
 
@@ -499,7 +499,7 @@ Open templates/template.html and add the following code to import the new Bootst
 <script src="/static/js/bootstrap.bundle.js"></script>
 ```
 
-![Screen Shot 2022-07-27 at 2.37.53 pm.png](_images/Screen_Shot_2022-07-27_at_2.37.53_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.37.53_pm.png|Screen Shot 2022-07-27 at 2.37.53 pm.png]]
 
 If you run the project and load the site you may notice some changes.
 
@@ -508,7 +508,7 @@ If you run the project and load the site you may notice some changes.
 
 </aside>
 
-![Screen Shot 2022-07-27 at 2.39.06 pm.png](_images/Screen_Shot_2022-07-27_at_2.39.06_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.39.06_pm.png|Screen Shot 2022-07-27 at 2.39.06 pm.png]]
 
 # Navbar Updates
 
@@ -518,9 +518,9 @@ Bootstrap has a number of different, configurable, navbars that you can use in y
 
 Some examples are shown here.
 
-![Screen Shot 2022-07-27 at 2.42.16 pm.png](_images/Screen_Shot_2022-07-27_at_2.42.16_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.42.16_pm.png|Screen Shot 2022-07-27 at 2.42.16 pm.png]]
 
-![Screen Shot 2022-07-27 at 2.42.51 pm.png](_images/Screen_Shot_2022-07-27_at_2.42.51_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.42.51_pm.png|Screen Shot 2022-07-27 at 2.42.51 pm.png]]
 
 <aside>
 ‼️ It’s up to you to decide how exactly your navbar appears to the user. You can configure it as much or as little as you want.
@@ -529,7 +529,7 @@ Some examples are shown here.
 
 Start by Using the simplest version of the navbar code. Using the link above, this can be found under “Nav” down the page. 
 
-![Screen Shot 2022-07-27 at 2.45.53 pm.png](_images/Screen_Shot_2022-07-27_at_2.45.53_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.45.53_pm.png|Screen Shot 2022-07-27 at 2.45.53 pm.png]]
 
 Copy the code shown there. 
 
@@ -590,11 +590,11 @@ Change the other links in the nav bar to link to the pages that will be included
 
 **Before**
 
-![Screen Shot 2022-07-27 at 2.53.19 pm.png](_images/Screen_Shot_2022-07-27_at_2.53.19_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.53.19_pm.png|Screen Shot 2022-07-27 at 2.53.19 pm.png]]
 
 **After**
 
-![Screen Shot 2022-07-27 at 2.54.19 pm.png](_images/Screen_Shot_2022-07-27_at_2.54.19_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.54.19_pm.png|Screen Shot 2022-07-27 at 2.54.19 pm.png]]
 
 Included in the default code is the first link `Navbar` ****which is a placeholder link to return the user back to the homepage. As our previous project had a logo, change this text to be the logo used previously. 
 
@@ -603,41 +603,41 @@ Included in the default code is the first link `Navbar` ****which is a placehold
 
 </aside>
 
-![Screen Shot 2022-07-27 at 2.59.27 pm.png](_images/Screen_Shot_2022-07-27_at_2.59.27_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.59.27_pm.png|Screen Shot 2022-07-27 at 2.59.27 pm.png]]
 
 Move the banner image from the old navbar code to just above the new navbar code block.
 
 Remove the `class="center"` attribute as well.
 
-![Screen Shot 2022-07-27 at 3.01.12 pm.png](_images/Screen_Shot_2022-07-27_at_3.01.12_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.01.12_pm.png|Screen Shot 2022-07-27 at 3.01.12 pm.png]]
 
 Remove the old navbar code as it is no longer required.
 
-![Screen Shot 2022-07-27 at 2.55.07 pm.png](_images/Screen_Shot_2022-07-27_at_2.55.07_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_2.55.07_pm.png|Screen Shot 2022-07-27 at 2.55.07 pm.png]]
 
 The site now appears similar to this. The issue is that the links in the navbar are not visible.
 
 This can be changed using some of the other colour styles for Navbars.
 
-![Screen Shot 2022-07-27 at 3.02.05 pm.png](_images/Screen_Shot_2022-07-27_at_3.02.05_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.02.05_pm.png|Screen Shot 2022-07-27 at 3.02.05 pm.png]]
 
 Again, on this site - [https://getbootstrap.com/docs/5.2/components/navbar](https://getbootstrap.com/docs/5.2/components/navbar) Click on the Color Schemes section to look at the different options and copy the code relevant to what you want.
 
-![Screen Shot 2022-07-27 at 3.12.34 pm.png](_images/Screen_Shot_2022-07-27_at_3.12.34_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.12.34_pm.png|Screen Shot 2022-07-27 at 3.12.34 pm.png]]
 
 You will need to change the `<nav ...>` line of code to match what the code is on the website.
 
 **Before**
 
-![Screen Shot 2022-07-27 at 3.14.00 pm.png](_images/Screen_Shot_2022-07-27_at_3.14.00_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.14.00_pm.png|Screen Shot 2022-07-27 at 3.14.00 pm.png]]
 
 **After**
 
-![Screen Shot 2022-07-27 at 3.15.24 pm.png](_images/Screen_Shot_2022-07-27_at_3.15.24_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.15.24_pm.png|Screen Shot 2022-07-27 at 3.15.24 pm.png]]
 
 After that small change, you should be able to see a significant difference in the navbar.
 
-![Screen Shot 2022-07-27 at 3.15.52 pm.png](_images/Screen_Shot_2022-07-27_at_3.15.52_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_3.15.52_pm.png|Screen Shot 2022-07-27 at 3.15.52 pm.png]]
 
 <aside>
 ‼️ The site will still need some more changes required, however this already has added some additional functionality that you may have already noticed. If not, try resizing the width of the window!
@@ -655,7 +655,7 @@ Bootstraps Grid system is described in detail on this page.
 <aside>
 ‼️ Each row can be split into 12 columns, and each row can be separated in individuals ways. This allows for a lot of flexibility.
 
-![bootstrap_grid_system_sample_diagram.png](_images/bootstrap_grid_system_sample_diagram.png)
+![[_images/bootstrap_grid_system_sample_diagram.png|bootstrap_grid_system_sample_diagram.png]]
 
 [https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system](https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system)
 
@@ -670,19 +670,19 @@ Now, the layout of the site, previously CSS’s `Grid` layout can be updated to 
 
 Change the class of the main layout to `container-fluid`.
 
-![Screen Shot 2022-07-27 at 10.42.30 pm.png](_images/Screen_Shot_2022-07-27_at_10.42.30_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_10.42.30_pm.png|Screen Shot 2022-07-27 at 10.42.30 pm.png]]
 
 In this example, the first row will contain just the heading. The second row will contain `cellContent1` and `cellContent2`, and the third row will contain `cellContent3` as the footer.
 
 Here is the wireframe of what the following code will attempt.
 
-![Image.png](_images/Image.png)
+![[_images/Image.png|Image.png]]
 
 Add a new section of the layout to organise the site into rows.
 
 The three rows have been added - `<div class="row">` matching the wireframe above.
 
-![Screen Shot 2022-07-27 at 10.54.00 pm.png](_images/Screen_Shot_2022-07-27_at_10.54.00_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_10.54.00_pm.png|Screen Shot 2022-07-27 at 10.54.00 pm.png]]
 
 <aside>
 ‼️ You can use CTRL+ALT+L to automatically format the code.
@@ -693,7 +693,7 @@ For each Row, you need to add the class `col` to indicate it’s a new column, e
 
 You can see in the screenshot that `col` can be used in conjunction with other custom-written CSS classes such as text-highlighting if needed.
 
-![Screen Shot 2022-07-27 at 11.00.31 pm.png](_images/Screen_Shot_2022-07-27_at_11.00.31_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_11.00.31_pm.png|Screen Shot 2022-07-27 at 11.00.31 pm.png]]
 
 Lastly, the width of each column can be set. In this case, the sidebar in the second row is roughly a third of the width of the page, and the main content is roughly two thirds. 
 
@@ -701,11 +701,11 @@ Bootstrap defines a row has 12 columns, so that would mean the Sidebar column ha
 
 Change the different sizes of the columns to suit your layout design.
 
-![Screen Shot 2022-07-27 at 11.05.17 pm.png](_images/Screen_Shot_2022-07-27_at_11.05.17_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_11.05.17_pm.png|Screen Shot 2022-07-27 at 11.05.17 pm.png]]
 
 After this process, the site should look similar to this (depending on your layout design choices)
 
-![Screen Shot 2022-07-27 at 11.06.26 pm.png](_images/Screen_Shot_2022-07-27_at_11.06.26_pm.png)
+![[_images/Screen_Shot_2022-07-27_at_11.06.26_pm.png|Screen Shot 2022-07-27 at 11.06.26 pm.png]]
 
 # Further Development
 
@@ -732,17 +732,17 @@ In this exercise, you’ll demonstrate each of these processes with a simple ToD
 
 In the database tab, right click on the tables and choose New → Table in the popup menu.
 
-![Screen Shot 2022-06-29 at 9.31.32 pm.png](_images/Screen_Shot_2022-06-29_at_9.31.32_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_9.31.32_pm.png|Screen Shot 2022-06-29 at 9.31.32 pm.png]]
 
 Name the table `todo`.
 
-![Screen Shot 2022-06-29 at 9.38.27 pm.png](_images/Screen_Shot_2022-06-29_at_9.38.27_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_9.38.27_pm.png|Screen Shot 2022-06-29 at 9.38.27 pm.png]]
 
 Create the first field or column in the table, called `id` by clicking on the `+` button. 
 
 Make sure you tick all the boxes as this will be the primary key and auto incremented. This means that the database itself will manage the numbering of the row and doesn’t need to be manually programmed.
 
-![Screen Shot 2022-06-29 at 9.38.34 pm.png](_images/Screen_Shot_2022-06-29_at_9.38.34_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_9.38.34_pm.png|Screen Shot 2022-06-29 at 9.38.34 pm.png]]
 
 Create three more field (or columns). 
 
@@ -752,11 +752,11 @@ The second is called `done`. The type of this field should be `BOOLEAN`.
 
 When creating the fields, do not tick any of the boxes.
 
-![Screen Shot 2022-06-29 at 10.07.40 pm.png](_images/Screen_Shot_2022-06-29_at_10.07.40_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.07.40_pm.png|Screen Shot 2022-06-29 at 10.07.40 pm.png]]
 
 Click Execute. Once that process is complete, expand the database tables, and todo. The fields created should appear.
 
-![Screen Shot 2022-06-29 at 10.07.47 pm.png](_images/Screen_Shot_2022-06-29_at_10.07.47_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.07.47_pm.png|Screen Shot 2022-06-29 at 10.07.47 pm.png]]
 
 # Create Model
 
@@ -769,7 +769,7 @@ At the end of the file, and after any other classes, add the following `todo` cl
 
 </aside>
 
-![Screen Shot 2022-06-29 at 10.09.05 pm.png](_images/Screen_Shot_2022-06-29_at_10.09.05_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.09.05_pm.png|Screen Shot 2022-06-29 at 10.09.05 pm.png]]
 
 ```python
 class todo (db.Model):
@@ -806,7 +806,7 @@ Right click on the Templates folder and create a new HTML file called `todo.html
 
 Replace the sidebar with the code to create a new entry in the todo list.
 
-![Screen Shot 2022-06-29 at 10.15.54 pm.png](_images/Screen_Shot_2022-06-29_at_10.15.54_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.15.54_pm.png|Screen Shot 2022-06-29 at 10.15.54 pm.png]]
 
 ```python
 <form method="POST" action="/todo">
@@ -823,9 +823,9 @@ It also adds an Update button for each entry.
 
 An example of what it will create is:
 
-![Screen Shot 2022-06-29 at 10.23.19 pm.png](_images/Screen_Shot_2022-06-29_at_10.23.19_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.23.19_pm.png|Screen Shot 2022-06-29 at 10.23.19 pm.png]]
 
-![Screen Shot 2022-06-29 at 10.20.41 pm.png](_images/Screen_Shot_2022-06-29_at_10.20.41_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.20.41_pm.png|Screen Shot 2022-06-29 at 10.20.41 pm.png]]
 
 ```python
 <h2>List</h2>
@@ -853,11 +853,11 @@ Open `app.py` .
 
 Update the Flask import line of code to include the `request` library.
 
-![Screen Shot 2022-06-29 at 10.01.57 pm.png](_images/Screen_Shot_2022-06-29_at_10.01.57_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.01.57_pm.png|Screen Shot 2022-06-29 at 10.01.57 pm.png]]
 
 Update the following import. This allows this file to load and use the new class just created.
 
-![Screen Shot 2022-06-29 at 9.51.34 pm.png](_images/Screen_Shot_2022-06-29_at_9.51.34_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_9.51.34_pm.png|Screen Shot 2022-06-29 at 9.51.34 pm.png]]
 
 ## View Todos
 
@@ -892,7 +892,7 @@ You can read more [here](https://pythonbasics.org/flask-http-methods/). |
 | 50 | After submitting the new ToDo entry to the database, this reloads the current page. |
 | 51 | “Sends” the template to the browser with all the notes loaded from the previous query on line 34. |
 
-![Screen Shot 2022-08-08 at 8.51.47 pm.png](_images/Screen_Shot_2022-08-08_at_8.51.47_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_8.51.47_pm.png|Screen Shot 2022-08-08 at 8.51.47 pm.png]]
 
 ## Run and test the page.
 
@@ -902,11 +902,11 @@ Run the project and access the link:
 
 You should see something like this:
 
-![Screen Shot 2022-06-29 at 10.42.07 pm.png](_images/Screen_Shot_2022-06-29_at_10.42.07_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.42.07_pm.png|Screen Shot 2022-06-29 at 10.42.07 pm.png]]
 
 Create a new Entry and reload the page.
 
-![Screen Shot 2022-06-29 at 10.42.56 pm.png](_images/Screen_Shot_2022-06-29_at_10.42.56_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_10.42.56_pm.png|Screen Shot 2022-06-29 at 10.42.56 pm.png]]
 
 # ‘Edit Todo’ Route
 
@@ -914,11 +914,11 @@ This route will handle both the update and delete functions.
 
 Update the Flask import statement to also import the `redirect` library.
 
-![Screen Shot 2022-06-29 at 11.18.53 pm.png](_images/Screen_Shot_2022-06-29_at_11.18.53_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_11.18.53_pm.png|Screen Shot 2022-06-29 at 11.18.53 pm.png]]
 
 Add the following code to `app.py`
 
-![Screen Shot 2022-06-29 at 11.36.07 pm.png](_images/Screen_Shot_2022-06-29_at_11.36.07_pm.png)
+![[_images/Screen_Shot_2022-06-29_at_11.36.07_pm.png|Screen Shot 2022-06-29 at 11.36.07 pm.png]]
 
 ```python
 @app.route("/todoedit/<todo_id>", methods=["POST", "GET"])
@@ -972,11 +972,11 @@ This task, if completed as part of the assessment, will be used as evidence for 
 
 Right click on the template folder, and choose New → HTML File.
 
-![Screen Shot 2022-06-21 at 10.11.36 am.png](_images/Screen_Shot_2022-06-21_at_10.11.36_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.11.36_am.png|Screen Shot 2022-06-21 at 10.11.36 am.png]]
 
 Call the file `index`.
 
-![Screen Shot 2022-06-21 at 10.12.05 am.png](_images/Screen_Shot_2022-06-21_at_10.12.05_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.12.05_am.png|Screen Shot 2022-06-21 at 10.12.05 am.png]]
 
 Replace the contents of `index.html` with the following code.
 
@@ -1012,15 +1012,15 @@ First, update `app.py` to also import `render_template` from the flask library.
 
 </aside>
 
-![Screen Shot 2022-06-21 at 10.42.45 am.png](_images/Screen_Shot_2022-06-21_at_10.42.45_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.42.45_am.png|Screen Shot 2022-06-21 at 10.42.45 am.png]]
 
 Rename the `hello_world()` function to something more appropriate - `homepage()`.
 
-![Screen Shot 2022-06-21 at 10.45.50 am.png](_images/Screen_Shot_2022-06-21_at_10.45.50_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.45.50_am.png|Screen Shot 2022-06-21 at 10.45.50 am.png]]
 
 Update the return statement to render the `index.html` file, and also assign the title variable to be “Ngunnawal Country”.
 
-![Screen Shot 2022-06-21 at 10.47.59 am.png](_images/Screen_Shot_2022-06-21_at_10.47.59_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.47.59_am.png|Screen Shot 2022-06-21 at 10.47.59 am.png]]
 
 - Code
 	
@@ -1031,15 +1031,15 @@ Update the return statement to render the `index.html` file, and also assign the
 
 Run the site and click the link to open in the browser.
 
-![Screen Shot 2022-06-21 at 10.49.51 am.png](_images/Screen_Shot_2022-06-21_at_10.49.51_am.png)
+![[_images/Screen_Shot_2022-06-21_at_10.49.51_am.png|Screen Shot 2022-06-21 at 10.49.51 am.png]]
 
 Back in Pycharm, update the cellContent blocks with some text.
 
-![Screen Shot 2022-06-21 at 10.14.13 pm.png](_images/Screen_Shot_2022-06-21_at_10.14.13_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.14.13_pm.png|Screen Shot 2022-06-21 at 10.14.13 pm.png]]
 
 Reload the page in the browser, and you should see the update content.
 
-![Screen Shot 2022-06-21 at 10.14.56 pm.png](_images/Screen_Shot_2022-06-21_at_10.14.56_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.14.56_pm.png|Screen Shot 2022-06-21 at 10.14.56 pm.png]]
 
 ## Refreshing the page doesn’t work?
 
@@ -1047,7 +1047,7 @@ If you save changes to your code, and the changes aren’t reflected in the brow
 
 Click on the Configurations dropdown in the toolbar, and then **Edit Configurations**.
 
-![Screen Shot 2022-06-21 at 10.20.35 pm.png](_images/Screen_Shot_2022-06-21_at_10.20.35_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.20.35_pm.png|Screen Shot 2022-06-21 at 10.20.35 pm.png]]
 
 Tick the **FLACK_DEBUG** checkbox and click Ok.
 
@@ -1058,7 +1058,7 @@ You may need to restart the server for this setting to take effect.
 
 </aside>
 
-![Screen Shot 2022-06-21 at 10.21.30 pm.png](_images/Screen_Shot_2022-06-21_at_10.21.30_pm.png)
+![[_images/Screen_Shot_2022-06-21_at_10.21.30_pm.png|Screen Shot 2022-06-21 at 10.21.30 pm.png]]
 
 That should let you make changes to the code, and not restart the server to see the changes made.
 
@@ -1071,13 +1071,13 @@ This task implements the back-end functIonality for the “contact us” page. T
 
 This process will be similar to the process for adding future functionality in the project. 
 
-![Flask - MVC.png](_images/Flask_-_MVC.png)
+![[_images/Flask_-_MVC.png|Flask - MVC.png]]
 
 # Contact Page Configuration
 
 Create a new HTML file in the templates folder called `contact.html` and replace the contents of the file with the standard code:
 
-![Screen Shot 2022-07-01 at 10.16.31 am.png](_images/Screen_Shot_2022-07-01_at_10.16.31_am.png)
+![[_images/Screen_Shot_2022-07-01_at_10.16.31_am.png|Screen Shot 2022-07-01 at 10.16.31 am.png]]
 
 ```python
 {% extends 'template.html' %}
@@ -1102,7 +1102,7 @@ Replace the Main Content text with form tags.
 
 `form.hidden_tag()` is required for security purposes. It generates a CSRF token. You can read about Cross Site Request Forgery [here](https://owasp.org/www-community/attacks/csrf).
 
-![Screen Shot 2022-07-01 at 1.30.52 pm.png](_images/Screen_Shot_2022-07-01_at_1.30.52_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.30.52_pm.png|Screen Shot 2022-07-01 at 1.30.52 pm.png]]
 
 ```html
 <form action="" method="post" novalidate>
@@ -1117,7 +1117,7 @@ The `name` field that is highlighted in the screenshot refers to variables that 
 
 Create three of these blocks, the first for `name`, the second for `email` and the third for `message`.
 
-![Screen Shot 2022-07-01 at 1.37.36 pm.png](_images/Screen_Shot_2022-07-01_at_1.37.36_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.37.36_pm.png|Screen Shot 2022-07-01 at 1.37.36 pm.png]]
 
 ```html
 <p>
@@ -1131,7 +1131,7 @@ Create three of these blocks, the first for `name`, the second for `email` and t
 
 After the field, and just prior to the </form> add in the code for the submit button.
 
-![Screen Shot 2022-07-01 at 1.41.23 pm.png](_images/Screen_Shot_2022-07-01_at_1.41.23_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.41.23_pm.png|Screen Shot 2022-07-01 at 1.41.23 pm.png]]
 
 ```html
 <p>{{ form.submit() }}</p>
@@ -1139,7 +1139,7 @@ After the field, and just prior to the </form> add in the code for the submit bu
 
 At the end of the process, the code for the cell content should appear similar to this.
 
-![Screen Shot 2022-07-01 at 1.41.51 pm.png](_images/Screen_Shot_2022-07-01_at_1.41.51_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.41.51_pm.png|Screen Shot 2022-07-01 at 1.41.51 pm.png]]
 
 Save the file.
 
@@ -1164,11 +1164,11 @@ The `id **`and `Date Submitted` fields were not included in the contact form, bu
 
 Open the Database Tab in Pycharm.
 
-![Screen Shot 2022-07-01 at 11.00.17 am.png](_images/Screen_Shot_2022-07-01_at_11.00.17_am.png)
+![[_images/Screen_Shot_2022-07-01_at_11.00.17_am.png|Screen Shot 2022-07-01 at 11.00.17 am.png]]
 
 Right-click on the database name → New → Table.
 
-![Screen Shot 2022-07-01 at 11.03.11 am.png](_images/Screen_Shot_2022-07-01_at_11.03.11_am.png)
+![[_images/Screen_Shot_2022-07-01_at_11.03.11_am.png|Screen Shot 2022-07-01 at 11.03.11 am.png]]
 
 In the dialog that appears, name the table `contact`. 
 
@@ -1179,7 +1179,7 @@ Click on the plus button to add a new column/field and name this `id`. For this 
 
 </aside>
 
-![Screen Shot 2022-07-01 at 11.06.05 am.png](_images/Screen_Shot_2022-07-01_at_11.06.05_am.png)
+![[_images/Screen_Shot_2022-07-01_at_11.06.05_am.png|Screen Shot 2022-07-01 at 11.06.05 am.png]]
 
 Add the other fields to the table, for the other ones, **you do not need to tick any of the boxes.**
 
@@ -1190,13 +1190,13 @@ These options refer to specific restrictions for database tables, and entering d
 
 </aside>
 
-![2022-07-01 11-07-46.2022-07-01 11_09_55.gif](_images/2022-07-01_11-07-46.2022-07-01_11_09_55.gif)
+![[_images/2022-07-01_11-07-46.2022-07-01_11_09_55.gif|2022-07-01 11-07-46.2022-07-01 11_09_55.gif]]
 
 Press **Execute** once completed. The tables will appear in the database.
 
 You may need to press the refresh button to have the database update.
 
-![Screen Shot 2022-07-01 at 11.11.44 am.png](_images/Screen_Shot_2022-07-01_at_11.11.44_am.png)
+![[_images/Screen_Shot_2022-07-01_at_11.11.44_am.png|Screen Shot 2022-07-01 at 11.11.44 am.png]]
 
 The table has been created and now will be able to be accessed from within Flask.
 
@@ -1217,7 +1217,7 @@ Each table will have its corresponding **class** which will have the same name. 
 
 Copy the following code in. This will allow the models file to access the database configuration.
 
-![Screen Shot 2022-07-01 at 4.03.29 pm.png](_images/Screen_Shot_2022-07-01_at_4.03.29_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_4.03.29_pm.png|Screen Shot 2022-07-01 at 4.03.29 pm.png]]
 
 ```python
 from app import db
@@ -1228,13 +1228,13 @@ To create the model, Flask requires a **class** to be created for it to store th
 
 The syntax for this is `class Contact(db.Model):`
 
-![Screen Shot 2022-07-01 at 4.04.15 pm.png](_images/Screen_Shot_2022-07-01_at_4.04.15_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_4.04.15_pm.png|Screen Shot 2022-07-01 at 4.04.15 pm.png]]
 
 Each field that is in the database will need it’s corresponding entry in the model class. For instance, the first field in the database is `id`, so the first variable created is the id.
 
 As this id variable is the primary key, and autoincrements (as defined when creating the table), this needs to be indicated in the declaration.
 
-![Screen Shot 2022-07-01 at 4.04.22 pm.png](_images/Screen_Shot_2022-07-01_at_4.04.22_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_4.04.22_pm.png|Screen Shot 2022-07-01 at 4.04.22 pm.png]]
 
 ```python
 class Contact(db.Model):
@@ -1243,7 +1243,7 @@ class Contact(db.Model):
 
 The next three fields are just TEXT fields, and can be defined as such.
 
-![Screen Shot 2022-07-01 at 2.00.46 pm.png](_images/Screen_Shot_2022-07-01_at_2.00.46_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_2.00.46_pm.png|Screen Shot 2022-07-01 at 2.00.46 pm.png]]
 
 ```python
 name = db.Column(db.Text)
@@ -1258,7 +1258,7 @@ message = db.Column(db.Text)
 
 The final field is the `dataSubmitted` field. As this is stored as a DATETIME in the database, this needs to be declared as such.
 
-![Screen Shot 2022-07-01 at 2.01.22 pm.png](_images/Screen_Shot_2022-07-01_at_2.01.22_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_2.01.22_pm.png|Screen Shot 2022-07-01 at 2.01.22 pm.png]]
 
 ```python
 dateSubmitted = db.Column(db.DateTime)
@@ -1282,7 +1282,7 @@ This function assigns all the variables as necessary, but importantly, also sets
 
 The final class should look similar to this one. 
 
-![Screen Shot 2022-07-01 at 4.05.15 pm.png](_images/Screen_Shot_2022-07-01_at_4.05.15_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_4.05.15_pm.png|Screen Shot 2022-07-01 at 4.05.15 pm.png]]
 
 <aside>
 ‼️ Python is extremely strict with indentation. Make sure the fields are indented (press tab) once after the class definition.
@@ -1299,13 +1299,13 @@ Create a `forms.py` file in the root directory of the project.
 
 Do this by right-clicking on the project folder and choose New → Python file. Call it `forms.py`.
 
-![Screen Shot 2022-07-01 at 1.10.06 pm.png](_images/Screen_Shot_2022-07-01_at_1.10.06_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.10.06_pm.png|Screen Shot 2022-07-01 at 1.10.06 pm.png]]
 
 Add the necessary imports to the top of the file.
 
 These imports are used to create the structure of the forms in memory. Additionally the `DataRequired` and `Email` validators easily allow the code to require data to be submitted for each field, and also force the email address entered by the user to be in a valid format.
 
-![Screen Shot 2022-07-01 at 1.16.55 pm.png](_images/Screen_Shot_2022-07-01_at_1.16.55_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.16.55_pm.png|Screen Shot 2022-07-01 at 1.16.55 pm.png]]
 
 ```python
 from flask_wtf import FlaskForm
@@ -1315,7 +1315,7 @@ from wtforms import StringField, SubmitField, IntegerField
 
 Create the class, indicating that it will be used as a `FlaskForm`.
 
-![Screen Shot 2022-07-01 at 1.46.54 pm.png](_images/Screen_Shot_2022-07-01_at_1.46.54_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.46.54_pm.png|Screen Shot 2022-07-01 at 1.46.54 pm.png]]
 
 ```python
 class ContactForm (FlaskForm):
@@ -1334,7 +1334,7 @@ The text immediately inside the brackets - “Name”, “Email”, “Message�
 
 The `validators` forces the data to be required before submitting, and in the case of the email address, also forces it to be a valid email address.
 
-![Screen Shot 2022-07-01 at 1.47.51 pm.png](_images/Screen_Shot_2022-07-01_at_1.47.51_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.47.51_pm.png|Screen Shot 2022-07-01 at 1.47.51 pm.png]]
 
 ```python
 name = StringField("Name", validators=[DataRequired()])
@@ -1359,7 +1359,7 @@ Start by opening `app.py` and adding code to import the two new classes created:
 
 </aside>
 
-![Screen Shot 2022-07-01 at 3.37.38 pm.png](_images/Screen_Shot_2022-07-01_at_3.37.38_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.37.38_pm.png|Screen Shot 2022-07-01 at 3.37.38 pm.png]]
 
 ```python
 from models import Contact
@@ -1377,7 +1377,7 @@ This code creates the route entry point for `/contact.html` and associates it wi
 
 The route also is defined with `, methods=["POST", "GET"])` which indicates that the route will not only display the c`ontact.html` page, but also accept data back to the server, through the form submit.
 
-![Screen Shot 2022-07-01 at 3.31.46 pm.png](_images/Screen_Shot_2022-07-01_at_3.31.46_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.31.46_pm.png|Screen Shot 2022-07-01 at 3.31.46 pm.png]]
 
 ```python
 @app.route("/contact.html", methods=["POST", "GET"])
@@ -1387,7 +1387,7 @@ def contact():
 
 The first step for this function is to load the ContactForm to be displayed to the user. Add the following code to load the class and store it in a variable called `form`.
 
-![Screen Shot 2022-07-01 at 3.48.45 pm.png](_images/Screen_Shot_2022-07-01_at_3.48.45_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.48.45_pm.png|Screen Shot 2022-07-01 at 3.48.45 pm.png]]
 
 ```python
 form = ContactForm()
@@ -1408,9 +1408,9 @@ Ideally, it all works and you should see a page similar to this example.
 
 </aside>
 
-![Screen Shot 2022-07-28 at 9.27.41 pm.png](_images/Screen_Shot_2022-07-28_at_9.27.41_pm.png)
+![[_images/Screen_Shot_2022-07-28_at_9.27.41_pm.png|Screen Shot 2022-07-28 at 9.27.41 pm.png]]
 
-![Screen Shot 2022-07-01 at 3.49.48 pm.png](_images/Screen_Shot_2022-07-01_at_3.49.48_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.49.48_pm.png|Screen Shot 2022-07-01 at 3.49.48 pm.png]]
 
 ## Form Submission
 
@@ -1418,7 +1418,7 @@ The form is displayed to the user but data can not be submitted as yet. The fina
 
 First, check if the user has pressed the submit button. This is done through the `validate_on_submit()` function.
 
-![Screen Shot 2022-07-01 at 3.54.36 pm.png](_images/Screen_Shot_2022-07-01_at_3.54.36_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.54.36_pm.png|Screen Shot 2022-07-01 at 3.54.36 pm.png]]
 
 ```python
 if form.validate_on_submit():
@@ -1426,7 +1426,7 @@ if form.validate_on_submit():
 
 Then create a new_contact object which contains all of the information in the form fields - name, email and message. 
 
-![Screen Shot 2022-07-01 at 3.55.40 pm.png](_images/Screen_Shot_2022-07-01_at_3.55.40_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.55.40_pm.png|Screen Shot 2022-07-01 at 3.55.40 pm.png]]
 
 ```python
 new_contact = Contact(name=form.name.data, email=form.email.data, message=form.message.data)
@@ -1438,7 +1438,7 @@ The last step is writing the `new_contact` data to the database.
 
 “commit” means it actually writes it to the database.
 
-![Screen Shot 2022-07-01 at 3.57.42 pm.png](_images/Screen_Shot_2022-07-01_at_3.57.42_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_3.57.42_pm.png|Screen Shot 2022-07-01 at 3.57.42 pm.png]]
 
 ```python
 db.session.add(new_contact)
@@ -1451,7 +1451,7 @@ Save the file.
 
 Hopefully the project functions just as it does below.
 
-![2022-07-01 16-10-08.2022-07-01 16_13_04.gif](_images/2022-07-01_16-10-08.2022-07-01_16_13_04.gif)
+![[_images/2022-07-01_16-10-08.2022-07-01_16_13_04.gif|2022-07-01 16-10-08.2022-07-01 16_13_04.gif]]
 
 # Custom CSS in Forms.
 
@@ -1482,7 +1482,7 @@ A Quick Summary of what is implemented so far:
 - The User model has a function - `is_admin()` - which will return `True` if the user_level is set to 2.
 - Some routes have `@login_required` defined which requires the user to be logged in or will redirect the user to the login page.
 
-![Screen Shot 2022-09-05 at 9.40.44 pm.png](_images/Screen_Shot_2022-09-05_at_9.40.44_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_9.40.44_pm.png|Screen Shot 2022-09-05 at 9.40.44 pm.png]]
 
 This is not *great* security and can use a lot of work. 
 
@@ -1494,13 +1494,13 @@ For instance, only administrators should be able to view all the messages on the
 
 Open `app.py` and find the `contact_messsages` route.
 
-![Screen Shot 2022-09-05 at 10.40.48 pm.png](_images/Screen_Shot_2022-09-05_at_10.40.48_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.40.48_pm.png|Screen Shot 2022-09-05 at 10.40.48 pm.png]]
 
 To implement access control, before the Contact table is loaded and the template is rendered, first implement an `if` statement to check to see if the current user is an admin.
 
 If the user is an administrator (level 2) then the page will load as it did previously.
 
-![Screen Shot 2022-09-05 at 10.43.08 pm.png](_images/Screen_Shot_2022-09-05_at_10.43.08_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.43.08_pm.png|Screen Shot 2022-09-05 at 10.43.08 pm.png]]
 
 ```python
 if current_user.is_admin():
@@ -1508,7 +1508,7 @@ if current_user.is_admin():
 
 Include an `else` clause to redirect the user to the home page if they are not an administrator. 
 
-![Screen Shot 2022-09-05 at 10.45.11 pm.png](_images/Screen_Shot_2022-09-05_at_10.45.11_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.45.11_pm.png|Screen Shot 2022-09-05 at 10.45.11 pm.png]]
 
 ```python
 else:
@@ -1523,7 +1523,7 @@ Currently there is a check to see if the current_user is logged in or not and di
 
 Add in a check to see if the user is an admin, and if so, show the link to the contact messages route.
 
-![Untitled](_images/Untitled.png)
+![[_images/Untitled.png]]
 
 ## Test the implementation
 
@@ -1535,11 +1535,11 @@ Attempt to access the URL without logging in, and it should redirect you to the 
 
 Attempt to access the URL logged in as a user with an access level set to 1.
 
-![Untitled](WebDev/_shared/Projects/Ngunnawal/_images/Untitled%201.png)
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 1.png|Untitled]]
 
 Attempt to access the URL logged in as a user with an access level set to 2.
 
-![Untitled](WebDev/_shared/Projects/Ngunnawal/_images/Untitled%202.png)
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 2.png|Untitled]]
 
 ## Continue Implementing Access Control
 
@@ -1567,11 +1567,11 @@ As the current user details is being sent to the template to be rendered, you ca
 
 Open `templates/base.html` and find the registration and login links.
 
-![Screen Shot 2022-09-19 at 9.17.10 am.png](_images/Screen_Shot_2022-09-19_at_9.17.10_am.png)
+![[_images/Screen_Shot_2022-09-19_at_9.17.10_am.png|Screen Shot 2022-09-19 at 9.17.10 am.png]]
 
 Surrounding these two links, add an `if` statement to check to see if the user is anonymous. This means that the user has **not** logged in yet.
 
-![Screen Shot 2022-09-19 at 9.18.45 am.png](_images/Screen_Shot_2022-09-19_at_9.18.45_am.png)
+![[_images/Screen_Shot_2022-09-19_at_9.18.45_am.png|Screen Shot 2022-09-19 at 9.18.45 am.png]]
 
 ```python
 {% if user.is_anonymous %}
@@ -1585,7 +1585,7 @@ The next step is to extend this by adding in an {% else %} section to only show 
 
 In the example shown, you can see that the **Registration** and **Login** links are shown if the user is not logged in (`is_anonymous`) and the **Profile**, **Photos**, **Logout** and **Reset Password** Links are shown if the user is logged in (`is_anonymous` is false)
 
-![Untitled](_images/Untitled%203.png)
+![[_images/Untitled 3.png|Untitled]]
 
 - Administrator Tools
 
@@ -1607,7 +1607,7 @@ Update the navbar component in `base.html` to add links to the administrator fun
 
 Look for the `{% if user.is_admin() %}` code and replace the existing links to be a dropdown menu.
 
-![Untitled](_images/Untitled%204.png)
+![[_images/Untitled 4.png|Untitled]]
 
 ```html
 <li><a class="nav-link" href="/contact_messages">Contact Messages</a></li>
@@ -1650,7 +1650,7 @@ In the `rowTwoColTwoContent` block add the code to loop over the number of users
 
 Save the file.
 
-![Screen Shot 2022-10-21 at 10.32.50 pm.png](_images/Screen_Shot_2022-10-21_at_10.32.50_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.32.50_pm.png|Screen Shot 2022-10-21 at 10.32.50 pm.png]]
 
 ```html
 <div class="container-fluid">
@@ -1665,7 +1665,7 @@ Save the file.
 
 Open `app.py` and Start by defining the route.
 
-![Screen Shot 2022-10-21 at 10.20.10 pm.png](_images/Screen_Shot_2022-10-21_at_10.20.10_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.20.10_pm.png|Screen Shot 2022-10-21 at 10.20.10 pm.png]]
 
 ```python
 @app.route('/admin/list_all_users')
@@ -1675,7 +1675,7 @@ def list_all_users():
 
 The code to load all the user details is simple enough, querying the entire user table, however this route needs to be limited so that only administrators can access it. If a user accesses it who is **not** an administrator, it will redirect them back to the front page.
 
-![Screen Shot 2022-10-21 at 10.35.21 pm.png](_images/Screen_Shot_2022-10-21_at_10.35.21_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.35.21_pm.png|Screen Shot 2022-10-21 at 10.35.21 pm.png]]
 
 ```python
 if current_user.is_admin():
@@ -1688,7 +1688,7 @@ else:
 
 When the site is run and the url accessed, the administrator will see a page similar to this:
 
-![Screen Shot 2022-10-21 at 10.36.13 pm.png](_images/Screen_Shot_2022-10-21_at_10.36.13_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.36.13_pm.png|Screen Shot 2022-10-21 at 10.36.13 pm.png]]
 
 ## Reset User Password Route
 
@@ -1697,7 +1697,7 @@ The site already allows for the user to reset their own password. The process fo
 <aside>
 ‼️ Consider the reset password function in `app.py` that already has been coded.
 
-![Untitled](_images/Untitled%205.png)
+![[_images/Untitled 5.png|Untitled]]
 
 </aside>
 
@@ -1721,11 +1721,11 @@ def reset_user_password(userid):
 
 The differences between the existing reset password route and this one can be seen here.
 
-![Screen Shot 2022-10-21 at 10.09.34 pm.png](_images/Screen_Shot_2022-10-21_at_10.09.34_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.09.34_pm.png|Screen Shot 2022-10-21 at 10.09.34 pm.png]]
 
 Notice the `/reset_password/<userid>` in the route and `reset_user_password(userid)` in the function header. This allows for the browser to access a URL such as [http://127.0.0.1:5000/reset_password/6](http://127.0.0.1:5000/reset_password/6). Where the `6` indicates the user id to be accessed as can be seen below.
 
-![Screen Shot 2022-10-21 at 10.05.04 pm.png](_images/Screen_Shot_2022-10-21_at_10.05.04_pm.png)
+![[_images/Screen_Shot_2022-10-21_at_10.05.04_pm.png|Screen Shot 2022-10-21 at 10.05.04 pm.png]]
 
 Additionally, the User.query code has been moved to be run before the if statement. This is so that the user details can be loaded to display on screen (as indicated in the render_template code with `user=user`). This allows the intended users email address to be shown instead of the `current_user` details.
 
@@ -1764,7 +1764,7 @@ This is only a minor change to the existing code.
 
 </aside>
 
-![Screen Shot 2022-10-23 at 10.31.27 pm.png](_images/Screen_Shot_2022-10-23_at_10.31.27_pm.png)
+![[_images/Screen_Shot_2022-10-23_at_10.31.27_pm.png|Screen Shot 2022-10-23 at 10.31.27 pm.png]]
 
 ### Administrator Control
 
@@ -1774,7 +1774,7 @@ To allow administrators to enable and disable user accounts, there are a number 
 
 Save the file.
 
-![Screen Shot 2022-10-23 at 11.29.01 pm.png](_images/Screen_Shot_2022-10-23_at_11.29.01_pm.png)
+![[_images/Screen_Shot_2022-10-23_at_11.29.01_pm.png|Screen Shot 2022-10-23 at 11.29.01 pm.png]]
 
 ```html
 <div class="col-md-3">
@@ -1793,7 +1793,7 @@ This route loads the user identified by their user id, then flips the status. Th
 
 Notice that this route doesn’t display a template to the user, just redirects them back to the `list_add_users` route. The user performing this function will see the changes reflect in the user list.
 
-![Screen Shot 2022-10-23 at 11.27.05 pm.png](_images/Screen_Shot_2022-10-23_at_11.27.05_pm.png)
+![[_images/Screen_Shot_2022-10-23_at_11.27.05_pm.png|Screen Shot 2022-10-23 at 11.27.05 pm.png]]
 
 ```python
 @app.route('/admin/user_enable/<userid>')
@@ -1829,7 +1829,7 @@ So far, users can send messages through the contact form, however the only way t
 
 Open `app.py` and create a new route.
 
-![Screen Shot 2022-09-05 at 10.25.29 pm.png](_images/Screen_Shot_2022-09-05_at_10.25.29_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.25.29_pm.png|Screen Shot 2022-09-05 at 10.25.29 pm.png]]
 
 ```python
 @app.route('/contact_messages')
@@ -1844,7 +1844,7 @@ Load all the entries in the contact table and store them in a variable.
 
 </aside>
 
-![Screen Shot 2022-09-05 at 10.27.27 pm.png](_images/Screen_Shot_2022-09-05_at_10.27.27_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.27.27_pm.png|Screen Shot 2022-09-05 at 10.27.27 pm.png]]
 
 ```python
 contact_messages = Contact.query.all()
@@ -1852,7 +1852,7 @@ contact_messages = Contact.query.all()
 
 Using this `contact_messages`, send the messages to a template page called `contactMessages.html`.
 
-![Screen Shot 2022-09-05 at 10.08.56 pm.png](_images/Screen_Shot_2022-09-05_at_10.08.56_pm.png)
+![[_images/Screen_Shot_2022-09-05_at_10.08.56_pm.png|Screen Shot 2022-09-05 at 10.08.56 pm.png]]
 
 ```python
 return render_template("contactMessages.html", title="Contact Messages", user=current_user, messages=contact_messages)
@@ -1864,13 +1864,13 @@ return render_template("contactMessages.html", title="Contact Messages", user=cu
 
 Duplicate `index.html` and name the new file `contactMessages.html`. 
 
-![Untitled](_images/Untitled%206.png)
+![[_images/Untitled 6.png|Untitled]]
 
 To display the contact messages from the database, output the user's name, email address, message and the date it was submitted. This can be done using the bootstrap grid system as previously used.
 
 Remove the contents of the `rowTwoColTwoContent` block and add the new `div`.
 
-![Untitled](_images/Untitled%207.png)
+![[_images/Untitled 7.png|Untitled]]
 
 ```python
 <div class="container-fluid">
@@ -1887,7 +1887,7 @@ This **for** loop will iterate over the entries in `messages` (which is the `con
 
 </aside>
 
-![Untitled](_images/Untitled%208.png)
+![[_images/Untitled 8.png|Untitled]]
 
 ```python
 <div class="container-fluid">
@@ -1899,7 +1899,7 @@ This **for** loop will iterate over the entries in `messages` (which is the `con
 
 Each entry will be a row, so a new `div` tagged with `row` is needed inside the for loop.
 
-![Untitled](_images/Untitled%209.png)
+![[_images/Untitled 9.png|Untitled]]
 
 ```html
 <div class="row">
@@ -1909,7 +1909,7 @@ Each entry will be a row, so a new `div` tagged with `row` is needed inside the 
 
 Output each of the fields in the record (except for the ID) in different columns.
 
-![Untitled](_images/Untitled%2010.png)
+![[_images/Untitled 10.png|Untitled]]
 
 ```html
 <div class="col-3"> {{ message.name }}</div>
@@ -1924,7 +1924,7 @@ Run the site and login. Modify the URL by adding `/contact_messages` to the end.
 
 You should see a page similar to this (with different messages).
 
-![Untitled](_images/Untitled%2011.png)
+![[_images/Untitled 11.png|Untitled]]
 
 ## Extension
 
@@ -1934,7 +1934,7 @@ The Date Submitted output isn’t very user-friendly. How could this be improved
 	
 	Update `contactMessages.html` to change how the date is outputed by placing `.strftime('%H:%M - %d/%m/%Y')` after the `datetime` output.
 	
-	![Screen Shot 2022-09-07 at 12.45.06 pm.png](_images/Screen_Shot_2022-09-07_at_12.45.06_pm.png)
+	![[_images/Screen_Shot_2022-09-07_at_12.45.06_pm.png|Screen Shot 2022-09-07 at 12.45.06 pm.png]]
 	
 
 How could the administrator control which messages they’ve seen or responded to? What would need to be added to the database and webpage? 
@@ -1972,7 +1972,7 @@ Create a new HTML file called `userProfile.html`. Replace the contents with the 
 
 How the profile information is displayed is flexible, however all the fields in the user table can be displayed. As the site already has bootstrap included, a bootstrap grid system can be employed in `cellContent2` (or whichever ‘cell’ is appropriate for your site).
 
-![Screen Shot 2022-09-02 at 1.31.31 pm.png](_images/Screen_Shot_2022-09-02_at_1.31.31_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.31.31_pm.png|Screen Shot 2022-09-02 at 1.31.31 pm.png]]
 
 ```html
 <div class="container text-left">
@@ -1984,7 +1984,7 @@ The contents of the user table can be displayed as a simple table, with rows for
 
 For instance, a row in the grid to display “User Name” and then the users email address would be entered as shown.
 
-![Screen Shot 2022-09-02 at 1.41.40 pm.png](_images/Screen_Shot_2022-09-02_at_1.41.40_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.41.40_pm.png|Screen Shot 2022-09-02 at 1.41.40 pm.png]]
 
 ```html
 <div class="row">
@@ -1999,7 +1999,7 @@ For instance, a row in the grid to display “User Name” and then the users em
 
 Create a row block for each of the fields in the user table. The end result will look similar to this.
 
-![Screen Shot 2022-09-02 at 1.44.43 pm.png](_images/Screen_Shot_2022-09-02_at_1.44.43_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.44.43_pm.png|Screen Shot 2022-09-02 at 1.44.43 pm.png]]
 
 ```html
 {% block cellContent2 %}
@@ -2048,7 +2048,7 @@ The route is set to GET and POST for future use, where the page could be changed
 
 The route is also set to require the user to be logged in, otherwise there could be a security breach, or crashing the page.
 
-![Screen Shot 2022-09-02 at 1.49.21 pm.png](_images/Screen_Shot_2022-09-02_at_1.49.21_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.49.21_pm.png|Screen Shot 2022-09-02 at 1.49.21 pm.png]]
 
 ```python
 @app.route('/profile', methods=['GET', 'POST'])
@@ -2061,7 +2061,7 @@ def profile():
 
 Open `templates/template.html` and add a new navbar entry in the section with Logout and Reset Password. This is the section of the code which only displays when the user is logged in.
 
-![Screen Shot 2022-09-02 at 1.51.55 pm.png](_images/Screen_Shot_2022-09-02_at_1.51.55_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.51.55_pm.png|Screen Shot 2022-09-02 at 1.51.55 pm.png]]
 
 ```html
 <li class="nav-item">
@@ -2073,7 +2073,7 @@ Open `templates/template.html` and add a new navbar entry in the section with Lo
 
 Run the project, log in and access the User Profile link.
 
-![Screen Shot 2022-09-02 at 1.52.49 pm.png](_images/Screen_Shot_2022-09-02_at_1.52.49_pm.png)
+![[_images/Screen_Shot_2022-09-02_at_1.52.49_pm.png|Screen Shot 2022-09-02 at 1.52.49 pm.png]]
 
 # Version 1.5 - User Interface Updates
 
@@ -2083,7 +2083,7 @@ Instead of simply outputting `user.user_level` you can first check what value it
 
 In `userProfile.html` replace `user.user_level` with an if statement and appropriate output.
 
-![Screen Shot 2022-09-05 at 9.56.52 am.png](_images/Screen_Shot_2022-09-05_at_9.56.52_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.56.52_am.png|Screen Shot 2022-09-05 at 9.56.52 am.png]]
 
 ```python
 {% if user.user_level==1 %}
@@ -2095,11 +2095,11 @@ In `userProfile.html` replace `user.user_level` with an if statement and appropr
 
 When the profile page is accessed now, it should show the more user friendly output.
 
-![Screen Shot 2022-09-05 at 9.57.57 am.png](_images/Screen_Shot_2022-09-05_at_9.57.57_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.57.57_am.png|Screen Shot 2022-09-05 at 9.57.57 am.png]]
 
 Additionally, showing the password hash is not helpful to the user at all. It would be more useful to change that entry to be a link to the reset Password page.
 
-![Screen Shot 2022-09-05 at 10.02.17 am.png](_images/Screen_Shot_2022-09-05_at_10.02.17_am.png)
+![[_images/Screen_Shot_2022-09-05_at_10.02.17_am.png|Screen Shot 2022-09-05 at 10.02.17 am.png]]
 
 ```html
 <a href="/reset_password">Reset Password</a>
@@ -2107,7 +2107,7 @@ Additionally, showing the password hash is not helpful to the user at all. It wo
 
 When the site is run, you should see this
 
-![Screen Shot 2022-09-05 at 10.02.11 am.png](_images/Screen_Shot_2022-09-05_at_10.02.11_am.png)
+![[_images/Screen_Shot_2022-09-05_at_10.02.11_am.png|Screen Shot 2022-09-05 at 10.02.11 am.png]]
 
 # Version 2 - Editable Data
 
@@ -2121,7 +2121,7 @@ Open `forms.py` and create a new `UserProfileForm` class.
 
 Include the fields that you want the user to be able to edit.
 
-![Screen Shot 2022-09-05 at 9.02.01 am.png](_images/Screen_Shot_2022-09-05_at_9.02.01_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.02.01_am.png|Screen Shot 2022-09-05 at 9.02.01 am.png]]
 
 ```python
 class UserProfileForm(FlaskForm):
@@ -2141,7 +2141,7 @@ Add a update_details() function to the User model to update only the fields that
 
 </aside>
 
-![Screen Shot 2022-09-05 at 10.20.51 am.png](_images/Screen_Shot_2022-09-05_at_10.20.51_am.png)
+![[_images/Screen_Shot_2022-09-05_at_10.20.51_am.png|Screen Shot 2022-09-05 at 10.20.51 am.png]]
 
 ```python
 def update_details(self, email_address, name):
@@ -2155,31 +2155,31 @@ Currently `userProfile.html` only displays the information, rather than the form
 
 For instance, the Users name is displayed using the following code.
 
-![Screen Shot 2022-09-05 at 9.04.32 am.png](_images/Screen_Shot_2022-09-05_at_9.04.32_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.04.32_am.png|Screen Shot 2022-09-05 at 9.04.32 am.png]]
 
 Whereas the form code, taken from registration.html looks like this.
 
-![Screen Shot 2022-09-05 at 9.05.41 am.png](_images/Screen_Shot_2022-09-05_at_9.05.41_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.05.41_am.png|Screen Shot 2022-09-05 at 9.05.41 am.png]]
 
 Therefore in `userProfile.html` each field that is determined to be updatable, the simple **display** will need to be replaced  with the **form** code.
 
 For instance:
 
-![Screen Shot 2022-09-05 at 9.08.10 am.png](_images/Screen_Shot_2022-09-05_at_9.08.10_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.08.10_am.png|Screen Shot 2022-09-05 at 9.08.10 am.png]]
 
 # Update route
 
 Open `app.py` and import `UserProfileForm` from forms.
 
-![Screen Shot 2022-09-05 at 9.48.00 am.png](_images/Screen_Shot_2022-09-05_at_9.48.00_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.48.00_am.png|Screen Shot 2022-09-05 at 9.48.00 am.png]]
 
 Find the `profile()` route. Create the `form` variable, loading the `UserProfileForm`, and then send the form to the template.
 
-![Screen Shot 2022-09-05 at 9.52.45 am.png](_images/Screen_Shot_2022-09-05_at_9.52.45_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.52.45_am.png|Screen Shot 2022-09-05 at 9.52.45 am.png]]
 
 When the site is run now, the form should appear.
 
-![Screen Shot 2022-09-05 at 9.59.21 am.png](_images/Screen_Shot_2022-09-05_at_9.59.21_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.59.21_am.png|Screen Shot 2022-09-05 at 9.59.21 am.png]]
 
 ## Update Route
 
@@ -2190,7 +2190,7 @@ Open `app.py` and add the following code to the route to update the database rec
 
 </aside>
 
-![Screen Shot 2022-09-05 at 10.29.09 am.png](_images/Screen_Shot_2022-09-05_at_10.29.09_am.png)
+![[_images/Screen_Shot_2022-09-05_at_10.29.09_am.png|Screen Shot 2022-09-05 at 10.29.09 am.png]]
 
 ```python
 if form.validate_on_submit():
@@ -2207,11 +2207,11 @@ One of the issues with the current system is that the user can’t see their cur
 
 To do so, the code first needs to load the current data from the database, and then pre-populate the data into the form. The first step is to move the line of code which loads the current user to outside the `form.validate_on_submit()` block.
 
-![Screen Shot 2022-09-05 at 11.08.53 am.png](_images/Screen_Shot_2022-09-05_at_11.08.53_am.png)
+![[_images/Screen_Shot_2022-09-05_at_11.08.53_am.png|Screen Shot 2022-09-05 at 11.08.53 am.png]]
 
 After loading the data, the code should then check if the page being loaded (not submitted). If it is, then fill in the data into the form.
 
-![Screen Shot 2022-09-05 at 11.11.00 am.png](_images/Screen_Shot_2022-09-05_at_11.11.00_am.png)
+![[_images/Screen_Shot_2022-09-05_at_11.11.00_am.png|Screen Shot 2022-09-05 at 11.11.00 am.png]]
 
 ```python
 if request.method == 'GET':
@@ -2234,7 +2234,7 @@ There are a number of issues with this page.
 
 It is possible to build custom ‘error’ pages to keep the user ‘within’ the website and allow them to continue using the site.
 
-![Screen Shot 2022-08-09 at 10.44.41 am.png](_images/Screen_Shot_2022-08-09_at_10.44.41_am.png)
+![[_images/Screen_Shot_2022-08-09_at_10.44.41_am.png|Screen Shot 2022-08-09 at 10.44.41 am.png]]
 
 # HTML Pages
 
@@ -2266,11 +2266,11 @@ In `cellContent2`, add a message to the user to indicate that there is a problem
 
 </aside>
 
-![Screen Shot 2022-08-09 at 10.51.28 am.png](_images/Screen_Shot_2022-08-09_at_10.51.28_am.png)
+![[_images/Screen_Shot_2022-08-09_at_10.51.28_am.png|Screen Shot 2022-08-09 at 10.51.28 am.png]]
 
 You can choose how you want the messages to display. Using Bootstraps built-in Alerts can be a quick and easy solution, such as:
 
-![Untitled](_images/Untitled%2012.png)
+![[_images/Untitled 12.png|Untitled]]
 
 ```html
 <div class="alert alert-danger" role="alert">
@@ -2309,29 +2309,29 @@ def internal_server_error(e):
 
 Run the project and attempt to access a page that doesn’t exist. Make sure the custom error page loads.
 
-![Screen Shot 2022-08-09 at 10.55.44 am.png](_images/Screen_Shot_2022-08-09_at_10.55.44_am.png)
+![[_images/Screen_Shot_2022-08-09_at_10.55.44_am.png|Screen Shot 2022-08-09 at 10.55.44 am.png]]
 
 To force the page to load correctly, you may need to **turn off** the FLASK_DEBUG setting. To do so, click on Edit Configurations under the Flask (app.py) dropdown.
 
-![Screen Shot 2022-09-05 at 9.16.43 am.png](_images/Screen_Shot_2022-09-05_at_9.16.43_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.16.43_am.png|Screen Shot 2022-09-05 at 9.16.43 am.png]]
 
 Uncheck the box, and click ok.
 
-![Screen Shot 2022-09-05 at 9.17.34 am.png](_images/Screen_Shot_2022-09-05_at_9.17.34_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.17.34_am.png|Screen Shot 2022-09-05 at 9.17.34 am.png]]
 
 Then, in `index.html` comment out the last line of code to force an error.
 
-![Screen Shot 2022-09-05 at 9.18.34 am.png](_images/Screen_Shot_2022-09-05_at_9.18.34_am.png)
+![[_images/Screen_Shot_2022-09-05_at_9.18.34_am.png|Screen Shot 2022-09-05 at 9.18.34 am.png]]
 
 Rerun the site and the 500 error page should appear.
 
 # Example error pages
 
-![pMGfBE5gnyuzxa6BGKAi3Q-970-80.jpg.webp](_images/pMGfBE5gnyuzxa6BGKAi3Q-970-80.jpg.webp)
+![[_images/pMGfBE5gnyuzxa6BGKAi3Q-970-80.jpg.webp|pMGfBE5gnyuzxa6BGKAi3Q-970-80.jpg.webp]]
 
-![mYKbf3DSinvWnEzmHkEnCE-970-80.jpg.webp](_images/mYKbf3DSinvWnEzmHkEnCE-970-80.jpg.webp)
+![[_images/mYKbf3DSinvWnEzmHkEnCE-970-80.jpg.webp|mYKbf3DSinvWnEzmHkEnCE-970-80.jpg.webp]]
 
-![pbtqaZH7Q9QcrVDnuJomQT-970-80.jpg.webp](_images/pbtqaZH7Q9QcrVDnuJomQT-970-80.jpg.webp)
+![[_images/pbtqaZH7Q9QcrVDnuJomQT-970-80.jpg.webp|pbtqaZH7Q9QcrVDnuJomQT-970-80.jpg.webp]]
 
 - Current User
 
@@ -2344,7 +2344,7 @@ Open `app.py` and **update EVERY route** **rendering a template** to include the
 
 For instance, the homepage route needs to have the `render_template` line of code updated as shown.
 
-![Untitled](_images/Untitled%2013.png)
+![[_images/Untitled 13.png|Untitled]]
 
 - Photo Upload
 
@@ -2385,7 +2385,7 @@ This tutorial will show option 2 for a number of reasons. The primary is that it
 
 At the end of this process, the user photo page will look similar to this.
 
-![Screen Shot 2022-09-06 at 9.10.34 pm.png](_images/Screen_Shot_2022-09-06_at_9.10.34_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.10.34_pm.png|Screen Shot 2022-09-06 at 9.10.34 pm.png]]
 
 ## Project Configuration
 
@@ -2393,13 +2393,13 @@ For users to be able to upload images, there needs to be a directory created to 
 
 Under Static, right-click on images and create a directory.
 
-![Screen Shot 2022-09-06 at 9.22.57 pm.png](_images/Screen_Shot_2022-09-06_at_9.22.57_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.22.57_pm.png|Screen Shot 2022-09-06 at 9.22.57 pm.png]]
 
 Name this directory `userPhotos`.
 
 This will be the directory where the photos will be stored when they’re uploaded by the users.
 
-![Screen Shot 2022-09-06 at 9.23.02 pm.png](_images/Screen_Shot_2022-09-06_at_9.23.02_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.23.02_pm.png|Screen Shot 2022-09-06 at 9.23.02 pm.png]]
 
 ## Database Table
 
@@ -2416,39 +2416,39 @@ A arguably better solution would be to create another table which focuses on the
 
 A new table will be created - `photos` - which will store the data, and link to the user id stored in the `user` table, as can be seen in the UML diagram shown here.
 
-![databaseuml.png](_images/databaseuml.png)
+![[_images/databaseuml.png|databaseuml.png]]
 
 An example of the data that could be stored in the database is shown here.
 
-![Screen Shot 2022-09-06 at 10.09.20 pm.png](_images/Screen_Shot_2022-09-06_at_10.09.20_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.09.20_pm.png|Screen Shot 2022-09-06 at 10.09.20 pm.png]]
 
 ---
 
 Right click on `main` in the database tab, and choose New → Table.
 
-![Screen Shot 2022-09-06 at 9.45.08 pm.png](_images/Screen_Shot_2022-09-06_at_9.45.08_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.45.08_pm.png|Screen Shot 2022-09-06 at 9.45.08 pm.png]]
 
 Create the table columns as shown.
 
-![Screen Shot 2022-09-06 at 9.52.40 pm.png](_images/Screen_Shot_2022-09-06_at_9.52.40_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.52.40_pm.png|Screen Shot 2022-09-06 at 9.52.40 pm.png]]
 
 Add a new Primary Key, setting the name to be `photoid` and set the column name to be `photoid`.
 
-![Screen Shot 2022-09-06 at 10.02.44 pm.png](_images/Screen_Shot_2022-09-06_at_10.02.44_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.02.44_pm.png|Screen Shot 2022-09-06 at 10.02.44 pm.png]]
 
 Click Ok. This will create the table in the database.
 
-![Screen Shot 2022-09-06 at 10.03.50 pm.png](_images/Screen_Shot_2022-09-06_at_10.03.50_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.03.50_pm.png|Screen Shot 2022-09-06 at 10.03.50 pm.png]]
 
 ## Photo Upload Form
 
 Open `forms.py` and update the import statements to allow the form to upload files.
 
-![Screen Shot 2022-09-06 at 9.26.51 pm.png](_images/Screen_Shot_2022-09-06_at_9.26.51_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.26.51_pm.png|Screen Shot 2022-09-06 at 9.26.51 pm.png]]
 
 Create a new `class` called `PhotoUploadForm`, which contains the form fields for the user to select a file and set the title of the image.
 
-![Screen Shot 2022-09-06 at 9.29.17 pm.png](_images/Screen_Shot_2022-09-06_at_9.29.17_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_9.29.17_pm.png|Screen Shot 2022-09-06 at 9.29.17 pm.png]]
 
 ```python
 class PhotoUploadForm(FlaskForm):
@@ -2461,7 +2461,7 @@ class PhotoUploadForm(FlaskForm):
 
 Open `models.py` and create a new model to match the database created.
 
-![Screen Shot 2022-09-06 at 10.24.51 pm.png](_images/Screen_Shot_2022-09-06_at_10.24.51_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.24.51_pm.png|Screen Shot 2022-09-06 at 10.24.51 pm.png]]
 
 ```python
 class Photos(db.Model):
@@ -2477,7 +2477,7 @@ To simply the process in the future, create a `__init__` method to assist in cre
 
 This function will make it easier to create new entries in the database when uploading images, in particular by automatically assigning the date time when the file is uploaded. This is done in the same way for the `contact` model.
 
-![Screen Shot 2022-09-06 at 10.26.08 pm.png](_images/Screen_Shot_2022-09-06_at_10.26.08_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.26.08_pm.png|Screen Shot 2022-09-06 at 10.26.08 pm.png]]
 
 ```python
 def __init__(self, title, filename, userid):
@@ -2491,7 +2491,7 @@ def __init__(self, title, filename, userid):
 
 Edit `template.html` by adding a link to the new page to be created in the navbar. Place it under the link to the Profile page.
 
-![Screen Shot 2022-09-06 at 10.13.39 pm.png](_images/Screen_Shot_2022-09-06_at_10.13.39_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.13.39_pm.png|Screen Shot 2022-09-06 at 10.13.39 pm.png]]
 
 ```html
 <li class="nav-item">
@@ -2571,11 +2571,11 @@ Now it’s time to create the code to upload photos.
 
 Open `app.py` and update the import statements to include new libraries that will be needed, and the newly created `photo` model.
 
-![Screen Shot 2022-09-06 at 10.37.54 pm.png](_images/Screen_Shot_2022-09-06_at_10.37.54_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.37.54_pm.png|Screen Shot 2022-09-06 at 10.37.54 pm.png]]
 
 Configure the project to set the uploads folder for the image, and set the allowed extensions. 
 
-![Screen Shot 2022-09-06 at 10.31.29 pm.png](_images/Screen_Shot_2022-09-06_at_10.31.29_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.31.29_pm.png|Screen Shot 2022-09-06 at 10.31.29 pm.png]]
 
 ```python
 UPLOAD_FOLDER = './static/images/userPhotos/'
@@ -2587,7 +2587,7 @@ Create a function, separate to the standard routes created so far, which will ta
 
 This is to prevent users from uploading any file they wish to. 
 
-![Screen Shot 2022-09-06 at 10.35.03 pm.png](_images/Screen_Shot_2022-09-06_at_10.35.03_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.35.03_pm.png|Screen Shot 2022-09-06 at 10.35.03 pm.png]]
 
 ```python
 def allowed_file(filename):
@@ -2599,7 +2599,7 @@ Create a new route for the page. As this route will both send data to the user a
 
 The page will need the form defined in `forms.py` and the current user details.
 
-![Screen Shot 2022-09-06 at 10.39.10 pm.png](_images/Screen_Shot_2022-09-06_at_10.39.10_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.39.10_pm.png|Screen Shot 2022-09-06 at 10.39.10 pm.png]]
 
 ```python
 @app.route('/userPhotos', methods=['GET', 'POST'])
@@ -2611,13 +2611,13 @@ def photos():
 
 If you run the project now, and click on the Photos link in the navbar, you should see the form being rendered.
 
-![Screen Shot 2022-09-06 at 10.40.23 pm.png](_images/Screen_Shot_2022-09-06_at_10.40.23_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.40.23_pm.png|Screen Shot 2022-09-06 at 10.40.23 pm.png]]
 
 The next step is to process the uploading of the file. There are a few steps to go through. First, the file and filename of the image needs to be collected. If the filename is an approved one, then the file will be uploaded and saved in the correct folder, and the data be written to the database.
 
 Starting with collecting the image and filename, update the route to check if the user has pressed the submit button, and collect the appropriate data.
 
-![Screen Shot 2022-09-06 at 10.47.17 pm.png](_images/Screen_Shot_2022-09-06_at_10.47.17_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.47.17_pm.png|Screen Shot 2022-09-06 at 10.47.17 pm.png]]
 
 ```python
 if form.validate_on_submit():
@@ -2627,7 +2627,7 @@ if form.validate_on_submit():
 
 After collecting the image data, the code will then need to confirm it has a correct file extension, using the `allowed_file()` function, then upload the file.
 
-![Screen Shot 2022-09-06 at 10.49.22 pm.png](_images/Screen_Shot_2022-09-06_at_10.49.22_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.49.22_pm.png|Screen Shot 2022-09-06 at 10.49.22 pm.png]]
 
 ```python
 if new_image and allowed_file(filename):
@@ -2636,7 +2636,7 @@ if new_image and allowed_file(filename):
 
 Once the file has been uploaded, then create the new photo model, write it to the database, inform the user that it was successful, and reload the page.
 
-![Screen Shot 2022-09-06 at 10.51.08 pm.png](_images/Screen_Shot_2022-09-06_at_10.51.08_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.51.08_pm.png|Screen Shot 2022-09-06 at 10.51.08 pm.png]]
 
 ```python
 photo = Photos(title=form.title.data, filename=filename, userid=current_user.id)
@@ -2648,7 +2648,7 @@ return redirect(url_for("photos"))
 
 The final part of the route is to inform the user if the file upload was not allowed.
 
-![Screen Shot 2022-09-06 at 10.52.52 pm.png](_images/Screen_Shot_2022-09-06_at_10.52.52_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_10.52.52_pm.png|Screen Shot 2022-09-06 at 10.52.52 pm.png]]
 
 ```python
 else:
@@ -2659,7 +2659,7 @@ else:
 
 Run the site and access the page. Choose an image and set a title. Make sure the file gets uploaded correctly.
 
-![2022-09-06 22-54-25.2022-09-06 23_00_03.gif](_images/2022-09-06_22-54-25.2022-09-06_23_00_03.gif)
+![[_images/2022-09-06_22-54-25.2022-09-06_23_00_03.gif|2022-09-06 22-54-25.2022-09-06 23_00_03.gif]]
 
 ## Version 2 - displaying the users images
 
@@ -2669,7 +2669,7 @@ First, update the route by first collecting a list of all the images associated 
 
 The code can query the Photos table and collect all records, filtered by the userid.
 
-![Screen Shot 2022-09-06 at 11.03.46 pm.png](_images/Screen_Shot_2022-09-06_at_11.03.46_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_11.03.46_pm.png|Screen Shot 2022-09-06 at 11.03.46 pm.png]]
 
 ```python
 user_images = Photos.query.filter_by(userid=current_user.id).all()
@@ -2679,7 +2679,7 @@ Then pass this list of records - `user_images` - to the HTML page to display by 
 
 That’s the only changes required in the route.
 
-![Screen Shot 2022-09-06 at 11.04.58 pm.png](_images/Screen_Shot_2022-09-06_at_11.04.58_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_11.04.58_pm.png|Screen Shot 2022-09-06 at 11.04.58 pm.png]]
 
 Displaying the users images could be problematic, depending on how exactly you wished them to be displayed. In a simple fashion, they could be displayed using a standard CSS Grid layout with a number of columns, with rows being autogenerated.
 
@@ -2694,7 +2694,7 @@ This code uses the CSS class `grid-container` and then uses a for loop to create
 
 Save the File
 
-![Screen Shot 2022-09-06 at 11.12.22 pm.png](_images/Screen_Shot_2022-09-06_at_11.12.22_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_11.12.22_pm.png|Screen Shot 2022-09-06 at 11.12.22 pm.png]]
 
 ```python
 <div class="grid-container">
@@ -2722,7 +2722,7 @@ You may also find an existing selector - `.grid-container > div`. This can be de
 
 After editing the CSS to match your design choices, you can reload the site and view the Photos page.
 
-![Screen Shot 2022-09-06 at 11.24.17 pm.png](_images/Screen_Shot_2022-09-06_at_11.24.17_pm.png)
+![[_images/Screen_Shot_2022-09-06_at_11.24.17_pm.png|Screen Shot 2022-09-06 at 11.24.17 pm.png]]
 
 <aside>
 ‼️ These images can be displayed however you wish. Investigate and test different options for displaying images in a gallery. Experiment!
@@ -2745,7 +2745,7 @@ In short, the filename variable when uploading needs to be overridden. Before th
 
 After the file extension is approved, extract the file extension and store is separately.
 
-![Screen Shot 2022-09-07 at 9.47.12 am.png](_images/Screen_Shot_2022-09-07_at_9.47.12_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.47.12_am.png|Screen Shot 2022-09-07 at 9.47.12 am.png]]
 
 ```python
 # Get the file extension of the file.
@@ -2759,7 +2759,7 @@ Generate a random number using the `uuid` library.
 
 </aside>
 
-![Screen Shot 2022-09-07 at 9.54.21 am.png](_images/Screen_Shot_2022-09-07_at_9.54.21_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.54.21_am.png|Screen Shot 2022-09-07 at 9.54.21 am.png]]
 
 ```python
 import uuid
@@ -2768,7 +2768,7 @@ random_filename = str(uuid.uuid4())
 
 Finally, override the filename variable, with the randomly generated uuid and the extension.
 
-![Screen Shot 2022-09-07 at 9.54.03 am.png](_images/Screen_Shot_2022-09-07_at_9.54.03_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.54.03_am.png|Screen Shot 2022-09-07 at 9.54.03 am.png]]
 
 ```python
 filename = random_filename + "." + file_ext
@@ -2776,7 +2776,7 @@ filename = random_filename + "." + file_ext
 
 Upload an image and you’ll notice that the image is uploaded with a random filename but still with the same extension.
 
-![Screen Shot 2022-09-07 at 9.51.47 am.png](_images/Screen_Shot_2022-09-07_at_9.51.47_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.51.47_am.png|Screen Shot 2022-09-07 at 9.51.47 am.png]]
 
 - Photo Gallery
 
@@ -2789,15 +2789,15 @@ The page will be *similar* to the userPhotos.html file as this page already disp
 
 With that in mind, duplicate userPhotos.html and name the file `gallery.html`.
 
-![Screen Shot 2022-09-07 at 9.24.33 am.png](_images/Screen_Shot_2022-09-07_at_9.24.33_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.24.33_am.png|Screen Shot 2022-09-07 at 9.24.33 am.png]]
 
 Leave the `grid-container` div block and remove the div block with the form. 
 
-![Screen Shot 2022-09-07 at 9.27.01 am.png](_images/Screen_Shot_2022-09-07_at_9.27.01_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.27.01_am.png|Screen Shot 2022-09-07 at 9.27.01 am.png]]
 
 After this process, your `gallery.html` should appear similar to this.
 
-![Screen Shot 2022-09-07 at 9.29.08 am.png](_images/Screen_Shot_2022-09-07_at_9.29.08_am.png)
+![[_images/Screen_Shot_2022-09-07_at_9.29.08_am.png|Screen Shot 2022-09-07 at 9.29.08 am.png]]
 
 Save the file.
 
@@ -2827,7 +2827,7 @@ Luckily the project being built allows for a easy implementation of a flash mess
 
 Open `app.py` and add `flash` to the `from flask import….` line of code.
 
-![Screen Shot 2022-08-09 at 9.50.41 am.png](_images/Screen_Shot_2022-08-09_at_9.50.41_am.png)
+![[_images/Screen_Shot_2022-08-09_at_9.50.41_am.png|Screen Shot 2022-08-09 at 9.50.41 am.png]]
 
 # Update Routes
 
@@ -2840,7 +2840,7 @@ To add a flash message, the command is: `flash("Message")`.
 
 </aside>
 
-![Screen Shot 2022-08-09 at 9.52.45 am.png](_images/Screen_Shot_2022-08-09_at_9.52.45_am.png)
+![[_images/Screen_Shot_2022-08-09_at_9.52.45_am.png|Screen Shot 2022-08-09 at 9.52.45 am.png]]
 
 Add appropriate messages to other routes, such as `loggout`, `contact`, and `User Registration`. 
 
@@ -2869,7 +2869,7 @@ Wherever the messages are to appear in your code, add the following code block.
 
 This example shows that messages will appears just below the navbar.
 
-![Screen Shot 2022-08-09 at 10.18.13 am.png](_images/Screen_Shot_2022-08-09_at_10.18.13_am.png)
+![[_images/Screen_Shot_2022-08-09_at_10.18.13_am.png|Screen Shot 2022-08-09 at 10.18.13 am.png]]
 
 # Flash CSS
 
@@ -2886,7 +2886,7 @@ Open `static/site.css` and add the following CSS
 
 Test out a flash message and you should see it appear similar to the one shown.
 
-![Untitled](_images/Untitled%2014.png)
+![[_images/Untitled 14.png|Untitled]]
 
 You can expand on this CSS to make the messages stand out even more by updating the CSS, as shown here.
 
@@ -2909,11 +2909,11 @@ Modify the CSS to make the messages appear the way you wish to.
 }
 ```
 
-![Untitled](_images/Untitled%2015.png)
+![[_images/Untitled 15.png|Untitled]]
 
 # Demonstration
 
-![2022-08-09 10-19-24.2022-08-09 10_22_39.gif](_images/2022-08-09_10-19-24.2022-08-09_10_22_39.gif)
+![[_images/2022-08-09_10-19-24.2022-08-09_10_22_39.gif|2022-08-09 10-19-24.2022-08-09 10_22_39.gif]]
 
 - User Registration
 
@@ -2924,7 +2924,7 @@ Before delving into the user registration code, an easy place to start is to upd
 
 Open `templates/template.html` . Update the navbar code to include a new link which directs the user to `/register`.
 
-![Screen Shot 2022-07-05 at 10.45.46 pm.png](_images/Screen_Shot_2022-07-05_at_10.45.46_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.45.46_pm.png|Screen Shot 2022-07-05 at 10.45.46 pm.png]]
 
 ```python
 <a href="register">User Registration</a>
@@ -2932,7 +2932,7 @@ Open `templates/template.html` . Update the navbar code to include a new link wh
 
 When the site is next run, the User Registration link should appear on all pages based on this template.
 
-![Screen Shot 2022-07-05 at 10.46.33 pm.png](_images/Screen_Shot_2022-07-05_at_10.46.33_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.46.33_pm.png|Screen Shot 2022-07-05 at 10.46.33 pm.png]]
 
 # Create User Table
 
@@ -2953,24 +2953,24 @@ For the purposes of this module, the data that will be stored will be:
 
 Right-click on the Database in Pycharm and choose New Table. Call the table `user`.
 
-![Screen Shot 2022-07-05 at 8.46.18 pm.png](_images/Screen_Shot_2022-07-05_at_8.46.18_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_8.46.18_pm.png|Screen Shot 2022-07-05 at 8.46.18 pm.png]]
 
 Create the fields as needed.
 
 <aside>
 ‼️ Which ever field is going to be the users “username”, set that to be Unique in the database creation process.
 
-![Screen Shot 2022-07-05 at 8.48.41 pm.png](_images/Screen_Shot_2022-07-05_at_8.48.41_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_8.48.41_pm.png|Screen Shot 2022-07-05 at 8.48.41 pm.png]]
 
 </aside>
 
-![This is only an example. Create the fields as you need for the specific implementation requirements.](_images/Screen_Shot_2022-08-03_at_9.16.36_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.16.36_pm.png|This is only an example. Create the fields as you need for the specific implementation requirements.]]
 
 This is only an example. Create the fields as you need for the specific implementation requirements.
 
 The table should be created similar to this example.
 
-![Screen Shot 2022-08-03 at 9.17.05 pm.png](_images/Screen_Shot_2022-08-03_at_9.17.05_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.17.05_pm.png|Screen Shot 2022-08-03 at 9.17.05 pm.png]]
 
 # User Model
 
@@ -2978,7 +2978,7 @@ Open `models.py` to create the User Class. Unlike other models, this model needs
 
 At the top of `models.py` add the following import statements.
 
-![Screen Shot 2022-07-05 at 9.33.20 pm.png](_images/Screen_Shot_2022-07-05_at_9.33.20_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_9.33.20_pm.png|Screen Shot 2022-07-05 at 9.33.20 pm.png]]
 
 ```python
 from flask_login import UserMixin
@@ -2994,7 +2994,7 @@ Remember the class has to match the specific implementation of the database, not
 
 The code for the user class is shown here.
 
-![Screen Shot 2022-08-03 at 9.17.52 pm.png](_images/Screen_Shot_2022-08-03_at_9.17.52_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.17.52_pm.png|Screen Shot 2022-08-03 at 9.17.52 pm.png]]
 
 ```python
 class User(UserMixin, db.Model):
@@ -3033,7 +3033,7 @@ The second compares the stored hash with an unencrypted password. This will be u
 
 Add the following functions to your User class.
 
-![Screen Shot 2022-08-03 at 9.18.36 pm.png](_images/Screen_Shot_2022-08-03_at_9.18.36_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.18.36_pm.png|Screen Shot 2022-08-03 at 9.18.36 pm.png]]
 
 ```python
 def set_password (self, password):
@@ -3061,7 +3061,7 @@ At this stage, the function can return true is the `user_level` value is a 1 and
 
 </aside>
 
-![Screen Shot 2022-08-03 at 9.19.09 pm.png](_images/Screen_Shot_2022-08-03_at_9.19.09_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.19.09_pm.png|Screen Shot 2022-08-03 at 9.19.09 pm.png]]
 
 ```python
 def is_admin(self):
@@ -3081,11 +3081,11 @@ Open `forms.py`.
 
 Add a new `PasswordField` to the `wtforms` imports to enable the password to be hidden.
 
-![Screen Shot 2022-07-05 at 10.48.58 pm.png](_images/Screen_Shot_2022-07-05_at_10.48.58_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.48.58_pm.png|Screen Shot 2022-07-05 at 10.48.58 pm.png]]
 
 Add a new validator in the import statements, this one `EqualTo`.
 
-![Screen Shot 2022-07-05 at 9.53.46 pm.png](_images/Screen_Shot_2022-07-05_at_9.53.46_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_9.53.46_pm.png|Screen Shot 2022-07-05 at 9.53.46 pm.png]]
 
 The RegistrationForm class will be similar to this.
 
@@ -3096,7 +3096,7 @@ The RegistrationForm class will be similar to this.
 
 Collecting the password is done a little differently, as per standard practice, the user should enter the password twice to confirm the passwords are identical.
 
-![Screen Shot 2022-07-05 at 10.50.25 pm.png](_images/Screen_Shot_2022-07-05_at_10.50.25_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.50.25_pm.png|Screen Shot 2022-07-05 at 10.50.25 pm.png]]
 
 ```python
 class RegistrationForm(FlaskForm):
@@ -3113,7 +3113,7 @@ One issue with users self-registering is that the system should not accept dupli
 
 Import the User model into the `forms.py` file.
 
-![Screen Shot 2022-07-05 at 9.59.52 pm.png](_images/Screen_Shot_2022-07-05_at_9.59.52_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_9.59.52_pm.png|Screen Shot 2022-07-05 at 9.59.52 pm.png]]
 
 ```python
 from models import User
@@ -3121,11 +3121,11 @@ from models import User
 
 Also add a new Validator - `ValidationError`
 
-![Screen Shot 2022-07-05 at 10.02.30 pm.png](_images/Screen_Shot_2022-07-05_at_10.02.30_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.02.30_pm.png|Screen Shot 2022-07-05 at 10.02.30 pm.png]]
 
 Add the verification function to the RegistrationForm class.
 
-![Screen Shot 2022-07-05 at 10.03.53 pm.png](_images/Screen_Shot_2022-07-05_at_10.03.53_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.03.53_pm.png|Screen Shot 2022-07-05 at 10.03.53 pm.png]]
 
 ```python
 def validate_email_address(self, email_address_to_register):
@@ -3163,7 +3163,7 @@ The HTML template will again be based on the main site `template.html`.
 
 Replace the Main Content text with the structure for the form.
 
-![Screen Shot 2022-07-05 at 10.16.23 pm.png](_images/Screen_Shot_2022-07-05_at_10.16.23_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.16.23_pm.png|Screen Shot 2022-07-05 at 10.16.23 pm.png]]
 
 ```python
 <form action="" method="post">
@@ -3179,7 +3179,7 @@ Similar to previous forms, you will need to create a copy of this block of code 
 
 The only parts that need to change for each field are highlighted red.
 
-![Screen Shot 2022-07-01 at 1.37.36 pm.png](_images/Screen_Shot_2022-07-01_at_1.37.36_pm.png)
+![[_images/Screen_Shot_2022-07-01_at_1.37.36_pm.png|Screen Shot 2022-07-01 at 1.37.36 pm.png]]
 
 ```python
 <p>
@@ -3199,7 +3199,7 @@ form.`email_address`.label
 
 </aside>
 
-![Screen Shot 2022-07-05 at 10.19.28 pm.png](_images/Screen_Shot_2022-07-05_at_10.19.28_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.19.28_pm.png|Screen Shot 2022-07-05 at 10.19.28 pm.png]]
 
 ```python
 <form action="" method="post">
@@ -3243,17 +3243,17 @@ The final step is to link all the parts together in the registration route.
 
 Open `app.py` and update the forms import statement to include the the User model and RegistrationForm created.
 
-![Screen Shot 2022-07-05 at 10.27.57 pm.png](_images/Screen_Shot_2022-07-05_at_10.27.57_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.27.57_pm.png|Screen Shot 2022-07-05 at 10.27.57 pm.png]]
 
 Update the flask import statement to also import `url_for`.
 
-![Screen Shot 2022-07-05 at 10.35.28 pm.png](_images/Screen_Shot_2022-07-05_at_10.35.28_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.35.28_pm.png|Screen Shot 2022-07-05 at 10.35.28 pm.png]]
 
 Create the new Route.
 
 This route will create the RegistrationForm in memory and pass it to the `registration.html` template.
 
-![Screen Shot 2022-07-05 at 10.30.19 pm.png](_images/Screen_Shot_2022-07-05_at_10.30.19_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.30.19_pm.png|Screen Shot 2022-07-05 at 10.30.19 pm.png]]
 
 ```python
 @app.route("/register", methods=["GET", "POST"])
@@ -3267,7 +3267,7 @@ Add the user to the database.
 
 When the user presses the submit button, the code block in `form.validate_on_submit()` is run. This creates the new user in memory first, then sets the password (hashing it in the process by using the `set_password` helper function) and the writes it to the database.
 
-![Screen Shot 2022-07-05 at 10.37.42 pm.png](_images/Screen_Shot_2022-07-05_at_10.37.42_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.37.42_pm.png|Screen Shot 2022-07-05 at 10.37.42 pm.png]]
 
 ```python
 if form.validate_on_submit():
@@ -3282,11 +3282,11 @@ if form.validate_on_submit():
 
 Run the project and visit [http://127.0.0.1:5000/register](http://127.0.0.1:5000/register).
 
-![Screen Shot 2022-07-05 at 10.51.52 pm.png](_images/Screen_Shot_2022-07-05_at_10.51.52_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.51.52_pm.png|Screen Shot 2022-07-05 at 10.51.52 pm.png]]
 
 Register a user and then view the database (you may need to refresh the view). The new user should appear similar to this.
 
-![Screen Shot 2022-07-05 at 10.33.58 pm.png](_images/Screen_Shot_2022-07-05_at_10.33.58_pm.png)
+![[_images/Screen_Shot_2022-07-05_at_10.33.58_pm.png|Screen Shot 2022-07-05 at 10.33.58 pm.png]]
 
 - User Login
 
@@ -3306,11 +3306,11 @@ One of the requirements of the flask_login system is a helper function to load t
 
 Open `models.py`, and update the import statement to include login from app.
 
-![Screen Shot 2022-08-24 at 12.23.28 pm.png](_images/Screen_Shot_2022-08-24_at_12.23.28_pm.png)
+![[_images/Screen_Shot_2022-08-24_at_12.23.28_pm.png|Screen Shot 2022-08-24 at 12.23.28 pm.png]]
 
 Add the following code to the bottom of the `models.py` file.
 
-![Screen Shot 2022-08-03 at 9.28.13 pm.png](_images/Screen_Shot_2022-08-03_at_9.28.13_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.28.13_pm.png|Screen Shot 2022-08-03 at 9.28.13 pm.png]]
 
 ```python
 @login.user_loader
@@ -3327,13 +3327,13 @@ def load_user(id):
 
 Open [forms.py](http://forms.py) and create a new class - `LoginForm`.
 
-![Screen Shot 2022-08-03 at 3.52.53 pm.png](_images/Screen_Shot_2022-08-03_at_3.52.53_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_3.52.53_pm.png|Screen Shot 2022-08-03 at 3.52.53 pm.png]]
 
 Define the variables and fields that are required for the form. In this case, there should be a `email address` field and a `password` field. The password field is similar to a normal `StringField` except that it won’t display the letters entered, but hides the password when typing it in.
 
 The submit entry will show as a button, similar to the Register button in the Registration process.
 
-![Screen Shot 2022-08-03 at 3.57.11 pm.png](_images/Screen_Shot_2022-08-03_at_3.57.11_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_3.57.11_pm.png|Screen Shot 2022-08-03 at 3.57.11 pm.png]]
 
 ```python
 class LoginForm(FlaskForm):
@@ -3360,7 +3360,7 @@ Copy the contents of `registration.html` and remove the code to display the fiel
 
 The code to the login page will be similar to this:
 
-![Screen Shot 2022-08-03 at 4.04.22 pm.png](_images/Screen_Shot_2022-08-03_at_4.04.22_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.04.22_pm.png|Screen Shot 2022-08-03 at 4.04.22 pm.png]]
 
 You can modify the login page to display however you would like.
 
@@ -3370,11 +3370,11 @@ Open [`app.py`](http://app.py).
 
 Import the new `LoginForm` at the top of the file, extending the code which already imports the `RegistrationForm` (amongst others).
 
-![Screen Shot 2022-08-03 at 4.11.21 pm.png](_images/Screen_Shot_2022-08-03_at_4.11.21_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.11.21_pm.png|Screen Shot 2022-08-03 at 4.11.21 pm.png]]
 
 Import the necessary libraries from `flask_login`. 
 
-![Screen Shot 2022-08-22 at 9.23.57 am.png](_images/Screen_Shot_2022-08-22_at_9.23.57_am.png)
+![[_images/Screen_Shot_2022-08-22_at_9.23.57_am.png|Screen Shot 2022-08-22 at 9.23.57 am.png]]
 
 ```python
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
@@ -3382,7 +3382,7 @@ from flask_login import current_user, login_user, LoginManager, logout_user, log
 
 Configure the login manager to use the new login system that is being designed.
 
-![Screen Shot 2022-08-22 at 9.21.46 am.png](_images/Screen_Shot_2022-08-22_at_9.21.46_am.png)
+![[_images/Screen_Shot_2022-08-22_at_9.21.46_am.png|Screen Shot 2022-08-22 at 9.21.46 am.png]]
 
 ```python
 login = LoginManager(app)
@@ -3391,23 +3391,23 @@ login.login_view = 'login'
 
 Create a new route for `/login`. 
 
-![Screen Shot 2022-08-03 at 4.08.31 pm.png](_images/Screen_Shot_2022-08-03_at_4.08.31_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.08.31_pm.png|Screen Shot 2022-08-03 at 4.08.31 pm.png]]
 
 Load the `LoginForm` and store it in a variable named `form`.
 
 You’ll notice that the structure of these routes so far is fairly similar, especially when loading a form. This will assist you when creating your own additional functionality
 
-![Screen Shot 2022-08-03 at 4.32.30 pm.png](_images/Screen_Shot_2022-08-03_at_4.32.30_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.32.30_pm.png|Screen Shot 2022-08-03 at 4.32.30 pm.png]]
 
 Check if the form has been submitted.
 
-![Screen Shot 2022-08-24 at 12.26.14 pm.png](_images/Screen_Shot_2022-08-24_at_12.26.14_pm.png)
+![[_images/Screen_Shot_2022-08-24_at_12.26.14_pm.png|Screen Shot 2022-08-24 at 12.26.14 pm.png]]
 
 If the form has been submitted (i.e. the user has entered an email address and password) the process should then attempt to load the user record from the database that has that email address.
 
 This code uses the User model, and loads the first entry in the database where the email address stored in the table matches the email address entered in the form.
 
-![Screen Shot 2022-08-24 at 12.27.18 pm.png](_images/Screen_Shot_2022-08-24_at_12.27.18_pm.png)
+![[_images/Screen_Shot_2022-08-24_at_12.27.18_pm.png|Screen Shot 2022-08-24 at 12.27.18 pm.png]]
 
 ```python
 user = User.query.filter_by(email_address=form.email_address.data).first()
@@ -3426,7 +3426,7 @@ The code needs to cater for all three cases.
 
 The code can easily check if the user is not found in the database (i.e. no match on the email address) by checking if the `user` variable is empty.
 
-![Screen Shot 2022-08-03 at 4.21.51 pm.png](_images/Screen_Shot_2022-08-03_at_4.21.51_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.21.51_pm.png|Screen Shot 2022-08-03 at 4.21.51 pm.png]]
 
 At this stage, you, the developer, need to determine what is to occur to users who enter incorrect details. There are a number of possibilities, however at this stage, the code can simply reload the login page to prompt them again.
 
@@ -3435,7 +3435,7 @@ At this stage, you, the developer, need to determine what is to occur to users w
 
 </aside>
 
-![Screen Shot 2022-08-03 at 4.23.39 pm.png](_images/Screen_Shot_2022-08-03_at_4.23.39_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.23.39_pm.png|Screen Shot 2022-08-03 at 4.23.39 pm.png]]
 
 Turning to Case #2, if the user enters an email address that is found in the database, but an incorrect password, the same outcome is wanted as Case #1 - the login page is reloaded. The `if user is None:` statement can be extended to check if the password is incorrect. This extra check will run the `check_password` function written in the User model. 
 
@@ -3449,23 +3449,23 @@ Turning to Case #2, if the user enters an email address that is found in the dat
 
 </aside>
 
-![Screen Shot 2022-08-03 at 4.26.55 pm.png](_images/Screen_Shot_2022-08-03_at_4.26.55_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_4.26.55_pm.png|Screen Shot 2022-08-03 at 4.26.55 pm.png]]
 
 Finally, the last case (Case #3) is if the email address and password are correct. If this is the case, you can utilise the pre-written function to log the user in. If the user successfully logs in, they will be redirected to the homepage *at this stage*.
 
-![Screen Shot 2022-08-03 at 9.22.13 pm.png](_images/Screen_Shot_2022-08-03_at_9.22.13_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.22.13_pm.png|Screen Shot 2022-08-03 at 9.22.13 pm.png]]
 
 # Template Updates
 
 The login page has been created, but is not accessible through the website. Update the navbar in templates/template.html to include the link to the newly created login page.
 
-![Screen Shot 2022-08-03 at 9.32.32 pm.png](_images/Screen_Shot_2022-08-03_at_9.32.32_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.32.32_pm.png|Screen Shot 2022-08-03 at 9.32.32 pm.png]]
 
 One of the additional features that can be easily included is the ability to dynamically load information regarding the user who is currently logged in, such as their name.
 
 As an example, open `templates/index.html` and in the main block, include the following code.
 
-![Screen Shot 2022-08-03 at 9.48.32 pm.png](_images/Screen_Shot_2022-08-03_at_9.48.32_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_9.48.32_pm.png|Screen Shot 2022-08-03 at 9.48.32 pm.png]]
 
 ```python
 Welcome {{ user.name }}!
@@ -3475,15 +3475,15 @@ Save the file.
 
 Open `app.py` and update the `return` statement to include the `current_user` variable to indicate the user who is currently logged in (if any).
 
-![Screen Shot 2022-08-03 at 10.21.25 pm.png](_images/Screen_Shot_2022-08-03_at_10.21.25_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.21.25_pm.png|Screen Shot 2022-08-03 at 10.21.25 pm.png]]
 
 Log into the site and when the home page is loaded, the users name should appear.
 
-![Screen Shot 2022-08-03 at 10.34.23 pm.png](_images/Screen_Shot_2022-08-03_at_10.34.23_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.34.23_pm.png|Screen Shot 2022-08-03 at 10.34.23 pm.png]]
 
 Now that this is proven to work, this `{{ user.name }}` can be added to the template, so it appears alongside the navbar. This means that the users name can be shown on any page they access.
 
-![Screen Shot 2022-08-03 at 10.39.38 pm.png](_images/Screen_Shot_2022-08-03_at_10.39.38_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.39.38_pm.png|Screen Shot 2022-08-03 at 10.39.38 pm.png]]
 
 ```html
 <div style="color:white">{{ user.name }}</div>
@@ -3491,9 +3491,9 @@ Now that this is proven to work, this `{{ user.name }}` can be added to the temp
 
 As it is part of the template for all pages, all the other routes in `app.py` will need to also be updated to include the `user=current_user`, similar to the homepage.
 
-![Screen Shot 2022-08-03 at 10.43.12 pm.png](_images/Screen_Shot_2022-08-03_at_10.43.12_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.43.12_pm.png|Screen Shot 2022-08-03 at 10.43.12 pm.png]]
 
-![Screen Shot 2022-08-03 at 10.42.43 pm.png](_images/Screen_Shot_2022-08-03_at_10.42.43_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.42.43_pm.png|Screen Shot 2022-08-03 at 10.42.43 pm.png]]
 
 - User Logout
 
@@ -3504,11 +3504,11 @@ Providing the functionality for logging out is relatively simple as the bulk of 
 
 In `app.py`, update the flask-login import line to include `logout_user`.
 
-![Screen Shot 2022-08-03 at 10.45.54 pm.png](_images/Screen_Shot_2022-08-03_at_10.45.54_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.45.54_pm.png|Screen Shot 2022-08-03 at 10.45.54 pm.png]]
 
 Add a new Route for `/logout`. This route only needs to run the logout_user() function and then redirect the user to the homepage.
 
-![Screen Shot 2022-08-03 at 10.46.15 pm.png](_images/Screen_Shot_2022-08-03_at_10.46.15_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.46.15_pm.png|Screen Shot 2022-08-03 at 10.46.15 pm.png]]
 
 ```python
 @app.route('/logout')
@@ -3521,11 +3521,11 @@ def logout():
 
 Update the navbar in `templates/template.html` to include a link to the new `/logout` route
 
-![Screen Shot 2022-08-03 at 10.50.36 pm.png](_images/Screen_Shot_2022-08-03_at_10.50.36_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_10.50.36_pm.png|Screen Shot 2022-08-03 at 10.50.36 pm.png]]
 
 Test it out!
 
-![2022-08-03 22-53-17.2022-08-03 22_53_59.gif](_images/2022-08-03_22-53-17.2022-08-03_22_53_59.gif)
+![[_images/2022-08-03_22-53-17.2022-08-03_22_53_59.gif|2022-08-03 22-53-17.2022-08-03 22_53_59.gif]]
 
 # Dynamic Navbar Updates
 
@@ -3538,9 +3538,9 @@ Open `templates/template.html`.
 
 Add an `if` check in the navbar and check to see if the user is anonymous or not.
 
-![Screen Shot 2022-08-03 at 11.01.51 pm.png](_images/Screen_Shot_2022-08-03_at_11.01.51_pm.png)
+![[_images/Screen_Shot_2022-08-03_at_11.01.51_pm.png|Screen Shot 2022-08-03 at 11.01.51 pm.png]]
 
-![2022-08-03 22-58-58.2022-08-03 23_00_24.gif](_images/2022-08-03_22-58-58.2022-08-03_23_00_24.gif)
+![[_images/2022-08-03_22-58-58.2022-08-03_23_00_24.gif|2022-08-03 22-58-58.2022-08-03 23_00_24.gif]]
 
 - Password Reset
 
@@ -3560,7 +3560,7 @@ The form to reset the password is relatively simple, as it only requires a singl
 
 Open `forms.py` and add a new class:
 
-![Screen Shot 2022-08-08 at 11.05.49 pm.png](_images/Screen_Shot_2022-08-08_at_11.05.49_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.05.49_pm.png|Screen Shot 2022-08-08 at 11.05.49 pm.png]]
 
 ```python
 class ResetPasswordForm(FlaskForm):
@@ -3578,7 +3578,7 @@ Create a new html file in the templates folder and name it `passwordreset.html`.
 
 You’ll notice that the code is extremely similar to the login and registration forms in structure. 
 
-![Screen Shot 2022-08-08 at 11.16.48 pm.png](_images/Screen_Shot_2022-08-08_at_11.16.48_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.16.48_pm.png|Screen Shot 2022-08-08 at 11.16.48 pm.png]]
 
 ```python
 {% extends 'template.html' %}
@@ -3611,11 +3611,11 @@ Open `app.py` and as done previously before creating the route, import the new p
 
 Look for the `from forms...` line of code and add `ResetPasswordForm` to the end.
 
-![Screen Shot 2022-08-08 at 11.21.24 pm.png](_images/Screen_Shot_2022-08-08_at_11.21.24_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.21.24_pm.png|Screen Shot 2022-08-08 at 11.21.24 pm.png]]
 
 Create the new route to load the form and return the HTML file just created.
 
-![Screen Shot 2022-08-08 at 11.22.50 pm.png](_images/Screen_Shot_2022-08-08_at_11.22.50_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.22.50_pm.png|Screen Shot 2022-08-08 at 11.22.50 pm.png]]
 
 ```python
 @app.route('/reset_password', methods=['GET', 'POST'])
@@ -3626,7 +3626,7 @@ def reset_password():
 
 At this point, you can test the form to see if it appears by running the project and accessing the url: [http://127.0.0.1:5000/reset_password](http://127.0.0.1:5000/reset_password)
 
-![Screen Shot 2022-08-08 at 11.24.03 pm.png](_images/Screen_Shot_2022-08-08_at_11.24.03_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.24.03_pm.png|Screen Shot 2022-08-08 at 11.24.03 pm.png]]
 
 The remaining code to update the password is very similar to other code, such as register or any time data has been submitted to the database.
 
@@ -3634,7 +3634,7 @@ This code finds the user in the database (filtering by the username and comparin
 
 Finally it commits the changes to the database and sends the user back to the home page.
 
-![Screen Shot 2022-08-24 at 12.34.13 pm.png](_images/Screen_Shot_2022-08-24_at_12.34.13_pm.png)
+![[_images/Screen_Shot_2022-08-24_at_12.34.13_pm.png|Screen Shot 2022-08-24 at 12.34.13 pm.png]]
 
 ```python
 if form.validate_on_submit():
@@ -3652,11 +3652,11 @@ Obviously, this page serves no purpose for users who are not logged into the sit
 
 Open `app.py` and add `login_required` to the imports for `flask_login`.
 
-![Screen Shot 2022-08-08 at 11.37.53 pm.png](_images/Screen_Shot_2022-08-08_at_11.37.53_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.37.53_pm.png|Screen Shot 2022-08-08 at 11.37.53 pm.png]]
 
 At the `reset_password` route, add the `@login_required` decorator after the `@app.route` decorator and before the function definition.
 
-![Screen Shot 2022-08-08 at 11.40.20 pm.png](_images/Screen_Shot_2022-08-08_at_11.40.20_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.40.20_pm.png|Screen Shot 2022-08-08 at 11.40.20 pm.png]]
 
 You can now test the update by attempting to access the page after logging out the current user.
 
@@ -3670,9 +3670,9 @@ Open `templates/template.html` and search for the navbar code.
 
 Add the link to the section of the navbar that only displays if the users are logged in. I.e. in the same block as the logout link.
 
-![Screen Shot 2022-08-08 at 11.45.41 pm.png](_images/Screen_Shot_2022-08-08_at_11.45.41_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.45.41_pm.png|Screen Shot 2022-08-08 at 11.45.41 pm.png]]
 
-![Screen Shot 2022-08-08 at 11.46.04 pm.png](_images/Screen_Shot_2022-08-08_at_11.46.04_pm.png)
+![[_images/Screen_Shot_2022-08-08_at_11.46.04_pm.png|Screen Shot 2022-08-08 at 11.46.04 pm.png]]
 
 # Extension: Confirm password
 

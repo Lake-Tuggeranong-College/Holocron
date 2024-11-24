@@ -9,7 +9,7 @@ yearSemester:
 
 For suggestions on how to structure your report, see this page:
 
-[Technical Report Writing](technicalReportWriting.md)
+[[technicalReportWriting.md|Technical Report Writing]]
 
 
 # Assessable Topics 
@@ -77,7 +77,7 @@ An example of this image could be similar to:
 ![[MVC - Code Section.png]]
 
 Pick one route, preferably a complex route, and analyse that one. For example `resumeBuild` (there may be a more suitable option however):
-![resumeBuildRoute](/WebDev/2-Digital-Applications/2024S2/_images/resumeBuildRoute.png)
+![[/WebDev/2-Digital-Applications/2024S2/_images/resumeBuildRoute.png]]
 
 In this route, you could analyse
 - what a `POST` and a `GET` request is, and how that links with `if request.method == 'POST'`

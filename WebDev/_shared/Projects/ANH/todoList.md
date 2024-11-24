@@ -6,11 +6,11 @@ tags: ANH
 > - Implement a simple 'mini' app into the flask project
 > - Learn & implement CRUD operations
 > - Gain evidence for [ICTICT226 - Operate Simple Database Applications](https://training.gov.au/Training/Details/ICTICT226).
-> - ![todoDemo](todoDemo.gif)
+> - ![[todoDemo.gif]]
 # CRUD
 
 
-![CRUD](todoCRUD.jpeg)
+![[todoCRUD.jpeg|CRUD]]
 
 [https://www.atatus.com/glossary/crud/](https://www.atatus.com/glossary/crud/)
 
@@ -24,15 +24,15 @@ In this exercise, you’ll demonstrate each of these processes with a simple ToD
 
 In the database extension tab, click the `+` icon next to `Tables` to create a new table.
 
-![todoNewTable](todoNewTable.png)
+![[todoNewTable.png]]
 
 Name the table `todo`.
 
-![todoTableName](todoTableName.png)
+![[todoTableName.png]]
 
 Update the SQL commands to specify the fields to create in the `todo` table.
 
-![todoTableSQL](todoTableSQL.png)
+![[todoTableSQL.png]]
 
 ```sql
 CREATE TABLE todo(
@@ -45,11 +45,11 @@ CREATE TABLE todo(
 
 Press the run link to execute the SQL.
 
-![todoTableExecute](todoTableExecute.png)
+![[todoTableExecute.png]]
 
 The table will now be created and will appear in the left-hand view.
 
-![todoTableComplete](todoTableComplete.png)
+![[todoTableComplete.png]]
 
 # Create Model
 
@@ -60,7 +60,7 @@ At the end of the file, and after any other classes, add the following `todo` cl
  > [!info] Like with any other classes in this case, the names of the class and the variables need to match what the the names are in the database. If you’ve named them different, you will need to make them match.
 
 
-![todoModelCreate](todoModelCreate.png)
+![[todoModelCreate.png]]
 
 ```python
 class todo (db.Model):
@@ -76,7 +76,7 @@ class todo (db.Model):
 
 Right click on the Templates folder and create a new HTML file called `todo.html`. 
 
-![todoHTMLNew](todoHTMLNew.png)
+![[todoHTMLNew.png]]
 
 Replace the contents with this standard code.
 
@@ -104,7 +104,7 @@ Replace the contents with this standard code.
 
 Replace the sidebar (`rowTwoColOneContent`) with the code to create a new entry in the todo list.
 
-![todoFormCode](todoFormCode.png)
+![[todoFormCode.png]]
 
 ```python
 <form method="POST" action="/todo">
@@ -120,10 +120,10 @@ This code **loops** for each entry in the Todo list (how many rows are in the ta
 It also adds an Update button for each entry.
 
 > [!example]- An example of what this code will create is:
-> ![todoExampleList](todoExampleList.png)
+> ![[todoExampleList.png]]
 
 
-![todoList](todoListCode.png)
+![[todoListCode.png|todoList]]
 
 ```python
 <h2>List</h2>
@@ -151,13 +151,13 @@ Open `app.py` .
 
 Update the following import. This allows this file to load and use the new class just created.
 
-![todoImportTodo](todoImportTodo.png)
+![[todoImportTodo.png]]
 
 ## View Todos
 
 Create a new route by copying this code into `app.py.`
 
-![todoAddRoute](todoAddRoute.png)
+![[todoAddRoute.png]]
 
 ```python
 @app.route('/todo', methods=["POST", "GET"])
@@ -198,11 +198,11 @@ Run the project and access the link:
 
 You should see something similar to this:
 
-![todoExample](todoExample.png)
+![[todoExample.png]]
 
 Create a new Entry and reload the page.
 
-![todoExampleCreateEntry](todoExampleCreateEntry.png)
+![[todoExampleCreateEntry.png]]
 
 # ‘Edit Todo’ Route
 
@@ -210,7 +210,7 @@ This route will handle both the update and delete functions.
 
 Add the following route code to `app.py`
 
-![todoEditRoute](todoEditRoute.png)
+![[todoEditRoute.png]]
 
 ```python
 @app.route("/todoedit/<todo_id>", methods=["POST", "GET"])
@@ -246,7 +246,7 @@ def edit_note(todo_id):
 
 Open base.html and add a new link to the TODO mini app.
 
-![todoTemplateUpdate](todoTemplateUpdate.png)
+![[todoTemplateUpdate.png]]
 ```html
 <a class="nav-link" href="/todo">ToDo List</a>
 ```

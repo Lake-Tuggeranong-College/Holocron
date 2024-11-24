@@ -19,7 +19,7 @@ Go to the following site and create a Jetbrains account **using your school Goog
 
 Once done, visit the following page and apply for a free educational account. 
 
-[Jetbrains Education](https://www.jetbrains.com/community/education/#students)
+[[https://www.jetbrains.com/community/education/#students]]
 
 #### Install Jetbrains Toolbox
 

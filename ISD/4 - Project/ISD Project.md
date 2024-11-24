@@ -39,11 +39,11 @@ tags:
 > [!info]- Week 1
 > ![[semesterCalendarS2#School Events - Week 1]]
 > #### Class Tasks
-> - [x] [CloneHolocron](_sharedContent/CloneHolocron.md)
+> - [[_sharedContent/CloneHolocron.md|x]]
 > - [x] [[ISD/4 - Project/_projects/Declan Battle Royal/Fork & Clone Project|Fork & Clone Project]]
 > #### Theory
 > - [ ] [[ISD/4 - Project/_projects/Declan Battle Royal/Characters|Characters]]
-> - [ ] [DBR Brainstorming](ISD/4%20-%20Project/_projects/Declan%20Battle%20Royal/DBR%20Brainstorming.md)
+> - [[ISD/4 - Project/_projects/Declan Battle Royal/DBR Brainstorming.md| ]]
 > #### Practical
 > N/A
 
@@ -59,7 +59,7 @@ tags:
 > [!danger]- Week 3
 > ![[semesterCalendarS2#School Events - Week 3]]
  > 
-> [Assessment Assistance](Task1.md)
+> [[Task1.md|Assessment Assistance]]
 >
 > **Assessment Week**
 > You will be given your assessment/topic Monday morning. The task will be due Friday 11:59pm.
@@ -73,16 +73,16 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Phase 1 Development](ISD/4%20-%20Project/_topics/Phase%201%20Development.md)
+> - [[ISD/4 - Project/_topics/Phase 1 Development.md| ]]
 
 > [!info]- Week 5
 > ![[semesterCalendarS2#School Events - Week 5]]
 > #### Class Tasks
-> - [ ] [Assessment Documentation](ISD/4%20-%20Project/_projects/Declan%20Battle%20Royal/Assessment%20Documentation.md)
+> - [[ISD/4 - Project/_projects/Declan Battle Royal/Assessment Documentation.md| ]]
 > #### Theory
 > N/A
 > #### Practical
-> - [ ] [Phase 1 Development](ISD/4%20-%20Project/_topics/Phase%201%20Development.md)
+> - [[ISD/4 - Project/_topics/Phase 1 Development.md| ]]
 
 > [!info]- Week 6
 > ![[semesterCalendarS2#School Events - Week 6]]
@@ -105,7 +105,7 @@ tags:
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
 > #### Class Tasks
-> [Assessment Documentation](obsidian://open?vault=Holocron&file=ISD%2F4%20-%20Project%2F2024S2%2FAssessment%202%20-%202024S2)
+> [[obsidian://open?vault=Holocron&file=ISD%2F4 - Project%2F2024S2%2FAssessment 2 - 2024S2|Assessment Documentation]]
 >Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
 >Development Process should be fully written by end of week 9 so start now and get ahead<br>
 >[VET Competency](https://classroom.google.com/u/2/c/NjQ5OTU5NDgxMDQw/a/NzEwNDU3NzEwMjI3/details)  
@@ -121,7 +121,7 @@ Section 1 should be completed by end of week 8
 > #### Class Tasks
 > - [ ] [VET Competencies](https://classroom.google.com/c/NjQ5OTU5NDgxMDQw/a/NzEwNDU3NzEwMjI3/details)
 > 	- By the end of this week this competency should be entirely complete. Ensure you have all of your evidence added and are tagging Ryan in the document so that he can confirm that the **Client only** sections have been completed.
-> - [ ] [Assessment 2](ISD/4%20-%20Project/2024S2/Assessment%202.md)
+> - [[ISD/4 - Project/2024S2/Assessment 2.md| ]]
 > 	- You should have the development process section drafted and ready to submit at the end of this week. Jacob will be reviewing and providing feedback on this section.
 > #### Theory
 > N/A
@@ -133,7 +133,7 @@ Section 1 should be completed by end of week 8
 > #### Class Tasks
 > - [ ] VET Competency
 > 	- Ensure that you have at least done competency [# ICTSAS305 Provide ICT advice to clients](https://classroom.google.com/c/NjQ5OTU5NDgxMDQw/a/NzEwNDU3NzEwMjI3/details) by the end of term. There are more competencies on the Google Classroom that will help you towards your Cert III. At this stage in your college career you are more than capable of providing evidence for every single one.
-> - [ ] [Assessment 2](ISD/4%20-%20Project/2024S2/Assessment%202.md)
+> - [[ISD/4 - Project/2024S2/Assessment 2.md| ]]
 > 	- You should be able to access the feedback on your development process section now. Review these and have a look at the feedback.
 > 	- The assessment documentation scaffold page has been populated for each section now. These should make it very easy to write up your assessment well before the due date. The whole document is due in week 12. With 3 weeks left (not including the school holidays) you have plenty of time to work through the linked page and write up your assessment documentation.
 > #### Theory
@@ -146,7 +146,7 @@ Section 1 should be completed by end of week 8
 > ![[semesterCalendarS2#School Events - Week 11]]
 > #### Class Tasks
 > - [ ] Finalise Project
-> - [ ] [Assessment 2](ISD/4%20-%20Project/2024S2/Assessment%202.md)
+> - [[ISD/4 - Project/2024S2/Assessment 2.md| ]]
 > #### Theory
 > N/A
 > #### Practical
@@ -165,7 +165,7 @@ Section 1 should be completed by end of week 8
 > [!danger]- Week 13
 > ![[semesterCalendarS2#School Events - Week 13]]
 > - [ ] Finalise Project
-> - [ ] [Assessment 2](ISD/4%20-%20Project/2024S2/Assessment%202.md)
+> - [[ISD/4 - Project/2024S2/Assessment 2.md| ]]
 >
 > **Assessment Due**
 > The task will be due Friday 11:59pm.
@@ -209,7 +209,7 @@ Section 1 should be completed by end of week 8
 | Unit Outline     | Assessments                                                                      |
 | ---------------- | -------------------------------------------------------------------------------- |
 | Google Classroom | Assessment 1 - 25 %                                                              |
-|                  | [Assessment 2](ISD/4%20-%20Project/2024S2/Assessment%202.md) - 50 % |
+|                  | [[ISD/4 - Project/2024S2/Assessment 2.md]] - 50 % |
 |                  | [[ISD/4 - Project/2024S2/Assessment 3\|Assessment 3]] - 25 %                     |
 
 # Contact Details

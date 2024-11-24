@@ -64,7 +64,7 @@ With the CollisionShape3D selected, set the Shape attribute to a Capsule.
 # Navigation Agent
 The next node to add is `NavigationAgent3D`. This is the node that will interact with the NavigationMesh created in another stage.
 
-![enemyNavAgent](enemyNavAgent.png)
+![[enemyNavAgent.png]]
 
 # Script
 

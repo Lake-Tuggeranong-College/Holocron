@@ -8,21 +8,21 @@ Download and install the Raspberry Pi Imager
 
 When the Imager is open, Click “Choose OS”.
 
-![Screen Shot 2022-03-09 at 10.16.07 am.png](rpiImager.png)
+![[rpiImager.png|Screen Shot 2022-03-09 at 10.16.07 am.png]]
 
 Select Raspberry Pi OS (Other).
 
-![Screen Shot 2022-03-09 at 10.16.30 am.png](rpiImagerChooseOS.png)
+![[rpiImagerChooseOS.png|Screen Shot 2022-03-09 at 10.16.30 am.png]]
 
 In the list, choose Raspberry PI OS (64-bit).
 
-![Screen Shot 2022-03-09 at 10.16.58 am.png](rpiImagerChooseOS64bit.png)
+![[rpiImagerChooseOS64bit.png|Screen Shot 2022-03-09 at 10.16.58 am.png]]
 
 Click Choose Storage. 
 
 Choose the attached SD Card.
 
-![Screen Shot 2022-03-09 at 10.17.36 am.png](rpiImagerChooseStorage.png)
+![[rpiImagerChooseStorage.png|Screen Shot 2022-03-09 at 10.17.36 am.png]]
 
 Click Write.
 
@@ -34,13 +34,13 @@ When the Imager is open, Click “Choose OS”.
 
 Choose General Purpose OS.
 
-![Screen Shot 2022-03-09 at 10.21.30 am.png](rpiImagerGeneralPurposeOS.png)
+![[rpiImagerGeneralPurposeOS.png|Screen Shot 2022-03-09 at 10.21.30 am.png]]
 
 Choose Ubuntu Desktop. 
 
 Make sure it’s not the Server version.
 
-![Screen Shot 2022-03-09 at 10.19.36 am.png](rpiImagerUbuntuDesktop.png)
+![[rpiImagerUbuntuDesktop.png|Screen Shot 2022-03-09 at 10.19.36 am.png]]
 
 Click Choose Storage. 
 

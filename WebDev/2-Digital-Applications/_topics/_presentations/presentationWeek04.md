@@ -16,7 +16,7 @@ Three components:
 
 All the experience data will be stored in one table. 
 
-![resumeERD](resumeERD.png)
+![[resumeERD.png]]
 
 `userID` is the current user's id from the `user` table.
 
@@ -38,26 +38,26 @@ Creating:
 ---
 # Resume Build
 
-![resumeBuildTemplateFormEntry](resumeBuildTemplateFormEntry.png)
+![[resumeBuildTemplateFormEntry.png]]
 
 ---
 
 # Resume Edit
 
-![resumeEditPreview](resumeEditPreview.png)
+![[resumeEditPreview.png]]
 
 ---
 
 # Resume Display
 
-![resumeDisplayCardExample2](resumeDisplayCardExample2.png)
+![[resumeDisplayCardExample2.png]]
 
 ---
 # Improvements?
 
 What else goes on a resume?
 
-![resumeExampleWikiCommons](resumeExampleGenerated.png)
+![[resumeExampleGenerated.png|resumeExampleWikiCommons]]
 
 note: - Personal information
 	- Name

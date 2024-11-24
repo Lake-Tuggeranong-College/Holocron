@@ -31,7 +31,7 @@ CREATE TABLE resume_referees(
 
 Update `models.py` to create a new class to match the new table:
 
-![resumeFinalRefereeModel](resumeFinalRefereeModel.png)
+![[resumeFinalRefereeModel.png]]
 
 ```python
 class ResumeReferees(db.Model):
@@ -48,7 +48,7 @@ Open `forms.py`. Due to changes required further in the code, you will need to:
 - Change the variable for the SubmitField for `ResumeForm` to `submit1`, and 
 - Create the new RefereeForm class. Notice that the SubmitField is named `submit2`.
 
-![resumeFinalForms](resumeFinalForms.png)
+![[resumeFinalForms.png]]
 
 ```python
 class RefereeForm(FlaskForm):
@@ -65,7 +65,7 @@ class RefereeForm(FlaskForm):
 
 First, add the newly created classes to the import statements near the top of the file.
 
-![resumeFinalImport](resumeFinalImports.png)
+![[resumeFinalImports.png|resumeFinalImport]]
 
 ### `resumeBuild()`
 
@@ -73,11 +73,11 @@ Several changes need to be made to this function for the new referee functionali
 
 Right-click on `form` and choose **Rename Symbol**. Change the name to `formResume` and hit enter. 
 
-![resumeFinalRename](resumeFinalRename.png)
+![[resumeFinalRename.png]]
 
 Create a new variable for `RefereeForm`.
 
-![resumeFinalRefereeForm](resumeFinalRefereeForm.png)
+![[resumeFinalRefereeForm.png]]
 
 
 ```python
@@ -86,7 +86,7 @@ formReferee = RefereeForm()
 
 Update the remainder of the function to check which form was submitted (using which button) and update the relevant database. The `renderTemplate()` function call will also need to be updated to send both forms to the `resumeBuild.html` template.
 
-![resumeFinalValidateSubmit](resumeFinalValidateSubmit.png)
+![[resumeFinalValidateSubmit.png]]
 
 ```python
 if formResume.submit1.data and formResume.validate:
@@ -118,7 +118,7 @@ Update `resumeDisplay()` to load the referees for the user. This process is done
 
 You'll then need to add the referee data to send to the template.
 
-![resumeFinalDisplay](resumeFinalDisplay.png)
+![[resumeFinalDisplay.png]]
 
 ```python
 userReferees = ResumeReferees.query.filter_by(userID=current_user.id).all()
@@ -128,13 +128,13 @@ userReferees = ResumeReferees.query.filter_by(userID=current_user.id).all()
 
 Open `resumeBuild.html` and update to reflect the changes made, to accomodate adding Experience and Referees.
 
-![resumeFinalFormUpdate](resumeFinalFormUpdate.png)
+![[resumeFinalFormUpdate.png]]
 
 Add the code for the Referee form.
 
 > [!important] Pay attention to the `</div>` tags to ensure the page will be laid out correctly.
 
-![resumeFinalFormNew](resumeFinalFormNew.png)
+![[resumeFinalFormNew.png]]
 
 ```html
 <div class="row">
@@ -166,7 +166,7 @@ The final step is to code the resume to display the referees. Open `resumeDispla
 
 Add the code to iterate over any referees the user has and display them.
 
-![resumeFinalRefereesDisplay](resumeFinalRefereesDisplay.png)
+![[resumeFinalRefereesDisplay.png]]
 
 ```html
 <h2>Referees</h2>
@@ -260,13 +260,13 @@ Instead of the user entering the rating as a number out of 5, update the form to
 
 > [!hint] A drop-down list is called a **Select** in HTML. You may find [this page](https://getbootstrap.com/docs/5.3/forms/select/) useful.
 
-![resumeFinalSelectRating](resumeFinalSelectRating.png)
+![[resumeFinalSelectRating.png]]
 
 ## Another Challenge!
 
 Instead of displaying the rating as just a number or text, change `resumeDisplay.html` to display a star (or other symbol) to represent the rating.
 
-![resumeFinalSkillsStar](resumeFinalSkillsStar.png)
+![[resumeFinalSkillsStar.png]]
 
 To do this you could first check the value then display a star. Do this in the template, you could use code similar to this:
 
@@ -281,7 +281,7 @@ To do this you could first check the value then display a star. Do this in the t
 
 Currently, when attempting to print, the resume format is distorted.
 
-![resumeFinalPrintFail](resumeFinalPrintFail.png)
+![[resumeFinalPrintFail.png]]
 
 
 Research into how to use CSS to print webpages in a print-friendly format.

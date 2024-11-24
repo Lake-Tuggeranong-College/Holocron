@@ -1217,7 +1217,7 @@ Variables, constants etc that are declared within a function, are only accessibl
 
 ### Flowcharts
 
-[Mermaid](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax)
+[[https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax]]
 
 [Flowcharts](https://www.notion.so/Flowcharts-aefdd8293cdb46a1a4aa96ca5a3f9f48?pvs=21)
 
@@ -1359,7 +1359,7 @@ In the text editor, create the start to the mermaid flowchart, by adding the fol
 
 This indicates that the diagram will be a flowchart, and that it will be **T**op **D**own.
 
-> [!info]  [https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation)
+> [[https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation]]
 TB - top to bottom
 TD - top-down/ same as top to bottom
 BT - bottom to top

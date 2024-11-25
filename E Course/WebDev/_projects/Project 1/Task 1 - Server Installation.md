@@ -26,10 +26,10 @@ dev -->|deploy| prod
 
 ## Task 1 Competencies
 
-| Unit Code      | Unit Title                                  | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| -------------- | ------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| ICTICT213	<br> | Use computer operating systems and hardware |      ✅       |                  |               |         ✅         |
-| ICTICT223      | Install software applications               |              |        ✅         |               |                   |
+| Unit Code                                                                        | Unit Title                                  | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| -------------------------------------------------------------------------------- | ------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT213](https://training.gov.au/Training/Details/ICTICT213/unitdetails)	<br> | Use computer operating systems and hardware |      ✅       |                  |               |         ✅         |
+| [ICTICT223](https://training.gov.au/Training/Details/ICTICT223/unitdetails)      | Install software applications               |              |        ✅         |               |                   |
 
 # Presentation Slides
 

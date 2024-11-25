@@ -18,7 +18,7 @@ These competencies are covered throughout this semester.
 
 ![[Task 3 - PHP Practical#Task 3 Competencies]]
 
-![[Task 4 Project Highlights#Task 4 Competencies]]
+![[Task 4 - Project Highlights#Task 4 Competencies]]
 
 # Content
 This semester will be divided into two projects, *loosely* aimed at being completed each term.
@@ -29,4 +29,4 @@ This semester will be divided into two projects, *loosely* aimed at being comple
 
 [[Task 3 - PHP Practical]]
 
-[[Task 4 Project Highlights]]
+[[Task 4 - Project Highlights]]

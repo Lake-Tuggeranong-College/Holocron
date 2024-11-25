@@ -24,16 +24,16 @@ This setup will allow you to develop and test your website locally, and then eas
 
 | Estimated Time | Deliverables | Linked Project                |
 | -------------- | ------------ | ----------------------------- |
-|                | PHP Website  | [[Task 4 Project Highlights]] |
+|                | PHP Website  | [[Task 4 - Project Highlights]] |
 
 ## Task 3 Competencies
 
-| Unit Code      | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| -------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| ICTPRG302	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
-| CUADIG211      | Maintain interactive content              |              |        ✅         |               |         ✅         |
-| CUADIG303      | Produce and prepare photo images          |              |        ✅         |               |         ✅         |
-| BSBTEC101      | Operate digital devices                   |              |        ✅         |               |                   |
+| Unit Code                                                                        | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| -------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
+| [CUADIG211](https://training.gov.au/Training/Details/CUADIG211/unitdetails)      | Maintain interactive content              |              |        ✅         |               |         ✅         |
+| [CUADIG303](https://training.gov.au/Training/Details/CUADIG303/unitdetails)      | Produce and prepare photo images          |              |        ✅         |               |         ✅         |
+| [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                   |              |        ✅         |               |                   |
 
 # Task
 

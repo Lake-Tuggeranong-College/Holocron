@@ -129,3 +129,61 @@ These steps should help you get PHP up and running on your system. If you encoun
 
 This file configures the container so when it starts up, it automatically configures software to work for our project and environment.
 
+
+In the repository folder, create a folder called `.devcontainer`. The folder starts with a `.` which may mean it is usually hidden in Windows Explorer/Finder etc.
+
+Inside this folder, create a file called `devcontainer.json` and replace the contents with the following:
+
+```json
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php
+{
+	"name": "PHP",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/php:1-8.2-bullseye",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [
+	// 	8080
+	// ],
+	"features": {
+		"ghcr.io/warrenbuckley/codespace-features/sqlite:1": {},
+		"ghcr.io/devcontainers/features/php:1": {}
+	},
+	// Use 'portsAttributes' to set default properties for specific forwarded ports. More info: https://code.visualstudio.com/docs/remote/devcontainerjson-reference.
+	"portsAttributes": {
+		"8000": {
+			"label": "PHP Server",
+			"onAutoForward": "notify"
+		}
+	},
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash .devcontainer/install-dependencies.sh",
+
+	"postStartCommand": "php -S 0.0.0.0:8000"
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
+```
+
+## Install dependences file
+
+In the same folder as the `devcontainder.json` file, create another file named `install-dependencies.sh`. Replace the contents with :
+
+```bash
+sudo apt update
+sudo apt install sqlite3
+```
+
+This file is referenced in `devcontainer.json` , excuting the script after the Docker container has been initialised for the first time.
+
+After creating the two files, your project should appear like this:
+
+![[dockerDevContainer.png]]

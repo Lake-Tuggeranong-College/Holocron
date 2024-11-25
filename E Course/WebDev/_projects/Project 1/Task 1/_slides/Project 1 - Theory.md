@@ -204,6 +204,69 @@ Core feature of the course infrastructure.
 
 note:
 
+---
+
+# Virtualisation
+
+- **Virtualisation**: The process of creating a virtual version of something, such as hardware platforms, storage devices, and network resources.
+- **Benefits**: Improved resource utilisation, scalability, and isolation.
+
+--
+
+# Types of Virtualisation
+- Hardware Virtualisation
+- Software Virtualisation
+- Network Virtualisation
+- Storage Virtualisation
+
+note:
+Hardware virtualisation is the focus for this presentation.
+
+
+--
+
+# Hardware Virtualisation
+- **Definition**: Creating virtual machines that act like real computers with an operating system.
+- **Examples**: UTM, VirtualBox
+
+```mermaid
+graph TD;
+    B[Hypervisor] --> A[Physical Hardware];
+    C[Virtual Machine 1] --> B;
+    D[Virtual Machine 2] --> B;
+    E[Virtual Machine 3] --> B ;
+```
+
+--
+
+# Software Virtualisation
+
+- **Definition**: Virtualising applications or entire operating systems.
+- **Examples**: Containers (Docker), Application Virtualisation
+
+```mermaid
+graph TD;
+    A[Host OS] --> B[Virtualisation Layer];
+    B --> C[App 1];
+    B --> D[App 2];
+    B --> E[App 3];
+```
+
+--
+
+## VirtualBox Example
+
+- **VirtualBox**: A cross-platform virtualisation application.
+- **Features**: Supports multiple OS types, extensive features.
+
+```mermaid
+graph TD;
+    A[Host OS] --> B[VirtualBox];
+    B --> C[Linux VM];
+    B --> D[Windows VM];
+    B --> E[Other OS VM];
+```
+
 
 ---
 
@@ -212,6 +275,16 @@ note:
 **Docker** is a containerisation platform that allows developers to package, deploy, and run applications in isolated environments called **containers**.
 
 [Docker Video](https://youtu.be/_dfLOzuIg2o?si=HSy74yep4VaeVCSp)
+
+--
+
+# Docker Terms
+
+| Term                 | Description                                                                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Docker **image**     | Read-only templates used to create containers. Images are built from a set of instructions written in a Dockerfile, which specifies the base image, dependencies, and commands to run. |
+| Docker **container** | Instances of Docker images that run applications. Containers are isolated from each other and the host system, ensuring consistency across different environments.                     |
+
 
 note:
 A way to package your application and its dependencies together so that it can run on any computer, regardless of the operating system or software that is installed. 
@@ -249,9 +322,9 @@ subgraph Docker Container
     E[Libraries E]
     F[Docker Runtime F]
 end
-C --> F
-F --> D
-F --> E
+F --> C
+D --> F
+E --> F
 ```
 
 
@@ -266,16 +339,16 @@ note:
 # Docker vs. Other Virtualisation
 
 
-|Feature|Docker|Virtual Machines|
-|---|---|---|
-|**Resource usage**|Lightweight|Heavy resource consumption|
-|**Isolation**|Shares kernel with host|Has its own isolated kernel|
-|**Startup time**|Fast|Slow|
-|**Use case**|Containerized applications|Full operating system virtualization|
+| Feature            | Docker                     | Virtual Machines                     |
+| ------------------ | -------------------------- | ------------------------------------ |
+| **Resource usage** | Lightweight                | Heavy resource consumption           |
+| **Isolation**      | Shares kernel with host    | Has its own isolated kernel          |
+| **Startup time**   | Fast                       | Slow                                 |
+| **Use case**       | Containerised applications | Full operating system virtualisation |
 
 Notes:
 
-- Docker containers share the host's kernel, reducing overhead and improving resource utilization.
+- Docker containers share the host's kernel, reducing overhead and improving resource utilisation.
 - Virtual machines have their own isolated kernel, which incurs more resource consumption and slower startup times.
 
 --
@@ -346,7 +419,9 @@ Without a kernel, an operating system would be like an orchestra without a condu
 
 # Task
 
-Follow the steps in the project instructions
+Follow the steps in the project instructions.
+
+End Goal: To have a docker container on your device that then is uploaded and installed on the LTC server.
 
 
 ---

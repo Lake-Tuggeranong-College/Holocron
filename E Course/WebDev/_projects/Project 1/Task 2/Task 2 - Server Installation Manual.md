@@ -26,9 +26,11 @@ Create a spreadsheet with data to compare using Docker containers with having a 
 # Task
 [[Report]]
 
-# Marking Scheme
+# Student Guides
 
-The marking scheme for this task can be found on Google Classroom.
+These are required to be deemed competent. 
+
+They can be found on Google Classroom.
 
 # Task Conditions
 

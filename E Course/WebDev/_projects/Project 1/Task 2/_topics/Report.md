@@ -1,20 +1,35 @@
-Create a Google Sheet, named "Server Option Comparison".
-
-Include data on the cost of building a server to run multiple websites, through Docker and having a dedicated server. Using research, find the costs for appropriate hardware:
-- CPU
-- Memory
-- Local Storage (HDD/SSD)
-- Keyboard/Mouse/Monitor
-- etc.
-
-Using formulas, calculate the total sum of each servers.
-
-
-Include the spreadsheet created as a 'live' link in your Google Doc report.
-
 Write report detailing the installation of the server, specifically for the project requirements and goals. 
 
+
+
+# Timesheet
+
 Associated with the report, you will also create a timesheet spreadsheet to document the hours and cost to the client. This spreadsheet is to be embedded/linked into the Google Doc.
+
+## Google Sheet
+Start by creating the time sheet in google sheets. Create a blank document and enter the required values.
+
+For example, your timesheet may end up looking like this:
+
+![[dockerTimeSheetSpreadsheet.png]]
+
+Select the cells you wish to include in the report - using the example above, you would select all of them.
+
+## Google Docs
+
+
+In the existing report, add a section titled "Timesheet".
+
+Paste the spreadsheet into the document.
+
+![[dockerTimeSheetDocsPasteLink.png]]
+
+
+The document is now updated with the 'live' link with the Google Sheet
+
+![[dockerTimeSheetDocsLinked.png]]
+
+
 
 ## Deliverables
 

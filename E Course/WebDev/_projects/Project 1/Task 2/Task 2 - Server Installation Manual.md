@@ -18,13 +18,13 @@ Create a spreadsheet with data to compare using Docker containers with having a 
 
 ## Task 2 Competencies
 
-| Unit Code | Unit Title                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------- | ------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| ICTICT214 | Operate application software packages |      ✅       |                  |               |         ✅         |
-| BSBTEC201 | Use business software applications    |              |        ✅         |               |         ✅         |
+| Unit Code                                                                   | Unit Title                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT214](https://training.gov.au/Training/Details/ICTICT214/unitdetails) | Operate application software packages |      ✅       |                  |               |         ✅         |
+| [BSBTEC201](https://training.gov.au/training/details/BSBTEC201/unitdetails) | Use business software applications    |              |        ✅         |               |         ✅         |
 
 # Task
-[[Report]]
+[[Software Installation & Configuration Report]]
 
 # Student Guides
 

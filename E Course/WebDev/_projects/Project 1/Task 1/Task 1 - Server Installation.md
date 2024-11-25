@@ -35,14 +35,15 @@ dev -->|deploy| prod
 
 [[Project 1 - Theory]]
 
-# Task
+# Task Details
 
 1. [[Software Installation & Configuration]]
 
+# Student Guides
 
-# Marking Scheme
+These are required to be deemed competent. 
 
-The marking scheme for this task can be found on Google Classroom.
+They can be found on Google Classroom.
 
 # Task Conditions
 

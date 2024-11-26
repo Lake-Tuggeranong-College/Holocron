@@ -128,7 +128,7 @@ Here’s the explanation:
 
 **Line 11**: this if statement checks to see if the player pressed the fire button (the space bar in this case).
 
-> [!info] `if` statements are discussed in more detail in [[ISD/1 - Digital Assets/_topics/Algorithm Design - Decisions]]
+> [!info] `if` statements are discussed in more detail in [[Player Movement]]
 
 **Line 12**: Creates, in memory, a new **instance** of the bullet scene.
 

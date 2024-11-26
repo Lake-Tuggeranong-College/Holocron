@@ -1523,7 +1523,7 @@ Currently there is a check to see if the current_user is logged in or not and di
 
 Add in a check to see if the user is an admin, and if so, show the link to the contact messages route.
 
-![[_images/Untitled.png]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled.png]]
 
 ## Test the implementation
 
@@ -1585,7 +1585,7 @@ The next step is to extend this by adding in an {% else %} section to only show 
 
 In the example shown, you can see that the **Registration** and **Login** links are shown if the user is not logged in (`is_anonymous`) and the **Profile**, **Photos**, **Logout** and **Reset Password** Links are shown if the user is logged in (`is_anonymous` is false)
 
-![[_images/Untitled 3.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 3.png|Untitled]]
 
 - Administrator Tools
 
@@ -1607,7 +1607,7 @@ Update the navbar component in `base.html` to add links to the administrator fun
 
 Look for the `{% if user.is_admin() %}` code and replace the existing links to be a dropdown menu.
 
-![[_images/Untitled 4.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 4.png|Untitled]]
 
 ```html
 <li><a class="nav-link" href="/contact_messages">Contact Messages</a></li>
@@ -1697,7 +1697,7 @@ The site already allows for the user to reset their own password. The process fo
 <aside>
 ‼️ Consider the reset password function in `app.py` that already has been coded.
 
-![[_images/Untitled 5.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 5.png|Untitled]]
 
 </aside>
 
@@ -1864,13 +1864,13 @@ return render_template("contactMessages.html", title="Contact Messages", user=cu
 
 Duplicate `index.html` and name the new file `contactMessages.html`. 
 
-![[_images/Untitled 6.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 6.png|Untitled]]
 
 To display the contact messages from the database, output the user's name, email address, message and the date it was submitted. This can be done using the bootstrap grid system as previously used.
 
 Remove the contents of the `rowTwoColTwoContent` block and add the new `div`.
 
-![[_images/Untitled 7.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 7.png|Untitled]]
 
 ```python
 <div class="container-fluid">

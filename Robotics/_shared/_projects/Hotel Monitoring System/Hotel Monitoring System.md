@@ -766,7 +766,7 @@ $$
 
 Add the following to the include block of code at the very top of your `main.cpp`.
 
-![[_images/Untitled 3.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 3.png|Untitled]]
 
 ```arduino
 #include "Adafruit_ADT7410.h"
@@ -776,7 +776,7 @@ Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
 
 Initialise the temperature sensor in `setup()`. 
 
-![[_images/Untitled 4.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 4.png|Untitled]]
 
 ```arduino
 if (!tempsensor.begin())
@@ -789,7 +789,7 @@ if (!tempsensor.begin())
 
 After the include statements at the top of the file, add this new function to get and return the temperature recorded by the temperature sensor.
 
-![[_images/Untitled 5.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 5.png|Untitled]]
 
 ```arduino
 float getTemperature()
@@ -820,7 +820,7 @@ Why do this?
 
 This allows the text to be uploaded in a single structure, and will eventually enable the server to respond in kind, by returning a JSON structure with information for the Arduino.
 
-![[_images/Untitled 6.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 6.png|Untitled]]
 
 ```arduino
 String dataTransfer(String apiKeyValue, String userName, String moduleName, String dataToPost)
@@ -871,7 +871,7 @@ String dataTransfer(String apiKeyValue, String userName, String moduleName, Stri
 
 Call `dataTransfer()` with the results from the getTemperature function.
 
-![[_images/Untitled 7.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 7.png|Untitled]]
 
 ```arduino
 dataTransfer(apiKeyValue, userName, "Temperature", String(getTemperature()));

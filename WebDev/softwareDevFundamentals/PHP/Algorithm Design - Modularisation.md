@@ -9,17 +9,17 @@ tags: php
 
 In PHP, functions are identified with the `function` keyword. 
 
-![[_images/Untitled 3.png|Untitled]]
+![[WebDev/1-Digital-Assets/_images/Untitled 3.png|Untitled]]
 
 PHP functions can be called from other PHP blocks.
 
-![[_images/Untitled 4.png|Untitled]]
+![[WebDev/1-Digital-Assets/_images/Untitled 4.png|Untitled]]
 
 ## PHP Arguments
 
 Functions can accept data through Arguments. Arguments are declared in the function declaration as with many other programming languages. 
 
-![[_images/Untitled 5.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 5.png|Untitled]]
 
 ## PHP Return Data
 
@@ -27,7 +27,7 @@ PHP does not **require** the declaration of return data when declaring functions
 
 When declaring functions, identify the return data type after the `()` with `: <data type>`.
 
-![[_images/Untitled 6.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 6.png|Untitled]]
 
 # Practical Exercises
 
@@ -44,7 +44,7 @@ The site being developed requires a number of forms on various pages, and on tho
 
 Open your `Software-Development Fundamentals-PHP` project. Open Create a new PHP file called `template.php`. Add the file to Git if required.
 
-![[_images/Untitled 7.png|Untitled]]
+![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 7.png|Untitled]]
 
 ![[commonBlocks#Commit & Push]]
 

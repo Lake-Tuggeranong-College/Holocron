@@ -135,15 +135,15 @@ Open the Bank Alarm project on [Tinkercad](https://www.tinkercad.com/). Before i
 
 In this stage, the code will not be changed, only the circuit itself. Close out of the Code view by clicking the code button in the tool bar.
 
-![[Untitled 3.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 3.png|Untitled]]
 
 Change the component list to **Components Basic** in the dropdown list.
 
-![[Untitled 4.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 4.png|Untitled]]
 
 Delete the ‘wires’ connecting the LED to the arduino and resistor. Select the wire and press delete.
 
-![[Untitled 5.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 5.png|Untitled]]
 
 Add a **Breadboard Small** to the circuit by dragging the component to the circuit area.
 
@@ -151,7 +151,7 @@ Add a **Breadboard Small** to the circuit by dragging the component to the circu
 
 Move the resistor and LED over to the new breadboard. 
 
-![[Untitled 6.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 6.png|Untitled]]
 
 Connect a wire from the **Anode** pin (on the right) to the top of the resistor. Do this by clicking on the Anode and then clicking on the top terminal of the resistor.
 
@@ -165,7 +165,7 @@ Connect the bottom terminal of the resistor to the breadboard.
 
 A breadboard is a reusable platform used for building and prototyping electronic circuits. It allows you to easily connect and disconnect components, without having to solder them together. Breadboards consist of a grid of holes into which electronic components can be inserted. The holes are typically arranged in a pattern of interconnected vertical and horizontal rows. This allows for the connection of different components' leads, such as resistors, capacitors, and transistors, to be easily connected together to create a functioning circuit.
 
-![[Untitled 7.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 7.png|Untitled]]
 
 ![[Untitled 8.png|Untitled]]
 

@@ -1041,7 +1041,7 @@ Another example of abstraction
 
 ## DRY vs WET
 
-![[functionsDryVsWet.png|functionsDryVsWet.png]]
+![[functionsDryVsWet.png]]
 
 Functions are one approach to reducing repeated code. Repeated code is undesirable in code as it can be harder to maintain (I.e. update and fix in the future) as the developer will have to change multiple parts of the code to solve one problem.
 

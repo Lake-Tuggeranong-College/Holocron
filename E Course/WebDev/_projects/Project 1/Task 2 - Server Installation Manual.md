@@ -2,7 +2,7 @@
 
 | Estimated Hours | Deliverables              | Related Task (if applicable)     |
 | --------------- | ------------------------- | -------------------------------- |
-| ==2==           | 1) Technical Document<br> | [[Task 1 - Server Installation]] |
+| ==4==           | 1) Technical Document<br> | [[Task 1 - Server Installation]] |
 
 For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container.
 

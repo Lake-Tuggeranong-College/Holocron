@@ -3,7 +3,7 @@ tags:
   - ISD
   - yr12
 ---
-> [!note]- 
+> [!note]- Project Overview
 > ![[ISD/3 - Digital Solutions/_projects/Frontierlands/Project Overview|Project Overview]]
 
 # Semester Plan

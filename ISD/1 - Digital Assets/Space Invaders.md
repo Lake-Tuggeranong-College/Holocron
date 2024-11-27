@@ -5,17 +5,17 @@ tags:
   - ISD
   - yr11
 ---
-> [!note]- Project Overview
-> The project will be explained in due time...
+> [!note]- Project Overview 
+> ![[ISD/1 - Digital Assets/_project/Space Invaders/Project Overview|Project Overview]]
 
 
 # Semester Plan
 
 | Week                                            | Content                                                                                                                                                                                                                                                                             | Submissions |
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| ![[semesterCalendarS1#School Events - Week 1]]  | [[Programming Introduction]]<br>[[ISD/1 - Digital Assets/_topics/Version Control\|Version Control]]<br>[[ISD/1 - Digital Assets/_project/Space Invaders/Accept Assignment\|Accept Assignment]]<br>[[ISD/1 - Digital Assets/_topics/Computational Thinking\|Computational Thinking]] |             |
-| ![[semesterCalendarS1#School Events - Week 2]]  | [[ISD/1 - Digital Assets/_topics/Mathematical & Logic Operations\|Mathematical & Logic Operations]]<br>[[Updating the GUI]]<br>[[Player Shooting]]                                                                                                                                  |             |
-| ![[semesterCalendarS1#School Events - Week 3]]  | [[ISD/1 - Digital Assets/_topics/Style Guide\|Style Guide]]<br>[[ISD/1 - Digital Assets/_topics/Buttons\|Buttons]]<br>[[Player Movement]]                                                                                                                                           |             |
+| ![[semesterCalendarS1#School Events - Week 1]]  | [[Programming Introduction]]<br>[[ISD/1 - Digital Assets/_project/Space Invaders/Version Control\|Version Control]]<br>[[ISD/1 - Digital Assets/_ap/2025S1/Accept Assignment\|Accept Assignment]]<br>[[ISD/1 - Digital Assets/_project/Space Invaders/Computational Thinking\|Computational Thinking]] |             |
+| ![[semesterCalendarS1#School Events - Week 2]]  | [[ISD/1 - Digital Assets/_project/Space Invaders/Mathematical & Logic Operations\|Mathematical & Logic Operations]]<br>[[Updating the GUI]]<br>[[Player Shooting]]                                                                                                                                  |             |
+| ![[semesterCalendarS1#School Events - Week 3]]  | [[ISD/1 - Digital Assets/_project/Space Invaders/Style Guide\|Style Guide]]<br>[[ISD/1 - Digital Assets/_project/Space Invaders/Buttons\|Buttons]]<br>[[Player Movement]]                                                                                                                                           |             |
 | ![[semesterCalendarS1#School Events - Week 4]]  |                                                                                                                                                                                                                                                                                     |             |
 | ![[semesterCalendarS1#School Events - Week 5]]  |                                                                                                                                                                                                                                                                                     |             |
 | ![[semesterCalendarS1#School Events - Week 6]]  |                                                                                                                                                                                                                                                                                     |             |

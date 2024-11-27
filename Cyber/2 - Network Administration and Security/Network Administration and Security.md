@@ -8,7 +8,7 @@ tags:
 > You are being tasked to develop secure servers and clients to support the Northside Hospital Project.
 > The project name is: **Biomedical ACT Administration (BACTA)**
 > You will be building and configuring a server, a workstation client and the publishing and secure storage of patient health data.
-> Details can be found here. [[Cyber/2 - Network Administration and Security/Projects/BACTA/Project Overview.md]]
+> Details can be found here. [[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview]]
 
 # Semester Plan
 ## Term 3
@@ -17,20 +17,20 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 1]]
 > #### Class Tasks
 > - [[_sharedContent/CloneHolocron.md| ]]
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Accept Assignment.md| ]]
+> - [[Cyber/2 - Network Administration and Security/_projects/BACTA/Accept Assignment| ]]
 > #### Theory
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Project Overview.md| ]]
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Technical Requirements.md| ]]
+> - [[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview| ]]
+> - [[Technical Requirements| ]]
 > #### Practical
 > N/A
 
 > [!info]- Week 2
 > ![[semesterCalendarS2#School Events - Week 2]] 
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Network Plan.md| ]]
+> - [[Network Plan| ]]
 > #### Theory
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Domain Controllers.md| ]]
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Packet Tracer - Configure Servers.md| ]]
+> - [[Domain Controllers| ]]
+> - [[Packet Tracer - Configure Servers| ]]
 > #### Practical
 > N/A
 
@@ -47,17 +47,17 @@ tags:
 > [!info]- Week 4
 > ![[semesterCalendarS2#School Events - Week 4]]
 > #### Class Tasks
-> - [[Task Allocation.md| ]]
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Project Plan.md| ]]
+> - [[Task Allocation| ]]
+> - [[Project Plan| ]]
 > #### Theory
 > N/A
 > #### Practical
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Install and configure Servers.md| ]]
+> - [[Install and configure Servers| ]]
 
 > [!info]- Week 5
 > ![[semesterCalendarS2#School Events - Week 5]]
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Server Documentation.md| ]]
+> - [[Server Documentation| ]]
 > #### Theory
 > N/A
 > #### Practical
@@ -75,18 +75,18 @@ tags:
 > [!important]- Week 7
 > ![[semesterCalendarS2#School Events - Week 7]]
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Server Documentation.md| ]]
-> - [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md| ]]
+> - [[Server Documentation| ]]
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2| ]]
 > #### Theory
 > N/A
 > #### Practical
-> - [[Cyber/2 - Network Administration and Security/Projects/BACTA/Install and configure Servers.md| ]]
+> - [[Install and configure Servers| ]]
 
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
 > #### Class Tasks
 > - [ ] ICTSAS305 Provide ICT Advice to Clients VET competency.
-> - [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md| ]] 
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2| ]] 
 > #### Theory
 > N/A
 > #### Practical
@@ -95,7 +95,7 @@ tags:
 > [!info]- Week 9
 > ![[semesterCalendarS2#School Events - Week 9]]
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md| ]]
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2| ]]
 > #### Theory
 > N/A
 > #### Practical
@@ -119,7 +119,7 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 11]]
 > #### Class Tasks
 > -  [[Bash Scripting]]
-> -  [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md]]
+> -  [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
@@ -129,7 +129,7 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 12]]
 > 
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2|Assessment 2]]
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
@@ -139,7 +139,7 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 13]]
 > 
 > - [ ] Finalise Project
-> - [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md| ]]
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2| ]]
 > 
 > **Assessment Due**
 > The task will be due Friday 11:59pm.
@@ -185,8 +185,8 @@ tags:
 | Unit Outline     | Assessments                                                                                                          |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Google Classroom | Assessment 1 - 25 %                                                                                                  |
-|                  | [[Cyber/2 - Network Administration and Security/2024S2/Assessment 2.md]] - 50 % |
-|                  | [[Cyber/2 - Network Administration and Security/2024S2/Assessment 3\|Assessment 3]] - 25 %                           |
+|                  | [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2]] - 50 % |
+|                  | [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 3\|Assessment 3]] - 25 %                           |
 |                  |                                                                                                                      |
 
 # Contact Details

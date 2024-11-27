@@ -55,8 +55,8 @@ Submissions are due **11:59pm Friday** each week.
 | Unit Outline     | Assessments                   |
 | ---------------- | ----------------------------- |
 | Google Classroom | Assessment 1 - 25 %           |
-|                  | [[WebDev/2-Digital-Applications/2024S2/Assessment 2]] - 50 % |
-|                  | [[WebDev/2-Digital-Applications/2024S2/Assessment 3]] - 25 %        |
+|                  | [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]] - 50 % |
+|                  | [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 3]] - 25 %        |
 
 
 ![[commonBlocks#Contact Details]]

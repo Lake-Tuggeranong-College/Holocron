@@ -7,11 +7,11 @@ css: css/holocronSlides.css
 
 **The Assessment is Due This Friday!**
 
-Read the [[WebDev/2-Digital-Applications/2024S2/Assessment 2|Assessment 2]] for details:
+Read the [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2|Assessment 2]] for details:
 - on what to cover in each section.
 - Suggestions for how to approach the sections.
 
-[[WebDev/2-Digital-Applications/2024S2/Assessment 2|Assessment 2]]
+[[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2|Assessment 2]]
 
 Stay focused on the topic/s listed.
 
@@ -21,7 +21,7 @@ The web version of the Holocron is now the preferred method to access the conten
 ---
 # Assessment 2
 
-![[WebDev/2-Digital-Applications/2024S2/_images/assessment2Topics.png]]
+![[WebDev/2-Digital-Applications/_ap/2024S2/_images/assessment2Topics.png]]
 
 Stay focused on the topic/s listed.
 

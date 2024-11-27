@@ -29,7 +29,7 @@ Each video will be accompanied by a written component with a bit more detail so 
 ---
 # Assessment
 
-[[WebDev/2-Digital-Applications/2024S2/Assessment 2.md|Assessment 2 Information]]
+[[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2|Assessment 2 Information]]
 
 
 ---

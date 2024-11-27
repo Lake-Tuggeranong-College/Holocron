@@ -147,7 +147,7 @@ N/A
 ![Assessment](https://youtu.be/uCfS1UTsFUA)
   
 #### Class Tasks
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 #### Theory
 - [[presentationWeek08]]
 #### Practical
@@ -187,7 +187,7 @@ N/A
 #### Class Tasks
 - [[presentationWeek10]]
 #### Theory
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 - [VET Competency](https://classroom.google.com/c/NjkwOTc0MjQ2OTU4/a/NzA1MzI1MzkyNzAx/details)
 #### Practical
 - N/A
@@ -196,7 +196,7 @@ N/A
 ### Week 11
  ![[semesterCalendarS2#School Events - Week 11]]
 #### Class Tasks
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 #### Theory
 - [[presentationWeek11]]
 #### Practical
@@ -207,7 +207,7 @@ N/A
  ![https://youtu.be/M-PTSMAd8Jk](https://youtu.be/M-PTSMAd8Jk)
 
 #### Class Tasks
- -  [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+ -  [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 #### Theory
 - [[presentationWeek12]]
 #### Practical
@@ -222,7 +222,7 @@ The task will be due Friday 11:59pm.
 Worth 50%.  
 The task will be posted to Google Classroom, as per normal.
 #### Class Tasks
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
  - Submit Assessment 2
 #### Theory
 - [[presentationWeek13]]
@@ -278,8 +278,8 @@ N/A
 | Unit Outline     | Assessments                   |
 | ---------------- | ----------------------------- |
 | Google Classroom | Assessment 1 - 25 %           |
-|                  | [[WebDev/2-Digital-Applications/2024S2/Assessment 2]] - 50 % |
-|                  | [[WebDev/2-Digital-Applications/2024S2/Assessment 3]] - 25 %        |
+|                  | [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]] - 50 % |
+|                  | [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 3]] - 25 %        |
 
 
 ![[commonBlocks#Contact Details]]

@@ -32,12 +32,12 @@ tags:
 > #### Theory
 > - [[ISD/2 - Digital Applications/_topics/theory/3D Worlds.md| ]]
 > - [[ISD/2 - Digital Applications/_topics/theory/Code Comments.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Project Context.md| ]]
+> - [[Project Context| ]]
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Accept FPS Assignment.md| ]]
+> - [[Accept FPS Assignment| ]]
 > - [ ] Open Game in Godot 4.2.2
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Building The Environment.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Reusable Assets.md| ]]
+> - [[Building The Environment| ]]
+> - [[Reusable Assets| ]]
 
 > [!info]- Week 2
 > ![[semesterCalendarS2#School Events - Week 2]] 
@@ -47,8 +47,8 @@ tags:
 >- [ ] [[ISD/2 - Digital Applications/_topics/theory/Vectors|Vectors]]
 >- [[ISD/2 - Digital Applications/_topics/theory/State Design Pattern.md| ]]
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/First Person Controller.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Bullet Implementation.md| ]] 
+> - [[First Person Controller| ]]
+> - [[Bullet Implementation| ]] 
 
 > [!danger]- Week 3
 > ![[semesterCalendarS2#School Events - Week 3]]
@@ -67,14 +67,14 @@ tags:
 > #### Theory
 > - [[ISD/2 - Digital Applications/_topics/theory/Pathfinding.md| ]]
 > #### Practical
-> - [ ] [[ISD/2 - Digital Applications/_topics/tutorials/Enemy|Enemy]]
-> - [ ] [[ISD/2 - Digital Applications/_topics/tutorials/Enemy Pathfinding|Enemy Pathfinding]]
+> - [ ] [[Enemy|Enemy]]
+> - [ ] [[Enemy Pathfinding|Enemy Pathfinding]]
 > - [ ] Continue Developing your environment.
 
 > [!info]- Week 5
 > ![[semesterCalendarS2#School Events - Week 5]]
 > #### Class Tasks
-> - [[ISD/2 - Digital Applications/2024S2/Assessment 2|Assessment 2]]
+> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
@@ -88,7 +88,7 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Objects Taking Damage.md| ]]
+> - [[Objects Taking Damage| ]]
 
 > [!info]- Week 7
 > ![[semesterCalendarS2#School Events - Week 7]]
@@ -97,31 +97,31 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Points.md| ]]
+> - [[Points| ]]
 
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
 > #### Class Tasks
-> [[ISD/2 - Digital Applications/2024S2/Assessment 2|Assessment 2]]
+> [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
 > Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
 > Development Process should be fully written by end of week 9 so start now and get ahead
 > #### Theory 
 > N/A
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Win Conditions.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Lose Conditions.md| ]]
+> - [[Win Conditions| ]]
+> - [[Lose Conditions| ]]
 
 > [!info]- Week 9
 > ![[semesterCalendarS2#School Events - Week 9]]
 > #### Class Tasks
 > - [ ] [ VET Competencies](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
 > 	- This week we will begin working through a VET Competency as well as working on Assessment documentation and the finishing touches of your games. You should aim to have this competency fully complete at the end of Week 10. Completing the competency is really simple and just takes a bit of time. Jacob will be going over how to complete the competency in great detail in Mondays class.
-> - [[ISD/2 - Digital Applications/2024S2/Assessment 2.md| ]]
+> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2| ]]
 > 	- You should have the development process section drafted and ready to submit at the end of this week. Jacob will be reviewing and providing feedback on this section.
 > #### Theory
 > N/A
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/Player Health.md| ]]
+> - [[ISD/2 - Digital Applications/_projects/FPS/Player Health| ]]
 
 > [!info]- Week 10
 > ![[semesterCalendarS2#School Events - Week 10]]
@@ -130,7 +130,7 @@ tags:
 > 	- Info about VET
 > - [ ] [VET Competency](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
 > 	- Complete this VET Competency by end of this week
->  - [[Robotics/4 - Project/2024S2/Assessment 2.md| ]]
+>  - [[Robotics/4 - Project/_ap/2024S2/Assessment 2| ]]
 > 	- You should be able to access the feedback on your development process section now. Review these and have a look at the feedback.
 > 	- The assessment documentation scaffold page has been populated for each section now. These should make it very easy to write up your assessment well before the due date. The whole document is due in week 12. With 3 weeks left (not including the school holidays) you have plenty of time to work through the linked page and write up your assessment documentation.
 > #### Theory
@@ -160,15 +160,15 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 12]]
 > 
 > #### Class Tasks
-> - [[ISD/2 - Digital Applications/2024S2/Assessment 2|Assessment 2]]
+> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
-> - [[ISD/2 - Digital Applications/_topics/tutorials/High Score System|High Score System]]
+> - [[ISD/2 - Digital Applications/_projects/FPS/High Score System|High Score System]]
 
 > [!danger]- Week 13
 > ![[semesterCalendarS2#School Events - Week 13]]
-> - [[ISD/2 - Digital Applications/2024S2/Assessment 2.md| ]]
+> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2| ]]
 > **Assessment Due**
 > The task will be due Friday 11:59pm.
 > Worth 50%.
@@ -213,8 +213,8 @@ tags:
 | Unit Outline     | Assessments                                                                                     |
 | ---------------- | ----------------------------------------------------------------------------------------------- |
 | Google Classroom | Assessment 1 - 25 %                                                                             |
-|                  | [[ISD/2 - Digital Applications/2024S2/Assessment 2.md]] - 50 % |
-|                  | [[ISD/2 - Digital Applications/2024S2/Assessment 3\|Assessment 3]] - 25 %                       |
+|                  | [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2]] - 50 % |
+|                  | [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 3\|Assessment 3]] - 25 %                       |
 
 ![[commonBlocks#Contact Details]]
 

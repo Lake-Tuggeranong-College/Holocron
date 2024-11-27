@@ -12,7 +12,7 @@ You will also be able to complete some of the VET competencies for this unit.
 # Assignment
 - Assignment on Classroom.
 - Technical document
-![[WebDev/2-Digital-Applications/2024S2/_images/assessment2Topics.png]]
+![[WebDev/2-Digital-Applications/_ap/2024S2/_images/assessment2Topics.png]]
 notes:
 - Watch the assignment video posted separately.
 

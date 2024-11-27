@@ -3,9 +3,8 @@ tags:
   - ISD
   - yr12
 ---
-> [!note]- Project Overview
-> The project will be explained in due time...
-
+> [!note]- 
+> ![[ISD/3 - Digital Solutions/_projects/Frontierlands/Project Overview|Project Overview]]
 
 # Semester Plan
 

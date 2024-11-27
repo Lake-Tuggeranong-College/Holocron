@@ -10,7 +10,7 @@
 # Presentation
 - [[presentationWeek11]]
 # Class Tasks
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 
 # Theory
 

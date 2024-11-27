@@ -13,7 +13,7 @@ The task will be posted to Google Classroom, as per normal.
 # Presentation
 - [[presentationWeek13]]
 # Class Tasks
-- [[WebDev/2-Digital-Applications/2024S2/Assessment 2]]
+- [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
  - Submit Assessment 2
 
 # Theory

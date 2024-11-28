@@ -665,10 +665,10 @@ Some examples:
 
 The right hand side of the assignment statement can be incredibly complex, but the left hand side will (almost) always a single variable. But there’s always exceptions to the rule.
 
-# Review
+## Review
 
 1. How is data stored in memory?
-2. What’s the difference between primitive and non-primitve data types?
+2. What’s the difference between primitive and non-primitve data types?s
 3. What is type inference?
 	1. Find three programming languages that use type inference.
 4. What is the opposite of type inference?
@@ -887,7 +887,7 @@ flowchart TB
 
 ## Notes
 
-![[Presentation_-_Loops.pdf|Presentation - Loops.pdf]]
+![[Presentation-Loops.pdf|Presentation - Loops.pdf]]
 
 ## Summary
 
@@ -1002,7 +1002,7 @@ Modular programming is a software design technique that involves separating the 
 
 ## Notes
 
-![[Presentation_-_Modularisation.pdf|Presentation - Modularisation.pdf]]
+![[Presentation-Modularisation.pdf|Presentation - Modularisation.pdf]]
 
 ## Summary
 

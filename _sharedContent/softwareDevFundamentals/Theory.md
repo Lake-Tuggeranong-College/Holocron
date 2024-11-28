@@ -249,7 +249,7 @@ Here is a template you can use to create your IPO Charts.
 
 ## What is Git?
 
-[https://www.youtube.com/watch?v=2ReR1YJrNOM](https://www.youtube.com/watch?v=2ReR1YJrNOM)
+![https://www.youtube.com/watch?v=2ReR1YJrNOM](https://www.youtube.com/watch?v=2ReR1YJrNOM)
 
 ![[gitXKCD.jpeg]]
 
@@ -302,7 +302,7 @@ Finally, these simple steps or rules are used to **program** a computer to hel
 
 Decomposition is one of the four cornerstones of Computer Science. It **involves breaking down a complex problem or system into smaller parts** that are more manageable and easier to understand. The smaller parts can then be examined and solved, or designed individually, as they are simpler to work with.
 
-[https://www.youtube.com/watch?v=rxsYpP2-omg](https://www.youtube.com/watch?v=rxsYpP2-omg)
+![https://www.youtube.com/watch?v=rxsYpP2-omg](https://www.youtube.com/watch?v=rxsYpP2-omg)
 
 ## Problem Solving Approaches
 
@@ -322,7 +322,7 @@ Break the task into smaller manageable tasks:
 2. Make Pancakes
 3. Eat Delicious Pancakes.
 
-[https://www.youtube.com/watch?v=0NdThGHhX8M](https://www.youtube.com/watch?v=0NdThGHhX8M)
+![https://www.youtube.com/watch?v=0NdThGHhX8M](https://www.youtube.com/watch?v=0NdThGHhX8M)
 
 Then approach each individual task separately. For example.
 
@@ -379,7 +379,7 @@ Gates are identified by their function: NOT, AND, NAND, OR, NOR, EX-OR and EX-NO
 
 ![[logicStates.png|logicStates.png]]
 
-[https://www.youtube.com/watch?v=kbXwFWMl6WA&ab_channel=MrPowell%27sComputerScienceChannel](https://www.youtube.com/watch?v=kbXwFWMl6WA&ab_channel=MrPowell%27sComputerScienceChannel)
+![https://www.youtube.com/watch?v=kbXwFWMl6WA&ab_channel=MrPowell%27sComputerScienceChannel](https://www.youtube.com/watch?v=kbXwFWMl6WA&ab_channel=MrPowell%27sComputerScienceChannel)
 
 There are a number of fundamental logic gates that you need to be aware of.
 
@@ -1225,7 +1225,7 @@ Visually create the flowcharts and copy the code.
 
 [Mermaid Flow](https://www.mermaidflow.app/)
 
-[https://www.youtube.com/watch?v=SWRDqTx8d4k](https://www.youtube.com/watch?v=SWRDqTx8d4k)
+![https://www.youtube.com/watch?v=SWRDqTx8d4k](https://www.youtube.com/watch?v=SWRDqTx8d4k)
 
 
 ## Flowcharts Overview
@@ -1236,7 +1236,7 @@ There are many tools available to create flowcharts, both online and application
 
 Flowcharts show the *logic* of an algorithm without specific code syntax.
 
-[https://www.youtube.com/watch?v=kxZJv56BxU8](https://www.youtube.com/watch?v=kxZJv56BxU8)
+![https://www.youtube.com/watch?v=kxZJv56BxU8](https://www.youtube.com/watch?v=kxZJv56BxU8)
 
 ![[flowchartHeyJude.jpeg|flowchartHeyJude.jpeg]]
 

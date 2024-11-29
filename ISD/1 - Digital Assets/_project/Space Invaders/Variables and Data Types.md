@@ -1,3 +1,5 @@
+> [!important] Prerequisites: [[Player Shooting]]
+
 ![[Theory#Variables and Data Types]]
 
 
@@ -48,6 +50,8 @@ This structure, and others similar to it, will be used throughout the developmen
 [[https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2]]
 
 # Practical Exercises
+
+## Counting number of bullets
 
 
 > [!info] The goal of this tutorial is to implement a limit to how many player bullets can appear on screen at once.

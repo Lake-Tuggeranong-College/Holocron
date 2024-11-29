@@ -57,3 +57,18 @@ In this exercise, you will develop a game in a short amount of time.
 An approach to game design
 
 ![[MDA.pdf]]
+
+##  MDA Summary
+
+![[MDA - Mechanics Dynamics Aesthetics]]
+
+
+## MDA Examples
+
+![[MDA - Space Invaders (1978)]]
+
+![[MDA - Doom]]
+
+![[MDA - Fortnite]]
+
+![[MDA - Borderlands 2]]

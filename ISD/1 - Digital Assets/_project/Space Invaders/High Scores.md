@@ -28,28 +28,31 @@ User data uses the `user://` prefix which points to a different folder which is 
 > 
 > [https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html)
 
+
+
+
 # Update `Global.gd`
 
-Open `Global.gd` and create a new variable to link to the save file.
+Open `Global.gd`. The `scoring_information` dictionary containing the current score and high score keys will be already defined during the [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]] stage. 
 
-![[persistentDataVariableSaveFile.png]]
+Create a new variable to link to the save file.
+
+![[persistentDataSaveFile.png]]
 
 ```gdscript
-var save_file = "user://save.dat"
+var save_file = "user://save.txt"
 ```
-
-Add a new variable to store the high score, **if required**. You may already have a variable storing the high score - if so, use that.
-
-![[persistentDataVarHighScore.png]]
 
 Save the file.
 ## Win Scene
 
 *Open* or *create* a `win.tscn` in your project and attach a script.
 
-![[persistentDataNewScript.png]]
+![[persistentDataWinNewScript.png]]
 
 In the new script create a `save_data()` function, calling it from `_ready()`.
+
+![[persistentDataScriptFunction.png]]
 
 Inside `save_data()`, the connection to the file is created, and opened to write data to it. 
 
@@ -62,14 +65,14 @@ After the connection is made, you simply write the value of the variable to the 
 > **Third argument** - The *value*. This is the actual data that you want to save.
 > So the code below would create a "Player" section, which contained a "score" key, with a specific value attached.
 
-![[persistentDataFuncSave.png]]
+![[persistentDataFuncSaveData.png]]
 
 ```gdscript
 func save_data():
 	var file = ConfigFile.new()
-	file.set_value("Player", "score", Global.current_score)
-	var error := file.save(Global.save_file)
-
+	file.set_value("Player", "high_score", GlobalVariables.scoring_information["highScore"])
+	var error := file.save (GlobalVariables.save_file)
+	
 	if error:
 		print("!!Data Not Saved!!")
 ```
@@ -80,30 +83,32 @@ Run through the game, killing all the enemies.
 
 After the Win scene has been loaded, you should find `save.dat` in the user directory (see above). You'll notice that the structure of the file matches the `set_value` function with `"Player"` (the section) and `"score"` (the key).
 
-![[persistentDataFileContents.png]]
+![[ISD/1 - Digital Assets/_project/Space Invaders/_images/persistentDataFileContents.png]]
 
 ![[commonBlocks#Commit & Push]]
 # Loading Data
 
 Now that the data is stored on the local drive, it can be loaded when the game starts.
 
-Open `main_menu.gd` and create a new function - `load_data()`. This function will need to first check if the `save.dat` file exists, if so, then open it to read the contents.
+Open the main menu (`Menu.tscn`). Attach a script if there's not already one attached.
 
-![[persistentDataFuncLoad.png]]
+Create a new function - `load_data()`. This function will need to first check if the `save.dat` file exists, if so, then open it to read the contents.
+
+![[persistentDataFuncLoadData.png]]
 
 
 
 ```gdscript
 func load_data():
 	var config_file := ConfigFile.new()
-	var error := config_file.load(Global.save_file)
+	var error := config_file.load(GlobalVariables.save_file)
 	if error:
 		print("An error happened while loading data: ", error)
 		return
 	
 	# Load specific data
-	Global.high_score = config_file.get_value("Player", "score", 0)
-	print(Global.high_score)
+	GlobalVariables.scoring_information["highScore"] = config_file.get_value("Player", "high_score", 0)
+	print(GlobalVariables.scoring_information["highScore"])
 ```
 
 Repeat the process with another piece of data, such as the players name, or the value of current timer.

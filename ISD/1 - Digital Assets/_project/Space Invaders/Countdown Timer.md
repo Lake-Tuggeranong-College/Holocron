@@ -1,3 +1,5 @@
+> [!important] Prerequisite: [[Updating the GUI]]
+
 ![[Theory#Algorithm Design - Loops]]
 
 # GDScript Implementation

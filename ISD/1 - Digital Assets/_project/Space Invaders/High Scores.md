@@ -1,5 +1,6 @@
 > [!important] This tutorial gives you the evidence to complete VET competency `ICTPRG302 Apply Introductory Programming Techniques`, performance criteria 4.1 & 4.3
 
+> [!important] Prerequisites: [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]]
 # Saving the Score
 
 In this tutorial, you'll be storing the players score as persistent data, so subsequent playthroughs can keep a track of the high score.

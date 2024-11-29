@@ -24,7 +24,7 @@ tags:
 [[Updating the GUI]]
 [[Countdown Timer]]
 [[Win and Lose Conditions]]
-[[ISD/2 - Digital Applications/_projects/FPS/Player Health\|Player Health]]
+[[ISD/1 - Digital Assets/_project/Space Invaders/Player Health|Player Health]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]]
 [[High Scores]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Raycasts|Raycasts]]

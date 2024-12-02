@@ -63,10 +63,19 @@ var can_shoot = false
 ![[raycastEnemyVariable.png]]
 
 
-**Update** the `_process()` function to first check if `can_shoot` is true. If it is true, then the normal ‘shooting’ code will execute.
-
-
+**Update** the `fire_bullet()` function to first check if `can_shoot` is true. If it is true, then the normal ‘shooting’ code will execute.
   
-![[raycastIfCanShoot.png]]
+![[raycastCheckCanShoot.png]]
+
+Save the file.
 
 ![[commonBlocks#Commit & Push]]
+
+
+# Confirmation
+
+Check to ensure that it works correctly. Is it?
+
+If not, what is occurring and:
+- What could be the cause, and
+- What could be the solution?

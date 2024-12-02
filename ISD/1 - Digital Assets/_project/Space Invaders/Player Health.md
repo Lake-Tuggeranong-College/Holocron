@@ -217,4 +217,10 @@ You may need to tweak the values in your project to match the health system. Alt
 
 # Demonstration
 
+## Simple
 ![[playerHealthHeartsExampleFull.gif]]
+
+
+## Partial
+
+![[playerHealthHeartsExamplePartial.gif]]

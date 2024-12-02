@@ -1,3 +1,5 @@
+> [!important] Prerequisite: [[Enemy Shooting]]
+
 During the game, the players health should be impacted by various game mechanics. These could include:
 
 | Reducing Health         | Increasing Health        |
@@ -86,7 +88,22 @@ Save the File.
 ![[commonBlocks#Commit & Push]]
 # Reducing Health
 
+The players health can be reduced when an enemy bullet collision occurs. If the bullet collides with the player, the `change_health` function will be called in `player.gd`.
 
+Open `Bullet-Enemy.gd` and add code to the `_physics_process` function. This code will run when the bullet hits the player, and calls `change_health` with a value of -10. 
+
+![[playerHealthReduceHealth.png]]
+
+```gdscript
+collided_object.get_collider().change_health(-10)
+```
+
+This approach can be taken for any object that collides with the player object.
+
+Save the file.
+
+![[commonBlocks#Commit & Push]]
 
 # Increasing Health
 
+TBA

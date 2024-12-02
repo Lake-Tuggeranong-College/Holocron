@@ -58,7 +58,7 @@ Open `Player.gd` and create a new variable to store the players health.
 
 ![[playersHealthVariable.png]]
 
-```
+```gdscript
 @export var health: int = 10
 ```
 

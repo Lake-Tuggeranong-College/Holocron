@@ -53,7 +53,7 @@ Open `Enemy/Enemy.tscn`. Add a Timer node to the scene.
 
 ![[enemyShootingTimerAdd.png]]
 
-Enable the **Autostart** option in the inspector. This will automatically start the timer for each enemy when the enemy gets instantiated.
+Ensure the **Autostart** option in the inspector is turned **OFF**. 
 
 ![[enemyShootingTimerAutostart.png]]
 
@@ -64,6 +64,21 @@ Switch to the **Node** tab, and double click on the `timeout` signal. Change the
 Click **Connect**
 
 Save the Scene.
+
+# Randomising Bullet Fire Time
+
+By default the Timer is set to 1 second before the firing is triggered, however that doesn't make for a fun game. To fix this 'problem', the timer value will be randomised between set values. To do this, `_ready()` will be edited in `Enemy.gd`.
+
+Add code to generate a random number, set between 2 and 30 seconds. Then start the timer.
+
+![[enemyShootingRandomTimer.png]]
+
+```gdscript
+var rng = RandomNumberGenerator.new()
+rng.randomize()
+$Timer.wait_time  = rng.randf_range(2.0, 30.0)
+$Timer.start()
+```
 
 # `fire_bullet`
 
@@ -85,6 +100,8 @@ if GlobalVariables.enemyBulletInstanceCount < 5:
 ```
 
 Save the Scene.
+
+
 
 # Enemy Bullet Management
 

@@ -59,7 +59,7 @@ Open `Player.gd` and create a new variable to store the players health.
 ![[playersHealthVariable.png]]
 
 ```gdscript
-@export var health: int = 10
+@export var health: int
 ```
 
 > [!info] Defining it as `@export` allows the developer to set the value from the inspector tab for the node. This allows different instances of the same node to have different starting values. E.g. different enemies can have different health.
@@ -86,7 +86,7 @@ func change_health(health_modifier):
 Save the File.
 
 ![[commonBlocks#Commit & Push]]
-# Reducing Health
+## Reducing Health
 
 The players health can be reduced when an enemy bullet collision occurs. If the bullet collides with the player, the `change_health` function will be called in `player.gd`.
 
@@ -104,6 +104,117 @@ Save the file.
 
 ![[commonBlocks#Commit & Push]]
 
-# Increasing Health
+## Increasing Health
 
 TBA
+
+# Health Display
+
+The players health is managed internally, however the user doesn't get informed of the current status.
+
+There are many ways to display health to the user, either the raw values, or hearts or a health bar etc. In this stage of the tutorial hearts will be used. The assets for these hearts were from [https://kenney.nl/assets/platformer-art-deluxe](https://kenney.nl/assets/platformer-art-deluxe)
+
+Download the heart images and copy them to the **Images** folder in your project.
+
+![[hud_heartEmpty.png]]
+
+![[hud_heartHalf.png]]
+
+![[hud_heartFull.png]]
+
+![[ISD/1 - Digital Assets/_project/Space Invaders/_images/playerHealthHeartsImport.png]]
+
+
+Open `MainGame.tscn`. Create a **HBoxContainer** as a child of **HUD**, renaming it `Health`. Create five **TextureRect**s as children of `Health`. Your hierarchy is to look like this.
+
+![[playerHealthHUDNodes.png]]
+
+For each of the TextureRects, select it in the Node list, and drag `hud_heartFull.png` to the Texture option in the inspector.
+
+![[playerHealthAssignTexture.png]]
+
+
+
+
+Attach a script to the `Health` HboxContainer, naming the file `Health.gd`. Replace the contents with the code shown.
+
+At this stage, nothing will occur if the game is run. The `update_health` function will need to be called by the main game script to update the hearts based on the players health.
+
+> [!important] ********************REMEMBER!!!******************** The paths to the images need to match. Check capitalisations and the **********exact********** path for each of the images. E.g. - `res://Images/hud_heartFull.png`
+> 
+
+
+```gdscript
+extends HBoxContainer
+
+enum MODES {simple, empty, partial}
+
+var heart_full = preload("res://Images/hud_heartFull.png")
+var heart_empty = preload("res://Images/hud_heartEmpty.png")
+var heart_half = preload("res://Images/hud_heartHalf.png")
+
+@export var mode: MODES
+
+func update_health(value):
+	match mode:
+		MODES.simple:	
+			update_simple(value)
+		MODES.empty:
+			update_empty(value)
+		MODES.partial:
+			update_partial(value)
+
+func update_simple(value):
+	for i in get_child_count():
+		get_child(i).visible = value > i
+
+func update_empty(value):
+
+	for i in get_child_count():
+		if value > i:
+			get_child(i).texture = heart_full
+		else:
+			get_child(i).texture = heart_empty
+
+func update_partial(value):
+	for i in get_child_count():
+		if value > i * 2 + 1:
+			get_child(i).texture = heart_full
+		elif value > i * 2:
+			get_child(i).texture = heart_half
+		else:
+			get_child(i).texture = heart_empty
+
+```
+
+This code is relatively complex and introduces a new variable type - ENUMs.
+
+> [!info]- Enums
+> More information on enums can be found here - [[enums]].
+
+Save the file.
+
+## `MainGame.gd`
+
+Open `MainGame.gd` and edit `_process()`. Add a line of code to call the `update_health` function just created.
+
+![[playerHealthMainGameUpdate.png]]
+
+```gdscript
+$HUD/Health.update_health($Player.health)
+```
+
+
+# Functionality
+
+Depending on the values you've chosen the logic may need to be modified.
+
+For instance, if the `Mode` is set to Simple, this assumes that the players health starts at 5, and each bullet inflicts 1 HP worth of damage.
+
+![[playerHealthLogicSimple.png]]
+
+You may need to tweak the values in your project to match the health system. Alternatively, you can tweak the logic of the Simple, Partial or Empty modes. 
+
+# Demonstration
+
+![[playerHealthHeartsExampleFull.gif]]

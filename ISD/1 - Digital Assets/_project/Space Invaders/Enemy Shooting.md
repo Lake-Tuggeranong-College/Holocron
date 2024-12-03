@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 
 There are many approaches to take to implement the enemy shooting game mechanic. The approach taken in this tutorial is:
 - Attach a timer to each enemy.

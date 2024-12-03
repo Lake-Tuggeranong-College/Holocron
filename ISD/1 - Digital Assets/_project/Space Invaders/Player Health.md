@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 > [!important] Prerequisite: [[Enemy Shooting]]
 
 During the game, the players health should be impacted by various game mechanics. These could include:

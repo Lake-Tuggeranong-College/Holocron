@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 
 
 > [!info] Raycasts are an invisible line between two points in game. Using Raycasts you can detect collisions (or potential collisions). They have a number of uses such as calculating the destination of a bullet, without creating (instantiating) a bullet in game, or if an object can ‘see’ another object (if there’s a wall in the way).

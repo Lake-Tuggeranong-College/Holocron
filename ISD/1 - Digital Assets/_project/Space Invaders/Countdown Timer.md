@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 > [!important] Prerequisite: [[Updating the GUI]]
 
 ![[Theory#Algorithm Design - Loops]]

@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 ## Win & Lose Conditions
 
 The Win and Lose conditions refer to the state of gameplay to determine whether the player “wins” the game or “loses” the game. Those states are determined by the game itself and what occurs after is up to the developer.

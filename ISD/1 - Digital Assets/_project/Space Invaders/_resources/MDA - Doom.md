@@ -1,7 +1,7 @@
 ---
 tags:
+  - S1
   - ISD
-  - yr11
 ---
 > [!info] Google Gemini, 7 Oct 2024
 

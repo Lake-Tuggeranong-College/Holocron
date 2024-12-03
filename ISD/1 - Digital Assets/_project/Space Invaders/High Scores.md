@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 > [!important] This tutorial gives you the evidence to complete VET competency `ICTPRG302 Apply Introductory Programming Techniques`, performance criteria 4.1 & 4.3
 
 > [!important] Prerequisites: [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]]

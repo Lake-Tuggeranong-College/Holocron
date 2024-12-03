@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 There are two main uses of audio in a game:
 
 - Background Music

@@ -1,9 +1,7 @@
 ---
 tags:
   - S1
-  - DigitalTechnologies
   - ISD
-  - yr11
 ---
 > [!note]- Project Overview 
 > ![[ISD/1 - Digital Assets/_project/Space Invaders/Project Overview|Project Overview]]

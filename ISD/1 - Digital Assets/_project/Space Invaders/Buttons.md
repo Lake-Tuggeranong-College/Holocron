@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 The main menu has a number of buttons, but currently are not functional. This tutorial shows how to add simple functionality.
 
 # Start Game Button

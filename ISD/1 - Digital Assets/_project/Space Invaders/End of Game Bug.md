@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 If your game is experiencing a bug where objects from the Main Game are appearing after a scene changes, such as when the player dies or countdown finishes, this is one method of fixing the bug.
 
 In `Global.gd` add a new variable called `Player`. This variable will be used as a ‘pointer’ to the player object. When the player object gets created, the `Player` variable will set to point to the player object. When the scene ends (win or lose) the `Player` variable will be set back to null.

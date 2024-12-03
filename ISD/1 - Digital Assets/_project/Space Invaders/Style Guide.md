@@ -1,3 +1,8 @@
+---
+tags:
+  - S1
+  - ISD
+---
 ![[Theory#Style Guide]]
 
 

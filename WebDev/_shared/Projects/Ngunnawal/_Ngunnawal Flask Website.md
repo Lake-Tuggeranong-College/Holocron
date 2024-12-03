@@ -346,7 +346,7 @@ In Flask, the pages can be created as a hierarchy, with one or some being the pa
 
 The child pages will inherit everything from template.html and modify only the sections of the page that are ‘allowed’. 
 
-![[1).png](_images/Flask_Parent_Child_Pages_(1|Flask Parent Child Pages (1).png]].png)
+![[Flask_Parent_Child_Pages_(1).png]]
 
 ## Update Images
 

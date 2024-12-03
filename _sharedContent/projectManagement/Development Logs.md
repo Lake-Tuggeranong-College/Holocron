@@ -58,4 +58,4 @@ To evaluate your process, you could discuss the different options you could have
 
 [Development Logs / DevLogs](https://www.notion.so/Development-Logs-DevLogs-e8204266fe204737966c9e4131602a4f?pvs=21) 
 
-[[DevLog) Example - Barry Hawkins](https://barryhawkins.com/compendium/development-process/artifacts/examples/development-log-devlog-example/|Development Log (DevLog) Example - Barry Hawkins]]
+[DevLog Example - Barry Hawkins](https://barryhawkins.com/compendium/development-process/artifacts/examples/development-log-devlog-example/|Development Log (DevLog) Example - Barry Hawkins)

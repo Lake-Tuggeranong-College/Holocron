@@ -4,7 +4,7 @@ tags: php
 
 # Website Development Overview
 
-Front-end website development refers to the client-side of web development, which deals with the design and user experience of a website. This includes technologies such as HTML, CSS, and JavaScript, which are used to build the layout, look and feel, and interactivity of a website.
+Front-end website development refers to the client-side of web development, which deals with the design and user experience of a website. This includes technologies such as [[HTML]], [[CSS]], and JavaScript, which are used to build the layout, look and feel, and interactivity of a website.
 
 Back-end website development, on the other hand, deals with the server-side of web development, which is responsible for the functionality of a website. This includes technologies such as PHP, Ruby, Python, and JavaScript, as well as databases like MySQL and MongoDB. Back-end developers are responsible for building and maintaining the code that runs on the server and powers the functionality of a website, such as data storage, processing, and retrieval.
 
@@ -54,14 +54,7 @@ Create a Jetbrains Educational Account.
 
 </aside>
 
-[[https://www.jetbrains.com/community/education/#students]]
-
-## Install Jetbrains Toolbox
-
-After creating the Jetbrains account, download and install the Toolbox App. This tool manages the installation and configuration of the Jetbrains tool.s
-
-![[../../Robotics and Mechatronics ca68cec91d6442099e52729c5ecb71f1/ESP32 Feather Project c4305cef98014e9b8a5e92faa2a08741/Untitled 26.png|Untitled]]
-
+[https://www.jetbrains.com/community/education/#students](https://www.jetbrains.com/community/education/#students)
 ## Install PHPStorm (if not already installed)
 
 Using the Jetbrains toolbox, Install PHPStorm. 

@@ -2,7 +2,7 @@ Database design is the process of creating a structure for storing and managing 
 
 ![https://www.youtube.com/watch?v=wR0jg0eQsZA](https://www.youtube.com/watch?v=wR0jg0eQsZA)
 
-https://support.microsoft.com/en-us/office/database-design-basics-eb2159cf-1e30-401a-8084-bd4f9c9ca1f5
+[Database Design Basics](https://support.microsoft.com/en-us/office/database-design-basics-eb2159cf-1e30-401a-8084-bd4f9c9ca1f5)
 
 ## Normalisation
 
@@ -75,13 +75,9 @@ The Lake Tuggeranong Nursery stocks many different types of plants.  All the de
 
 Currently all the information is stored in a single table in a file, as shown below
 
-The simplest computerised database consists of a single table of records stored on the computer in a file often referred to as a
+The simplest computerised database consists of a single table of records stored on the computer in a file often referred to as a **flat file** database.  Some low cost database programs only allow the creation of a flat file.  Flat files are satisfactory for relatively simple applications such as a mailing list.
 
-**flat file**
-
-database.  Some low cost database programs only allow the creation of a flat file.  Flat files are satisfactory for relatively simple applications such as a mailing list.
-
-[[https://docs.google.com/spreadsheets/d/1ai6ldBVHr2tfLLZ-23t-k_VqhMg8PLgxD__SYybfIOg/edit#gid=0](https://docs.google.com/spreadsheets/d/1ai6ldBVHr2tfLLZ-23t-k_VqhMg8PLgxD__SYybfIOg/edit#gid=0]]
+[https://docs.google.com/spreadsheets/d/1ai6ldBVHr2tfLLZ-23t-k_VqhMg8PLgxD__SYybfIOg/edit#gid=0](https://docs.google.com/spreadsheets/d/1ai6ldBVHr2tfLLZ-23t-k_VqhMg8PLgxD__SYybfIOg/edit#gid=0)
 
 ### **Redundant data**
 

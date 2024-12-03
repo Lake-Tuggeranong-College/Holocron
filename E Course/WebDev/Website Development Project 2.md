@@ -16,9 +16,9 @@ You will be developing two websites:
 # Competencies
 These competencies are covered throughout this semester.
 
-![[Task 3 - PHP Practical#Task 3 Competencies]]
+![[Task 3 - PHP Practical Coversheet#Task 3 Competencies]]
 
-![[Task 4 - Project Highlights#Task 4 Competencies]]
+![[Task 4 - Project Highlights Coversheet#Task 4 Competencies]]
 
 # Content
 This semester will be divided into two projects, *loosely* aimed at being completed each term.
@@ -27,6 +27,6 @@ This semester will be divided into two projects, *loosely* aimed at being comple
 
 # Individual Tasks
 
-[[Task 3 - PHP Practical]]
+[[Task 3 - PHP Practical Coversheet]]
 
-[[Task 4 - Project Highlights]]
+[[Task 4 - Project Highlights Coversheet]]

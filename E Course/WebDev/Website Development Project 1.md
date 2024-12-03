@@ -11,9 +11,9 @@ The programming languages and technology focus in this unit will be:
 # Competencies
 These competencies are covered throughout this semester.
 
-![[Task 1 - Server Installation#Task 1 Competencies]]
+![[Task 1 - Server Installation Coversheet#Task 1 Competencies]]
 
-![[Task 2 - Server Installation Manual#Task 2 Competencies]]
+![[Task 2 - Server Installation Manual Coversheet#Task 2 Competencies]]
 # Content
 This semester will cover two project comprised of a number of tasks.
 
@@ -25,9 +25,9 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 # Individual Tasks
 
-[[Task 1 - Server Installation]]
+[[Task 1 - Server Installation Coversheet]]
 
-[[Task 2 - Server Installation Manual]]
+[[Task 2 - Server Installation Manual Coversheet]]
 
 
 

@@ -2,7 +2,7 @@
 
 | Estimated Hours | Deliverables              | Related Task (if applicable)     |
 | --------------- | ------------------------- | -------------------------------- |
-| ==4==           | 1) Technical Document<br> | [[Task 1 - Server Installation]] |
+| ==4==           | 1) Technical Document<br> | [[Task 1 - Server Installation Coversheet]] |
 
 For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container.
 
@@ -24,7 +24,7 @@ Create a spreadsheet with data to compare using Docker containers with having a 
 | [BSBTEC201](https://training.gov.au/training/details/BSBTEC201/unitdetails) | Use business software applications    |              |        ✅         |               |         ✅         |
 
 # Task
-[[Software Installation & Configuration Report]]
+[[Software Installation & Configuration Manual]]
 
 # Student Guides
 

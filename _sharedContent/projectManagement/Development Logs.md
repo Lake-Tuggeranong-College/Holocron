@@ -5,10 +5,8 @@
 
 At regular intervals (check the requirements) you will be updating a development log to demonstrate how the project has developed from its infancy to completion.
 
-<aside>
-⁉️ The format of the log is up to you. It could be a video series, a website, a google doc.
+> [!info] The format of the log is up to you. It could be a video series, a website, a google doc.
 
-</aside>
 
 In each entry, you are to cover topics such as the ones shown.. Choose any and all that apply. You can add sections if needed or if appropriate.
 
@@ -22,10 +20,9 @@ Explain each of these.
 
 Focus on the *improvements* you’ve made to the project. 
 
-<aside>
-‼️ You could show before and after versions of the project to demonstrate what and how the project has been improved.
 
-</aside>
+> [!info] You could show before and after versions of the project to demonstrate what and how the project has been improved.
+
 
 Some of the topics you *could* cover are:
 

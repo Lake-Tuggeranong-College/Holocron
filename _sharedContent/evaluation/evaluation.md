@@ -7,9 +7,8 @@
 
 # Project Evaluation
 
-> A project evaluation is a formative aspect of the project management process, wherein an organization gathers data to measure whether or not it achieved its goals and why.
-[https://www.masterclass.com/articles/project-evaluation](https://www.masterclass.com/articles/project-evaluation)
-> 
+> [!info] A project evaluation is a formative aspect of the project management process, wherein an organization gathers data to measure whether or not it achieved its goals and why.
+> [https://www.masterclass.com/articles/project-evaluation](https://www.masterclass.com/articles/project-evaluation)
 
 ## Success Criteria
 

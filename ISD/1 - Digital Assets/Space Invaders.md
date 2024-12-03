@@ -17,8 +17,9 @@ tags:
 [[ISD/1 - Digital Assets/_project/Space Invaders/Style Guide\|Style Guide]]
 [[Player Movement]]
 [[Player Shooting]]
-[[Audio]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Variables and Data Types|Variables and Data Types]]
+[[Enemy Movement]]
+[[Audio]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Computational Thinking|Computational Thinking]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Mathematical & Logic Operations|Mathematical & Logic Operations]]
 [[Options]]
@@ -29,6 +30,7 @@ tags:
 [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]]
 [[High Scores]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Raycasts|Raycasts]]
+> [[End of Game Bug]]
 [[ISD/1 - Digital Assets/_project/Space Invaders/Export Game|Export Game]]
 
 

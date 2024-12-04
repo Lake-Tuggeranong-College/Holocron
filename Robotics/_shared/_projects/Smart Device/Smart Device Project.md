@@ -1,8 +1,10 @@
 ---
-tag: Robotics
-tags: archived
+tags:
+  - Robotics
+  - Robotics/esp32
+  - Robotics/Arduino
+  - S1
 ---
-
 
 Create a Google Doc to document these, and future, topics.
 

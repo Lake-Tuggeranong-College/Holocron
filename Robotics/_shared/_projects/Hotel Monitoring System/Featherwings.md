@@ -1,6 +1,7 @@
 ---
-tag: Robotics
-tags: archived
+tags:
+  - Robotics
+  - Robotics/esp32
 ---
 
 # Featherwings

@@ -1,6 +1,8 @@
 ---
-tag: Robotics
-tags: archived
+tags:
+  - Robotics
+  - Robotics/esp32
+  - S2
 ---
 # ESP32 Feather Project
 
@@ -63,8 +65,6 @@ Open VSCode and open the Extensions tab.
 
 Search for **PlatformIO** and click on the Install button.
 
-# PHP / MySQL Crash Course
-    
 
 # PHP, MySQL Crash Course
 

@@ -42,7 +42,7 @@ Open `contact.php` created in Variables and Data Types.
 
 Find the code which tests if the form has been submitted.
 
-![[_images/SCR-20230120-tl7.png|SCR-20230120-tl7.png]]
+![[decisionsIfPost.png|decisionsIfPost.png]]
 
 The logic of what needs to be done is shown in this flowchart
 
@@ -70,7 +70,7 @@ ifMessageEmpty-->|False|ifError-->setEmailAddress-->setMessage-->echoEmail-->ech
 
 To implement this logic, first set the value of `$formError` to be `false`.
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled.png|Untitled]]
+![[decisionsFormErrorFalse.png|Untitled]]
 
 ```php
 $formError = false;
@@ -80,7 +80,7 @@ Next implement the code to check each field and whether it is empty.
 
 PHP has a helper function called `empty()` which returns `true` if the variable or object is empty and `false` if there is some data stored. If the user does not enter an email address, `$_POST['inputEmail'])` will be empty and therefore return `true` which will then run the code in the `if` block.
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 1.png|Untitled]]
+![[decisionsCheckForm.png|Untitled]]
 
 ```php
 if (empty($_POST['inputEmail'])) {
@@ -95,7 +95,7 @@ if (empty($_POST['inputMessage'])) {
 
 The remainder of the existing code which collects and then displays the email address and message entered can remain the same, although be placed in an `if` block to check if the `formError` variable has been set to `true`.
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 2.png|Untitled]]
+![[decisionsFormNoError.png|Untitled]]
 
 ```php
 if ($formError == false) {

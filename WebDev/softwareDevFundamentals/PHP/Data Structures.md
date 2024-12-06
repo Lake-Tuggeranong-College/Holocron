@@ -203,11 +203,11 @@ The displayed individual costs of each item will need to be updated as well.
 > [!info] You may have noticed the different syntax - `<?=` is equivalent to `<?php echo`.
 
 
-![[_images/Untitled 28.png|Untitled]]
+![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 28.png|Untitled]]
 
 Reload the page in the browser and the product names and prices should reflect the values set in the two associated arrays.
 
-![[_images/Untitled 29.png|Untitled]]
+![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 29.png|Untitled]]
 
  
 

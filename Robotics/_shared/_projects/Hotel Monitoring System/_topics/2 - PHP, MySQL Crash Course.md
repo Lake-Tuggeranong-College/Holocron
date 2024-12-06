@@ -33,11 +33,11 @@ You can read more on CRUD by accessing [this page](https://www.humio.com/glossar
 
 Open the project in PHPStorm and open the database tab.
 
-![[Untitled 8.png|Untitled]]
+
 
 Click the + icon to add a new database source. Select MariaDB from the dropdown list.
 
-![[Untitled 9.png|Untitled]]
+
 
 Enter the IP Address of the database server in the Host text box.
 
@@ -49,7 +49,7 @@ Click Test Connection.
 
 Click Ok.
 
-![[Untitled 10.png|Untitled]]
+
 
 Once the connection has been established, click on the `1 of 3` status next to the database connection and then select **All Schemas**. 
 

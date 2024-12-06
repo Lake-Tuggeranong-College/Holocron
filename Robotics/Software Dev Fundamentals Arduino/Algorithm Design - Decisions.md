@@ -397,7 +397,7 @@ const int pinPIR = 2;
 
 Add the code in `setup()` to configure the pins to be input or output.
 
-![[Untitled 28.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 28.png|Untitled]]
 
 ```arduino
 pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
@@ -409,7 +409,7 @@ Add a function to read the response from the PIR.
 
 The PIR sensor responds with `true` if it detects movement, `false` otherwise.
 
-![[Untitled 29.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 29.png|Untitled]]
 
 ```arduino
 boolean readPIR() {
@@ -423,7 +423,7 @@ This function does all the specific low-level code to send the pulse and read th
 
 If the distance to the object is determined to be less than the threshold, then the function returns `true`, otherwise `false`.
 
-![[Untitled 30.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 30.png|Untitled]]
 
 ```arduino
 boolean readDistance(int distanceThreshold) {
@@ -459,7 +459,7 @@ To help the debugging process that may be required in the future, add a helper f
 
 </aside>
 
-![[Untitled 31.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 31.png|Untitled]]
 
 ```arduino
 void debugSensors(int potValue, boolean pirValue, boolean sonarValue) {
@@ -476,7 +476,7 @@ Create a function that will access and read the sensor values from the functions
 
 This function reads the responses from all the other functions and stores them locally.
 
-![[Untitled 32.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 32.png|Untitled]]
 
 ```arduino
 void triggerAlarm() {
@@ -489,7 +489,7 @@ void triggerAlarm() {
 
 Add an if statement to determine if all three trigger values are ‘correct’. “Correct” in this case means that they are enough to meet the requirements to trigger the alarm - the potentiometer value needs to be greater than 511. The PIR and Sonar values need to be `true`.
 
-![[Untitled 33.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 33.png|Untitled]]
 
 ```arduino
 if (potTrigger > 511 && pirTrigger == true && sonarTrigger == true) {
@@ -503,13 +503,13 @@ if (potTrigger > 511 && pirTrigger == true && sonarTrigger == true) {
 > [!info]- **Compound** conditions
 > Compound conditions such as the one shown above, a logical expression that combines multiple individual conditions using logical operators such as "and" (`&&`) or "or" (||). These conditions are typically used in control flow statements such as "if-else" or "while" loops to determine the execution of certain code. For example, the expression "`x > 0 && x < 10`" is a compound condition that checks whether the variable "x" is greater than 0 and less than 10. If both conditions are true, the code within the corresponding control flow statement will be executed.
 > In the code shown, ALL of the individual conditions (red, yellow and purple) must equate to `true` for the whole `if` statement to be evaluated as `true`.
-![[Untitled 34.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 34.png|Untitled]]
 
 
 
 Add the appropriate code in the different if blocks to turn the LED on or off.
 
-![[Untitled 35.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 35.png|Untitled]]
 
 ```arduino
 if (potTrigger > 511 && pirTrigger == true && sonarTrigger == true) {
@@ -523,7 +523,7 @@ if (potTrigger > 511 && pirTrigger == true && sonarTrigger == true) {
 
 Finally, modify `loop()` to call `triggerAlarm()` instead of `determineLEDBrightness()`.
 
-![[Untitled 36.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 36.png|Untitled]]
 
 ```arduino
 void loop()
@@ -551,7 +551,7 @@ The highlighted value needs to be less than 100.
 
 The dial needs to be set to a value on the lefthand side (<511)
 
-![[Untitled 37.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 37.png|Untitled]]
 
 **PIR**
 

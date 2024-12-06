@@ -36,7 +36,7 @@ String user = "Ryan Cather";
 
 At this end of the process, your `sensitiveInformation.h` file should appear similar to this.
 
-![[Untitled 38.png|Untitled]]
+![[loopWhileLoop.png|Untitled]]
 
 $$
 \utilde {\color{black} \fcolorbox{darkorange}{darkorange}  {Commit and Push to Github}}
@@ -51,7 +51,7 @@ Add the following additional include statements at the top of your code, *after*
 #include <HTTPClient.h>
 ```
 
-![[Untitled 39.png|Untitled]]
+![[loopCSVStructure.png|Untitled]]
 
 Add the following block of code to the `setup()` function.
 
@@ -74,7 +74,7 @@ while (!Serial) {
   Serial.println(WiFi.localIP());
 ```
 
-![[Untitled 40.png|Untitled]]
+![[loopCSVReadData.png|Untitled]]
 
 - Event Logging to the Database
 

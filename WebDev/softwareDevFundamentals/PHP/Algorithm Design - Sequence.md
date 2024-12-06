@@ -8,7 +8,7 @@ tags: php
 
 PHP can co-exist with HTML in the source file, meaning it can be challenging to read a single file as there could be a number of languages in a single file.
 
-![[_images/Untitled 45.png|Untitled]]
+![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 45.png|Untitled]]
 
 <aside>
 ‼️ PHP code can be included with HTML as many time as needed in a single file.
@@ -21,9 +21,9 @@ This code collects data from a HTML form (`$_GET['username']`) and then outputs 
 
 `echo` outputs information to the rendered page.
 
-![[_images/Untitled 46.png|Untitled]]
+![[moduleFormGetData.png|Untitled]]
 
-![[_images/Untitled 47.png|Untitled]]
+![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 47.png|Untitled]]
 
  
 

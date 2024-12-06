@@ -1697,7 +1697,7 @@ The site already allows for the user to reset their own password. The process fo
 <aside>
 ‼️ Consider the reset password function in `app.py` that already has been coded.
 
-![[WebDev/_shared/Projects/Ngunnawal/_images/Untitled 5.png|Untitled]]
+![[passwordresetRoute.png|Untitled]]
 
 </aside>
 

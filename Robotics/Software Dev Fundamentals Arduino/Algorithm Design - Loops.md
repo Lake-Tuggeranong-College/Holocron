@@ -113,7 +113,7 @@ for (int pinLED = 5; pinLED <= 9; pinLED++) {
 
 Move the line `pinMode(pinLED, OUTPUT);` to be inside the for loop block.
 
-![[Untitled 41.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 41.png|Untitled]]
 
 ```arduino
 pinMode(pinLED, OUTPUT);

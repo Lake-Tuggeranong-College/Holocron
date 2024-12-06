@@ -77,7 +77,7 @@ In this task, you’ll implement an invoice page which reads the data from `orde
 
 Create a new PHP page in the project called `orderForm.php`. 
 
-![[_images/Untitled 30.png|Untitled]]
+![[loopsNewPHPOrderForm.png|Untitled]]
 
 Replace the contents of the file with the following HTML form.
 
@@ -88,7 +88,7 @@ Replace the contents of the file with the following HTML form.
 
 This form is similar in structure to the contact form on `contact.php` however with more fields for the users details, and for the 5 products the user wishes to order.
 
-![[_images/Untitled 31.png|Untitled]]
+![[loopsFormExample.png|Untitled]]
 
 ```php
 <?php include "template.php" ?>
@@ -157,7 +157,7 @@ This form is similar in structure to the contact form on `contact.php` however w
 
 After the HTML form code, add in a PHP block which then checks if the user has pressed the submit button.
 
-![[_images/Untitled 32.png|Untitled]]
+![[loopsIfPost.png|Untitled]]
 
 ```php
 <?php
@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 Using `sanitiseData()`, collect and store the field data into various variables.
 
-![[_images/Untitled 33.png|Untitled]]
+![[loopsFormCollectData.png|Untitled]]
 
 ```php
 // Customer Details
@@ -192,7 +192,7 @@ $prodQuantity5 = sanitiseData($_POST['orderProduct5']);
 
 Finally, save the collected data to `orders.csv`. 
 
-![[_images/Untitled 34.png|Untitled]]
+![[loopFormSaveData.png|Untitled]]
 
 ```php
 $csvFile = fopen("orders.csv", "a");
@@ -211,7 +211,7 @@ Run the page in the browser, and fill out the details. Press submit and `orders.
 
 </aside>
 
-![[_images/Untitled 35.png|Untitled]]
+![[loopsCSVOutput.png|Untitled]]
 
 ## Invoice
 
@@ -222,7 +222,7 @@ Run the page in the browser, and fill out the details. Press submit and `orders.
 
 Create a new page in the project called `invoice.php`. 
 
-![[_images/Untitled 36.png|Untitled]]
+![[loopNewfileInvoice.png|Untitled]]
 
 Create the code to display all the data that is going to be read and calculated.
 
@@ -328,7 +328,7 @@ This code displays the customer details and the products they ordered, the quant
 
 In the empty PHP block near the top of the page, create an `if` statement which will attempt to open `orders.csv` and will only continue if there are no errors.
 
-![[_images/Untitled 37.png|Untitled]]
+![[loopOpenCSV.png|Untitled]]
 
 ```php
 // Read the contents of the file
@@ -338,7 +338,7 @@ if (($handle = fopen("orders.csv", "r")) !== FALSE) {
 
 Using a `while` loop, read the contents of each line of the `orders.csv` 
 
-![[_images/Untitled 38.png|Untitled]]
+![[loopWhileLoop.png|Untitled]]
 
 ```php
 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -354,9 +354,9 @@ Each time the loop iterates it will read the current line of the file and store 
 
  `$data` in this case is divided into 10 different variables, each with an identifier (starting with 0). Each variable can be accessed by using the identifier, for example `$data[2]` is `123 Fake St`, as can be seen in the image below.
 
-![[_images/Untitled 39.png|Untitled]]
+![[loopCSVStructure.png|Untitled]]
 
-![[_images/Untitled 40.png|Untitled]]
+![[loopCSVReadData.png|Untitled]]
 
 ```php
 $numberOfRowsOfData = count($data);
@@ -379,10 +379,9 @@ $prod5Quantity = $data[9];
 
 Calculate all the totals, but first define the cost of each item.
 
-<aside>
-‼️ Defining the costs of the items in the code limits the scalability of the code as the site will need to be modified if prices change etc. However in this example it can be quickly set up, and later this will be modified to load prices from another source.
 
-</aside>
+> [!info] Defining the costs of the items in the code limits the scalability of the code as the site will need to be modified if prices change etc. However in this example it can be quickly set up, and later this will be modified to load prices from another source.
+
 
 ```php
 $prod1ItemCost = 3.4;
@@ -405,7 +404,7 @@ $invoiceTotal = $prod1SubTotal + $prod2SubTotal + $prod3SubTotal + $prod4SubTota
 
 Add links to the Order form and invoice pages in the navbar in `template.php`. 
 
-![[_images/Untitled 41.png|Untitled]]
+![[loopNavbarUpdates.png|Untitled]]
 
 ```html
 <li class="nav-item">
@@ -422,8 +421,8 @@ Add links to the Order form and invoice pages in the navbar in `template.php`.
 
 Load the pages in the browser, and they should appear similar to these.
 
-![[_images/SCR-20230226-wj9.png|SCR-20230226-wj9.png]]
+![[loopFormTest.png|loopFormTest.png]]
 
-![[_images/SCR-20230226-wjh.png|SCR-20230226-wjh.png]]
+![[loopInvoiceTest.png|loopInvoiceTest.png]]
 
 # Review

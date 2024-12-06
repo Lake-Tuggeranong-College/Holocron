@@ -132,7 +132,7 @@ Currently, the code:
 - configures pin 9 to put OUTPUT, and
 - enables the Serial Monitor.
 
-![[Untitled 44.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 44.png|Untitled]]
 
 <aside>
 ‼️ **Explanation.**
@@ -146,7 +146,7 @@ The LED is an OUTPUT device and the Potentiometer is an INPUT device, hence the 
 
 </aside>
 
-![[Untitled 45.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 45.png|Untitled]]
 
 ## Reading the Potentiometer
 
@@ -163,7 +163,7 @@ After `loop()` create a new function to read the value from the potentiometer.
 
 </aside>
 
-![[Untitled 46.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 46.png|Untitled]]
 
 ```arduino
 int readPotentiometer() {
@@ -188,7 +188,7 @@ Before making the code more complex, it’s advisable to check at regular interv
 
 Add code to output the value of the potentiometer, stored in `potValue` to the serial monitor.
 
-![[Untitled 47.png|Untitled]]
+![[Robotics/Software Dev Fundamentals Arduino/_images/Untitled 47.png|Untitled]]
 
 ```arduino
 Serial.println(potValue);

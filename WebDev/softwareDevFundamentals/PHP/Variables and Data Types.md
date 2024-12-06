@@ -193,7 +193,7 @@ Update the Heading on the page to the Contact page.
 
 ![[_images/Untitled 43.png|Untitled]]
 
-![[_images/Untitled 44.png|Untitled]]
+![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 44.png|Untitled]]
 
 In this Contact form, a standard programming process has been developed - Input → Processing → Output. The data gets inputted into the system, it is processed and then outputted.
 

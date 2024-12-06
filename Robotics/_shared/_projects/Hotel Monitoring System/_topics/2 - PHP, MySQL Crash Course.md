@@ -63,7 +63,7 @@ In order to manage the connection to the MySQL database, it makes sense to keep 
 
 Create a new PHP file called `config.php` in the root of the project.
 
-![[SCR-20221128-taa.png]]
+![[phpNewConfig.png]]
 
 Copy this code into config.php.
 
@@ -79,7 +79,7 @@ You will need to change the values of the following variables:
 
 You will be given these details in class.
 
-![[SCR-20221128-uvo-2.png]]
+![[phpConfigCode.png]]
 
 ```php
 <?php
@@ -177,7 +177,7 @@ function outputFooter()
 
 If you launch the page in the browser, you’ll see something like this.
 
-![[SCR-20221128-tjf.png]]
+![[phpOutput.png]]
 
 ### Explanation
 
@@ -192,7 +192,7 @@ The template page is complex because it covers a number of base tasks.
 | 6 | Site-wide function to sanitise data. More later. |
 | 7 | Site-wide function to output a standardised footer across pages. |
 
-![[SCR-20221128-tl2-2.png]]
+![[phpCodeExplain.png]]
 
 ## `index.php`
 
@@ -209,7 +209,7 @@ Create a new PHP file called `index.php`. Replace the contents with this.
 
 Launch the page and you should see something similar to this:
 
-![[SCR-20221128-ts2.png]]
+![[phpHeader.png]]
 
 ## `registration.php`
 

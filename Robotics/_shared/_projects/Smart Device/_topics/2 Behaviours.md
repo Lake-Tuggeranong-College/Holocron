@@ -22,6 +22,6 @@ When someone presses the dog collar (**button** is pressed), the dog barks (the 
 
 **Here are a number of examples from previous years.**
 
-![[Screen_Shot_2022-04-05_at_10.10.49_am.png|Screen Shot 2022-04-05 at 10.10.49 am.png]]
+![[behaviourExample2.png|Screen Shot 2022-04-05 at 10.10.49 am.png]]
 
-![[Screen_Shot_2022-04-05_at_10.10.20_am.png|Screen Shot 2022-04-05 at 10.10.20 am.png]]
+![[behaviourExample1.png|Screen Shot 2022-04-05 at 10.10.20 am.png]]

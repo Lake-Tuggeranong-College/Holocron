@@ -18,6 +18,6 @@ The banner should have:
 
 ## Examples
 
-![[Kyle_Brogden_semester_2_2021.png|Kyle Brogden semester 2 2021.png]]
+![[exampleSmartFridge.png|Kyle Brogden semester 2 2021.png]]
 
-![[Smart_Coffee_Banner.jpg|Smart Coffee Banner.jpg]]
+![[exampleSmartCoffee.jpg|Smart Coffee Banner.jpg]]

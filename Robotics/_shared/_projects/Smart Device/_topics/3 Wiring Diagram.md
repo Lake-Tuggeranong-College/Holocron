@@ -15,7 +15,7 @@ The goal of a wiring diagram is to demonstrate how the components are connected 
 2. Finally, open Cirkit Designer, go to File → Open and choose the `.ckt` file.
     1. You may find that you need to open Cirkit Designer first, then Select **Open File**.
 
-![[Screen_Shot_2022-04-18_at_11.20.46_pm.png|Screen Shot 2022-04-18 at 11.20.46 pm.png]]
+![[wiringCirkitDesigner.png|Screen Shot 2022-04-18 at 11.20.46 pm.png]]
 
 ## Cirkit Designer How To
 
@@ -52,7 +52,7 @@ Some of the devices are listed below, showing the pins identified on the device 
 
 SD Card
 
-![[SCR-20230425-rskw-2.png]]
+![[moduleMicroSDCardReader.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -63,7 +63,7 @@ SD Card
 
 Servo
 
-![[SCR-20230425-rslw-2.png]]
+![[moduleServo.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -71,7 +71,7 @@ Servo
 
 Motor Module
 
-![[SCR-20230425-rscr-2.png]]
+![[moduleL298N.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -80,7 +80,7 @@ Motor Module
 
 Piezo / Buzzer
 
-![[SCR-20230425-rsfq-2.png]]
+![[modulePiezo.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -88,7 +88,7 @@ Piezo / Buzzer
 
 Button Sensor
 
-![[SCR-20230425-rsir-2.png]]
+![[moduleButton.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -96,7 +96,7 @@ Button Sensor
 
 IR Receiver
 
-![[SCR-20230425-rsht-2.png]]
+![[moduleIRReceiver.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -104,7 +104,7 @@ IR Receiver
 
 Line Tracker Sensor
 
-![[SCR-20230425-rsgn-2.png]]
+![[moduleLineTracker.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -112,7 +112,7 @@ Line Tracker Sensor
 
 Sonar / HCSR04
 
-![[SCR-20230425-rshe-2.png]]
+![[moduleSonar.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -121,7 +121,7 @@ Sonar / HCSR04
 
 Traffic Lights
 
-![[SCR-20230425-rsed-2.png]]
+![[moduleTrafficLight.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -131,7 +131,7 @@ Traffic Lights
 
 Potentiometer
 
-![[SCR-20230425-rsjo-2.png]]
+![[modulePot.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -146,4 +146,4 @@ Potentiometer
 
 At the end of the wiring process, you should have a digram that appears similar to this.
 
-![[final.png]]
+![[wiringFinal.png]]

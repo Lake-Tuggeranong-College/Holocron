@@ -7,7 +7,7 @@ In this stage you will be “converting” your behaviours and flowcharts into c
 
 Start by creating a new Arduino sketch in the IDE, naming it after you project - such as SmartHouse. Save this sketch in your Github directory.
 
-![[Screen_Shot_2022-05-20_at_2.55.05_pm.png|Screen Shot 2022-05-20 at 2.55.05 pm.png]]
+![[codeNewArduinoSketch.png|Screen Shot 2022-05-20 at 2.55.05 pm.png]]
 
 ![[commonBlocks#Commit & Push]]
 
@@ -35,7 +35,7 @@ If you need to install an external library, please see this guide.
 
 You will need to install the `RTCLib` (by Adafruit) library. Follow the instructions above.
 
-![[Screen_Shot_2022-05-20_at_3.59.18_pm.png|Screen Shot 2022-05-20 at 3.59.18 pm.png]]
+![[codeArduinoLibrary.png|Screen Shot 2022-05-20 at 3.59.18 pm.png]]
 
 Once the library has been installed, add the code shown here before the setup() function.
 
@@ -138,7 +138,7 @@ void logEvent(String dataToLog) {
 
 At this stage, your code should appear **similar** to this.
 
-![[Screen_Shot_2022-05-20_at_5.05.31_pm.png|Screen Shot 2022-05-20 at 5.05.31 pm.png]]
+![[codeSDCardRTCCode.png|Screen Shot 2022-05-20 at 5.05.31 pm.png]]
 
 ## Module Specific Code
 

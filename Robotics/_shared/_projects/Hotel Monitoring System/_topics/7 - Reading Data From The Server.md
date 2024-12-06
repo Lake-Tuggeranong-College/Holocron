@@ -6,7 +6,7 @@ The project up to this point involves uploading data from the ESP32 to the PHP s
 
 The database tables are shown here for the project so far.
 
-![[eventLog.png]]
+![[dataReadERD.png]]
 
 A new table needs to be added which will store a command (LED on, LED off etc) as well as the module information.
 
@@ -18,4 +18,4 @@ The new table - `moduleCommands` - will contain the fields to store data, so tha
 
 The password is stored in `hashedPassword` . Passwords should never be stored in plain text in a database in case unauthorised users (bad actors) get access to the database. Hashing passwords involves encrypting the password prior to storing the password in the database. 
 
-![[moduleCommands.png]]
+![[dataReadModuleCommands.png]]

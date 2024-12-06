@@ -85,12 +85,11 @@ Instead of logging events locally (to a SD card or similar), the Arduino can log
 
 Open `main.cpp` and add the following function near the top of the code.
 
-<aside>
-‼️ It needs to be stored *after* the include statements and  *prior* to `setup()`
 
-![[_images/Untitled 41.png|Untitled]]
+> [!info] It needs to be stored *after* the include statements and  *prior* to `setup()`
+> ![[eventLoggingPosition.png]]
 
-</aside>
+
 
 ```arduino
 void logEvent(String eventData)
@@ -142,10 +141,10 @@ Add two events that are logged. The first in `setup()` to indicate the system ha
 logEvent("System Initalised");
 ```
 
-![[_images/Untitled 42.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 42.png]]
 
 Upload the code to the Adafruit ESP32 Feather and check the database to ensure that it’s being stored correctly.
 
-![[_images/Untitled 43.png|Untitled]]
+![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 43.png]]
 
 ![[commonBlocks#Commit & Push]]

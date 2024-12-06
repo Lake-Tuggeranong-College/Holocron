@@ -27,4 +27,4 @@ You may use additional hardware for your specific implementation. This may inclu
 - RGB LEDs
 - etc.
 
-![[IMG_4999.heic|IMG_4999.HEIC]]
+![[featherFeatherWings.jpg]]

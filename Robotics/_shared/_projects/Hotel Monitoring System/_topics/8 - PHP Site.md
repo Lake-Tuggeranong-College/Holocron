@@ -18,15 +18,15 @@ PHP is used by itself but is also the main language in many other frameworks ava
 
 Copy the CSS and JS folder into the project.
 
-![[Untitled 28.png|Untitled]]
+![[phpAddBootstrap.png]]
 
 ## Site Configuration
 
 Create a new php file in the project, named `config.php`. 
 
-![[Untitled 29.png|Untitled]]
+![[phpAddNewFile.png]]
 
-![[Untitled 30.png|Untitled]]
+![[phpConfigSave.png]]
 
 Replace the contents with the code shown.
 
@@ -62,7 +62,7 @@ Create a new file `template.php`.
 
 This php page will be used by all other PHP pages that are created for the website to offer a similar interface. 
 
-![[Untitled 31.png|Untitled]]
+![[phpTemplateView.png]]
 
 ```php
 <?php require_once 'config.php'; ?>
@@ -198,19 +198,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 Load the page in the browser and it should appear similar to the one shown. Enter some data and press submit.
 
-![[Untitled 32.png|Untitled]]
+![[phpViewForm.png]]
 
 Open the database table view in PHPstorm by opening the database tab and then double-clicking on `moduleCommands`. 
 
 Ideally, if the files are all programmed correctly, the new module data should appear.
 
-![[Untitled 33.png|Untitled]]
+![[phpDbRecord.png]]
 
 ## JSON
 
 JSON is a data format that is similar to a dictionary or key-value pair structure.
 
-![[Untitled 34.png|Untitled]]
+![[phpJsonExample.png]]
 
 JSON, which stands for "JavaScript Object Notation," is like a special language that helps you organise and describe this data in a way that computers can easily understand.
 
@@ -242,7 +242,7 @@ This will allow the PHP site to return a JSON object to the ESP32 and have it ex
 
 Save the file. The project may have to load the library, which may take a minute or two.
 
-![[Untitled 35.png|Untitled]]
+![[phpArduinoJsonLibrary.png]]
 
 Open `main.cpp`. Add the following include directive to load the library.
 
@@ -250,11 +250,11 @@ Open `main.cpp`. Add the following include directive to load the library.
 #include "ArduinoJson.h"
 ```
 
-![[Untitled 36.png|Untitled]]
+![[phpArduinoJsonLibraryInclude.png]]
 
 The `dataTransfer()` function currently uploads data and receives a response, however the code doesn’t use that response at this stage. To change this, go do the `loop()` function and add `String payload` to the start of the dataTransfer function call.
 
-![[Untitled 37.png|Untitled]]
+![[phpArduinoPayload.png]]
 
 Add the code shown to the end of `loop()` to extract and output the command data. This command variable will be sent back by the PHP server in JSON format, extracted from the database table.
 

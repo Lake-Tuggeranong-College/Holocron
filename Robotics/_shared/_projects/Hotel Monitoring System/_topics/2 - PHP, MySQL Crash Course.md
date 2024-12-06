@@ -305,12 +305,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 If a user has be found (i.e. if `$count > 0`) then the code will want to load all the details of that users record.
 
-<aside>
-‼️ A **record** in a database is a collection of data which is organised into fields and is stored within a table. Each record contains values which correspond to the fields in the table. These records are used to store and retrieve information, such as a user's name, address, and other personal data. Records are usually identified by a unique key or identifier, such as an ID number.
 
-![[_images/Untitled 14.png|Untitled]]
+> [!important] A **record** in a database is a collection of data which is organised into fields and is stored within a table. Each record contains values which correspond to the fields in the table. These records are used to store and retrieve information, such as a user's name, address, and other personal data. Records are usually identified by a unique key or identifier, such as an ID number.
+> 
+> ![[_images/Untitled 14.png|Untitled]]
 
-</aside>
+
 
 ```php
 $query = $conn->query("SELECT * FROM `user` WHERE `username`='$username'");
@@ -331,10 +331,8 @@ So, in this specific case, the fields will equate to these *indexes*.
 
 At this stage, the username is correct and valid, but the system still needs to confirm the password, which is hashed in the database. Luckily PHP has a helper function to compare a password in plain text with the hashed password. This function - `password_verify()` - will return `true` if the passwords match and `false` if not. 
 
-<aside>
-‼️ Note that the clear text password is being compared to `row[2]` which is the hashed_password field from the database.
 
-</aside>
+>[!info] Note that the clear text password is being compared to `row[2]` which is the hashed_password field from the database.
 
 ![[_images/Untitled 17.png|Untitled]]
 
@@ -345,10 +343,9 @@ if (password_verify($password, $row[2])) {
 
 If `password_verify()` returns true then the user has successfully logged on. Before proceeding with any other part of the process, you need to set some **session** variables.
 
-<aside>
-‼️ Session variables in PHP are variables that store user information for a specific session. They are stored in the server's memory for a certain amount of time and are used to track user activities during that session. Session variables can be used to store user-specific data, such as their name, preferences, or cart contents. They allow a website to remember user-specific data across multiple pages and even after a user has left the website and returned.
 
-</aside>
+> [!info] Session variables in PHP are variables that store user information for a specific session. They are stored in the server's memory for a certain amount of time and are used to track user activities during that session. Session variables can be used to store user-specific data, such as their name, preferences, or cart contents. They allow a website to remember user-specific data across multiple pages and even after a user has left the website and returned.
+
 
 For the purposes of this project, the only sessions variables needed (at this stage) are the `user_id`, `username` and `access_level`.
 

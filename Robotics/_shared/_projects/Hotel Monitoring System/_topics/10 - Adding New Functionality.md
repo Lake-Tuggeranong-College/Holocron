@@ -2,12 +2,11 @@
 
 ## Video Demonstration
 
-<aside>
-‼️ The exact process and code you’ll need to implement will depend on your specific requirements.
 
-</aside>
+> [!info] The exact process and code you’ll need to implement will depend on your specific requirements.
 
-[https://youtu.be/rPDmzrNgSn4](https://youtu.be/rPDmzrNgSn4)
+
+![https://youtu.be/rPDmzrNgSn4](https://youtu.be/rPDmzrNgSn4)
 
 ## Step 1: Define function
 
@@ -17,7 +16,7 @@ In this example, the status of a button will be uploaded to the server, and the 
 
 Decide the input sensor and the output actuator. 
 
-![[_images/Untitled 47.png|Untitled]]
+![[newFunctionalityButtonFan.png]]
 
 ## Step 2: Libraries
 
@@ -25,13 +24,13 @@ Import the necessary libraries for your sensor and actuator. This will require r
 
 Import the library/ies required using the Library option in the Platform IO home.
 
-![[_images/Untitled 48.png|Untitled]]
+![[newFunctionalityAddLibraries.png]]
 
 ### Alternatively…
 
 Open `platformio.ini` and add the following libraries to the end of the list.
 
-![[_images/Untitled 49.png|Untitled]]
+![[newFunctionalityLibrariesAddManually.png]]
 
 ```cpp
 
@@ -42,7 +41,7 @@ adafruit/Adafruit SSD1306@^2.5.7
 adafruit/Adafruit Motor Shield V2 Library@^1.1.1
 ```
 
-Step 3: Collect Input
+## Step 3: Collect Input
 
 ## Step 4: Send Data to the Server and Receive Response
 

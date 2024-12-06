@@ -30,13 +30,12 @@ To allow the project to scale up, and add functionality easily, it’s time to m
 
 To easily do this, rename the loop function to `temperatureAndLED()` and then create a new `loop()` that calls it.
 
-![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled.png]]
+![[refactorMainLoopSimplify.png]]
 
 Add a short delay into `loop()`. This will give the ESP32 a regular amount of time where it is idle, allowing new code to be uploaded to it.
 
-<aside>
-‼️ A rule of thumb is to always add a short delay in the loop function. Otherwise the Arduino/ESP may be too ‘busy’ to allow the IDE to upload new code.
 
-</aside>
+> [!info] A rule of thumb is to always add a short delay in the loop function. Otherwise the Arduino/ESP may be too ‘busy’ to allow the IDE to upload new code.
 
-![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 1.png|Untitled]]
+
+![[refactorLoopDelay.png]]

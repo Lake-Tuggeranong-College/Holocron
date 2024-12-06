@@ -47,7 +47,7 @@ This example will calculate the area of a circle with a radius of 5.
 
 The output will be :
 
-![[Screenshot_2022-11-21_at_2.52.24_pm.png|Screenshot 2022-11-21 at 2.52.24 pm.png]]
+![[variablesVariableOutput.png|Screenshot 2022-11-21 at 2.52.24 pm.png]]
 
 ```php
 $radius = 5;
@@ -102,15 +102,15 @@ Open your `Software-Development Fundamentals-PHP` project. In this stage of the 
 
 Right click on the Project name in the Project Explorer and choose New→PHP file. 
 
-![[_images/Screenshot_2022-11-21_at_2.11.30_pm.png|Screenshot 2022-11-21 at 2.11.30 pm.png]]
+![[variablesNewPHPFile.png|Screenshot 2022-11-21 at 2.11.30 pm.png]]
 
 Enter `contact` for the filename. This will create the contact.php file.
 
-![[_images/Screenshot_2022-11-21_at_2.13.41_pm.png|Screenshot 2022-11-21 at 2.13.41 pm.png]]
+![[variablesNewPHPFileName.png|Screenshot 2022-11-21 at 2.13.41 pm.png]]
 
 PHPStorm may ask you if you wish to add this to the Git Repository. Click `Don’t Ask Again`, and then click Add.
 
-![[_images/Screenshot_2022-11-21_at_2.13.50_pm.png|Screenshot 2022-11-21 at 2.13.50 pm.png]]
+![[variablesAddFileToGit.png|Screenshot 2022-11-21 at 2.13.50 pm.png]]
 
 Replace the contents of the the file with the standard ‘template’ for HTML files for this project.
 
@@ -122,7 +122,7 @@ This may look complex, however much of the code is Bootstrap code to display the
 
 At this stage, the important aspects to note is the `name` attributes of each of the `input` fields - `inputEmail` and `inputMessage`. These will be referred to later in PHP code.
 
-![[_images/Screenshot_2022-11-22_at_9.49.12_am.png|Screenshot 2022-11-22 at 9.49.12 am.png]]
+![[variablesContactForm.png|Screenshot 2022-11-22 at 9.49.12 am.png]]
 
 ```html
 <div class="container-fluid">
@@ -143,13 +143,13 @@ At this stage, the important aspects to note is the `name` attributes of each of
 
 At this stage, the page simple shows the form but doesn’t do anything with the data when the user presses submit. That’s where PHP is introduced.
 
-![[_images/Screenshot_2022-11-22_at_9.50.51_am.png|Screenshot 2022-11-22 at 9.50.51 am.png]]
+![[variablesContactFormDisplay.png|Screenshot 2022-11-22 at 9.50.51 am.png]]
 
 After the form add PHP code to detect if the form has been submitted. This is done through the `$_SERVER["REQUEST_METHOD"] == "POST"` check. 
 
 `POST` is a standard webserver protocol, and is linked with the `<form action="contact.php" method="post">` code created earlier. When the user presses the submit button on the form, the form is `post`ed back to the server. The PHP code added detects that `post` and can respond accordingly.
 
-![[_images/Screenshot_2022-11-22_at_9.52.34_am.png|Screenshot 2022-11-22 at 9.52.34 am.png]]
+![[variablesIfPost.png|Screenshot 2022-11-22 at 9.52.34 am.png]]
 
 ```php
 <?php
@@ -168,7 +168,7 @@ If the PHP code detects the post (meaning the user presses the submit button), t
 
 </aside>
 
-![[_images/Screenshot_2022-11-22_at_9.55.38_am.png|Screenshot 2022-11-22 at 9.55.38 am.png]]
+![[variablesGetFormData.png|Screenshot 2022-11-22 at 9.55.38 am.png]]
 
 ```php
 $emailAddress = $_POST['inputEmail'];
@@ -177,7 +177,7 @@ $messageSubmitted = $_POST['inputMessage'];
 
 The last step is then to output the values stored in the two variables. This can be done simply by using the `echo` command to output the values onto the webpage itself.
 
-![[_images/Screenshot_2022-11-22_at_9.57.10_am.png|Screenshot 2022-11-22 at 9.57.10 am.png]]
+![[variablesDisplayFormData.png|Screenshot 2022-11-22 at 9.57.10 am.png]]
 
 ```php
 echo $emailAddress;
@@ -187,13 +187,13 @@ echo $messageSubmitted;
 
 Test the form by entering data and pressing submit. The data entered should be displayed on screen.
 
-![[_images/2022-11-22_09-59-41.2022-11-22_10_00_25.gif|2022-11-22 09-59-41.2022-11-22 10_00_25.gif]]
+![[variableSubmitDemo.gif|2022-11-22 09-59-41.2022-11-22 10_00_25.gif]]
 
 Update the Heading on the page to the Contact page.
 
-![[_images/Untitled 43.png|Untitled]]
+![[variableContactUsHeading.png|Untitled]]
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 44.png|Untitled]]
+![[variableContactUsForm.png|Untitled]]
 
 In this Contact form, a standard programming process has been developed - Input → Processing → Output. The data gets inputted into the system, it is processed and then outputted.
 

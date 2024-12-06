@@ -10,11 +10,11 @@ Back-end website development, on the other hand, deals with the server-side of w
 
 In this course, the focus will be on the back-end functionality, with **PHP** being the main language for this. The course will also show how to interface with a database using **SQL**. Whilst building the site, you will also be learning some front-end technologies as well - HTML, CSS and Javascript.
 
-![[web_front_and_back_end_technologies.png|web front and back end technologies.png]]
+![[overviewFrontBackEnd.png|web front and back end technologies.png]]
 
 The code that will be written for this course will be executed in a number of different places - front end code (HTML, CSS and Javascript) are rendered and executed in the browser on the client device. The back-end code is executed on the web server, and this acts as an Intermediary between the client device and the database.
 
-![[PHP_process_explained.png|PHP process explained.png]]
+![[overviewPHPProcess.png|PHP process explained.png]]
 
 # PHP Implementation
 
@@ -28,11 +28,11 @@ PHP was created in 1994, so in terms of Programming Languages it is quite old, b
 
 PHP is used by itself but is also the main language in many other frameworks available, such as Wordpress and Laravel.
 
-![[Screen_Shot_2022-08-30_at_9.05.41_pm.png|PHP mixed in with HTML.]]
+![[overviewPHPAndHTMLMix.png|PHP mixed in with HTML.]]
 
 PHP mixed in with HTML.
 
-![[PHPDevelopment_53c5061d67f82_w1500.jpeg]]
+![[overviewPHPInfoGraphic.jpeg]]
 
 # Project Overview
 
@@ -80,19 +80,19 @@ Install XAMPP on your machine.
 
 On Windows, leave the installation directory as the default - C:\xampp.
 
-![[_images/Screenshot_2022-11-21_at_11.44.25_am.png|Screenshot 2022-11-21 at 11.44.25 am.png]]
+![[overviewXampp.png|Screenshot 2022-11-21 at 11.44.25 am.png]]
 
 After installation, run XAMPP, click on the Manage Servers tab and start `Apache Web Server` and `MySQL Database` are running.
 
-![[_images/Screenshot_2022-11-21_at_12.08.11_pm.png|Screenshot 2022-11-21 at 12.08.11 pm.png]]
+![[overviewXamppServers.png|Screenshot 2022-11-21 at 12.08.11 pm.png]]
 
 ## PHPMyAdmin
 
 After the XAMPP installation, test to ensure that it’s all working by access PHPMyAdmin on your local machine.
 
-[](http://127.0.0.1/phpmyadmin/)
+[http://127.0.0.1/phpmyadmin/](http://127.0.0.1/phpmyadmin/)
 
-![[_images/Screenshot_2022-11-21_at_12.11.19_pm.png|Screenshot 2022-11-21 at 12.11.19 pm.png]]
+![[overviewPHPMyAdmin.png|Screenshot 2022-11-21 at 12.11.19 pm.png]]
 
 ## Create a Github Account
 
@@ -112,79 +112,79 @@ Open the link to view the template project on Github for this project.
 
 Click on the **Use This Template** Button.
 
-![[_images/SCR-20221212-han-2.png|SCR-20221212-han-2.png]]
+![[overviewUseTemplate.png|overviewUseTemplate.png]]
 
 Click **Create New Repository** to make a copy of the project into your account.
 
-![[_images/SCR-20221212-hd2-2.png|SCR-20221212-hd2-2.png]]
+![[overviewCreateNewRepo.png|overviewCreateNewRepo.png]]
 
 Give the project a name, such as `Software-Development-Fundamentals-PHP` and then click **Create Repository from Template**. 
 
 This will create a new repository in your account.
 
-![[_images/SCR-20221212-heq-2.png|SCR-20221212-heq-2.png]]
+![[overviewRepoName.png|overviewRepoName.png]]
 
 Once that’s completed, open PHPStorm and choose **Get from VCS.**
 
-![[_images/SCR-20221212-hh6-2.png|SCR-20221212-hh6-2.png]]
+![[overviewGetFromVCS.png|overviewGetFromVCS.png]]
 
 Select **Github** in the menu on the left, find the project you just created and click **Clone**.
 
-![[_images/SCR-20221212-hhx-2.png|SCR-20221212-hhx-2.png]]
+![[overviewChooseRepo.png|overviewChooseRepo.png]]
 
 The project will now open. If PHPstorm asks you if you trust the project, click Trust. 
 
 Double click on `hello.php`. Click the popup to view the rendered page in the PHPStorm internal browser.
 
-![[_images/Screen_Shot_2022-12-12_at_12.41.13_pm.png|Screen Shot 2022-12-12 at 12.41.13 pm.png]]
+![[overviewHelloPHP.png|Screen Shot 2022-12-12 at 12.41.13 pm.png]]
 
 When you first open the project, you will receive a **502 Bad Gateway** error. This is due to PHPStorm not knowing where PHP is installed on your computer. Click on **Configure PHP Interpreter** in the notification.
 
 If PHPStorm shows the other notification, click **Don’t Ask Again**.
 
-![[_images/SCR-20221212-hnw-2.png|SCR-20221212-hnw-2.png]]
+![[overviewBadGateway.png|overviewBadGateway.png]]
 
 To configure the PHP Interpreter, click on the `...` button.
 
-![[_images/SCR-20221212-hp8-2.png|SCR-20221212-hp8-2.png]]
+![[overviewCLIChoose.png|overviewCLIChoose.png]]
 
 Click the `+` to add a new interpreter.
 
-![[_images/SCR-20221212-hpk-2.png|SCR-20221212-hpk-2.png]]
+![[overviewNewInterpreter.png|overviewNewInterpreter.png]]
 
 In the `+` menu that appears, if the PHP is not automatically detected, you’ll need to browse to where PHP is installed (c:\XAMPP), and then under `bin/php`. This is the file you wish to choose.
 
 Click Ok and then Ok again.
 
-![[_images/SCR-20221212-hq1-2.png|SCR-20221212-hq1-2.png]]
+![[overviewSetInterpreter.png|overviewSetInterpreter.png]]
 
 Using Kubuntu in 6118, when configuring the PHP Interpreter in PHPStorm, set the PHP Executable to `/opt/lampp/bin/php`. This should detect it as PHP Version 8.2.0
 
-![[_images/Untitled 42.png|Untitled]]
+![[overviewInterpreterVersion.png|Untitled]]
 
 Close the preview window and then reopen it and you’ll see `Hello World` appear. This means that the project and PHP is configured correctly.
 
-![[_images/SCR-20221212-hqd.png|SCR-20221212-hqd.png]]
+![[overviewHelloDisplay.png|overviewHelloDisplay.png]]
 
 ## Publish Project to Github
 
 Open the PHP project in PHP.
 
-![[_images/Screenshot_2022-11-21_at_1.17.28_pm.png|Screenshot 2022-11-21 at 1.17.28 pm.png]]
+![[overviewPHPStormView.png|Screenshot 2022-11-21 at 1.17.28 pm.png]]
 
 Choose VCS→ Enable Version Control Integration.
 
-![[_images/Screenshot_2022-11-21_at_1.14.11_pm.png|Screenshot 2022-11-21 at 1.14.11 pm.png]]
+![[overviewPHPStormEnableVCS.png|Screenshot 2022-11-21 at 1.14.11 pm.png]]
 
 Choose Git and click Ok.
 
-![[_images/Screenshot_2022-11-21_at_1.14.58_pm.png|Screenshot 2022-11-21 at 1.14.58 pm.png]]
+![[overviewVCSSetGit.png|Screenshot 2022-11-21 at 1.14.58 pm.png]]
 
 Open Settings (File → Settings). Under Version Control Click Githhub and then click the + button to add a new Github account. Choose Login Via Github.
 
 Log in to Github with your browser and authorise the connection.
 
-![[_images/Screenshot_2022-11-21_at_1.12.28_pm.png|Screenshot 2022-11-21 at 1.12.28 pm.png]]
+![[overviewGitHubLogin.png|Screenshot 2022-11-21 at 1.12.28 pm.png]]
 
 # Review
 

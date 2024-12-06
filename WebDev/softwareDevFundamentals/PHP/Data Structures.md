@@ -23,7 +23,7 @@ echo count($starWarsMovies);
 
 which will output
 
-![[_images/Untitled 18.png|Untitled]]
+![[dataArrayOutput.png|Untitled]]
 
 ### Get the length of an Array
 
@@ -39,7 +39,7 @@ echo count($starWarsMovies);
 
 which will output
 
-![[_images/Untitled 19.png|Untitled]]
+![[dataArrayLength.png|Untitled]]
 
 <aside>
 ‼️ Remember - the length of an array is **always** one more than the index of the last element!
@@ -67,7 +67,7 @@ echo "PE: ".$subjectRooms["PE"]."<br>";
 
 will produce
 
-![[_images/Untitled 20.png|Untitled]]
+![[dataKeyValue.png|Untitled]]
 
 ## Looping through an Array
 
@@ -96,21 +96,18 @@ foreach ($subjectRooms as $subject => $roomNumber){
 }
 ```
 
-<aside>
-‼️ In the first iteration of this foreach loop, `key` will be "Website Development" and `value` will be “6118”.
 
-</aside>
+> [!info] In the first iteration of this foreach loop, `key` will be "Website Development" and `value` will be “6118”.
 
-![[_images/Untitled 21.png|Untitled]]
+
+
+![[dataArrayIteration.png|Untitled]]
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
 
-In this task, you’ll centralise the product names and prices to use associative arrays.
+> [!info] In this task, you’ll centralise the product names and prices to use associative arrays.
 
-</aside>
 
 ## Product Catalogue
 
@@ -125,12 +122,12 @@ The new data can be saved in any page, however as the details are used on both  
 
 Open `template.php` and define a new associative array in the php block.
 
-<aside>
-‼️ You can choose the product names and prices.
 
-</aside>
+> [!info] You can choose the product names and prices.
 
-![[_images/Untitled 22.png|Untitled]]
+
+
+![[dataArrayDefinition.png|Untitled]]
 
 ```php
 $productNames = array("product1"=>"Darth Vader Helmet", "product2"=>"Grogu Plush", "product3"=>"ROTJ Jigsaw", "product4"=>"Aftermath", "product5"=>"Alphabet Squadron");
@@ -143,7 +140,7 @@ Save `template.php`.
 
 Open `orderForm.php` and update the Product Names that are outputted to use the `$productNames` associative array.
 
-![[_images/Untitled 23.png|Untitled]]
+![[dataOrderFormOutput.png|Untitled]]
 
 ```php
 <?php echo $productNames["product1"]; ?>
@@ -151,13 +148,13 @@ Open `orderForm.php` and update the Product Names that are outputted to use the 
 
 Load the page in the Preview or browser and the item names should then appear.
 
-![[_images/Untitled 24.png|Untitled]]
+![[dataOrderForm.png|Untitled]]
 
 To remove the error that appears indicating that `productNames` is unknown, you can add the following code to the top PHP block. 
 
 This indicates that the variable `productNames` will be used later in the code.
 
-![[_images/Untitled 25.png|Untitled]]
+![[dataSetVariable.png|Untitled]]
 
 ```php
 /** @var $productNames */
@@ -179,7 +176,7 @@ $prod5ItemCost = 1.01;
 
 Update the subTotal calculations to use the `$productPrices` associative array. 
 
-![[_images/Untitled 26.png|Untitled]]
+![[dataSubTotalCalculation.png|Untitled]]
 
 ```php
 $prod1SubTotal = $prod1Quantity * $productPrices["product1"];
@@ -191,7 +188,7 @@ $prod5SubTotal = $prod5Quantity * $productPrices["product5"];
 
 Similar to `orderForm.php` update the product name outputs to use the `$productNames` associative array.
 
-![[_images/Untitled 27.png|Untitled]]
+![[dataProductOutput.png|Untitled]]
 
 ```php
 <?php echo $productNames["product1"]; ?>
@@ -203,11 +200,11 @@ The displayed individual costs of each item will need to be updated as well.
 > [!info] You may have noticed the different syntax - `<?=` is equivalent to `<?php echo`.
 
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 28.png|Untitled]]
+![[dataProductPricesOutput.png|Untitled]]
 
 Reload the page in the browser and the product names and prices should reflect the values set in the two associated arrays.
 
-![[WebDev/softwareDevFundamentals/PHP/_images/Untitled 29.png|Untitled]]
+![[dataProductOrderOutput.png|Untitled]]
 
  
 

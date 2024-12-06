@@ -349,7 +349,7 @@ If `password_verify()` returns true then the user has successfully logged on. Be
 
 For the purposes of this project, the only sessions variables needed (at this stage) are the `user_id`, `username` and `access_level`.
 
-![[_images/Untitled 18.png|Untitled]]
+![[dataArrayOutput.png|Untitled]]
 
 ```php
 $_SESSION["user_id"] = $row[0];
@@ -359,7 +359,7 @@ $_SESSION['access_level'] = $row[3];
 
 Finally, add a catch for if the logon was unsuccessful.
 
-![[_images/Untitled 19.png|Untitled]]
+![[dataArrayLength.png|Untitled]]
 
 ```php
 else {
@@ -375,7 +375,7 @@ Try it out!
 
 Create a new page named `logout.php`. All this page needs to do at this stage is to clear all session variables from memory so that the user is now no longer logged in.
 
-![[_images/Untitled 20.png|Untitled]]
+![[dataKeyValue.png|Untitled]]
 
 ```php
 <?php
@@ -386,7 +386,7 @@ session_destroy();
 
 The final line of code for the log out process should be to redirect the browser to another page.
 
-![[_images/Untitled 21.png|Untitled]]
+![[dataArrayIteration.png|Untitled]]
 
 ```php
 header("Location:index.php");
@@ -398,12 +398,12 @@ Open `template.php` as a few changes need to be made due to a change in the proj
 
 In the nav bar, there are references to the session variable name, however this has not been set in the project so far. Change both instances of `name` to `username`. 
 
-![[_images/Untitled 22.png|Untitled]]
+![[dataArrayDefinition.png|Untitled]]
 
 Save and reload the login page in the browser and the navbar should now display the successfully logged in users username.
 
-![[_images/Untitled 23.png|Untitled]]
+![[dataOrderFormOutput.png|Untitled]]
 
 Update the link for Sign in `template.php` to link to the correct page for login. 
 
-![[_images/Untitled 24.png|Untitled]]
+![[dataOrderForm.png|Untitled]]

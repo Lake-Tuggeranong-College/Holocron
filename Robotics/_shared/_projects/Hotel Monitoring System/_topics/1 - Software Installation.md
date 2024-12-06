@@ -16,7 +16,7 @@ Once done, visit the following page and apply for a free educational account.
 
 After creating the Jetbrains account, download and install the Toolbox App. This tool manages the installation and configuration of the Jetbrains tool.
 
-![[Untitled 26.png|Untitled]]
+![[dataSubTotalCalculation.png|Untitled]]
 
 #### Install PHPStorm
 
@@ -32,7 +32,7 @@ Open PHPStorm, and click the open for Version Control (or VCS). You will be requ
 
 This will open the project in PHPStorm.
 
-![[Untitled 27.png|Untitled]]
+![[dataProductOutput.png|Untitled]]
 
 ### Visual Studio Code
 
@@ -50,7 +50,7 @@ Installing it on Linux may be more complicated and particular to the specific in
 
 Open VSCode and open the Extensions tab.
 
-![[Untitled 25.png|Untitled]]
+![[dataSetVariable.png|Untitled]]
 
 Search for **PlatformIO** and click on the Install button.
 

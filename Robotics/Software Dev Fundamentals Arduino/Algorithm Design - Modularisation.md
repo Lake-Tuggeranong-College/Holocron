@@ -178,7 +178,7 @@ Read the value of the potentiometer and store in a local variable.
 
 </aside>
 
-![[SCR-20230111-lrj.png|SCR-20230111-lrj.png]]
+![[moduleStorePotValue.png|moduleStorePotValue.png]]
 
 ```arduino
 int potValue = analogRead(A0);

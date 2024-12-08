@@ -539,13 +539,13 @@ void loop()
 
 Start the simulation and check to make sure that all three sensors need to have ‘correct’ values for the LED to be on.
 
-![[Jan-13-2023_10-59-19.gif|Jan-13-2023 10-59-19.gif]]
+![[decisionsSonarDemo.gif|Jan-13-2023 10-59-19.gif]]
 
 **Sonar**
 
 The highlighted value needs to be less than 100.
 
-![[SCR-20230113-f6h.png|SCR-20230113-f6h.png]]
+![[decisionsSonarDistanceValue.png|decisionsSonarDistanceValue.png]]
 
 **Potentiometer**
 

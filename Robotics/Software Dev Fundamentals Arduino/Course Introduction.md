@@ -38,21 +38,21 @@ Click the link to join the Class for this subject.
 
 Sign into Tinkercad with Google, using your school credentials.
 
-![[SCR-20221205-g2b.png|SCR-20221205-g2b.png]]
+![[overviewTinkerCADLogin.png|overviewTinkerCADLogin.png]]
 
 Click on the first activity - “1 Blink”.
 
 Choose `Circuit` from the `Create new design` menu.
 
-![[SCR-20221205-gb8.png|SCR-20221205-gb8.png]]
+![[overviewTinkerCADNewCircuit.png|overviewTinkerCADNewCircuit.png]]
 
 Change the Basics components menu to Starters Arduino. Find `Blink` in that list.
 
-![[SCR-20221205-gco.png|SCR-20221205-gco.png]]
+![[overviewTinkerCADStartersMenu.png|overviewTinkerCADStartersMenu.png]]
 
 Drag the Blink module to the editing area
 
-![[SCR-20221205-ge8.png|SCR-20221205-ge8.png]]
+![[overviewTinkerCADBlink.png|overviewTinkerCADBlink.png]]
 
 Click on the Code button, and change the code type to Text.
 

@@ -59,7 +59,7 @@ void loop() {
 }
 ```
 
-![[Screen_Shot_2022-01-08_at_10.15.29_pm.png|Screen Shot 2022-01-08 at 10.15.29 pm.png]]
+![[dataSerialMonitorLoop.png]]
 
 ## Key Value Pair
 
@@ -190,7 +190,7 @@ Add additional sensors to the bank alarm. If the code has been designed correctl
 > Use [[)`](Arduino - Software Development Fundamentals cc4eab9811e94d60a4e3a154d8e47870.md|`random()`]] to generate the random number. Hint: You will need to generate a new “seed” for each time you generate a random number. 
 
 
-![[2022-01-08_09-00-35.2022-01-08_09_01_23.gif|2022-01-08 09-00-35.2022-01-08 09_01_23.gif]]
+![[dataLoopMultipleLEDs.gif]]
 
 ### Copy Starting Project
 
@@ -198,7 +198,7 @@ Open this project, and click on Copy and Tinker. This will give you the circuit 
 
 [Tinkercad | From mind to design in minutes](https://www.tinkercad.com/things/4zdB1jGJSFy-led-array/editel)
 
-![[Screen_Shot_2022-02-26_at_9.16.31_pm.png|Screen Shot 2022-02-26 at 9.16.31 pm.png]]
+![[dataCopyAndTinker.png]]
 
 <aside>
 💁 This project could be done without using an array. The code could create 11 different variables for each pin, however it can be more efficient to use arrays and loops to iterate over the pins. As always, this is only one approach to solve this problem.
@@ -230,7 +230,7 @@ Prior to the `setup()`, the global variables need to be defined. As the array of
 
 Add the array definition before `setup()`.
 
-![[Screen_Shot_2022-02-26_at_9.25.04_pm.png|Screen Shot 2022-02-26 at 9.25.04 pm.png]]
+![[dataLoopPins.png]]
 
 - Code
 	
@@ -252,7 +252,7 @@ Inside setup() define a new array called `arraySize` and calculate the length of
 
 </aside>
 
-![[Screen_Shot_2022-02-26_at_9.43.42_pm.png|Screen Shot 2022-02-26 at 9.43.42 pm.png]]
+![[dataArrayPins.png]]
 
 - Code
 	
@@ -271,7 +271,7 @@ Using a for loop, iterate over each pin (from 2 to 13 inclusive) and set each pi
 
 First, inside `setup()`, define the for loop to iterate over the correct pins.
 
-![[Screen_Shot_2022-02-26_at_9.44.16_pm.png|Screen Shot 2022-02-26 at 9.44.16 pm.png]]
+![[dataLoopOverPins.png]]
 
 - Code
 	
@@ -284,7 +284,7 @@ First, inside `setup()`, define the for loop to iterate over the correct pins.
 
 Inside the for loop, set each pin to OUTPUT by utilising the `ledPins` array and `individualPins` Loop Control Variable which updates each iteration.
 
-![[Screen_Shot_2022-02-26_at_9.44.22_pm.png|Screen Shot 2022-02-26 at 9.44.22 pm.png]]
+![[dataLoopPinsOutput.png]]
 
 - Code
 	
@@ -299,7 +299,7 @@ That’s all that’s needed for configuration and setup. Now it’s time to wri
 
 Inside `loop()`, create another for loop, exactly the same configuration as the one in `setup()`.
 
-![[Screen_Shot_2022-02-26_at_9.48.10_pm.png|Screen Shot 2022-02-26 at 9.48.10 pm.png]]
+![[dataForLoopPins.png]]
 
 - Code
 	
@@ -317,7 +317,7 @@ Generate a random number. This number will be generated between 0 and 255 to cor
 
 </aside>
 
-![[Screen_Shot_2022-02-26_at_9.49.59_pm.png|Screen Shot 2022-02-26 at 9.49.59 pm.png]]
+![[dataRNG.png]]
 
 - Code
 	
@@ -328,7 +328,7 @@ Generate a random number. This number will be generated between 0 and 255 to cor
 
 Using the number generated, write the randomStrength value to the pin using analogWrite. Additionally, put a short delay so it’s possible to see the LEDs before they change too quickly.
 
-![[Screen_Shot_2022-02-26_at_9.54.11_pm.png|Screen Shot 2022-02-26 at 9.54.11 pm.png]]
+![[dataRNGSetValue.png]]
 
 - Code
 	
@@ -365,13 +365,13 @@ Click the Copy and Tinker button to open your own version.
 
 [Circuit design Sensor Input Storage Starter | Tinkercad](https://www.tinkercad.com/things/crk5oZw4Pv0-sensor-input-storage-starter)
 
-![[Spectacular_Krunk-Bombul.png|Spectacular Krunk-Bombul.png]]
+![[dataTinkerCADMultiplePots.png]]
 
 ### Configure the global variables
 
 Similar to the previous project, configure an array with the pins being used - A0 to A4. Additionally calculate and store the size of the array to be used later in loops.
 
-![[Screen_Shot_2022-02-26_at_11.03.25_pm.png|Screen Shot 2022-02-26 at 11.03.25 pm.png]]
+![[dataPotsArray.png]]
 
 - Code
 	
@@ -383,7 +383,7 @@ Similar to the previous project, configure an array with the pins being used - A
 
 Declare another array to store the values read for each potentiometer. At the beginning of the code, the values are unknown, and therefore shouldn’t be set. Arduino can declare an array of a specific size without any values.
 
-![[Screen_Shot_2022-02-26_at_11.07.59_pm.png|Screen Shot 2022-02-26 at 11.07.59 pm.png]]
+![[dataPotsArrayLength.png]]
 
 - Code
 	
@@ -400,7 +400,7 @@ Also configure the Serial monitor by running the `begin()` function.
 
 The configuration is now complete. It’s time to focus on `loop()`.
 
-![[Screen_Shot_2022-02-26_at_11.14.31_pm.png|Screen Shot 2022-02-26 at 11.14.31 pm.png]]
+![[dataPotsSetInput.png]]
 
 - Code
 	
@@ -422,7 +422,7 @@ The code will read each value, store them in an array, print out each element in
 
 </aside>
 
-![[Screen_Shot_2022-02-26_at_11.20.08_pm.png|Screen Shot 2022-02-26 at 11.20.08 pm.png]]
+![[dataPotsDefineTotal.png]]
 
 - Code
 	
@@ -440,7 +440,7 @@ This is done in a very similar way to done previously.
 
 </aside>
 
-![[Screen_Shot_2022-02-26_at_11.21.37_pm.png|Screen Shot 2022-02-26 at 11.21.37 pm.png]]
+![[dataPotsForLoop.png]]
 
 - Code
 	
@@ -463,7 +463,7 @@ Therefore the first time the loop runs, this will read the value of the sensor a
 
 The left-hand side of the = is `potValues[individualPot]`. On the first iteration of the loop, `individualPot` is 0 (as it is above), which will write the value to `potValues[0]`.
 
-![[Screen_Shot_2022-02-26_at_11.25.05_pm.png|Screen Shot 2022-02-26 at 11.25.05 pm.png]]
+![[dataPotsReadValues.png]]
 
 - Code
 	
@@ -478,7 +478,7 @@ The values have been stored, now it’s time to output.
 
 Create another for loop with the same configuration as previously done.
 
-![[Screen_Shot_2022-02-26_at_11.33.34_pm.png|Screen Shot 2022-02-26 at 11.33.34 pm.png]]
+![[dataPotsNewFor.png]]
 
 - Code
 	
@@ -491,7 +491,7 @@ Create another for loop with the same configuration as previously done.
 
 Inside the new loop, calculate the total value of the individual potentiometers. This will be used later to calculate the average.
 
-![[Screen_Shot_2022-02-26_at_11.35.06_pm.png|Screen Shot 2022-02-26 at 11.35.06 pm.png]]
+![[dataPotsCalculateTotal.png]]
 
 - Code
 	
@@ -504,7 +504,7 @@ Output the element of `potValues` for this iteration. The index used is `individ
 
 Also output a comma to the Serial Monitor to separate the values to make it more readable.
 
-![[Screen_Shot_2022-02-26_at_11.37.19_pm.png|Screen Shot 2022-02-26 at 11.37.19 pm.png]]
+![[dataPotsOutputValues.png]]
 
 - Code
 	
@@ -533,7 +533,7 @@ $$
 
 As the average will most likely be a decimal point value, this average variable will need to be declared as a `float` rather than an `int`.
 
-![[Screen_Shot_2022-02-26_at_11.47.18_pm.png|Screen Shot 2022-02-26 at 11.47.18 pm.png]]
+![[dataPotsAverage.png]]
 
 - Code
 	

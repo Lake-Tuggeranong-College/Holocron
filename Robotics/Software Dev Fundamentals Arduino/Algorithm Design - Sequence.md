@@ -23,7 +23,7 @@ The standard brackets - or parentheses - indicate **conditions** and **parameter
 
 The Curly Brackets - { and } - indicate the start and the end of a code block. This code block can be a **function** (as can be seen in the image with `setup()` and `loop()`) and also with **decisions** and **loops**. 
 
-![[Screen_Shot_2021-12-16_at_1.23.37_pm.png|Screen Shot 2021-12-16 at 1.23.37 pm.png]]
+![[sequenceBlink.png|Screen Shot 2021-12-16 at 1.23.37 pm.png]]
 
 ## Semicolon
 

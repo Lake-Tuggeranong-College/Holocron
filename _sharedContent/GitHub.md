@@ -101,7 +101,7 @@ Click Clone.
 
 After a short moment, it will then show you this page:
 
-![[vcsGitHubDesktopRepoSelected.png|Github%20-%20Master%20ad9076c7419d48498579ee23008406a7/Screen_Shot_2021-07-20_at_9.40.18_am.png]]
+![[vcsGitHubDesktopRepoSelected.png]]
 
 Click on the Current Repository Download in the top left of the window. Right Click on the repository and choose to open it in the file explorer.
 

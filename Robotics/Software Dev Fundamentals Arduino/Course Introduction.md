@@ -30,7 +30,7 @@ Each Arduino sketch needs to have the same basic structure.
 
 In this initial stage, you'll be using [TinkerCAD](https://www.tinkercad.com/) to virtually program Arduino Uno board.
 
-![[Screen_Shot_2021-12-14_at_11.55.20_pm.png|Screen Shot 2021-12-14 at 11.55.20 pm.png]]
+![[overviewTinkerCADCreateNewCircuit.png|Screen Shot 2021-12-14 at 11.55.20 pm.png]]
 
 Click the link to join the Class for this subject.
 
@@ -58,7 +58,7 @@ Click on the Code button, and change the code type to Text.
 
 Here you will see the "Hello World" code for Arduino, also referred to as Blink. At this stage, don't worry too much about the specific code - you'll learn that later. Just notice how the code is written, the syntax and the functions used - `setup()` and `loop()`.
 
-![[Screen_Shot_2021-12-15_at_12.00.54_am.png|Screen Shot 2021-12-15 at 12.00.54 am.png]]
+![[overviewTinkerCADBlinkCode.png|Screen Shot 2021-12-15 at 12.00.54 am.png]]
 
 You can start the code running by using the Start Simulation button.
 

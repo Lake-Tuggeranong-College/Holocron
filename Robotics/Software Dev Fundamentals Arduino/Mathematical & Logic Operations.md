@@ -28,7 +28,7 @@ $AB+C$
 
 ![[Main.png]]
 
-![[Screen_Shot_2021-12-16_at_12.51.18_pm.png|Screen Shot 2021-12-16 at 12.51.18 pm.png]]
+![[logicTruthTable.png|Screen Shot 2021-12-16 at 12.51.18 pm.png]]
 
 ### Sample Answer
 

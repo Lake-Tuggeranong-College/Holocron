@@ -53,7 +53,7 @@ Click Ok.
 
 Once the connection has been established, click on the `1 of 3` status next to the database connection and then select **All Schemas**. 
 
-![[Untitled 11.png|Untitled]]
+![[week14ContactDemo.png|Untitled]]
 
 You should then be able to view the databases associated with your logon.
 

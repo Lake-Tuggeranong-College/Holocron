@@ -10,7 +10,7 @@ tag: Robotics
 
 In Arduino, as with many other languages, the main decision block is the `IF..THEN..`. The syntax for this in Arduino is:
 
-![[Screen_Shot_2021-12-16_at_2.07.37_pm.png|Screen Shot 2021-12-16 at 2.07.37 pm.png]]
+![[decisionsIfBlock.png|Screen Shot 2021-12-16 at 2.07.37 pm.png]]
 
 <aside>
 💡 Note the condition is enclosed in parenthesis.
@@ -33,7 +33,7 @@ In this example, `x > 120` is the condition and `digitalWrite(LEDpin1, HIGH);
 
 ## IF..THEN.. ELSE..
 
-![[Screen_Shot_2021-12-16_at_2.28.59_pm.png|Screen Shot 2021-12-16 at 2.28.59 pm.png]]
+![[decisionsIfElseBlock.png|Screen Shot 2021-12-16 at 2.28.59 pm.png]]
 
 The standard IF..THEN structure can be extended with an ELSE to allow a code block to run if the condition is false.
 
@@ -579,7 +579,7 @@ For this, you will need to identify the pins and set them to input or output in 
 1. Build this circuit. The sensor at the bottom is called a “potentiometer”, which is an analog input device. Use the code as a starting point. Continue writing the loop() function to complete the following logic:
 `If the input from the potentiometer is above the threshold value, then turn the LED on. If it’s below the threshold, then turn the LED off.`
 
-![[Screen_Shot_2022-02-15_at_7.33.21_am.png|Screen Shot 2022-02-15 at 7.33.21 am.png]]
+![[decisionsPotLED.png|Screen Shot 2022-02-15 at 7.33.21 am.png]]
 
 ```arduino
 // These constants won't change:

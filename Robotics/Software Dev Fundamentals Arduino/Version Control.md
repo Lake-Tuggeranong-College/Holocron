@@ -27,7 +27,7 @@ When appropriate (after moving away from TinkerCAD) create a new repository for 
 
 After completing the tasks shown in the video, your repository should look similar to this one:
 
-![[Screen_Shot_2021-12-15_at_1.19.30_pm.png|Screen Shot 2021-12-15 at 1.19.30 pm.png]]
+![[vcsGitHub.png|Screen Shot 2021-12-15 at 1.19.30 pm.png]]
 
 [https://youtu.be/IyOwVwequD8](https://youtu.be/IyOwVwequD8)
 

@@ -53,7 +53,7 @@ This table describes some more of the data types available.
 
 When declaring constants in Arduino, use the const keyword *before* the data type.
 
-![[Screen_Shot_2021-12-15_at_9.20.40_am.png|Screen Shot 2021-12-15 at 9.20.40 am.png]]
+![[variablesConstant.png|Screen Shot 2021-12-15 at 9.20.40 am.png]]
 
 # Practical Exercises
 
@@ -137,7 +137,7 @@ Using tinkerCAD, create a circuit with just an Arduino Uno and write code to:
 
 1. Declare two variables, add them together (stored in a third variable) and output the result to the Serial Monitor.
 
-![[Screen_Shot_2021-12-15_at_11.15.56_am.png|Screen Shot 2021-12-15 at 11.15.56 am.png]]
+![[variablesSerialMonitorOutput.png]]
 
 2. Read a name, as a String, from the Serial Monitor, store it in a variable and then output "Hello `<name>`" back to the Serial Monitor.
 

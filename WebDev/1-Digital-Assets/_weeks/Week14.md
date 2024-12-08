@@ -49,8 +49,9 @@ So far, users can send messages through the contact form, however the only way t
 ## Route
 
 Open `app.py` and create a new route.
+![[week14ContactRoute.png]]
 
-![Screen Shot 2022-09-05 at 10.25.29 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fa0eebf5-d2a6-4547-a0e2-861a60b9e2b2/Screen_Shot_2022-09-05_at_10.25.29_pm.png)
+
 
 ```python
 @app.route('/contact_messages')
@@ -64,7 +65,8 @@ Load all the entries in the contact table and store them in a variable.
 
 </aside>
 
-![Screen Shot 2022-09-05 at 10.27.27 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7a60faa5-ec06-4dd3-92bb-2ae2fcdccaf0/Screen_Shot_2022-09-05_at_10.27.27_pm.png)
+
+![[week14ContactQueryAll.png]]
 
 ```python
 contact_messages = Contact.query.all()
@@ -72,7 +74,8 @@ contact_messages = Contact.query.all()
 
 Using this `contact_messages`, send the messages to a template page called `contactMessages.html`.
 
-![Screen Shot 2022-09-05 at 10.08.56 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2f9a3931-5f04-4e97-9840-c3c7a7c93381/Screen_Shot_2022-09-05_at_10.08.56_pm.png)
+![[week14ContactTemplate.png]]
+
 
 ```python
 return render_template("contactMessages.html", title="Contact Messages", user=current_user, messages=contact_messages)
@@ -82,13 +85,12 @@ return render_template("contactMessages.html", title="Contact Messages", user=cu
 
 Duplicate `index.html` and name the new file `contactMessages.html`.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/1b22e6c9-c929-4643-9887-f84bafffc25f/Untitled.png)
-
 To display the contact messages from the database, output the user's name, email address, message and the date it was submitted. This can be done using the bootstrap grid system as previously used.
 
 Remove the contents of the `rowTwoColTwoContent` block and add the new `div`.
+![[week14ContactTemplateContainer.png]]
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/c3098f16-8166-4a82-80f2-3185f2998969/Untitled.png)
+
 
 ```python
 <div class="container-fluid">
@@ -104,7 +106,7 @@ This **for** loop will iterate over the entries in `messages` (which is the `con
 
 </aside>
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/f750b4c5-fd30-4c83-9e52-2c663cc1f90a/Untitled.png)
+![[week14ContactTemplateLoop.png]]
 
 ```python
 <div class="container-fluid">
@@ -116,7 +118,7 @@ This **for** loop will iterate over the entries in `messages` (which is the `con
 
 Each entry will be a row, so a new `div` tagged with `row` is needed inside the for loop.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/c624bd24-a903-453a-acc7-c2f31e7b2afd/Untitled.png)
+![[week14ContactTemplateContainerRow.png]]
 
 ```html
 <div class="row">
@@ -126,7 +128,7 @@ Each entry will be a row, so a new `div` tagged with `row` is needed inside the 
 
 Output each of the fields in the record (except for the ID) in different columns.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/c1a43a9a-9ea0-4ad7-a23c-a8ab83610068/Untitled.png)
+![[week14ContactTemplateContainerRowFields.png]]
 
 ```html
 <div class="col-3"> {{ message.name }}</div>
@@ -141,18 +143,15 @@ Run the site and login. Modify the URL by adding `/contact_messages` to the end.
 
 You should see a page similar to this (with different messages).
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/3302342d-e65e-4ae7-81b1-81b1800c955d/Untitled.png)
+![[week14ContactDemo.png]]
 
 ## Extension
 
 The Date Submitted output isn’t very user-friendly. How could this be improved?
 
-- Answer
-    
-    Update `contactMessages.html` to change how the date is outputed by placing `.strftime('%H:%M - %d/%m/%Y')` after the `datetime` output.
-    
-    ![Screen Shot 2022-09-07 at 12.45.06 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f0c0d376-5b2e-4d17-8601-41efbaae51f2/Screen_Shot_2022-09-07_at_12.45.06_pm.png)
-    
+> [!info]- Answer
+Update `contactMessages.html` to change how the date is outputed by placing `.strftime('%H:%M - %d/%m/%Y')` after the `datetime` output.
+![[week14ContactTemplateTimeFix.png]]
 
 How could the administrator control which messages they’ve seen or responded to? What would need to be added to the database and webpage?
 
@@ -170,8 +169,7 @@ A Quick Summary of what is implemented so far:
 - A 1 in this field means standard user. A 2 means the user is an administrator.
 - The User model has a function - `is_admin()` - which will return `True` if the user_level is set to 2.
 - Some routes have `@login_required` defined which requires the user to be logged in or will redirect the user to the login page.
-
-![Screen Shot 2022-09-05 at 9.40.44 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/976a14bd-7f67-4d89-a312-2abf6e86dbba/Screen_Shot_2022-09-05_at_9.40.44_pm.png)
+![[week14UserAccessLevel.png]]
 
 This is not _great_ security and can use a lot of work.
 
@@ -183,13 +181,16 @@ For instance, only administrators should be able to view all the messages on the
 
 Open `app.py` and find the `contact_messsages` route.
 
-![Screen Shot 2022-09-05 at 10.40.48 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e2bd86e2-7586-4548-b818-a9301691b839/Screen_Shot_2022-09-05_at_10.40.48_pm.png)
+![[week14ContactRouteUpdateStart.png]]
+
 
 To implement access control, before the Contact table is loaded and the template is rendered, first implement an `if` statement to check to see if the current user is an admin.
 
 If the user is an administrator (level 2) then the page will load as it did previously.
 
-![Screen Shot 2022-09-05 at 10.43.08 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3615cd14-28f9-4807-ae32-2845907cecd8/Screen_Shot_2022-09-05_at_10.43.08_pm.png)
+![[week14ContactRouteCheckAdmin.png]]
+
+
 
 ```python
 if current_user.is_admin():
@@ -197,7 +198,8 @@ if current_user.is_admin():
 
 Include an `else` clause to redirect the user to the home page if they are not an administrator.
 
-![Screen Shot 2022-09-05 at 10.45.11 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/14ffc1ca-015c-41b8-bcf7-3ac059d7dca8/Screen_Shot_2022-09-05_at_10.45.11_pm.png)
+![[week14ContactRouteAdminElse.png]]
+
 
 ```python
 else:
@@ -260,7 +262,7 @@ Update the navbar component in `base.html` to add links to the administrator fun
 
 Look for the `{% if user.is_admin() %}` code and replace the existing links to be a dropdown menu.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/aab4c9a8-0946-4718-90df-d23fe7bf5b3e/Untitled.png)
+![[week14TemplateNavbarAdmin.png]]
 
 ```html
 <li><a class="nav-link" href="/contact_messages">Contact Messages</a></li>
@@ -303,7 +305,7 @@ In the `rowTwoColTwoContent` block add the code to loop over the number of users
 
 Save the file.
 
-![Screen Shot 2022-10-21 at 10.32.50 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a980f1c4-4861-4fdc-9ebc-6bc4fc537964/Screen_Shot_2022-10-21_at_10.32.50_pm.png)
+![[week14ListUsers.png]]
 
 ```html
 <div class="container-fluid">
@@ -318,7 +320,7 @@ Save the file.
 
 Open `app.py` and Start by defining the route.
 
-![Screen Shot 2022-10-21 at 10.20.10 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/737402a4-2333-42e1-9dba-83597904a18b/Screen_Shot_2022-10-21_at_10.20.10_pm.png)
+![[week14UserListRoute.png]]
 
 ```python
 @app.route('/admin/list_all_users')
@@ -328,7 +330,8 @@ def list_all_users():
 
 The code to load all the user details is simple enough, querying the entire user table, however this route needs to be limited so that only administrators can access it. If a user accesses it who is **not** an administrator, it will redirect them back to the front page.
 
-![Screen Shot 2022-10-21 at 10.35.21 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e0976fa5-8d04-4ef8-951b-177923bacb1e/Screen_Shot_2022-10-21_at_10.35.21_pm.png)
+![[week14UserListAdminCheck.png]]
+
 
 ```python
 if current_user.is_admin():
@@ -341,17 +344,14 @@ else:
 
 When the site is run and the url accessed, the administrator will see a page similar to this:
 
-![Screen Shot 2022-10-21 at 10.36.13 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1fca071d-cc56-4b24-b384-1d2caed49372/Screen_Shot_2022-10-21_at_10.36.13_pm.png)
+![[week14UserListAdminDemo.png]]
+
+
 
 ## Reset User Password Route
 
 The site already allows for the user to reset their own password. The process for administrators to reset other peoples passwords is very similar.
 
-<aside> ‼️ Consider the reset password function in `app.py` that already has been coded.
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8b184e85-619e-4821-953f-43ab6c909423/c26cdc13-f7aa-4b40-8ed5-ac7996e5478f/Untitled.png)
-
-</aside>
 
 To allow administrators to reset other peoples passwords, you can reuse `ResetPasswordForm` and the majority of the code shown with slight tweaks. The main one of these tweaks is the addition of the `userid` as a variable in the route and the function.
 
@@ -373,11 +373,13 @@ def reset_user_password(userid):
 
 The differences between the existing reset password route and this one can be seen here.
 
-![Screen Shot 2022-10-21 at 10.09.34 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fbd93583-eeba-443e-a90b-1d21bca7b85c/Screen_Shot_2022-10-21_at_10.09.34_pm.png)
+![[week14AdminResetPasswordRoute.png]]
+
+
 
 Notice the `/reset_password/<userid>` in the route and `reset_user_password(userid)` in the function header. This allows for the browser to access a URL such as [http://127.0.0.1:5000/reset_password/6](http://127.0.0.1:5000/reset_password/6). Where the `6` indicates the user id to be accessed as can be seen below.
 
-![Screen Shot 2022-10-21 at 10.05.04 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5ce34b7a-fd1b-4e45-8a1e-6b95489ab660/Screen_Shot_2022-10-21_at_10.05.04_pm.png)
+![[week14ResetPasswordAdminDB.png]]
 
 Additionally, the User.query code has been moved to be run before the if statement. This is so that the user details can be loaded to display on screen (as indicated in the render_template code with `user=user`). This allows the intended users email address to be shown instead of the `current_user` details.
 
@@ -399,9 +401,8 @@ To enable the disabling of accounts will require a few changes throughout the sy
 
 There may be other changes required, however these are the main ones.
 
-<aside> 💡 The Database and model already has support for enabling and disabling of user accounts through the `active` field.
 
-</aside>
+> [!important] The Database and model already has support for enabling and disabling of user accounts through the `active` field.
 
 ### Login
 
@@ -413,7 +414,9 @@ This is only a minor change to the existing code.
 
 </aside>
 
-![Screen Shot 2022-10-23 at 10.31.27 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2deec070-6bf1-44c7-a387-2f000890e382/Screen_Shot_2022-10-23_at_10.31.27_pm.png)
+![[week14UserNotActive.png]]
+
+
 
 ### Administrator Control
 
@@ -422,8 +425,8 @@ To allow administrators to enable and disable user accounts, there are a number 
 **One** easy method is to update the `listAllUsers.html` file to show if the account is enabled or disabled, and to generate a link to flip the account status (enabled→disabled or disabled→enabled).
 
 Save the file.
+![[week14TemplateCheckUserActive.png]]
 
-![Screen Shot 2022-10-23 at 11.29.01 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c7e079c8-1d9b-4884-9725-07b2cdf981c9/Screen_Shot_2022-10-23_at_11.29.01_pm.png)
 
 ```html
 <div class="col-md-3">
@@ -442,7 +445,8 @@ This route loads the user identified by their user id, then flips the status. Th
 
 Notice that this route doesn’t display a template to the user, just redirects them back to the `list_add_users` route. The user performing this function will see the changes reflect in the user list.
 
-![Screen Shot 2022-10-23 at 11.27.05 pm.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4b66ebce-1f2a-4735-a5e8-06067c74632c/Screen_Shot_2022-10-23_at_11.27.05_pm.png)
+![[week14AdminDisableUser.png]]
+
 
 ```python
 @app.route('/admin/user_enable/<userid>')

@@ -81,14 +81,14 @@ After signing up to Github, join the assignment by clicking on the link.
 
 When you click the link above, you’ll be asked to accept the assignment. Click the Accept button.
 
-  ![[SCR-20240202-slsf.png]]
+  ![[acceptAssignment.png]]
 
 
   
 
 The next page will appear. Wait a minute or two and then refresh the page and you will be presented with your own copy of the github repository.
 
-  ![[SCR-20240202-slvf.png]]
+  ![[assignmentAccepted.png]]
 
 
   
@@ -99,21 +99,21 @@ The next page will appear. Wait a minute or two and then refresh the page and yo
 
 In Codespaces, you can click the *Play* button in the main window (with `app.py` open).
 
-  ![[SCR-20240202-ucpb.png]]
+  ![[vsCodeRunProject.png]]
 
   
 
 If that doesn’t work, you can type in `flask --debug run` in the terminal tab.
 
-  ![[SCR-20240202-ucto.png]]
+  ![[vsCodeRunProjectCLI.png]]
 
   
 
 Whichever method you use to start the project, then click on the link shown and a new browser tab will open.
 
-  ![[SCR-20240202-udoz.png]]
+  ![[vsCodeServerURL.png]]
 
-![[SCR-20240202-udsz.png]]
+![[vsCodeServerRunning.png]]
   
 
 After signing up to Github, join the assignment by clicking on the link.

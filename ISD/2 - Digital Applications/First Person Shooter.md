@@ -97,7 +97,8 @@ tags:
 > #### Theory
 > N/A
 > #### Practical
-> - [[Points| ]]
+> - [[Points]]
+> - [[Simple Texturing of a Mesh]]
 
 > [!info]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]

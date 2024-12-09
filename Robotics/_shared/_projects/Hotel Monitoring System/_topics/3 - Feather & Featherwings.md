@@ -1,6 +1,6 @@
 
 
-[[Featherwings|Featherwings]]
+[[Featherwings]]
 
 
 

@@ -77,6 +77,8 @@ func _physics_process(delta):
 	get_tree().call_group("enemy", "update_target_location", player.global_transform.origin)
 ```
 
+
+
 # Add a Enemy
 
 Add a enemy node into your game (as a child of the root node **not** under NavigationRegion3D).

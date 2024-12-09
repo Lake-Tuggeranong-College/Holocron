@@ -19,216 +19,62 @@ tags:
 >   
 >   These instructions are written for Godot v4.2.2  
 
-# Subject Schedule
-
-## Term 3
-
-> [!info]- Week 1
-> ![[semesterCalendarS2#School Events - Week 1]]
-> #### Class Tasks
-> - [[_sharedContent/CloneHolocron.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/theory/Technical Analysis - First Person Shooters.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/theory/Project Timeline.md| ]]
-> #### Theory
-> - [[ISD/2 - Digital Applications/_topics/theory/3D Worlds.md| ]]
-> - [[ISD/2 - Digital Applications/_topics/theory/Code Comments.md| ]]
-> - [[Project Context| ]]
-> #### Practical
-> - [[Accept FPS Assignment| ]]
-> - [ ] Open Game in Godot 4.2.2
-> - [[Building The Environment| ]]
-> - [[Reusable Assets| ]]
-
-> [!info]- Week 2
-> ![[semesterCalendarS2#School Events - Week 2]] 
-> #### Class Tasks
-> N/A
-> #### Theory
->- [ ] [[ISD/2 - Digital Applications/_topics/theory/Vectors|Vectors]]
->- [[ISD/2 - Digital Applications/_topics/theory/State Design Pattern.md| ]]
-> #### Practical
-> - [[First Person Controller| ]]
-> - [[Bullet Implementation| ]] 
-
-> [!danger]- Week 3
-> ![[semesterCalendarS2#School Events - Week 3]]
-> 
-> [[Task1.md|Assessment Assistance]]
-> 
-> **Assessment Week**
-> You will be given your assessment/topic Monday morning. The task will be due Friday 11:59pm.
-> Worth 25%.
-> The task will be posted to Google Classroom, as per normal.
-
-> [!info]- Week 4
-> ![[semesterCalendarS2#School Events - Week 4]]
-> #### Class Tasks
-> N/A
-> #### Theory
-> - [[ISD/2 - Digital Applications/_topics/theory/Pathfinding.md| ]]
-> #### Practical
-> - [ ] [[Enemy|Enemy]]
-> - [ ] [[Enemy Pathfinding|Enemy Pathfinding]]
-> - [ ] Continue Developing your environment.
-
-> [!info]- Week 5
-> ![[semesterCalendarS2#School Events - Week 5]]
-> #### Class Tasks
-> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
-> #### Theory
-> N/A
-> #### Practical
-> - [[Raycasting]]
-> - [[Shooting Bullet Instances]]
-
-> [!info]- Week 6
-> ![[semesterCalendarS2#School Events - Week 6]]
-> #### Class Tasks
-> N/A
-> #### Theory
-> N/A
-> #### Practical
-> - [[Objects Taking Damage| ]]
-
-> [!info]- Week 7
-> ![[semesterCalendarS2#School Events - Week 7]]
-> #### Class Tasks
-> N/A
-> #### Theory
-> N/A
-> #### Practical
-> - [[Points]]
-> - [[Simple Texturing of a Mesh]]
-
-> [!info]- Week 8
-> ![[semesterCalendarS2#School Events - Week 8]]
-> #### Class Tasks
-> [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
-> Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
-> Development Process should be fully written by end of week 9 so start now and get ahead
-> #### Theory 
-> N/A
-> #### Practical
-> - [[Win Conditions| ]]
-> - [[Lose Conditions| ]]
-
-> [!info]- Week 9
-> ![[semesterCalendarS2#School Events - Week 9]]
-> #### Class Tasks
-> - [ ] [ VET Competencies](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
-> 	- This week we will begin working through a VET Competency as well as working on Assessment documentation and the finishing touches of your games. You should aim to have this competency fully complete at the end of Week 10. Completing the competency is really simple and just takes a bit of time. Jacob will be going over how to complete the competency in great detail in Mondays class.
-> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2| ]]
-> 	- You should have the development process section drafted and ready to submit at the end of this week. Jacob will be reviewing and providing feedback on this section.
-> #### Theory
-> N/A
-> #### Practical
-> - [[ISD/2 - Digital Applications/_projects/FPS/Player Health| ]]
-
-> [!info]- Week 10
-> ![[semesterCalendarS2#School Events - Week 10]]
-> #### Class Tasks
-> - [[sharedContent/VET.md| ]]
-> 	- Info about VET
-> - [ ] [VET Competency](https://classroom.google.com/c/NjM5MjA3NTM2OTA3/a/NzExMjQ2MzUzMDc3/details)
-> 	- Complete this VET Competency by end of this week
->  - [[Robotics/4 - Project/_ap/2024S2/Assessment 2| ]]
-> 	- You should be able to access the feedback on your development process section now. Review these and have a look at the feedback.
-> 	- The assessment documentation scaffold page has been populated for each section now. These should make it very easy to write up your assessment well before the due date. The whole document is due in week 12. With 3 weeks left (not including the school holidays) you have plenty of time to work through the linked page and write up your assessment documentation.
-> #### Theory
-> N/A
-> #### Practical
-> There is no coding content assigned for this week. However any further development you make on your project will only assist in the writing of your assessment as you'll have more content to discuss in your technical report. If you have completed the VET Competency and are up to date on your assessment try to independently find something that you could complete and work towards it. If you come up with any others be sure to let Jacob or Ryan know, show us what you made and how you made it. Here are some suggestions:
-> - An additional level
-> - A boss enemy that spawns once all enemies are defeated
-> - Different kinds of bullets (perhaps a slow moving bullet that does more less damage but tracks towards enemies)
-> - Different win/loss conditions
-> - A level where you have no weapon but have to collect items in a time frame while dodging enemies.
 
 
-## Term 4
-> [!info]- Week 11
-> ![[semesterCalendarS2#School Events - Week 11]]
-> #### Class Tasks
-> - [ ] Collate resources for assessment
-> - [ ] Assessment Feedback
-> - [ ] Technical Analysis for Assessment
-> #### Theory
-> N/A
-> #### Practical
-> - [ ] Finalise project
+# Semester Plan
 
-> [!info]- Week 12
-> ![[semesterCalendarS2#School Events - Week 12]]
-> 
-> #### Class Tasks
-> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2|Assessment 2]]
-> #### Theory
-> N/A
-> #### Practical
-> - [[ISD/2 - Digital Applications/_projects/FPS/High Score System|High Score System]]
+[[Accept FPS Assignment]]
+[[Building The Environment]]
+[[Bullet Implementation]]
+[[Enemy]]
+[[Enemy Pathfinding]]
+[[First Person Controller]]
+[[High Score System]]
+[[Lose Conditions]]
+[[Objects Taking Damage]]
+[[ISD/2 - Digital Applications/_projects/FPS/Player Health]]
+[[Points]]
+[[Project Context]]
+[[Raycasting]]
+[[Reusable Assets]]
+[[Shooting Bullet Instances]]
+[[Simple Texturing of a Mesh]]
+[[Win Conditions]]
 
-> [!danger]- Week 13
-> ![[semesterCalendarS2#School Events - Week 13]]
-> - [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2| ]]
-> **Assessment Due**
-> The task will be due Friday 11:59pm.
-> Worth 50%.
-> The task will be posted to Google Classroom, as per normal.
-
-> [!info]- Week 14
-> ![[semesterCalendarS2#School Events - Week 14]]
-> #### Class Tasks
-> - [[ISD/2 - Digital Applications/_topics/theory/Interview Preparation.md| ]]
-> #### Theory
-> N/A
-> #### Practical
-> N/A
-
-> [!danger]- Week 15
-> ![[semesterCalendarS2#School Events - Week 15]]
-> 
-> **Assessment Week** 
-> This assessment task is an interview. 
-> You will be assigned a 10min time slot for this week where you will have a one-to-one interview as your assessment.
-> Your interview and any documentation you bring to the interview will be assessed.
-> You will be given your assessment/topic Monday morning. The task will be due Friday 11:59pm.
-> Worth 25%.
-> The task will be posted to Google Classroom, as per normal.
-
-> [!info]- Week 16
-> ![[semesterCalendarS2#School Events - Week 16]]
-> 
-> **Catchup Week** for assessments.
-> If you have completed assessment tasks, focus on your VET competencies.
-
-> [!info]- Week 17
-> ![[semesterCalendarS2#School Events - Week 17]]
-
-> [!info]- Week 18
-> ![[semesterCalendarS2#School Events - Week 18]]
-
-
+| Week                                            | Content | Submissions |
+| ----------------------------------------------- | ------- | ----------- |
+| ![[semestercalendarS2#School Events - Week 1]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 2]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 3]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 4]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 5]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 6]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 7]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 8]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 9]]  |         |             |
+| ![[semestercalendarS2#School Events - Week 10]] |         |             |
+| ![[semestercalendarS2#School Events - Week 11]] |         |             |
+| ![[semestercalendarS2#School Events - Week 12]] |         |             |
+| ![[semestercalendarS2#School Events - Week 13]] |         |             |
+| ![[semestercalendarS2#School Events - Week 14]] |         |             |
+| ![[semestercalendarS2#School Events - Week 15]] |         |             |
+| ![[semestercalendarS2#School Events - Week 16]] |         |             |
+| ![[semestercalendarS2#School Events - Week 17]] |         |             |
+| ![[semestercalendarS2#School Events - Week 18]] |         |             |
+| ![[semestercalendarS2#School Events - Week 19]] |         |             |
+| ![[semestercalendarS2#School Events - Week 20]] |         |             |
 
 # Subject Information
 
-| Unit Outline     | Assessments                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| Google Classroom | Assessment 1 - 25 %                                                                             |
-|                  | [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 2]] - 50 % |
-|                  | [[ISD/2 - Digital Applications/_ap/2024S2/Assessment 3\|Assessment 3]] - 25 %                       |
+The Unit Outline can be found on Google Classroom.
+
+## Assessments
+
+This unit has a number of assessments, the details can be found in the unit outline.
+
+The details for each assessment can be found on Google Classroom, as they are published.
+
+## Contact Details
 
 ![[commonBlocks#Contact Details]]
 
-# VET Competencies
-During the course of this unit, you will be given the opportunity to complete the following VET Competencies:
-
-## ICT30120 Certificate III in Information Technology
-
-| Code      | Competency Title                                                              |      |
-| --------- | ----------------------------------------------------------------------------- | ---- |
-| BSBXCS303 | Securely manage personally identifiable information and workplace information | Core |
-| BSBXTW301 | Work in a team                                                                | Core |
-| ICTPRG302 | Apply introductory programming techniques                                     | Core |
-
-
-  

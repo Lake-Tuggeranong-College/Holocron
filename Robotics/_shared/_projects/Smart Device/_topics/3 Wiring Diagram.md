@@ -52,7 +52,7 @@ Some of the devices are listed below, showing the pins identified on the device 
 
 SD Card
 
-![[moduleMicroSDCardReader.png]]
+![[modularisationMicroSDCardReader.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -63,7 +63,7 @@ SD Card
 
 Servo
 
-![[moduleServo.png]]
+![[modularisationServo.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -71,7 +71,7 @@ Servo
 
 Motor Module
 
-![[moduleL298N.png]]
+![[modularisationL298N.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -80,7 +80,7 @@ Motor Module
 
 Piezo / Buzzer
 
-![[modulePiezo.png]]
+![[modularisationPiezo.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -88,7 +88,7 @@ Piezo / Buzzer
 
 Button Sensor
 
-![[moduleButton.png]]
+![[modularisationButton.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -96,7 +96,7 @@ Button Sensor
 
 IR Receiver
 
-![[moduleIRReceiver.png]]
+![[modularisationIRReceiver.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -104,7 +104,7 @@ IR Receiver
 
 Line Tracker Sensor
 
-![[moduleLineTracker.png]]
+![[modularisationLineTracker.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -112,7 +112,7 @@ Line Tracker Sensor
 
 Sonar / HCSR04
 
-![[moduleSonar.png]]
+![[modularisationSonar.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -121,7 +121,7 @@ Sonar / HCSR04
 
 Traffic Lights
 
-![[moduleTrafficLight.png]]
+![[modularisationTrafficLight.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |
@@ -131,7 +131,7 @@ Traffic Lights
 
 Potentiometer
 
-![[modulePot.png]]
+![[modularisationPot.png]]
 
 | Device Pin | Arduino Pin |
 | --- | --- |

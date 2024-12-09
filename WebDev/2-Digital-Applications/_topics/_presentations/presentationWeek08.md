@@ -36,7 +36,7 @@ Each video will be accompanied by a written component with a bit more detail so 
 
 # Practical
 
- [[/WebDev/_shared/Projects/ANH/shoppingListPart2.md|Shopping List Part 2]]
+ [[shoppingListPart2|Shopping List Part 2]]
 
 ---
 

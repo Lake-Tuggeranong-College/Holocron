@@ -7,7 +7,7 @@ Goals for this week:
 ---
 # Practical Content
 
-[[WebDev/_shared/Projects/ANH/shoppingListPart3|shoppingListPart3]]
+[[shoppingListPart3|shoppingListPart3]]
 - Take your time. This week is code heavy
 - Don't reinvent the wheel, if you've done something similar before use that previous knowledge and adjust for new requirements
 - COMMIT & PUSH

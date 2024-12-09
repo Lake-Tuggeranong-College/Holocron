@@ -1,19 +1,19 @@
 ---
-tags:
-  - S1
-  - ISD
+tag: Robotics
 ---
 
 ![[Theory#Mathematical & Logic Operations]]
 
 
-# Specific Implementation
-
+# Arduino Implementation
+    
 Read and practice all topics under [Mathematical & Logic Operations](https://www.notion.so/Mathematical-Logic-Operations-fbb6dd5a5acf434799d572e3e70a4e02?pvs=21).
 
 # Practical Exercises
 
 Using [https://circuitverse.org/](https://circuitverse.org/) draw the following Logic Circuits, and then complete the truth tables for each. You can use Google Sheets to create the truth tables if needed.
+
+## Logic Circuits and Truth Tables
 
 1. $(AB) + \overline{(AC)}$
 2. ${\overline{AB} + {\overline{BC}}}$
@@ -29,6 +29,14 @@ $AB+C$
 ![[logicGate1.png]]
 
 ![[logicTruthTable.png|Screen Shot 2021-12-16 at 12.51.18 pm.png]]
+
+### Sample Answer
+
+In this video, I show how to answer the first question listed above.
+
+[https://youtu.be/XQ1upSSMG_A](https://youtu.be/XQ1upSSMG_A)
+
+## Simplification
 
 Simplify the following boolean equations. Show your working, and identity which rule you're using at each step.
 
@@ -58,4 +66,3 @@ Discussion: What is the purpose of Karnaugh Maps and how does it assist us in de
 	1. NAND Gate
 	2. Half Adder
 	3. Care Safety Buzzer
-

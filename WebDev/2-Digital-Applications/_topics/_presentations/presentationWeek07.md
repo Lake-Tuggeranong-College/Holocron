@@ -46,7 +46,7 @@ notes:
 - Create model
 - Create form
 
-Follow instructions in [[/WebDev/_shared/Projects/ANH/shoppingListPart1.md|Shopping List Part 1]]
+Follow instructions in [[shoppingListPart1|Shopping List Part 1]]
 
 ---
 

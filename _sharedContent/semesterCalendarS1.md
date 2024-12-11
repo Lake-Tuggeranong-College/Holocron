@@ -3,28 +3,32 @@ tags:
   - S1
 ---
 ### School Events - Week 1
-**Monday** - Student Free Day
-**Tuesday** - First Day of Classes
+**Monday** - New Students Start
+**Tuesday** - All Students Return
 
 ### School Events - Week 2
 
-N/A
+**Tuesday** - TRaC Interviews
+**Wednesday** - TRaC Interviews
+**Thursday** - TRaC Interviews
+**Thursday** - Year 11 AST Trial
+**Friday** - TRaC Interviews
 
 ### School Events - Week 3
 
-N/A
+**Wednesday** - Parent Meet & Greet
 
 ### School Events - Week 4
 
-N/A
+**Wednesday** - Careers Expo
 
 ### School Events - Week 5
 
-N/A
+**Tuesday** - Moderation Day. **No Classes**.
 
 ### School Events - Week 6
 
-N/A
+**Monday** - Canberra Day Public Holiday
 
 ### School Events - Week 7
 
@@ -32,18 +36,23 @@ N/A
 
 ### School Events - Week 8
 
-N/A
+**Wednesday** - LTC Careers Expo
 
 ### School Events - Week 9
-**Monday** - Q2 Commences
+**Thursday** - Last Day of Q1
+**Friday** - Cross-Line Exams
 
 ### School Events - Week 10
 
-N/A
+**Monday** - Cross-Line Exams
+**Tuesday** - Q2 Start
+**Wednesday** - Parent Teacher Interviews
+**Thursday** - Parent Teacher Interviews
+
 
 ### School Events - Week 11
 
-N/A
+**Monday** - Student Free Day
 
 ### School Events - Week 12
 
@@ -63,19 +72,24 @@ N/A
 
 ### School Events - Week 16
 
-N/A
+**Monday** - Reconciliation Day Public Holiday
 
 ### School Events - Week 17
 
-N/A
+**Monday** - Sovereign's Birthday Public Holiday
 
 ### School Events - Week 18
 
-N/A
+**Monday** - Last day of Q2 classes.
+**Tuesday** - Cross-line Exams.
+**Wednesday** - Cross-line Exams.
+**Thursday** - Cross-line Exams.
+**Friday** - Cross-line Exams.
 
 ### School Events - Week 19
 
-N/A
+**Monday** - Year 11 & 12 AST Trials.
+**Tuesday** - Year 11 & 12 AST Trials.
 
 ### School Events - Week 20
 

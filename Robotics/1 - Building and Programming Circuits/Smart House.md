@@ -1,6 +1,6 @@
 
 > [!note]- Project Overview
-> ![[Smart House#Project Overview]]
+> ![[Robotics/_shared/_projects/Smart House/Smart House#Project Overview]]
 
 
 # Semester Plan

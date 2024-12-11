@@ -1,3 +1,5 @@
 [[Hotel Monitoring System]]
 
-[[Smart House]]
+[[Robotics/_shared/_projects/Smart House/Smart House]]
+
+[[Smart Car]]

@@ -9,28 +9,28 @@ tags:
 # Semester Plan
 
 
-| Week                                            | Content                               | Submissions |
-| ----------------------------------------------- | ------------------------------------- | ----------- |
-| ![[semesterCalendarS1#School Events - Week 1]]  | [[Analyse FPSs]]<br>[[Brainstorming]] |             |
-| ![[semesterCalendarS1#School Events - Week 2]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 3]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 4]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 5]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 6]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 7]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 8]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 9]]  |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 10]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 11]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 12]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 13]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 14]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 15]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 16]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 17]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 18]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 19]] |                                       |             |
-| ![[semesterCalendarS1#School Events - Week 20]] |                                       |             |
+| Week                                            | Content                               | Submissions                                                                    |
+| ----------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
+| ![[semesterCalendarS1#School Events - Week 1]]  | [[Analyse FPSs]]<br>[[Brainstorming]] |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 2]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 3]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 4]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 5]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 6]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 7]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 8]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 9]]  |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 10]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 11]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 12]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 13]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 14]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 15]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 16]] |                                       | **Friday** [[ISD/3 - Digital Solutions/_ap/2025S1/Assessment 3\|Assessment 3]] |
+| ![[semesterCalendarS1#School Events - Week 17]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 18]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 19]] |                                       |                                                                                |
+| ![[semesterCalendarS1#School Events - Week 20]] |                                       |                                                                                |
 
 # Subject Information
 

@@ -1,6 +1,7 @@
 ---
 tag: Robotics
 ---
+# Theory
 ![[Theory#Flowcharts]]
 
 

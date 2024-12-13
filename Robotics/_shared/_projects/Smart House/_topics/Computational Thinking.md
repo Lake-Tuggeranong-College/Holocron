@@ -1,6 +1,7 @@
 ---
 tag: Robotics
 ---
+# Theory
 ![[Theory#**What is Computational Thinking?**]]
 
 # Arduino Implementation

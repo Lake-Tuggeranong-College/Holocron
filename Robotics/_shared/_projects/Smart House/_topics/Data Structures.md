@@ -1,7 +1,7 @@
 ---
 tag: Robotics
 ---
-
+# Theory
 ![[Theory#Data Structures]]
 
 

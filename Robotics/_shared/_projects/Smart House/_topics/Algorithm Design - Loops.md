@@ -1,7 +1,7 @@
 ---
 tag: Robotics
 ---
-
+# Theory
 ![[Theory#Algorithm Design - Loops]]
 
 # Arduino Implementation

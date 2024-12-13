@@ -1,7 +1,7 @@
 ---
 tag: Robotics
 ---
-
+# Theory
 ![[Theory#Variables and Data Types]]
 
 # Arduino Implementation

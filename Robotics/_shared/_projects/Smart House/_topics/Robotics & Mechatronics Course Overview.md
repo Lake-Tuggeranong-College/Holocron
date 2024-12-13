@@ -1,24 +1,23 @@
 ---
 tag: Robotics
 ---
+# Theory
 ![[Theory#Course Overview]]
 
 # Arduino Implementation
 
-<aside>
-‼️ Be aware - The term "Arduino" can refer to either;
 
-1. The Arduino programming language,
-2. The Arduino IDE, or
-3. The Arduino board.
-</aside>
+> [!info] Be aware - The term "Arduino" can refer to either;
+>
+> 1. The Arduino programming language,
+> 2. The Arduino IDE, or
+> 3. The Arduino board.
+
 
 ## Arduino Sketches
 
-<aside>
-‼️ Arduino Code is referred to as Sketches.
+> [!info] Arduino Code is referred to as Sketches.
 
-</aside>
 
 Each Arduino sketch needs to have the same basic structure.
 

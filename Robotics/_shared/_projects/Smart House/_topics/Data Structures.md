@@ -11,10 +11,9 @@ tag: Robotics
 
 Arrays in Arduino are treated as standard variables, made up of other types. It’s important to note that in Arduino, the arrays are declared with a single data type, meaning that you cannot mix data types within the elements.
 
-<aside>
-💡 In Arduino, Array indexes start at 0. If your array has 5 elements, the maximum index is 4.
 
-</aside>
+>[!info] In Arduino, Array indexes start at 0. If your array has 5 elements, the maximum index is 4.
+
 
 ### Declaring Arrays
 
@@ -67,12 +66,10 @@ Unlike C++, Arduino does not have the native ability to implement dictionaries. 
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
 
-In this task, you’ll simplify the logic of the bank alarm by utilising the strength of arrays. The functionality of the circuit will not change much at this stage, however the code will be arguably more efficient.
-
-</aside>
+> [!info] **Goal**
+>
+> In this task, you’ll simplify the logic of the bank alarm by utilising the strength of arrays. The functionality of the circuit will not change much at this stage, however the code will be arguably more efficient.
 
 ## `readPotentiometer()`
 
@@ -139,12 +136,11 @@ To future-proof the code for this section, use a loop to add all the elements, w
 
 To do this, iterate over the array elements, adding onto the `arraySum`. 
 
-<aside>
-‼️ `sizeof()` returns the number of bytes of memory that the array takes, which is why the size of the array has to be divided by how much space the individual elements take up.
+
+> [!info] `sizeof()` returns the number of bytes of memory that the array takes, which is why the size of the array has to be divided by how much space the individual elements take up.
 For a simplistic view of it, let’s say the array is taking 6 bytes of memory. The size of the first individual (and therefore every other) element is 2 bytes. 
 6/2 = 3, therefore the array is 3 elements long.
 
-</aside>
 
 ![[dataTriggerAlarmUpdate.png]]
 
@@ -200,10 +196,9 @@ Open this project, and click on Copy and Tinker. This will give you the circuit 
 
 ![[dataCopyAndTinker.png]]
 
-<aside>
-💁 This project could be done without using an array. The code could create 11 different variables for each pin, however it can be more efficient to use arrays and loops to iterate over the pins. As always, this is only one approach to solve this problem.
 
-</aside>
+> [!info] This project could be done without using an array. The code could create 11 different variables for each pin, however it can be more efficient to use arrays and loops to iterate over the pins. As always, this is only one approach to solve this problem.
+
 
 Replace the default code with this bare bones code base.
 
@@ -223,21 +218,17 @@ void loop()
 
 Prior to the `setup()`, the global variables need to be defined. As the array of pin numbers is going to be used throughout the code, this means that the array needs to be defined outside of any function. 
 
-<aside>
-💁 See Variable Scope for more details.
+> [!info] See [[Theory#Variable Scope|Variable Scope]]  for more details.
 
-</aside>
 
 Add the array definition before `setup()`.
 
 ![[dataLoopPins.png]]
 
-- Code
-	
-	```arduino
-	int ledPins[] = {2,3,4,5,6,7,8,9,10,11,12};
-	```
-	
+
+```arduino
+int ledPins[] = {2,3,4,5,6,7,8,9,10,11,12};
+```
 
 Before the array can be iterated over, the size of the array needs to be stored. 
 
@@ -247,21 +238,16 @@ Inside setup() define a new array called `arraySize` and calculate the length of
 
 `arraySize` can be printed to the Serial Monitor to confirm that the value is correct.
 
-<aside>
-💁 Calculating the size of the array and storing it in a variable in code is future-proofing your code. If the number of pins changes (for instance only using pins 2-10) only the ledPins definition needs to be updated then the remainder of the code remains unchanged.
+ > [!info] Calculating the size of the array and storing it in a variable in code is future-proofing your code. If the number of pins changes (for instance only using pins 2-10) only the ledPins definition needs to be updated then the remainder of the code remains unchanged.
 
-</aside>
 
 ![[dataArrayPins.png]]
 
-- Code
-	
-	```arduino
-	Serial.begin(9600);
-	int arraySize = sizeof(ledPins) / sizeof(int);
-		Serial.println(arraySize);
-	```
-	
+```arduino
+Serial.begin(9600);
+int arraySize = sizeof(ledPins) / sizeof(int);
+	Serial.println(arraySize);
+```
 
 ### Configure the pins for Output
 
@@ -272,26 +258,19 @@ Using a for loop, iterate over each pin (from 2 to 13 inclusive) and set each pi
 First, inside `setup()`, define the for loop to iterate over the correct pins.
 
 ![[dataLoopOverPins.png]]
-
-- Code
+```arduino
+for (int individualPin=2; individualPin < arraySize; individualPin++) {
 	
-	```arduino
-	for (int individualPin=2; individualPin < arraySize; individualPin++) {
-		
-	}
-	```
-	
+}
+```
 
 Inside the for loop, set each pin to OUTPUT by utilising the `ledPins` array and `individualPins` Loop Control Variable which updates each iteration.
 
 ![[dataLoopPinsOutput.png]]
 
-- Code
-	
-	```arduino
-	pinMode(ledPins[individualPin], OUTPUT);
-	```
-	
+```arduino
+pinMode(ledPins[individualPin], OUTPUT);
+```
 
 That’s all that’s needed for configuration and setup. Now it’s time to write the code for the main loop.
 
@@ -301,42 +280,32 @@ Inside `loop()`, create another for loop, exactly the same configuration as the 
 
 ![[dataForLoopPins.png]]
 
-- Code
+
+```arduino
+for (int individualPin=2; individualPin < arraySize; individualPin++) {
 	
-	```arduino
-	for (int individualPin=2; individualPin < arraySize; individualPin++) {
-		
-	}
-	```
-	
+}
+```
 
 Generate a random number. This number will be generated between 0 and 255 to correlate with the possible strengths of the LEDs.
 
-<aside>
-💁 [[255)`](https://www.arduino.cc/reference/en/language/functions/random-numbers/random/|`random(255)`]] generates a Pseudo Random Number between 0 and 255;
 
-</aside>
+> [!info] [[255)`](https://www.arduino.cc/reference/en/language/functions/random-numbers/random/|`random(255)`]] generates a Pseudo Random Number between 0 and 255;
 
 ![[dataRNG.png]]
 
-- Code
-	
-	```arduino
-	int randomStrength = random(255);
-	```
-	
+```arduino
+int randomStrength = random(255);
+```
 
 Using the number generated, write the randomStrength value to the pin using analogWrite. Additionally, put a short delay so it’s possible to see the LEDs before they change too quickly.
 
 ![[dataRNGSetValue.png]]
 
-- Code
-	
-	```arduino
-	analogWrite(ledPins[individualPin], randStrength);
-	delay(50);
-	```
-	
+```arduino
+analogWrite(ledPins[individualPin], randStrength);
+delay(50);
+```
 
 ### AnalogWrite and Pulse Width Modulation
 
@@ -354,10 +323,9 @@ Run the simulation and watch the randomness unfold.
 
 ## Sensor Input Storage
 
-<aside>
-💁 Problem: Create and code a circuit which reads 5 sensor values from separate potentiometers and stores them in an array. Each loop(), output the raw values and then the average. For instance: `45, 565, 23, 54, 1. Average: 137.6`
 
-</aside>
+> [!info] Problem: Create and code a circuit which reads 5 sensor values from separate potentiometers and stores them in an array. Each loop(), output the raw values and then the average. For instance: `45, 565, 23, 54, 1. Average: 137.6`
+
 
 Open this Circuit which has the wiring completed for the potentiometers.
 
@@ -373,24 +341,19 @@ Similar to the previous project, configure an array with the pins being used - A
 
 ![[dataPotsArray.png]]
 
-- Code
-	
-	```arduino
-	int potPins[] = {A0, A1, A2, A3, A4};
-	int arraySize = sizeof(potPins) / sizeof(int);
-	```
-	
+```arduino
+int potPins[] = {A0, A1, A2, A3, A4};
+int arraySize = sizeof(potPins) / sizeof(int);
+```
 
 Declare another array to store the values read for each potentiometer. At the beginning of the code, the values are unknown, and therefore shouldn’t be set. Arduino can declare an array of a specific size without any values.
 
 ![[dataPotsArrayLength.png]]
 
-- Code
-	
-	```arduino
-	int potValues[5];
-	```
-	
+
+```arduino
+int potValues[5];
+```
 
 ### Configure the pins as inputs
 
@@ -402,54 +365,42 @@ The configuration is now complete. It’s time to focus on `loop()`.
 
 ![[dataPotsSetInput.png]]
 
-- Code
-	
-	```arduino
-	Serial.begin(9600);
-	
-	for (int individualPot = 0; individualPot < arraySize; individualPot++) {
-	  pinMode(individualPot, INPUT);
-	}
-	```
-	
+```arduino
+Serial.begin(9600);
+
+for (int individualPot = 0; individualPot < arraySize; individualPot++) {
+  pinMode(individualPot, INPUT);
+}
+```
 
 ### Read values from Each Potentiometer
 
 The code will read each value, store them in an array, print out each element in the array and then show the average. To start this, declare an integer variable called total which will store the addition of all the values read from the sensors.
 
-<aside>
-💁 The `total` variable is reset to 0 each time the loop function runs so as to not carry any values over from the previous loop.
+> [!info] The `total` variable is reset to 0 each time the loop function runs so as to not carry any values over from the previous loop.
 
-</aside>
 
 ![[dataPotsDefineTotal.png]]
 
-- Code
-	
-	```arduino
-	int total = 0;
-	```
-	
+```arduino
+int total = 0;
+```
 
 Create a for loop which iterates over each analog pin.
 
 This is done in a very similar way to done previously. 
 
-<aside>
-💁 Note: `individualPot` is just an integer, which will go from 0 to 4. This will be used to access the pins that the potentiometers are attached to, and also the index of the `potValues` array to store the values in.
+> [!info] Note: `individualPot` is just an integer, which will go from 0 to 4. This will be used to access the pins that the potentiometers are attached to, and also the index of the `potValues` array to store the values in.
 
-</aside>
+
 
 ![[dataPotsForLoop.png]]
 
-- Code
+```arduino
+for (int individualPot = 0; individualPot < arraySize; individualPot++) {
 	
-	```arduino
-	for (int individualPot = 0; individualPot < arraySize; individualPot++) {
-		
-	}
-	```
-	
+}
+```
 
 Read the values for the pin and store the value in the correct index in potValues.
 
@@ -465,12 +416,9 @@ The left-hand side of the = is `potValues[individualPot]`. On the first iteratio
 
 ![[dataPotsReadValues.png]]
 
-- Code
-	
-	```arduino
-	potValues[individualPot] = analogRead(potPins[individualPot]);
-	```
-	
+```arduino
+potValues[individualPot] = analogRead(potPins[individualPot]);
+```
 
 ### Outputting the values
 
@@ -480,25 +428,20 @@ Create another for loop with the same configuration as previously done.
 
 ![[dataPotsNewFor.png]]
 
-- Code
+```arduino
+for (int individualPot = 0; individualPot < arraySize; individualPot++) {
 	
-	```arduino
-	for (int individualPot = 0; individualPot < arraySize; individualPot++) {
-		
-	  }
-	```
-	
+  }
+```
 
 Inside the new loop, calculate the total value of the individual potentiometers. This will be used later to calculate the average.
 
 ![[dataPotsCalculateTotal.png]]
 
-- Code
-	
-	```arduino
-	total = total + potValues[individualPot];
-	```
-	
+
+```arduino
+total = total + potValues[individualPot];
+```
 
 Output the element of `potValues` for this iteration. The index used is `individualPot`.
 
@@ -506,18 +449,14 @@ Also output a comma to the Serial Monitor to separate the values to make it more
 
 ![[dataPotsOutputValues.png]]
 
-- Code
-	
-	```arduino
-	Serial.print(potValues[individualPot]);
-	Serial.print(",");
-	```
-	
+```arduino
+Serial.print(potValues[individualPot]);
+Serial.print(",");
+```
 
-<aside>
-💁 Notice the use of `Serial.print()` instead of `Serial.println()` used elsewhere. Serial.print() still outputs to the Serial Monitor, however does **not** add a return or new line character at the end of the print command. `Serial.println()` will output the data and follow it automatically with a newline character.
 
-</aside>
+> [!info] Notice the use of `Serial.print()` instead of `Serial.println()` used elsewhere. Serial.print() still outputs to the Serial Monitor, however does **not** add a return or new line character at the end of the print command. `Serial.println()` will output the data and follow it automatically with a newline character.
+
 
 ### Calculate and output the Average
 
@@ -535,15 +474,13 @@ As the average will most likely be a decimal point value, this average variable 
 
 ![[dataPotsAverage.png]]
 
-- Code
-	
-	```arduino
-	Serial.print("The average is : ");
-	float average = total / arraySize;
-	Serial.println(average);
-	delay(100);
-	```
-	
+
+```arduino
+Serial.print("The average is : ");
+float average = total / arraySize;
+Serial.println(average);
+delay(100);
+```
 
 ### Run the Simulation
 

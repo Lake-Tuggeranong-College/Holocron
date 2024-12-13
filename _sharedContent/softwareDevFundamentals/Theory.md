@@ -563,7 +563,7 @@ Karnaugh Maps are a useful process and tool to simplify complex boolean expressi
 ## Variables
 
 
-> > [!info] Variables are a way of storing data in a computer program.
+> [!info] Variables are a way of storing data in a computer program.
 
 
 Regardless of the language you’re programming in, you will at some stage need to store some data in memory (RAM)

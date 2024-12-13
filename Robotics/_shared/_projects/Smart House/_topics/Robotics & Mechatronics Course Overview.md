@@ -3,7 +3,7 @@ tag: Robotics
 ---
 ![[Theory#Course Overview]]
 
-## Arduino Implementation
+# Arduino Implementation
 
 <aside>
 ‼️ Be aware - The term "Arduino" can refer to either;
@@ -26,7 +26,7 @@ Each Arduino sketch needs to have the same basic structure.
 
 ![[Structure_of_an_Arduino_Sketch_example_with_code.png|Structure of an Arduino Sketch example with code.png]]
 
-## Practical Exercises
+# Practical Exercises
 
 In this initial stage, you'll be using [TinkerCAD](https://www.tinkercad.com/) to virtually program Arduino Uno board.
 

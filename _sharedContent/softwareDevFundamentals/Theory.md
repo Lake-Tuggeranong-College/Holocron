@@ -4,7 +4,7 @@
 
 [[Glossary]]
 
-## Course Overview
+# Course Overview
 
 
 > [!info] This course uses the generic, language agnostic "Software Development Fundamentals" course as a base. The Fundamentals course will introduce the topics / concepts for each stage, and this page has the language / platform specific implementation.

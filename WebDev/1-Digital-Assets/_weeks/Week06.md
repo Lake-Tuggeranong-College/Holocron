@@ -23,7 +23,7 @@ Watch the video/s supplied to understand the topics for this week.
 
 ### CSS
 
-![[CSS]]
+![[WebDev/_shared/CSS]]
 
 ---
 

@@ -4,7 +4,7 @@ tags: php
 
 # Website Development Overview
 
-Front-end website development refers to the client-side of web development, which deals with the design and user experience of a website. This includes technologies such as [[WebDev/_shared/HTML]], [[CSS]], and JavaScript, which are used to build the layout, look and feel, and interactivity of a website.
+Front-end website development refers to the client-side of web development, which deals with the design and user experience of a website. This includes technologies such as [[WebDev/_shared/HTML]], [[WebDev/_shared/CSS]], and JavaScript, which are used to build the layout, look and feel, and interactivity of a website.
 
 Back-end website development, on the other hand, deals with the server-side of web development, which is responsible for the functionality of a website. This includes technologies such as PHP, Ruby, Python, and JavaScript, as well as databases like MySQL and MongoDB. Back-end developers are responsible for building and maintaining the code that runs on the server and powers the functionality of a website, such as data storage, processing, and retrieval.
 

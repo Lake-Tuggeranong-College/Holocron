@@ -12,10 +12,9 @@ In essence, the goal is to write the outline of the functionality of the code. T
 
 So, you create the code which defines the function name, any parameters and any return type, but leave the implementation blank.
 
-<aside>
-‼️ Naming Conventions! Your functions should describe the purpose of the function.
 
-</aside>
+> [!info] [[Naming Convention]]! Your functions should describe the purpose of the function.
+
 
 Using the flowcharts you created previously, create the functions in Arduino. At the current state, leave the implementation blank. 
 

@@ -19,7 +19,7 @@ Watch the video/s supplied to understand the topics for this week.
 
 ![[VET]]
 ### HTML
-![[HTML]]
+![[WebDev/_shared/HTML]]
 
 ### CSS
 

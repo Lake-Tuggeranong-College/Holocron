@@ -579,7 +579,7 @@ Each one of these boxes can be given a unique name.
 Variables can be named *almost* anything. Generally, they cannot start with a number. 
 
 
-> [!info] The way you name variables is called the **naming convention.** Each programming language has its own standard naming convention. This is discussed in [[WebDev/_shared/_projects/softwareDevFundamentals/PHP/Style Guide]]
+> [!info] The way you name variables is called the [[Naming Convention]] Each programming language has its own standard naming convention. This is discussed in [[WebDev/_shared/_projects/softwareDevFundamentals/PHP/Style Guide]]
 
 
 Now that variables have been named, you can store data in the box. For instance, you may set the following data to the four variables in the example:
@@ -1538,7 +1538,7 @@ A style guide is a document in an organisation or programming environment which 
 
 ## Clean code
 
-You should strive for **clean code**. This is where your code is readable by other humans, not just executable by the computer. There are a number of considerations that fall under Clean Code - first of which is the naming conventions described above.
+You should strive for **clean code**. This is where your code is readable by other humans, not just executable by the computer. There are a number of considerations that fall under Clean Code - first of which is the [[Naming Convention|naming conventions]] described above.
 
 Some rules for writing clean code:
 

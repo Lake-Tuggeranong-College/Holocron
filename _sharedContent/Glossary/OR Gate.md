@@ -15,6 +15,8 @@ See Also:
 - [[NAND Gate]]
 - [[XOR Gate]]
 - [[XNOR Gate]]
+- [[NOR Gate]]
+- [[NOT Gate]]
 
 # Example/s
 

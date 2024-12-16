@@ -375,7 +375,7 @@ Logic gates are used to display and understand the logic in a circuit or piece o
 
 Logic gates process signals which represent **true** or **false**. Normally the positive supply voltage +Vs represents true and 0V represents false. Other terms used for the true and false states are shown in the table, it is best to be familiar with them all.
 
-Gates are identified by their function: NOT, AND, NAND, OR, NOR, EX-OR and EX-NOR. Capital letters are normally used to make it clear that the term refers to a logic gate.
+Gates are identified by their function: [[NOT Gate]], [[AND Gate]], [[NAND Gate]], [[OR Gate]], [[NOR Gate]], [[XOR Gate]] and [[XNOR Gate]]. Capital letters are normally used to make it clear that the term refers to a logic gate.
 
 ![[logicStates.png|logicStates.png]]
 
@@ -385,45 +385,37 @@ There are a number of fundamental logic gates that you need to be aware of.
 
 ### **NOT Gate**
 
-A NOT gate takes one input and produces a single output. The NOT gate simply "flips" the input, so TRUE becomes FALSE, and FALSE becomes TRUE.
+![[NOT Gate#Definition]]
 
-![[logicTruthTableNOT.png|Truth Table - NOT.png]]
 
 [https://circuitverse.org/simulator/embed/42660](https://circuitverse.org/simulator/embed/42660)
 
 ### **AND Gate**
 
-An AND gate takes two inputs and produces a single output. For the output to be TRUE, then **both** of the inputs have to be TRUE.
-
-![[logicTruthTableAND.png|Truth Table - AND.png]]
+![[AND Gate#Definition]]
 
 [https://circuitverse.org/simulator/embed/42653](https://circuitverse.org/simulator/embed/42653)
 
 ### **OR Gate**
 
-An OR gate takes two inputs and produces a single output. For the output to be TRUE, then **either one or both** of the inputs have to be TRUE.
-
-![[logicTruthTableOR.png|Truth Table - OR.png]]
-
+![[OR Gate#Definition]]
 [https://circuitverse.org/simulator/embed/42658](https://circuitverse.org/simulator/embed/42658)
 
 ### **NAND Gate**
 
-A NAND gate takes two inputs and produces a single output and is the combination of an AND gate with a NOT gate, so it is the opposite of an AND gate. For the output to be TRUE, then **either or both** of the inputs have to the FALSE.
-
-![[logicTruthTableNAND.png|Truth Table - NAND.png]]
+![[NAND Gate#Definition]]
 
 [https://circuitverse.org/simulator/embed/42661](https://circuitverse.org/simulator/embed/42661)
 
 ### **NOR Gate**
 
-A NOR gate takes two inputs and produces a single output and is the combination of an OR gate with a NOT gate, so it is the opposite of an OR gate. For the output to be TRUE, then **both** of the inputs have to the FALSE.
-
-![[logicTruthTableNOR.png|Truth Table - NOR.png]]
+![[NOR Gate#Definition]]
 
 [https://circuitverse.org/simulator/embed/42662](https://circuitverse.org/simulator/embed/42662)
 
-### **XOR and XNOR**
+### **XOR**
+
+![[XOR Gate#Definition]]
 
 The final two gates are **eXclusive** OR and NOR. In this case, Exclusive means the output is TRUE **only if either inputs are true, not both**.
 
@@ -431,7 +423,11 @@ The final two gates are **eXclusive** OR and NOR. In this case, Exclusive means 
 
 [https://circuitverse.org/simulator/embed/42663](https://circuitverse.org/simulator/embed/42663)
 
----
+### XNOR
+
+![[XNOR Gate#Definition]]
+
+[https://circuitverse.org/simulator/embed/42663](https://circuitverse.org/simulator/embed/42663)
 
 ## Logic Game Symbols
 

@@ -1,20 +1,31 @@
+#logicgate 
 # Definition
-The NOT gate simply "flips" the input, so TRUE becomes FALSE, and FALSE becomes TRUE.
 
-$$
-\documentclass{article}
-\usepackage{circuitikz}
-\begin{document}
+The NOT logic gate, also known as an inverter, is a basic digital logic gate that performs the logical NOT operation. It has one input and one output.
 
-\begin{circuitikz} \draw
-(0,2) node[and port] (myand1) {}
-(0,0) node[and port] (myand2) {}
-(2,1) node[xnor port] (myxnor) {}
-(myand1.out) -- (myxnor.in 1)
-(myand2.out) -- (myxnor.in 2);
-\end{circuitikz}
+**Function:**
 
-\end{document}
-$$
+The NOT gate outputs the opposite of its input:
+
+- If the input is **0**, the output is **1**.
+- If the input is **1**, the output is **0**.
+
+**Truth Table:**
+
+|Input (A)|Output (NOT A)|
+|---|---|
+|0|1|
+|1|0|
+
+# See Also
+- [[AND Gate]]
+- [[OR Gate]]
+- [[NAND Gate]]
+- [[XOR Gate]]
+- [[XNOR Gate]]
+- [[NOR Gate]]
 # Example/s
 
+Consider a NOT gate with an input of 0. According to the truth table, the output will be 1. When the input is 0, the transistor in the NOT gate is "off," which means that the current flows through the resistor, producing a high output voltage of 1.
+
+Conversely, if the input is 1, the transistor is "on," which allows current to flow directly to the output, producing a low output voltage of 0.

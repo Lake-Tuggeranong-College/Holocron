@@ -183,7 +183,7 @@ Add additional sensors to the bank alarm. If the code has been designed correctl
 
 
 > [!info] 💁 **Problem:** Create an Array of integers, representing pins 2-12. Attach LEDs to each of these pins. In your loop(), write a loop (`for`/`while`) to iterate over each pin, generating a random number between 0-255, and then set that as the brightness/strength of the LED.
-> Use [[)`](Arduino - Software Development Fundamentals cc4eab9811e94d60a4e3a154d8e47870.md|`random()`]] to generate the random number. Hint: You will need to generate a new “seed” for each time you generate a random number. 
+> Use [random()](https://docs.arduino.cc/language-reference/en/functions/random-numbers/random/) to generate the random number. Hint: You will need to generate a new “seed” for each time you generate a random number. 
 
 
 ![[dataLoopMultipleLEDs.gif]]
@@ -290,7 +290,7 @@ for (int individualPin=2; individualPin < arraySize; individualPin++) {
 Generate a random number. This number will be generated between 0 and 255 to correlate with the possible strengths of the LEDs.
 
 
-> [!info] [[255)`](https://www.arduino.cc/reference/en/language/functions/random-numbers/random/|`random(255)`]] generates a Pseudo Random Number between 0 and 255;
+> [!info] [random()](https://www.arduino.cc/reference/en/language/functions/random-numbers/random/) generates a Pseudo Random Number between 0 and 255;
 
 ![[dataRNG.png]]
 
@@ -309,7 +309,7 @@ delay(50);
 
 ### AnalogWrite and Pulse Width Modulation
 
-This code uses [[)`](https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/|`analogWrite()`]] which writes an analog value to a pin, using Pulse Width Modulation (PWM). This is a fantastic tutorial on the details of PWM.
+This code uses [analogwrite()](https://www.arduino.cc/reference/tr/language/functions/analog-io/analogwrite/) which writes an analog value to a pin, using Pulse Width Modulation (PWM). This is a fantastic tutorial on the details of PWM.
 
 The short version of PWM is that the Arduino, whilst a digital device, can simulate analog data. Instead of writing simply `HIGH` or `LOW` , analogWrite can write values between 0 and 255. In this case, 0 would be the equivalent of `LOW` and 255 would be the equivalent of `HIGH`.
 

@@ -65,7 +65,7 @@ A Use Case model can be developed by following the steps below.
 
 ### Resources
 
-[[ Guide with Examples ) - Creately Blog](https://creately.com/blog/diagrams/use-case-diagram-tutorial/|Use Case Diagram Tutorial ( Guide with Examples ) - Creately Blog]]
+[ Guide with Examples ) - Creately Blog](https://creately.com/blog/diagrams/use-case-diagram-tutorial/)
 
 [https://www.youtube.com/watch?v=quS39HW_bVg](https://www.youtube.com/watch?v=quS39HW_bVg)
 

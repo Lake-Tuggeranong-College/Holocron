@@ -1213,7 +1213,7 @@ Variables, constants etc that are declared within a function, are only accessibl
 
 ### Flowcharts
 
-[[https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax]]
+[Mermaid Flowcharts](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax)
 
 [Flowcharts](https://www.notion.so/Flowcharts-aefdd8293cdb46a1a4aa96ca5a3f9f48?pvs=21)
 

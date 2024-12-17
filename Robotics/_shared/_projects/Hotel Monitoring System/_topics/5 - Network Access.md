@@ -141,10 +141,10 @@ Add two events that are logged. The first in `setup()` to indicate the system ha
 logEvent("System Initalised");
 ```
 
-![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 42.png]]
+
 
 Upload the code to the Adafruit ESP32 Feather and check the database to ensure that it’s being stored correctly.
 
-![[Robotics/_shared/_projects/Hotel Monitoring System/_images/Untitled 43.png]]
+
 
 ![[commonBlocks#Commit & Push]]

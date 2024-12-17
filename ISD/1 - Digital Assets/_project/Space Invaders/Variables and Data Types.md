@@ -48,11 +48,11 @@ const MAXIMUM_VALUE = 5
 
 As a language for a game engine, GDScript uses many complex data types to assist in the game development process. These are structures which contain multiple individual pieces of data and functionality to assist the developer. 
 
-For example, [[https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2]]. This data type (officially referred to as a class) allows the developer to store the `x` and `y` coordinates of a point in the game window, such as the players position on a 2D screen. 
+For example, [Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2). This data type (officially referred to as a class) allows the developer to store the `x` and `y` coordinates of a point in the game window, such as the players position on a 2D screen. 
 
 This structure, and others similar to it, will be used throughout the development process and allows for additional functionality. Read the definition for more details:
 
-[[https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2]]
+[https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html#class-vector2)
 
 # Practical Exercises
 

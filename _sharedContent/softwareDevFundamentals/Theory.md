@@ -1,9 +1,5 @@
 
 
-# Course Contents
-
-[[Glossary]]
-
 # Course Overview
 
 
@@ -1355,7 +1351,7 @@ In the text editor, create the start to the mermaid flowchart, by adding the fol
 
 This indicates that the diagram will be a flowchart, and that it will be **T**op **D**own.
 
-> [[https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation]]
+> [https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowchart-orientation)
 TB - top to bottom
 TD - top-down/ same as top to bottom
 BT - bottom to top

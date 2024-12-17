@@ -79,7 +79,7 @@ tag: Robotics
 > [!important]- Week 8
 > ![[semesterCalendarS2#School Events - Week 8]]
 > #### Class Tasks
-> [[obsidian://open?vault=Holocron&file=Robotics%2F4 - Project%2F2024S2%2FAssessment 2 - 2024S2|Assessment Documentation]]
+> [[Robotics/4 - Project/_ap/2024S2/Assessment 2|Assessment 2]]
 >Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
 >Development Process should be fully written by end of week 9 so start now and get ahead<br>
 >[VET Competency](https://classroom.google.com/u/2/c/NjQ5OTU4MzU4NjY5/a/NzExMjY0MDk4MTUw/details)

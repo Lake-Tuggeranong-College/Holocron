@@ -95,12 +95,12 @@ tags:
 > [!info]- Week 9
 > ![[semesterCalendarS2#School Events - Week 9]]
 > #### Class Tasks
-> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2| ]]
+> - [[Cyber/2 - Network Administration and Security/_ap/2024S2/Assessment 2|Assessment 2]]
 > #### Theory
 > N/A
 > #### Practical
 >  - [ ] (Monday) Create New SD Card image with Raspberry Pi OS
->  - [[Tuesday) [Bash Scripting](Cyber/2 - Network Administration and Security/Projects/BACTA/Bash Scripting.md| ]]
+>  - [ ] (Tuesday) [[Bash Scripting]]
 >  - [ ] (Thursday) Continue Bash Scripting & Testing
 >  - [ ] (Thursday) Assessment - Coding
 

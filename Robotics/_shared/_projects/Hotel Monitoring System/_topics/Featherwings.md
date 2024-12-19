@@ -1090,7 +1090,7 @@ There are a few items to attend to:
 3. **Complex Code should be commented** to explain its purpose.
 4. **Any** time there is an event in the system, the **event is to be logged**!
 
-![[687474703a2f2f692e696d6775722e636f6d2f5430674f6772582e706e67.png]]
+![[codeInspirational.png]]
 
 ---
 
@@ -1396,13 +1396,13 @@ Compile and upload the Arduino code, and ensure that the website code has been u
 
 Access the website and see if you can lock and unlock the safe!
 
-![[2022-09-13_15-43-26.2022-09-13_15_51_15.gif|2022-09-13 15-43-26.2022-09-13 15_51_15.gif]]
+![[safeLockUnlock.gif]]
 
 ### Extension
 
 Update the website to additional show the current status of the safe - Locked or Unlocked.
 
-![[2022-09-13_15-55-32.2022-09-13_15_55_49.gif|2022-09-13 15-55-32.2022-09-13 15_55_49.gif]]
+![[safeLockUnlockHeading.gif]]
 
 ![[commonBlocks#Commit & Push]]
 
@@ -1563,7 +1563,7 @@ if (var == "FANCONTROL") {
 
 Save and upload the code to the Adafruit Feather board. The website will now allow you to set the fan to automatic or manual mode, and turn the fan on and off.
 
-![[2022-10-03_00-01-29.2022-10-03_00_02_27.gif|2022-10-03 00-01-29.2022-10-03 00_02_27.gif]]
+![[fanAutomaticVsManual.gif|2022-10-03 00-01-29.2022-10-03 00_02_27.gif]]
 
 Continue developing the site in similar methods to above - outputting sensor data, and affecting the hardware components.
 
@@ -1847,7 +1847,7 @@ Changes the colour of the links in the navbar.
 
 ![[Screen_Shot_2022-10-24_at_10.46.40_pm.png|Screen Shot 2022-10-24 at 10.46.40 pm.png]]
 
-![[2022-10-24_23-09-42.2022-10-24_23_10_13.gif|2022-10-24 23-09-42.2022-10-24 23_10_13.gif]]
+![[navbarHighlight.gif|2022-10-24 23-09-42.2022-10-24 23_10_13.gif]]
 
 Changes the colour the navbar entry changes to when the mouse hovers over it.
 

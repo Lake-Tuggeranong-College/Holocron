@@ -19,6 +19,3 @@ tags:
 
 [[Featherwings]]
 
-
-![[1 Flask Structure Overview]]
-

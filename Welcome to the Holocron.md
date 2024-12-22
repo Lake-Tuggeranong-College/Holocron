@@ -9,3 +9,7 @@ Welcome to the Holocron - the central repository for IT subjects at LTC.
 | 4        |                                              | [[ISD Project]]                  | [[Robotics Project]]                  |                                           |                                            |
 
 ![[commonBlocks#Contact Details]]
+
+# How to Use the Holocron
+
+![[Viewing the Holocron|How to Use the Holocron]]

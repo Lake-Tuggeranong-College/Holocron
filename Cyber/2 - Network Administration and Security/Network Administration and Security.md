@@ -8,7 +8,7 @@ tags:
 > You are being tasked to develop secure servers and clients to support the Northside Hospital Project.
 > The project name is: **Biomedical ACT Administration (BACTA)**
 > You will be building and configuring a server, a workstation client and the publishing and secure storage of patient health data.
-> Details can be found here. [[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview]]
+> Details can be found here. [[Cyber/_projects/BACTA/Project Overview]]
 
 # Semester Plan
 ## Term 3
@@ -17,9 +17,9 @@ tags:
 > ![[semesterCalendarS2#School Events - Week 1]]
 > #### Class Tasks
 > - [[_sharedContent/CloneHolocron.md| ]]
-> - [[Cyber/2 - Network Administration and Security/_projects/BACTA/Accept Assignment| ]]
+> - [[Cyber/_projects/BACTA/Accept Assignment| ]]
 > #### Theory
-> - [[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview| ]]
+> - [[Cyber/_projects/BACTA/Project Overview| ]]
 > - [[Technical Requirements| ]]
 > #### Practical
 > N/A

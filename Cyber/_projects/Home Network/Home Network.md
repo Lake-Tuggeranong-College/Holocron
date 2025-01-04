@@ -1,12 +1,19 @@
 # Project Overview
 
-This semester-long course introduces Year 11 students to the fundamentals of networking, including the OSI model, IP addressing, subnet masks, network topologies, and the use of the Packet Tracer simulation tool.
+This semester-long course introduces students to the fundamentals of networking and programming with the end-goal to build a secure automated home network.
 
 The networking topics you will learn are:
-- OSI Model
+- [[OSI Model]]
 - TCP/IP
 	- Subnet Masks
 - Packet Tracer
+
+The programming topics you will learn are:
+- [[Internet of Things (IoT)]] devices
+- Python programming
+- Sensors (input)
+- Actuators (output)
+
 
 # Objectives
 
@@ -17,13 +24,14 @@ Upon completion of this course, students will be able to:
 - Subnet IP addresses and apply subnet masks.
 - Identify different network topologies.
 - Use Packet Tracer to simulate and troubleshoot network configurations.
+- Code IoT devices to integrate sensors and actuators.
 
 
 # Project Deliverables
 
 There are three deliverables (assessments) for this project this semester.
 
-1. ==Research Task==.
-2. Evidence Guide
-3. Presentation & Reflection
+1. Technical Documentation.
+2. Home Network Design
+3. Video Demonstration.
 

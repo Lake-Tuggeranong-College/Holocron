@@ -26,14 +26,12 @@ The goal of the unit is to develop a Smart House prototype.
 9. [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Decisions]]
 10. [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Loops]]
 11. [[Robotics/_shared/_projects/Smart House/_topics/Data Structures|Data Structures]]
-12. [[1 Theme]]
-13. [[2 Behaviours]]
-14. [[3 Wiring Diagram]]
-15. [[4 Code - Configuration and Initialisation]]
-16. [[5 Stub Implementation]]
-17. [[6 Module Specific Instructions and Code]]
-18. [[7 Banner]]
-19. [[8 Logic and Method Stubs]]
+13. [[System Behaviours]]
+14. [[Wiring Diagram]]
+15. [[Code - Configuration and Initialisation]]
+16. [[Stub Implementation]]
+17. [[Module Specific Instructions and Code]]
+19. [[Logic and Method Stubs]]
 
 
 

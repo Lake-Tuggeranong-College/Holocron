@@ -8,3 +8,10 @@ Items to consider:
 - What tools/software is required.
 - What prior knowledge is required.
 - How can the hardware (ESP32s) be incorporated into the challenge.
+
+> [!note] This unit is called `Designing & Securing Enterprise Networks`. Therefore the challenges should have a focus on enterprise networking.
+
+When brainstorming & designing the challenges use the following questions as a guide:
+
+- What technologies does "enterprise networking" entail?
+- How can these technologies be demonstrated in a controlled, locked-down environment?

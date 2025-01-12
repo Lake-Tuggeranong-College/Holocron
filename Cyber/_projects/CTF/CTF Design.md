@@ -15,3 +15,4 @@ When brainstorming & designing the challenges use the following questions as a g
 
 - What technologies does "enterprise networking" entail?
 - How can these technologies be demonstrated in a controlled, locked-down environment?
+	- Can packet tracer be used?

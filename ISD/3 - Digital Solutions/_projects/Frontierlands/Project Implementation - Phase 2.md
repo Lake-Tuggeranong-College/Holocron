@@ -12,11 +12,11 @@
 
 - Design and execute test cases to cover all aspects of the game's environment and game mechanics.
 - Use a variety of testing methods, including functional testing, performance testing, and user experience testing.
-- Document all bugs and performance issues in detail, including steps to reproduce and expected behavior.
+- Document all bugs and performance issues in detail, including steps to reproduce and expected behaviour.
 
 **Bug Fixing:**
 
-- Prioritize bugs based on severity and impact on gameplay.
+- Prioritise bugs based on severity and impact on gameplay.
 - Implement bug fixes and conduct regression testing to ensure that the fixes do not introduce new issues.
 - Make necessary gameplay tweaks based on tester feedback to improve the overall gameplay experience.
 

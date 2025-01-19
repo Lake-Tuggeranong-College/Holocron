@@ -36,7 +36,7 @@ tags:
 
 | Week                                            | Content                                                            | Submissions                                                                 |
 | ----------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| ![[semesterCalendarS1#School Events - Week 1]]  | [[Permission Notes\|Permission Notes!!!!]]<br>[[Lesson Structure]] |                                                                             |
+| ![[semesterCalendarS1#School Events - Week 1]]  | [[Permission Notes\|Permission Notes!!!!]]<br>[[Content Structure]] |                                                                             |
 | ![[semesterCalendarS1#School Events - Week 2]]  | <br><br>                                                           |                                                                             |
 | ![[semesterCalendarS1#School Events - Week 3]]  |                                                                    |                                                                             |
 | ![[semesterCalendarS1#School Events - Week 4]]  |                                                                    |                                                                             |

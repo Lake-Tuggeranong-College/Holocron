@@ -322,11 +322,10 @@ Break the task into smaller manageable tasks:
 
 Then approach each individual task separately. For example.
 
-![[computationalTopDown1.png|top-down 1.png]]
 
-![[computationalTopDown2.png|top-down 2.png]]
-
-![[computationalTopDown3.png]]
+| Step 1                                         | Step 2                                         | Step 3                         |
+| ---------------------------------------------- | ---------------------------------------------- | ------------------------------ |
+| ![[computationalTopDown1.png\|top-down 1.png]] | ![[computationalTopDown2.png\|top-down 2.png]] | ![[computationalTopDown3.png]] |
 
 I really want pancakes.
 

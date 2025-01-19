@@ -305,7 +305,7 @@ Decomposition is one of the four cornerstones of Computer Science. It **involves
 ### Top-Down Approach
 
 
-❗ The main problem is broken into smaller subsystems.
+>[!info] The main problem is broken into smaller subsystems.
 
 
 Starting with the overall problem, and break it into stages, or areas, which are smaller more manageable tasks. Continue this process until the "problems" are small, easy to solve tasks.
@@ -332,7 +332,7 @@ I really want pancakes.
 ### Bottom-Up Approach
 
 
-❗ Solve small manageable tasks, integrating them together until an overall solution is reached.
+ > [!info] Solve small manageable tasks, integrating them together until an overall solution is reached.
 
 
 This approach starts by creating a list of all outstanding issues or considering the system as a whole, and categorise them into similar jobs, and then solving those smaller, more specific jobs first. Once the parts of the system are solved, then work is begun to integrate them.
@@ -431,7 +431,7 @@ Here is a summary of the Logic Gate Symbols that are standards.
 These images are used to define the logic circuits.
 
 
-❗ Notice how the NOR and NAND gates incorporate the small circle on the right of the symbol to indicate the NOT aspect.
+> [!important] Notice how the NOR and NAND gates incorporate the small circle on the right of the symbol to indicate the NOT aspect.
 
 
 ![[logicGateSymbols.jpg|logicGateSymbols.jpg]]
@@ -515,7 +515,7 @@ You can simplify Boolean algebra as with "normal" algebra.
 [Boolean Algebra Simplification Example 1.MP4](https://drive.google.com/file/d/1MIKxPdLqM5ZAwEtlnMSewu17UZ9HO4cV/view?usp=drivesdk)
 
 ![[logicBooleanAlgebraExample.jpg]]
-❗ Why Simplify? Because it can make logic easier when coding logic into your system.
+> [!info] Why Simplify? Because it can make logic easier when coding logic into your system.
 
 ### Boolean Identities
 

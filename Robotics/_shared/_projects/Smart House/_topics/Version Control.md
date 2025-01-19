@@ -19,10 +19,9 @@ TinkerCAD and the Arduino IDE do not have in-built functionality for Version Con
 
 The information on this [Version Control System](https://www.notion.so/Version-Control-System-Github-527442170bf24bfba8cc3b4126d7493d?pvs=21) should aid you in configuring the environment.
 
-<aside>
-💡 It is recommended that you start by creating a new repository in Github Desktop first. Then create individual sketches inside the repository folder for each project.
 
-</aside>
+> [!info] It is recommended that you start by creating a new repository in Github Desktop first. Then create individual sketches inside the repository folder for each project.
+
 
 When appropriate (after moving away from TinkerCAD) create a new repository for the Electronics Board project.
 
@@ -30,7 +29,7 @@ After completing the tasks shown in the video, your repository should look simil
 
 ![[vcsGitHub.png|Screen Shot 2021-12-15 at 1.19.30 pm.png]]
 
-[https://youtu.be/IyOwVwequD8](https://youtu.be/IyOwVwequD8)
+![https://youtu.be/IyOwVwequD8](https://youtu.be/IyOwVwequD8)
 
 # Practical Exercises
 
@@ -42,5 +41,3 @@ After completing the tasks shown in the video, your repository should look simil
 2. When do you pull a project?
 3. Is Git a distributed or centralised system? Why?
 4. How does Version Control assist in software development?
-
-[[Untitled 7c4bbd7fa0b54ed0b5abdf02f4ddf00c.csv|Untitled

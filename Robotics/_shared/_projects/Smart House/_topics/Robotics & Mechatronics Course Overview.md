@@ -67,14 +67,14 @@ Congratulations - you've (potentially) written your first Arduino Sketch!
 
 ![[overviewStartSimulation.gif|start simulation.gif]]
 
-## Extension
+# Extension
 
 1. Goal: Update the code to flash on and off every half a second. 
 	What part of the code would you need to change? 
 2. Change the LED to be on pin 10. 
 	What needs/needed to be changed?
 
-## Review
+# Review
 
 1. How were the first computers programmed?
 2. Where did the name "bug" originate?

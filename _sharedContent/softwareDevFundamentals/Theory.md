@@ -146,7 +146,7 @@ echo "Hello World!";
 ?>
 ```
 
-### A**ssembly**
+### Assembly
 
 ```
 ; x86 32 bit Mac OSX
@@ -182,7 +182,7 @@ Once you write the code, you've got have the computer execute (run) it. Dependin
 
 **Interpreted**
 
-I**nterpreted** code is executed line by line by the *interpreter.*
+*Interpreted* code is executed line by line by the *interpreter.*
 
 This means that the interpreter takes the first line of code that it can execute, performs that function and then moves to the next line.
 

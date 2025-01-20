@@ -16,7 +16,7 @@ tags:
 
 ### School Events - Week 3
 
-**Wednesday** - Parent Meet & Greet
+**Wednesday** - Parent Meet & Greet Night
 
 ### School Events - Week 4
 

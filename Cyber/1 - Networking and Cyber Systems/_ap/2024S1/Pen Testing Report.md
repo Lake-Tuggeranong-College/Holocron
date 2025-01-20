@@ -23,11 +23,9 @@ There are reports of unauthorised users on the network. Your goal is to find the
 
 Connect your device to the CyberRange network
 
-<aside>
-<img src="https://www.notion.so/icons/search_gray.svg" alt="https://www.notion.so/icons/search_gray.svg" width="40px" /> SSID: CyberRange
+> [!info]  SSID: CyberRange
 Password: CyberRange
 
-</aside>
 
 Scan the network to create a list of all devices connected.
 

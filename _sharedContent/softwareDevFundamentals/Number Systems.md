@@ -1,9 +1,6 @@
 # Binary
 
-<aside>
-💡 Written by Google Gemini…
-
-</aside>
+> [!info] Written by Google Gemini…
 
 The binary numbering system, also known as base-2, is a system for representing numbers using only two digits: 0 and 1. It might seem strange at first, but this simple system forms the foundation of the digital world! Here's a breakdown:
 
@@ -48,10 +45,8 @@ Remember, binary might seem alien at first, but understanding its logic unlocks 
 
 # Hexadecimal
 
-<aside>
-💡 Written by Google Gemini…
+> [!info] Written by Google Gemini…
 
-</aside>
 
 ## **Hexadecimal: Bridging the Gap Between Binary and Humans**
 

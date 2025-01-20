@@ -22,7 +22,4 @@ On the left, there is a list of **goals**, as headings. The **notes** column on 
 
 You could produce a diagram such as this one, **or similar**, or you can present it as a table in a Word Processed document.  The exact format of the Goals is less important than your analysis of the *entire* project and how you and the group will determine success, or levels of success.
 
-<aside>
-‼️ It is **not** expected that you evaluate the project at until after development has completed. These are simply the topics that you ***will*** evaluate the project against.
-
-</aside>
+> [!info] It is **not** expected that you evaluate the project at until after development has completed. These are simply the topics that you ***will*** evaluate the project against.

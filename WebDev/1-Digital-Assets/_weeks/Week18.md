@@ -2,9 +2,7 @@ $\color{black} \fcolorbox{lightgreen}{lightgreen} {Overview}$
 
 The goals for this topic are:
 
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
-
-</aside>
+ $\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}$
 
 $\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
 

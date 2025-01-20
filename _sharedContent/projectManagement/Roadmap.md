@@ -9,9 +9,8 @@ The product roadmap shows the various components of the project that will need t
 
 For your project, first compile a list of the different features, or aspects, to the project.
 
-<aside> ‼️ If you are comprehensive and targeted, this product road map may be used to cover many of the documentation requirements.
+> [!info] If you are comprehensive and targeted, this product road map may be used to cover many of the documentation requirements.
 
-</aside>
 
 Once you have the list, enter those under the topic column.
 

@@ -9,10 +9,7 @@ The banner should have:
 - Description of functionality
 - Any other information.
 
-<aside>
-❓ The banner needs to be an A5 landscape image.
-
-</aside>
+> [!info]  The banner needs to be an A5 landscape image.
 
 [Smart Device Project Banner Template](https://docs.google.com/drawings/d/1EFGiqYEbIj3BVJ_kU0cloBdFmk7fIWt3SMMJDB5X1O4/edit?usp=drivesdk)
 

@@ -8,9 +8,8 @@ The goals for this topic are:
     - Reseting User Passwords
     - Disabling User Accounts
 
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
+$\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}$
 
-</aside>
 
 $\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
 
@@ -61,9 +60,8 @@ def view_contact_messages():
 
 Load all the entries in the contact table and store them in a variable.
 
-<aside> 💡 The code `Contact.query.all()` reads the entire Contact table from the database and stores it in the `contact_messages` variable.
+> [!info]  The code `Contact.query.all()` reads the entire Contact table from the database and stores it in the `contact_messages` variable.
 
-</aside>
 
 
 ![[week14ContactQueryAll.png]]
@@ -102,9 +100,8 @@ To create a structure that will create as many rows as needed to display the who
 
 This **for** loop will iterate over the entries in `messages` (which is the `contact` table). Each time the loop iterates, it’s accessing a different record in the table.
 
-<aside> 💡 The first time, it will be accessing the first entry in the table, the second time it will access the second entry etc.
+> [!info]  The first time, it will be accessing the first entry in the table, the second time it will access the second entry etc.
 
-</aside>
 
 ![[week14ContactTemplateLoop.png]]
 
@@ -159,9 +156,8 @@ How could the administrator control which messages they’ve seen or responded t
 
 So far in the development process, there is very little access control.
 
-<aside> ‼️ Access control is the term to cover which users can access certain pages and other resources.
+> [!info]  Access control is the term to cover which users can access certain pages and other resources.
 
-</aside>
 
 A Quick Summary of what is implemented so far:
 
@@ -247,7 +243,7 @@ else:
 
 This section of the project focuses on Administrator functionality.
 
-It is _generally_ a bad idea to allow anyone, aside from a core group of people, direct access to the database, which means that most functions need to be configured to be allowed through a web interface.
+It is _generally_ a bad idea to allow anyone, apart from a core group of people, direct access to the database, which means that most functions need to be configured to be allowed through a web interface.
 
 Administrator functionality that would require a web interface could be:
 
@@ -385,9 +381,8 @@ Additionally, the User.query code has been moved to be run before the if stateme
 
 Test the functionality to ensure it works.
 
-<aside> ‼️ It may be useful to register a test account to practice the resetting of passwords on.
+> [!info] It may be useful to register a test account to practice the resetting of passwords on.
 
-</aside>
 
 ## Disabling User Accounts
 
@@ -410,9 +405,8 @@ The login process does not need to be changed significantly - the only addition 
 
 This is only a minor change to the existing code.
 
-<aside> ‼️ It would be useful to add a flash message to the user if the login process fails, instead of just redirecting them back to the user page.
+> [!info]  It would be useful to add a flash message to the user if the login process fails, instead of just redirecting them back to the user page.
 
-</aside>
 
 ![[week14UserNotActive.png]]
 
@@ -466,9 +460,8 @@ Hint: Look at the `list_all_users` route for suggestions.
 
 Open `models.py` and add a new variable to the `User` class to reflect the new addition to the database.
 
-<aside> ‼️ Create an account to test the process - check the database to ensure that the new account has been created correctly.
+> [!info] Create an account to test the process - check the database to ensure that the new account has been created correctly.
 
-</aside>
 
 Similarly to login, the registration process only needs a small addition to make the account active by default.
 

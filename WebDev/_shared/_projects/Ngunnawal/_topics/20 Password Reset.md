@@ -8,10 +8,8 @@ The Password Reset form is relatively easy compared to other parts of the websit
 
 Apart from the usual steps to create the form class, the HTML page etc, there is a small addition to this process, which is the requirement that users **must** be logged in before they can access the page/route. If the users are not logged in, it will automatically redirect them.
 
-<aside>
-‼️ This is not a “forgot password” function. That would require access to an email server, which is difficult in a school environment.
+> [!info] This is not a “forgot password” function. That would require access to an email server, which is difficult in a school environment.
 
-</aside>
 
 # Password Reset Form
 

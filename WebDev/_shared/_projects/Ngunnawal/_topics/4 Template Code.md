@@ -24,10 +24,8 @@ Include code in each cell such as:
 
 `{% **block cellContent3** %} {% **endblock** %}`
 
-<aside>
-‼️ The names within the {% and %} are Jinja2 blocks. These will be referred to later from the child pages.
+> [!info] The names within the {% and %} are Jinja2 blocks. These will be referred to later from the child pages.
 
-</aside>
 
 ![[Screen_Shot_2022-06-21_at_10.19.49_am.png|Screen Shot 2022-06-21 at 10.19.49 am.png]]
 

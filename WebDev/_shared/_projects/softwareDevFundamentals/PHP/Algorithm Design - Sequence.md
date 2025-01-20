@@ -10,10 +10,8 @@ PHP can co-exist with HTML in the source file, meaning it can be challenging to 
 
 ![[sequencePHPAndHTML.png|Untitled]]
 
-<aside>
-‼️ PHP code can be included with HTML as many time as needed in a single file.
+> [!info]  PHP code can be included with HTML as many time as needed in a single file.
 
-</aside>
 
 To start a PHP block, you can either use `<?php` or simple `<?` and end the PHP block with `?>`. 
 
@@ -29,11 +27,9 @@ This code collects data from a HTML form (`$_GET['username']`) and then outputs 
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!info] **Goal**
 
 In this task, you’ll 
 
-</aside>
 
 # Review

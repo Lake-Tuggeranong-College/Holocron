@@ -9,16 +9,15 @@ N/A
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!important] **Goal** 
+> 
+> In this task, you’ll be learning:
+> 
+> - what Git and Github is,
+> - How Version control is important in software development.
+> - What a **commit** is and how to perform one.
+> - How to **push** and **pull** changes to repositories.
 
-In this task, you’ll be learning:
-
-- what Git and Github is,
-- How Version control is important in software development.
-- What a **commit** is and how to perform one.
-- How to **push** and **pull** changes to repositories.
-</aside>
 
 ## Github Courses
 

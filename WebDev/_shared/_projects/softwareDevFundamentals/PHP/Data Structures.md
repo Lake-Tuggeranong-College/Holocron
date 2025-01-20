@@ -41,17 +41,13 @@ which will output
 
 ![[dataArrayLength.png|Untitled]]
 
-<aside>
-‼️ Remember - the length of an array is **always** one more than the index of the last element!
+> [!info] Remember - the length of an array is **always** one more than the index of the last element!
 
-</aside>
 
 ## Key Value Pair
 
-<aside>
-‼️ In PHP, these are referred to as **Associative Arrays**. Otherwise, they are exactly the same.
+> [!info] In PHP, these are referred to as **Associative Arrays**. Otherwise, they are exactly the same.
 
-</aside>
 
 Similarly to ‘normal’ arrays, the `array()` keyword is used to define associative arrays.
 
@@ -115,10 +111,8 @@ Currently the Products are listed with hard coded prices, specified in `invoice.
 
 The new data can be saved in any page, however as the details are used on both  `invoiceList.php` and `orderForm.php` pages, this could be defined in `template.php`. 
 
-<aside>
-‼️ Eventually this data will be stored in a database, but that’s a future upgrade.
+> [!info] Eventually this data will be stored in a database, but that’s a future upgrade.
 
-</aside>
 
 Open `template.php` and define a new associative array in the php block.
 

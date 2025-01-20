@@ -4,10 +4,9 @@
 
 In this example, you’ll be shown how to code a simple circuit to read a button press and turn an LED on.
 
-<aside>
-‼️ Your project requirements may be different, however the process of collecting the input and causing an output will be similar. You will need to research your input and output devices and how they are wired on the ESP32 Feather.
 
-</aside>
+> [!info] Your project requirements may be different, however the process of collecting the input and causing an output will be similar. You will need to research your input and output devices and how they are wired on the ESP32 Feather.
+
 
 ## Button Press → LED
 

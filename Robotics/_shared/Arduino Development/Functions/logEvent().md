@@ -11,19 +11,15 @@ Typically, in the situation below, you would use a physical Real Time Clock (RTC
 
 The code below uses the time of the computer **when the code is compiled** and uses that as the current time.
 
-<aside>
-⁉️ If the Arduino loses power or is restarted, you will no longer have an accurate time.
+> [!info] If the Arduino loses power or is restarted, you will no longer have an accurate time.
 
-</aside>
 
 # Code
 
 This code can be used as the starting for many software solutions which require logging of data to SD cards.
 
-<aside>
-⁉️ In order for this to work, you may need to install the RTClib (made by Adafruit) library. Instructions can be found [here](https://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use/library-manager)
+> [!info]  In order for this to work, you may need to install the RTClib (made by Adafruit) library. Instructions can be found [here](https://learn.adafruit.com/adafruit-all-about-arduino-libraries-install-use/library-manager)
 
-</aside>
 
 ```arduino
 #include <SPI.h>

@@ -66,10 +66,8 @@ Finally, you'll need to include the function which will run when the infrared mo
 
 The important variable that you will need to access is `aCommand`, which indicates which button is being pressed. For instance, this code prints the text version of the button based on the command. 
 
-<aside>
-🔥 This code works for a specific remote. Your remote may use different codes, so you'll need to map the codes to buttons using the Minimal Receiver code above.
+> [!info]  This code works for a specific remote. Your remote may use different codes, so you'll need to map the codes to buttons using the Minimal Receiver code above.
 
-</aside>
 
 ![[componentIRHumanReadable.png|Infrared%20Receiver%20207b66f6d390402b9b18f1b587991646/Screen_Shot_2021-05-16_at_10.18.26_pm.png]]
 

@@ -29,10 +29,8 @@ Open templates/template.html and add the following code to import the new Bootst
 
 If you run the project and load the site you may notice some changes.
 
-<aside>
-‼️ These will need to be fixed by updating the site to utilise the Bootstrap libraries more effectively.
+> [!info] These will need to be fixed by updating the site to utilise the Bootstrap libraries more effectively.
 
-</aside>
 
 ![[Screen_Shot_2022-07-27_at_2.39.06_pm.png|Screen Shot 2022-07-27 at 2.39.06 pm.png]]
 
@@ -48,10 +46,8 @@ Some examples are shown here.
 
 ![[Screen_Shot_2022-07-27_at_2.42.51_pm.png|Screen Shot 2022-07-27 at 2.42.51 pm.png]]
 
-<aside>
-‼️ It’s up to you to decide how exactly your navbar appears to the user. You can configure it as much or as little as you want.
+> [!info]  It’s up to you to decide how exactly your navbar appears to the user. You can configure it as much or as little as you want.
 
-</aside>
 
 Start by Using the simplest version of the navbar code. Using the link above, this can be found under “Nav” down the page. 
 
@@ -59,10 +55,9 @@ Start by Using the simplest version of the navbar code. Using the link above, th
 
 Copy the code shown there. 
 
-<aside>
-‼️ The code shown here *may* be the same as shown on the website, however the website code may have been updated. Check the site for the latest version.
 
-</aside>
+> [!info] The code shown here *may* be the same as shown on the website, however the website code may have been updated. Check the site for the latest version.
+
 
 ```python
 <nav class="navbar navbar-expand-lg bg-light">
@@ -107,10 +102,8 @@ You’ll also need to remove any code that indicates it’s the current page, as
 <a class="nav-link" href="/">Home</a>
 ```
 
-<aside>
-‼️ You can check the website changes by refreshing the page at each step to make sure it works.
 
-</aside>
+> [!info] You can check the website changes by refreshing the page at each step to make sure it works.
 
 Change the other links in the nav bar to link to the pages that will be included later (from the previous project).
 
@@ -124,10 +117,9 @@ Change the other links in the nav bar to link to the pages that will be included
 
 Included in the default code is the first link `Navbar` ****which is a placeholder link to return the user back to the homepage. As our previous project had a logo, change this text to be the logo used previously. 
 
-<aside>
-‼️ The image should be in the static/images folder. If it is not, copy it in.
 
-</aside>
+> [!info]  The image should be in the static/images folder. If it is not, copy it in.
+
 
 ![[Screen_Shot_2022-07-27_at_2.59.27_pm.png|Screen Shot 2022-07-27 at 2.59.27 pm.png]]
 
@@ -165,10 +157,9 @@ After that small change, you should be able to see a significant difference in t
 
 ![[Screen_Shot_2022-07-27_at_3.15.52_pm.png|Screen Shot 2022-07-27 at 3.15.52 pm.png]]
 
-<aside>
-‼️ The site will still need some more changes required, however this already has added some additional functionality that you may have already noticed. If not, try resizing the width of the window!
 
-</aside>
+> [!info]  The site will still need some more changes required, however this already has added some additional functionality that you may have already noticed. If not, try resizing the width of the window!
+
 
 ## Bootstrap Layout
 
@@ -178,21 +169,16 @@ Bootstraps Grid system is described in detail on this page.
 
 [Grid system](https://getbootstrap.com/docs/5.2/layout/grid/)
 
-<aside>
-‼️ Each row can be split into 12 columns, and each row can be separated in individuals ways. This allows for a lot of flexibility.
 
-![[bootstrap_grid_system_sample_diagram.png|bootstrap_grid_system_sample_diagram.png]]
+> [!info]  Each row can be split into 12 columns, and each row can be separated in individuals ways. This allows for a lot of flexibility.
+> ![[bootstrap_grid_system_sample_diagram.png|bootstrap_grid_system_sample_diagram.png]]
+> [https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system](https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system)
 
-[https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system](https://www.tutlane.com/tutorial/bootstrap/bootstrap-grid-system)
-
-</aside>
 
 Now, the layout of the site, previously CSS’s `Grid` layout can be updated to use Bootstrap’s `Grid` layout.
 
-<aside>
-‼️ As with much of the site, the design choices are yours to make - this is only an example.
+> [!info]  As with much of the site, the design choices are yours to make - this is only an example.
 
-</aside>
 
 Change the class of the main layout to `container-fluid`.
 
@@ -210,10 +196,8 @@ The three rows have been added - `<div class="row">` matching the wireframe abov
 
 ![[Screen_Shot_2022-07-27_at_10.54.00_pm.png|Screen Shot 2022-07-27 at 10.54.00 pm.png]]
 
-<aside>
-‼️ You can use CTRL+ALT+L to automatically format the code.
+> [!info]  You can use CTRL+ALT+L to automatically format the code.
 
-</aside>
 
 For each Row, you need to add the class `col` to indicate it’s a new column, even if there is only one column for the row.
 

@@ -41,10 +41,8 @@ Some hints on where to start and what information to research:
 
 Think of each criteria with a heading and a short description.
 
-<aside>
-‼️ Include 2 columns for this. The Criteria category (like a title) and then the Requirements. The requirements list all the specifics for that criteria.
+> [!info]  Include 2 columns for this. The Criteria category (like a title) and then the Requirements. The requirements list all the specifics for that criteria.
 
-</aside>
 
 **Examples**
 
@@ -128,10 +126,8 @@ In the final column provide insight for each criteria, with more focus on the on
 
 ### Completed Examples
 
-<aside>
-‼️ The format shown are just examples and do not need to be followed exactly.
+> [!info] The format shown are just examples and do not need to be followed exactly.
 
-</aside>
 
 ![[_sharedContent/_images/evaluationCompleted.jpg]]
 

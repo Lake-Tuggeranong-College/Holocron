@@ -200,10 +200,8 @@ In order to be able to edit the details in the database, you will need to update
 
 Add a update_details() function to the User model to update only the fields that you wish to allow the users to update.
 
-<aside>
-‼️ This function may need different variables depending on which fields are allowed to be changed.
+> [!info]  This function may need different variables depending on which fields are allowed to be changed.
 
-</aside>
 
 ![[Screen_Shot_2022-09-05_at_10.20.51_am.png|Screen Shot 2022-09-05 at 10.20.51 am.png]]
 
@@ -249,10 +247,8 @@ When the site is run now, the form should appear.
 
 Open `app.py` and add the following code to the route to update the database record.
 
-<aside>
-‼️ You’ll need to change the user.update_details() command to match the variables needed by the model.
+ > [!info] You’ll need to change the user.update_details() command to match the variables needed by the model.
 
-</aside>
 
 ![[Screen_Shot_2022-09-05_at_10.29.09_am.png|Screen Shot 2022-09-05 at 10.29.09 am.png]]
 

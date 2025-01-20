@@ -63,19 +63,15 @@ for (int i = 0; i <= 255; i++) {
   }
 ```
 
-<aside>
-‼️ Remember the *condition* has to equate to `true` or `false`.
+> [!info] Remember the *condition* has to equate to `true` or `false`.
 
-</aside>
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!important] **Goal**
+> 
+> In this task, you’ll be extending the Bank Alarm circuit by adding a number of additional LEDs to be used in a sequence. You will be using loops to access and cycle through the LEDs.
 
-In this task, you’ll be extending the Bank Alarm circuit by adding a number of additional LEDs to be used in a sequence. You will be using loops to access and cycle through the LEDs.
-
-</aside>
 
 Log into [Tinkercad](https://www.tinkercad.com/) and access the classroom used previously. Open the activity `Bank Alarm`.
 
@@ -133,10 +129,8 @@ for (int pinLED = 5; pinLED <= 9; pinLED++) {
 
 Run the simulation and test to ensure that the functionality is as expected. 
 
-<aside>
-‼️ You may notice there’s an issue with two of the LEDs - It’s got to do with something called **Pulse Width Modulation**. Can you work out what the issue is?
+> [!info] You may notice there’s an issue with two of the LEDs - It’s got to do with something called **Pulse Width Modulation**. Can you work out what the issue is?
 
-</aside>
 
 # Extension Exercises
 

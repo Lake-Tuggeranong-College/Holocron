@@ -66,12 +66,10 @@ foreach ($characters as $name) {
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!info] **Goal**
+> 
+> In this task, you’ll implement an invoice page which reads the data from `orders.csv`, looping over each line. To do this, you’ll first implement an order form which will collect the details from the user and save the data to a CSV file.
 
-In this task, you’ll implement an invoice page which reads the data from `orders.csv`, looping over each line. To do this, you’ll first implement an order form which will collect the details from the user and save the data to a CSV file.
-
-</aside>
 
 ## Order Form
 
@@ -81,10 +79,8 @@ Create a new PHP page in the project called `orderForm.php`.
 
 Replace the contents of the file with the following HTML form.
 
-<aside>
-‼️ In this form, currently, the user can only order from 5 different products. This is to make the programming of the page manageable at this stage.
+> [!info] In this form, currently, the user can only order from 5 different products. This is to make the programming of the page manageable at this stage.
 
-</aside>
 
 This form is similar in structure to the contact form on `contact.php` however with more fields for the users details, and for the 5 products the user wishes to order.
 
@@ -206,19 +202,15 @@ fclose($csvFile);
 
 Run the page in the browser, and fill out the details. Press submit and `orders.csv` should be created, if not already there.
 
-<aside>
-‼️ Don’t forget to add `orders.csv` to the git repository!
+> [!info]  Don’t forget to add `orders.csv` to the git repository!
 
-</aside>
 
 ![[loopsCSVOutput.png|Untitled]]
 
 ## Invoice
 
-<aside>
-‼️ Initially, the invoice page will **only** display the last entry in `orders.csv`. It is possible to display all invoices, however that is for a later time.
+> [!info] Initially, the invoice page will **only** display the last entry in `orders.csv`. It is possible to display all invoices, however that is for a later time.
 
-</aside>
 
 Create a new page in the project called `invoice.php`. 
 

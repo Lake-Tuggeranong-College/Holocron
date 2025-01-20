@@ -9,10 +9,7 @@ Network and Host IDs
 ![[ipAddressClasses.png]]
 ## Explanation
 
-<aside>
-💡 Written by Google Gemini
-
-</aside>
+> [!info]  Written by Google Gemini
 
 ### **IP Addresses: Navigating the Digital Highway**
 

@@ -5,10 +5,8 @@ tags:
 ---
 
 
-<aside>
-💡 Written by Google Gemini
+> [!info] Written by Google Gemini
 
-</aside>
 
 ## **Subnetting: Dividing the Digital Neighborhood**
 

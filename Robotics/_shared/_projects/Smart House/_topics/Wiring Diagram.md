@@ -2,10 +2,8 @@
 
 The goal of a wiring diagram is to demonstrate how the components are connected to each other. They are to be used as a **guide** to show which pins on the devices to connect to each other.
 
-<aside>
-‼️ The physical components may differ from the ones shown in a wiring digram. Always check which pins are the VIN and GND etc on your hardware.
+> [!info]  The physical components may differ from the ones shown in a wiring digram. Always check which pins are the VIN and GND etc on your hardware.
 
-</aside>
 
 ## Instructions
 
@@ -134,15 +132,13 @@ Potentiometer
 ![[modularisationPot.png]]
 
 | Device Pin | Arduino Pin |
-| --- | --- |
-| Leg1 | Ground |
-| Wiper | A3 |
-| Leg2 | 5V |
+| ---------- | ----------- |
+| Leg1       | Ground      |
+| Wiper      | A3          |
+| Leg2       | 5V          |
 
-<aside>
-‼️ Don’t forget to Autoroute all the wires!
+> [!info] Don’t forget to Autoroute all the wires!
 
-</aside>
 
 At the end of the wiring process, you should have a digram that appears similar to this.
 

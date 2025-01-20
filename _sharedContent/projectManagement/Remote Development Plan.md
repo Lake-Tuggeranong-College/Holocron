@@ -11,10 +11,8 @@ Consider the following questions:
 7. What would limit your progress?
 8. Are there any show-stopping issues? Issues that will **need** to be resolved before work can commence/continue.
 
-<aside>
-‼️  Even document aspects that have already been ‘solved’ such as having a computer at home with the required software.
+> [!info]  Even document aspects that have already been ‘solved’ such as having a computer at home with the required software.
 
-</aside>
 
 There will need to be a few cases to consider:
 

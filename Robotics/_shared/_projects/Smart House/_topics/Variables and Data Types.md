@@ -42,10 +42,8 @@ In Arduino, there are a number of the standard primitive types. The syntax for e
 
 This table describes some more of the data types available. 
 
-<aside>
-‼️ The sizes and ranges shown are based on the Arduino Uno. Other languages and platforms may use different sizes, and therefore ranges.
+> [!info] The sizes and ranges shown are based on the Arduino Uno. Other languages and platforms may use different sizes, and therefore ranges.
 
-</aside>
 
 ![[dataTypesSize.png]]
 
@@ -57,12 +55,11 @@ When declaring constants in Arduino, use the const keyword *before* the data typ
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
 
-In this task, you’ll be updating the Bank Alarm Project to use more variables and constants.
+> [!info] **Goal**
+In this task, you’ll be updating the Bank Alarm Project on TinkerCAD to use more variables and constants.
 
-</aside>
+
 
 Open the Bank Alarm project on [Tinkercad](https://www.tinkercad.com/). 
 
@@ -99,10 +96,8 @@ void setLEDBrightness(int LEDBrightness) {
 
 Start updating the code by declaring a few constants to store the pins used by the LED and the potentiometer.
 
-<aside>
-‼️ These have been declared as **constants** as there is no need for the contents to change throughout the execution of the code.
+> [!info] These have been declared as **constants** as there is no need for the contents to change throughout the execution of the code.
 
-</aside>
 
 ![[variablesConstDeclared.png]]
 
@@ -113,11 +108,9 @@ const int pinPot = A0;
 
 Replace any reference to pins 9 or A0 with the corresponding constant.
 
-<aside>
-‼️ You may have noticed that A0 has been defined as a integer, despite the A. This is because the Arduino language automatically converts this A0 ‘symbol’ into the number 14 for the Arduino Uno. 
-On the Arduino Uno, pin A0 can also be referred to as pin 14. Try updating the code and checking if it works!
+> [!info] You may have noticed that A0 has been defined as a integer, despite the A. This is because the Arduino language automatically converts this A0 ‘symbol’ into the number 14 for the Arduino Uno. 
+> On the Arduino Uno, pin A0 can also be referred to as pin 14. Try updating the code and checking if it works!
 
-</aside>
 
 ![[variablesUseInsteadOfPins.png]]
 

@@ -23,10 +23,8 @@ Update routes where feedback is important to the user. For instance, the passwor
 
 To add a flash message, the command is: `flash("Message")`. 
 
-<aside>
-‼️ As a rule of thumb, add the flash statements near the end of the process but before any return statement, as shown here.
+> [!info]  As a rule of thumb, add the flash statements near the end of the process but before any return statement, as shown here.
 
-</aside>
 
 ![[Screen_Shot_2022-08-09_at_9.52.45_am.png|Screen Shot 2022-08-09 at 9.52.45 am.png]]
 
@@ -50,10 +48,8 @@ Wherever the messages are to appear in your code, add the following code block.
 {% endwith %}
 ```
 
-<aside>
-‼️ Make sure you don’t put your message output into a block that will be overridden.
+> [!info]  Make sure you don’t put your message output into a block that will be overridden.
 
-</aside>
 
 This example shows that messages will appears just below the navbar.
 
@@ -80,10 +76,9 @@ You can expand on this CSS to make the messages stand out even more by updating 
 
 Modify the CSS to make the messages appear the way you wish to. 
 
-<aside>
-💡 Find CSS code on the web, or use generative AI, to assist you.
+> [!info]  Find CSS code on the web, or use generative AI, to assist you.
 
-</aside>
+
 
 ```css
 .flashes {

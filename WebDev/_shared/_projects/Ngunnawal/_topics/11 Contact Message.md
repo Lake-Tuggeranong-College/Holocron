@@ -21,10 +21,8 @@ def view_contact_messages():
 
 Load all the entries in the contact table and store them in a variable.
 
-<aside>
-💡 The code `Contact.query.all()` reads the entire Contact table from the database and stores it in the `contact_messages` variable.
+> [!info]  The code `Contact.query.all()` reads the entire Contact table from the database and stores it in the `contact_messages` variable.
 
-</aside>
 
 ![[week14ContactQueryAll.png|Screen Shot 2022-09-05 at 10.27.27 pm.png]]
 
@@ -64,10 +62,8 @@ To create a structure that will create as many rows as needed to display the who
 
 This **for** loop will iterate over the entries in `messages` (which is the `contact` table). Each time the loop iterates, it’s accessing a different record in the table.
 
-<aside>
-💡 The first time, it will be accessing the first entry in the table, the second time it will access the second entry etc.
+> [!info]  The first time, it will be accessing the first entry in the table, the second time it will access the second entry etc.
 
-</aside>
 
 ![[week14ContactTemplateLoop.png|Untitled]]
 

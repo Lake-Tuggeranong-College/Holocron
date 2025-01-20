@@ -31,12 +31,8 @@ echo "Total = $" . $total;
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
-
-In this task, you’ll be implementing a simple error checker by updating the Contact Us page to include some feedback in case the user leaves a field empty.
-
-</aside>
+> [!important] **Goal**
+ In this task, you’ll be implementing a simple error checker by updating the Contact Us page to include some feedback in case the user leaves a field empty.
 
 Open `contact.php` created in Variables and Data Types.
 

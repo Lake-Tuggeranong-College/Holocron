@@ -603,10 +603,8 @@ End Result
 
 Copy all relevant code in `setup()`, which is required to initialise the new modules.
 
-<aside>
-‼️ Do not copy the Setup.begin() line or any other code which is already in the destination setup().
+> [!info]  Do not copy the `Setup.begin()` line or any other code which is already in the destination setup().
 
-</aside>
 
 ![[Screen_Shot_2022-08-27_at_9.21.22_pm.png|Example of relevant module initialisation code.]]
 
@@ -616,10 +614,8 @@ Example of relevant module initialisation code.
 
 End Result
 
-<aside>
-‼️ The exact code you need to copy depends on the module you’re incorporating. Check the code carefully before attempting.
+> [!info] The exact code you need to copy depends on the module you’re incorporating. Check the code carefully before attempting.
 
-</aside>
 
 ### `Loop()`
 
@@ -639,10 +635,8 @@ Create the structure of the function.
 
 Copy the code from temperature sketch’s `loop()` into this new function. 
 
-<aside>
-‼️ Notice the change from `delay(1000)` to `delay(100)`. This is because any `delay()` call will impact the speed of the remainder of the code, possibly even the website responsiveness.
+> [!info]  Notice the change from `delay(1000)` to `delay(100)`. This is because any `delay()` call will impact the speed of the remainder of the code, possibly even the website responsiveness.
 
-</aside>
 
 ![[Screen_Shot_2022-08-27_at_10.10.51_pm.png|Screen Shot 2022-08-27 at 10.10.51 pm.png]]
 
@@ -652,10 +646,8 @@ You can now call this function from `loop()`.
 
 # Automatic Fan Subsystem
 
-<aside>
-‼️ This subsystem automatically turns the fan on when the temperature gets too hot. From a technical perspective, using the temperature from the featherwing, this determines whether to have the motor activated or not.
+> [!info] This subsystem automatically turns the fan on when the temperature gets too hot. From a technical perspective, using the temperature from the featherwing, this determines whether to have the motor activated or not.
 
-</aside>
 
 ## Includes section
 
@@ -669,12 +661,9 @@ Adafruit_DCMotor *myMotor = AFMS.getMotor(3);
 // Motor Shield END
 ```
 
-<aside>
-‼️ Note that `getMotor(3)` refers to the DC motor being attached to M3 on the board. Change this number to match where the motor is connected.  Use the image below to confirm.
+> [!info] Note that `getMotor(3)` refers to the DC motor being attached to M3 on the board. Change this number to match where the motor is connected.  Use the image below to confirm.
+> ![[feather_2927-00.jpeg]]
 
-![[feather_2927-00.jpeg]]
-
-</aside>
 
 ## Setup()
 
@@ -716,19 +705,15 @@ automaticFan(20.0);
 
 # Window Blind Control Subsystem
 
-<aside>
-‼️ This subsystem involves the manual control of blinds. From a technical perspective, Button A on the Mini TFT Featherwing will control a servo (opening and closing the blind)
+> [!info]  This subsystem involves the manual control of blinds. From a technical perspective, Button A on the Mini TFT Featherwing will control a servo (opening and closing the blind)
 
-</aside>
 
 ## Wiring
 
 The servo will need to be wired to VCC, GND and Pin 12 as per the diagram.
 
-<aside>
-‼️ In some servos, the VCC cable is Red. The GND is Brown and the data cable is yellow.
+> [!info] In some servos, the VCC cable is Red. The GND is Brown and the data cable is yellow.
 
-</aside>
 
 ## Library
 
@@ -837,10 +822,8 @@ This subsystem simulates the hotel room safe for guests to store their valuables
 
 The traffic light module will be used as indicators of the safe locking status. Red will be Locked. Green will be unlocked.
 
-<aside>
-‼️ This has been tested and confirmed to work with the Adafruit ESP32 Feather and the RFID-RC522 board.
+> [!info] This has been tested and confirmed to work with the Adafruit ESP32 Feather and the RFID-RC522 board.
 
-</aside>
 
 ![[rfid.png]]
 
@@ -929,10 +912,8 @@ void loop() {
 
 When uploaded, test it with a number of cards to check to make sure it’s working correctly. If it is, you should receive some data through the Serial Monitor that is similar to this.
 
-<aside>
-‼️ Make note of the UID of your card! You’ll need this later.
+> [!info]  Make note of the UID of your card! You’ll need this later.
 
-</aside>
 
 ![[Screen_Shot_2022-09-08_at_9.35.14_pm.png|Screen Shot 2022-09-08 at 9.35.14 pm.png]]
 
@@ -978,10 +959,8 @@ The first main custom function that is required is a slight modification of the 
 
 Add the custom function to the code, outside any other function.
 
-<aside>
-‼️ You’ll need to change the value of `validCardUID` to match the one identified earlier.
+> [!info] You’ll need to change the value of `validCardUID` to match the one identified earlier.
 
-</aside>
 
 A few items to notice with this function:
 
@@ -1044,10 +1023,8 @@ void safeStatusDisplay() {
 
 The reason these two functions have been separated instead of incorporating the code to write to the LEDs into the RFID function is to allow for further functionality for the project, but also to follow the basic principle of functions - **they should only do one job.** In this case one function checks whether the card is valid or not, the other sets the LEDs based on the safe locked status.
 
-<aside>
-‼️ Separating the code as has been done, will allow the `safeLocked` variable to be set elsewhere in the code, but the LED output functionality remains the same.
+> [!info] Separating the code as has been done, will allow the `safeLocked` variable to be set elsewhere in the code, but the LED output functionality remains the same.
 
-</aside>
 
 ## Extension
 
@@ -1109,10 +1086,8 @@ The majority of webserver code will be written in the websiteFunctionality tab.
 
 ![[Screen_Shot_2022-09-12_at_10.39.58_pm.png|Screen Shot 2022-09-12 at 10.39.58 pm.png]]
 
-<aside>
-‼️ Only Routes coded will respond on the webserver. I.e. if `LEDOn` is not an identified route, that URL will time out and nothing will occur for the user.
+> [!info]  Only Routes coded will respond on the webserver. I.e. if `LEDOn` is not an identified route, that URL will time out and nothing will occur for the user.
 
-</aside>
 
 ## Where to find Webserver Content
 
@@ -1128,20 +1103,10 @@ The HTML code can be found in the data folder.
 
 To update the Arduino with the latest web code, you will need to Select Tools → ESP32 Sketch Data Upload.
 
-<aside>
-‼️ This uploads the entire data folder
+> [!important] This uploads the entire data folder
+> This erases anything in the SPIFFS partition on the Arduino ESP32 Feather.
+> The Serial Monitor **cannot** be open for this process to run.
 
-</aside>
-
-<aside>
-‼️ This erases anything in the SPIFFS partition on the Arduino ESP32 Feather.
-
-</aside>
-
-<aside>
-‼️ The Serial Monitor **cannot** be open for this process to run.
-
-</aside>
 
 ![[Screen_Shot_2022-09-12_at_10.43.13_pm.png|Screen Shot 2022-09-12 at 10.43.13 pm.png]]
 
@@ -1234,10 +1199,8 @@ When this processes have completed, find the IP address in the Serial Monitor an
 
 ## Displaying the Temperature
 
-<aside>
-‼️ This process can be following to display any sensor data. The only changes needed would the variable names, and how to format the variables to output as a String in the processor() function.
+> [!info] This process can be following to display any sensor data. The only changes needed would the variable names, and how to format the variables to output as a String in the processor() function.
 
-</aside>
 
 ### Update the Dashboard
 
@@ -1247,10 +1210,8 @@ One of the simple updates that can be made to the website is to display the temp
 
 The first step is to edit the HTML file. Open `dashboard.html` in the sketch data folder.
 
-<aside>
-‼️ This file can be accessed by selecting Sketch→Show Sketch Data Folder in the Arduino IDE.
+> [!info]  This file can be accessed by selecting Sketch→Show Sketch Data Folder in the Arduino IDE.
 
-</aside>
 
 Open the file to edit in your favourite text editor. It is recommended to use Visual Studio Code, but not mandatory.
 
@@ -1317,19 +1278,15 @@ Open the edit `dashboard.html` in your text-editor of choice.
 
 Add a new row by creating two new `<div></div>` tags.
 
-<aside>
-‼️ The configuration of the CSS in this HTML file allows for cells to be added into the layout of the site with each new `<div></div>` tag. The grid layout has been set to 2 columns, meaning a row is 2 sets of `<div></div>` tags.
+> [!info] The configuration of the CSS in this HTML file allows for cells to be added into the layout of the site with each new `<div></div>` tag. The grid layout has been set to 2 columns, meaning a row is 2 sets of `<div></div>` tags.
 
-</aside>
 
 ![[Screen_Shot_2022-09-13_at_3.04.54_pm.png|Screen Shot 2022-09-13 at 3.04.54 pm.png]]
 
 The site will now look like this.
 
-<aside>
-‼️ You can open the page locally, meaning off the hard drive you’re developing on, to see how the page will render (what it will look like).
+> [!info] You can open the page locally, meaning off the hard drive you’re developing on, to see how the page will render (what it will look like).
 
-</aside>
 
 ![[Screen_Shot_2022-09-13_at_3.07.09_pm.png|Screen Shot 2022-09-13 at 3.07.09 pm.png]]
 
@@ -1378,11 +1335,9 @@ server.on("/SafeUnlock",  HTTP_GET, [[AsyncWebServerRequest * request]] {
 
 The locking functionality is done through the use of the already coded `safeLocked` boolean variable defined and used in the main code.
 
-<aside>
-‼️ The code in `websiteFunctionality` can access and change the values of global variables defined in the main sketch.
+> [!info] The code in `websiteFunctionality` can access and change the values of global variables defined in the main sketch.
 See the LEDOn and LEDOff routes for previous examples.
 
-</aside>
 
 ![[Screen_Shot_2022-09-13_at_3.27.51_pm.png|Screen Shot 2022-09-13 at 3.27.51 pm.png]]
 
@@ -1431,10 +1386,8 @@ Look for `automaticFan()`  and modify it so that instead of directly turning the
 
 This will allow the subsystem to not cause conflicts between automatic or manual mode. 
 
-<aside>
-‼️ As with other subsystems, there are other approaches to this problem, however this is simple and is similar to the approaches made in other parts of the code.
+> [!info] As with other subsystems, there are other approaches to this problem, however this is simple and is similar to the approaches made in other parts of the code.
 
-</aside>
 
 ![[Screen_Shot_2022-10-02_at_11.26.33_pm.png|Screen Shot 2022-10-02 at 11.26.33 pm.png]]
 
@@ -1463,10 +1416,8 @@ Finally, at least in the main code, change `loop()` to call `fanControl()` **ins
 
 ![[Screen_Shot_2022-10-02_at_11.33.29_pm.png|Screen Shot 2022-10-02 at 11.33.29 pm.png]]
 
-<aside>
-‼️ At this stage it would be advisable to compile and upload your code to ensure that the automatic functionality works as it did previously.
+> [!info] At this stage it would be advisable to compile and upload your code to ensure that the automatic functionality works as it did previously.
 
-</aside>
 
 ### dashboard.html Changes
 
@@ -1765,10 +1716,8 @@ Save the image into the data folder.
 
 Open `index.html` in your editor of choice, such as Visual Studio Code and add the following code to display the image.
 
-<aside>
-‼️ Remove the “TODO” line of code as an image has been added.
+> [!info] Remove the “TODO” line of code as an image has been added.
 
-</aside>
 
 ![[Screen_Shot_2022-10-24_at_10.02.44_pm.png|Screen Shot 2022-10-24 at 10.02.44 pm.png]]
 
@@ -1784,10 +1733,8 @@ More images can be added in the same manner throughout the website.
 
 If you wish to modify the colours of the website, you can edit the `arduino.css` file in the data folder. Experiment with changing the colours, identified with the HEX code. 
 
-<aside>
-‼️ Visual Studio code has a colour picker embedded to choose the colour you wish.
+> [!info]  Visual Studio code has a colour picker embedded to choose the colour you wish.
 
-</aside>
 
 To find some complimentary colours, you can use sites that match colours to the style you wish.
 
@@ -1880,10 +1827,8 @@ const char* usernameAdmin  = "root";
 const char* passwordAdmin   = "password";
 ```
 
-<aside>
-‼️ The usernames and passwords can be different to the ones shown.
+> [!info] The usernames and passwords can be different to the ones shown.
 
-</aside>
 
 Save the file.
 
@@ -1916,10 +1861,8 @@ server.on("/admin.html", HTTP_GET, [[AsyncWebServerRequest * request]] {
 
 To create the `admin.html` page, initially just duplicate (or copy and paste) `dashboard.html` and rename the new file `admin.html`.  Edit the file so that the heading and title is Administration instead of Guest.
 
-<aside>
-‼️ The navbar will need to be updated on all HTML pages to reflect the addition of the Admin page.
+> [!info] The navbar will need to be updated on all HTML pages to reflect the addition of the Admin page.
 
-</aside>
 
 ![[Screen_Shot_2022-10-25_at_12.21.01_am.png|Screen Shot 2022-10-25 at 12.21.01 am.png]]
 
@@ -1989,10 +1932,8 @@ Save the file.
 </div>
 ```
 
-<aside>
-‼️ At this stage, the updated HTML file/s can be updated on the Feather board by choosing Tools→ESP32 Sketch Data Upload
+> [!info] At this stage, the updated HTML file/s can be updated on the Feather board by choosing Tools→ESP32 Sketch Data Upload
 
-</aside>
 
 Open `websiteFunctionality` and add a new global constant to define the website parameter the code will look for and respond to.
 

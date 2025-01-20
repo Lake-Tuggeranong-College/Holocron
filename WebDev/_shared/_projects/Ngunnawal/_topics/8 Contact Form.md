@@ -94,10 +94,8 @@ The table fields that need to be created depend on the specific contact form bei
 
 The `id **`and `Date Submitted` fields were not included in the contact form, but are required in the database regardless of what other fields you need.
 
-<aside>
-‼️ The instructions only show creating the fields indicated. If you have others, you will need to add these to your process.
+> [!info] The instructions only show creating the fields indicated. If you have others, you will need to add these to your process.
 
-</aside>
 
 Open the Database Tab in Pycharm.
 
@@ -111,10 +109,8 @@ In the dialog that appears, name the table `contact`.
 
 Click on the plus button to add a new column/field and name this `id`. For this field, tick all the boxes.
 
-<aside>
-‼️ Spelling & capitalisation is critical.
+> [!info]  Spelling & capitalisation is critical.
 
-</aside>
 
 ![[Screen_Shot_2022-07-01_at_11.06.05_am.png|Screen Shot 2022-07-01 at 11.06.05 am.png]]
 
@@ -122,10 +118,8 @@ Add the other fields to the table, for the other ones, **you do not need to tick
 
 These options refer to specific restrictions for database tables, and entering data for data integrity, and not critical at this stage. These will be focused on and discussed in detail at another time.
 
-<aside>
-‼️ Name all the fields as single words, and all lowercase. This makes it easier when coding the python side of the app.
+> [!info]  Name all the fields as single words, and all lowercase. This makes it easier when coding the python side of the app.
 
-</aside>
 
 ![[2022-07-01_11-07-46.2022-07-01_11_09_55.gif|2022-07-01 11-07-46.2022-07-01 11_09_55.gif]]
 
@@ -139,18 +133,14 @@ The table has been created and now will be able to be accessed from within Flask
 
 # Create Models.py
 
-<aside>
-‼️ In flask, and other programming architectures, a ‘model’ refers to the computer modelling the data in the code.
+> [!info]  In flask, and other programming architectures, a ‘model’ refers to the computer modelling the data in the code.
 
-</aside>
 
 Create a python file in the root directory of the project called `models.py`
 
-<aside>
-‼️ For each database table that you’ll be reading from or writing to, you need a *model* created in this file.
+> [!info]  For each database table that you’ll be reading from or writing to, you need a *model* created in this file.
 Each table will have its corresponding **class** which will have the same name. Each class has a variable for each column set to the data type of the table in the database.
 
-</aside>
 
 Copy the following code in. This will allow the models file to access the database configuration.
 
@@ -188,10 +178,8 @@ email = db.Column(db.Text)
 message = db.Column(db.Text)
 ```
 
-<aside>
-‼️ If your database differs from this example, you will need to modify the class definitions accordingly.
+> [!info]  If your database differs from this example, you will need to modify the class definitions accordingly.
 
-</aside>
 
 The final field is the `dataSubmitted` field. As this is stored as a DATETIME in the database, this needs to be declared as such.
 
@@ -221,10 +209,8 @@ The final class should look similar to this one.
 
 ![[Screen_Shot_2022-07-01_at_4.05.15_pm.png|Screen Shot 2022-07-01 at 4.05.15 pm.png]]
 
-<aside>
-‼️ Python is extremely strict with indentation. Make sure the fields are indented (press tab) once after the class definition.
+> [!info]  Python is extremely strict with indentation. Make sure the fields are indented (press tab) once after the class definition.
 
-</aside>
 
 **Save the file.**
 
@@ -260,10 +246,8 @@ class ContactForm (FlaskForm):
 
 Similarly to the Model file, each field that will be collected by the form will need to have a corresponding variable.
 
-<aside>
-‼️ The variable names **must** match the variables created in the contact.html form.
+> [!info]  The variable names **must** match the variables created in the contact.html form.
 
-</aside>
 
 Each of these entries are defined as a `StringField`, meaning that they’ll be collecting text information - which matches the requirement of the database.
 
@@ -291,10 +275,8 @@ Start by opening `app.py` and adding code to import the two new classes created:
 - Update the model import to include Contact, and
 - import ContactForm from forms.
 
-<aside>
-‼️ These lines of code need to be AFTER the `db=SQLAlchemy(app)` line of code.
+> [!info]  These lines of code need to be AFTER the `db=SQLAlchemy(app)` line of code.
 
-</aside>
 
 ![[Screen_Shot_2022-07-01_at_3.37.38_pm.png|Screen Shot 2022-07-01 at 3.37.38 pm.png]]
 
@@ -305,10 +287,8 @@ from forms import ContactForm
 
 and creating a new route.
 
-<aside>
-‼️ The error showing in ‘form’ will be fixed at the next step.
+> [!info]  The error showing in ‘form’ will be fixed at the next step.
 
-</aside>
 
 This code creates the route entry point for `/contact.html` and associates it with the `contact()` function.
 
@@ -340,10 +320,8 @@ Ideally, it all works and you should see a page similar to this example.
 
 [http://127.0.0.1:5000/contact.html](http://127.0.0.1:5000/contact.html)
 
-<aside>
-‼️ This site may appear different if you’ve included Bootstrap into the template.
+> [!info]  This site may appear different if you’ve included Bootstrap into the template.
 
-</aside>
 
 ![[Screen_Shot_2022-07-28_at_9.27.41_pm.png|Screen Shot 2022-07-28 at 9.27.41 pm.png]]
 

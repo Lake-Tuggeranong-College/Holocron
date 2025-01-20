@@ -5,10 +5,8 @@ tags:
 ---
 # Create Index.html
 
-<aside>
-‼️ The individual pages, such as index.html, will have limited HTML, CSS and JS in them - this will be inherited from template.html.
+> [!info]  The individual pages, such as index.html, will have limited HTML, CSS and JS in them - this will be inherited from template.html.
 
-</aside>
 
 Right click on the template folder, and choose New → HTML File.
 
@@ -47,10 +45,8 @@ Save the file.
 
 First, update `app.py` to also import `render_template` from the flask library.
 
-<aside>
-‼️ This new import allows Flask to take the index.html and template.html pages written and replace the contents with what is required.
+> [!info]  This new import allows Flask to take the index.html and template.html pages written and replace the contents with what is required.
 
-</aside>
 
 ![[Screen_Shot_2022-06-21_at_10.42.45_am.png|Screen Shot 2022-06-21 at 10.42.45 am.png]]
 
@@ -91,12 +87,8 @@ Click on the Configurations dropdown in the toolbar, and then **Edit Configurati
 
 Tick the **FLACK_DEBUG** checkbox and click Ok.
 
-<aside>
-‼️
+> [!info] You may need to restart the server for this setting to take effect.
 
-You may need to restart the server for this setting to take effect.
-
-</aside>
 
 ![[Screen_Shot_2022-06-21_at_10.21.30_pm.png|Screen Shot 2022-06-21 at 10.21.30 pm.png]]
 

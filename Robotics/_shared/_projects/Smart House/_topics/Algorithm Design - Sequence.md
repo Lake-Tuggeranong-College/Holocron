@@ -14,10 +14,8 @@ Consider the code sample for `Blink`.
 
 Notice the use of brackets - () and {} - these are very important in the Arduino language (as they are in C and C++). 
 
-<aside>
-💡 Each open bracket, whichever type, must have a corresponding close bracket.
+> [!info] Each open bracket, whichever type, must have a corresponding close bracket.
 
-</aside>
 
 The standard brackets - or parentheses - indicate **conditions** and **parameters** and **arguments**. 
 
@@ -39,10 +37,8 @@ In Arduino, the compiler generally ignores whitespace, meaning you can have as m
 
 Indentation is also not critical, however it makes it easier to read code blocks if indented correctly.
 
-<aside>
-💡 CTRL+T is the shortcut to auto-format your code and fix up indentation.
+> [!info]  CTRL+T is the shortcut to auto-format your code and fix up indentation.
 
-</aside>
 
 # Practical Exercises
 

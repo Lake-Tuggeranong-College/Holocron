@@ -8,7 +8,7 @@ tags:
 
 This section of the project focuses on Administrator functionality. 
 
-It is *generally* a bad idea to allow anyone, aside from a core group of people, direct access to the database, which means that most functions need to be configured to be allowed through a web interface. 
+It is *generally* a bad idea to allow anyone, apart from a core group of people, direct access to the database, which means that most functions need to be configured to be allowed through a web interface. 
 
 Administrator functionality that would require a web interface could be:
 
@@ -110,12 +110,9 @@ When the site is run and the url accessed, the administrator will see a page sim
 
 The site already allows for the user to reset their own password. The process for administrators to reset other peoples passwords is very similar.
 
-<aside>
-‼️ Consider the reset password function in `app.py` that already has been coded.
-
+> [!info] Consider the reset password function in `app.py` that already has been coded.
 ![[passwordresetRoute.png|Untitled]]
 
-</aside>
 
 To allow administrators to reset other peoples passwords, you can reuse `ResetPasswordForm` and the majority of the code shown with slight tweaks. The main one of these tweaks is the addition of the `userid` as a variable in the route and the function.
 
@@ -147,10 +144,8 @@ Additionally, the User.query code has been moved to be run before the if stateme
 
 Test the functionality to ensure it works. 
 
-<aside>
-‼️ It may be useful to register a test account to practice the resetting of passwords on.
+> [!info] It may be useful to register a test account to practice the resetting of passwords on.
 
-</aside>
 
 ## Disabling User Accounts
 
@@ -164,10 +159,8 @@ To enable the disabling of accounts will require a few changes throughout the sy
 
 There may be other changes required, however these are the main ones.
 
-<aside>
-💡 The Database and model already has support for enabling and disabling of user accounts through the `active` field.
+> [!info]  The Database and model already has support for enabling and disabling of user accounts through the `active` field.
 
-</aside>
 
 ### Login
 
@@ -175,10 +168,8 @@ The login process does not need to be changed significantly - the only addition 
 
 This is only a minor change to the existing code.
 
-<aside>
-‼️ It would be useful to add a flash message to the user if the login process fails, instead of just redirecting them back to the user page.
+> [!info]  It would be useful to add a flash message to the user if the login process fails, instead of just redirecting them back to the user page.
 
-</aside>
 
 ![[week14UserNotActive.png|Screen Shot 2022-10-23 at 10.31.27 pm.png]]
 
@@ -229,9 +220,7 @@ Hint: Look at the `list_all_users` route for suggestions.
 
 Open `models.py` and add a new variable to the `User` class to reflect the new addition to the database.
 
-<aside>
-‼️ Create an account to test the process - check the database to ensure that the new account has been created correctly.
+> [!info] Create an account to test the process - check the database to ensure that the new account has been created correctly.
 
-</aside>
 
 Similarly to login, the registration process only needs a small addition to make the account active by default.

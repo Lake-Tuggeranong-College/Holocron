@@ -5,10 +5,8 @@ tags:
 ---
 
 
-<aside>
-‼️ Prerequisite: the [User Registration](https://www.notion.so/User-Registration-67db42f42a8e46e4ade2191d89dc1064?pvs=21) process being complete. Ensure users can register accounts before progressing.
+> [!bug]  Prerequisite: the [[18 User Registration]] process being complete. Ensure users can register accounts before progressing.
 
-</aside>
 
 The User Registration development process does much of the work for setting up the database and model, meaning this process is shorter.
 
@@ -34,10 +32,8 @@ def load_user(id):
 
 # Login Form
 
-<aside>
-‼️ These instructions are made assuming that there is only a need for a `email address` and a `password` in order to log in.
+> [!info] These instructions are made assuming that there is only a need for a `email address` and a `password` in order to log in.
 
-</aside>
 
 Open [forms.py](http://forms.py) and create a new class - `LoginForm`.
 
@@ -127,16 +123,13 @@ This code uses the User model, and loads the first entry in the database where t
 user = User.query.filter_by(email_address=form.email_address.data).first()
 ```
 
-<aside>
-‼️ There are three possible cases that need to be addressed:
+> [!info] There are three possible cases that need to be addressed:
+> 1. The User is **not** found in the database.
+> 2. The User is found in the database and the password **does not** match.
+> 3. The User is found in the database and the password matches.
+> 
+> The code needs to cater for all three cases.
 
-1. The User is **not** found in the database.
-2. The User is found in the database and the password **does not** match.
-3. The User is found in the database and the password matches.
-
-The code needs to cater for all three cases.
-
-</aside>
 
 The code can easily check if the user is not found in the database (i.e. no match on the email address) by checking if the `user` variable is empty.
 
@@ -144,24 +137,18 @@ The code can easily check if the user is not found in the database (i.e. no matc
 
 At this stage, you, the developer, need to determine what is to occur to users who enter incorrect details. There are a number of possibilities, however at this stage, the code can simply reload the login page to prompt them again.
 
-<aside>
-‼️ This caters for Case #1 listed above.
-
-</aside>
+> [!info] This caters for Case #1 listed above.
+> [!info] 
 
 ![[Screen_Shot_2022-08-03_at_4.23.39_pm.png|Screen Shot 2022-08-03 at 4.23.39 pm.png]]
 
 Turning to Case #2, if the user enters an email address that is found in the database, but an incorrect password, the same outcome is wanted as Case #1 - the login page is reloaded. The `if user is None:` statement can be extended to check if the password is incorrect. This extra check will run the `check_password` function written in the User model. 
 
-<aside>
-‼️ Notice that at no stage is the password stored in the code, in the clear. The password is taken from the form and then passed through the check_password function which runs the hash function to check against the database.
+> [!info]  Notice that at no stage is the password stored in the code, in the clear. The password is taken from the form and then passed through the check_password function which runs the hash function to check against the database.
 
-</aside>
 
-<aside>
-‼️ This caters for Case #2 listed above.
+> [!info]  This caters for Case #2 listed above.
 
-</aside>
 
 ![[Screen_Shot_2022-08-03_at_4.26.55_pm.png|Screen Shot 2022-08-03 at 4.26.55 pm.png]]
 

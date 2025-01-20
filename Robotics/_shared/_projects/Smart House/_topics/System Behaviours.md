@@ -9,10 +9,8 @@ These are the descriptions of what should occur when the system is running, writ
 
 When an Input occurs, perform an output, or to put it in more programming terms: `Input -> Processing -> Output`
 
-<aside>
-‼️ Remember to write the behaviours in context - to line up with your theme!
+> [!info]  Remember to write the behaviours in context - to line up with your theme!
 
-</aside>
 
 ## Sample Behaviour
 

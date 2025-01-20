@@ -162,10 +162,7 @@ In `_physics_process(delta)` add an if statement to check to see if the bullet h
 if (collidedObject):
 ```
 
-<aside>
-‼️ If the bullet has collided with an object, then `collidedObject` will contain some data and therefore return `true`.
-
-</aside>
+> [!info]  If the bullet has collided with an object, then `collidedObject` will contain some data and therefore return `true`.
 
 If the bullet has collided with an object, remove it from the game and then reduce by 1.
 

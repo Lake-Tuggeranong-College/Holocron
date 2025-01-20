@@ -64,10 +64,8 @@ The `user` table does not have the flexibility to store the details for potentia
 
 A arguably better solution would be to create another table which focuses on the images and simply stores the user id of the user that image belongs to.
 
-<aside>
-‼️ There is no upper limit on the number of images users can upload from a technical standpoint. As a developer you could impose a limit, but that is beyond the scope of this tutorial.
+> [!info] There is no upper limit on the number of images users can upload from a technical standpoint. As a developer you could impose a limit, but that is beyond the scope of this tutorial.
 
-</aside>
 
 A new table will be created - `photos` - which will store the data, and link to the user id stored in the `user` table, as can be seen in the UML diagram shown here.
 
@@ -342,10 +340,8 @@ Open `userPhotos.html` and insert the following code in whichever cellContent is
 
 This code uses the CSS class `grid-container` and then uses a for loop to create as many `<div>`s as required  - one per image. 
 
-<aside>
-‼️ The images are resized to 20% width. This is done for simplicity sake, however there are much more elegant ways to achieve the same goals through CSS.
+> [!info] The images are resized to 20% width. This is done for simplicity sake, however there are much more elegant ways to achieve the same goals through CSS.
 
-</aside>
 
 Save the File
 
@@ -379,10 +375,8 @@ After editing the CSS to match your design choices, you can reload the site and 
 
 ![[Screen_Shot_2022-09-06_at_11.24.17_pm.png|Screen Shot 2022-09-06 at 11.24.17 pm.png]]
 
-<aside>
-‼️ These images can be displayed however you wish. Investigate and test different options for displaying images in a gallery. Experiment!
+> [!info]  These images can be displayed however you wish. Investigate and test different options for displaying images in a gallery. Experiment!
 
-</aside>
 
 ## Version 3 - Extension
 
@@ -409,10 +403,8 @@ file_ext = filename.split(".")[1]
 
 Generate a random number using the `uuid` library.
 
-<aside>
-‼️ Information on UUIDs and why they can be considered completely unique : [https://en.wikipedia.org/wiki/Universally_unique_identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)
+> [!info] Information on UUIDs and why they can be considered completely unique : [https://en.wikipedia.org/wiki/Universally_unique_identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)
 
-</aside>
 
 ![[Screen_Shot_2022-09-07_at_9.54.21_am.png|Screen Shot 2022-09-07 at 9.54.21 am.png]]
 

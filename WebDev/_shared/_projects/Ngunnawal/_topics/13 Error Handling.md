@@ -44,10 +44,8 @@ Create a html page in the templates folder called `500.html`. Include the defaul
 
 In `cellContent2`, add a message to the user to indicate that there is a problem, but in a more user friendly way than the example above.
 
-<aside>
-‼️ Consider what the user would want to see on this page.
+> [!info]  Consider what the user would want to see on this page.
 
-</aside>
 
 ![[Screen_Shot_2022-08-09_at_10.51.28_am.png|Screen Shot 2022-08-09 at 10.51.28 am.png]]
 
@@ -67,15 +65,11 @@ Repeat this process for a `404.html` error page for if the page doesn’t exist.
 
 Open `app.py` and add the following routes.
 
-<aside>
-💡 These routes capture any `404` or `500` HTTP errors and instead of showing the standard error for the browser, it will show a custom built error, using based on the template. From a UX point of view, this ‘keeps’ the user within the site and can allow them to rectify the error by returning to other pages.
+> [!info]  These routes capture any `404` or `500` HTTP errors and instead of showing the standard error for the browser, it will show a custom built error, using based on the template. From a UX point of view, this ‘keeps’ the user within the site and can allow them to rectify the error by returning to other pages.
+> - 404 error - Not Found
+> - 500 error - Internal Server Error
+> You can find information on HTTP errors here: [https://developer.mozilla.org/en-US/docs/Web/HTTP/Status](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
-- 404 error - Not Found
-- 500 error - Internal Server Error
-
-You can find information on HTTP errors here: [https://developer.mozilla.org/en-US/docs/Web/HTTP/Status](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
-
-</aside>
 
 ```python
 # Error Handlers

@@ -1,10 +1,8 @@
 
 # Development Goals
 
-<aside>
-‼️ This may be done individually, or as a group, depending on the nature of the project.
+> [!info] This may be done individually, or as a group, depending on the nature of the project.
 
-</aside>
 
 For this task, use Notion. This can be used as a Project Management tool to keep track of different jobs, indicating which ones are outstanding, which are completed, which are waiting for others to complete.
 
@@ -55,10 +53,8 @@ Assign priorities for each group. Start with Priority 1 (being the most importan
 
 Under each group, assign priorities to the functions or tasks.
 
-<aside>
-‼️ It’s ok to have multiple tasks with the same priorities.
+> [!info] It’s ok to have multiple tasks with the same priorities.
 
-</aside>
 
 ## Assign to a person (if applicable)
 

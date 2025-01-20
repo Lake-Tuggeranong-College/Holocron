@@ -20,10 +20,8 @@ Click “Get from VCS”.
 
 Choose Github in the lefthand side menu.
 
-<aside>
-💡 You may need to log in to Github at this stage
+> [!info] You may need to log in to Github at this stage
 
-</aside>
 
 Choose the Repository, and the directory you wish to save it locally. 
 
@@ -41,10 +39,8 @@ After cloning your repository from Github to the local computer, the project wil
 
 ![[vcsJetbrainsTrust.png]]
 
-<aside>
-💁 If asked, choose to trust the project.
+> [!info]  If asked, choose to trust the project.
 
-</aside>
 
 ![[vcsJetbrainsRepoCloning.png]]
 
@@ -77,10 +73,8 @@ Configure the repository settings.
 
 ## Github Desktop - Cloning the Repository
 
-<aside>
-‼️ Github desktop is the GUI interface to clone, commit, push etc repositories to and from Github that runs on your local computer.
+> [!info] Github desktop is the GUI interface to clone, commit, push etc repositories to and from Github that runs on your local computer.
 
-</aside>
 
 Now, open **Github Desktop** on your computer and click "Clone Repository" under the File menu.
 
@@ -90,10 +84,8 @@ Select the new repository you just created.
 
 Choose the path where you want to save it. 
 
-<aside>
-⁉️ The directory will need to be empty.
+> [!info] The directory will need to be empty.
 
-</aside>
 
 Click Clone.
 
@@ -111,10 +103,8 @@ Click on the Current Repository Download in the top left of the window. Right Cl
 
 You should see that it's detected the new files. As this is the first time you are committing to the repository, just type in "init" to the summary and detail boxes and then hit commit.
 
-<aside>
-⁉️ When committing later, you'll need to put more details into these boxes. You'll need to explain what changes have been made.
+> [!info] When committing later, you'll need to put more details into these boxes. You'll need to explain what changes have been made.
 
-</aside>
 
 Finally, click "Push Origin" which will synchronise the repository to Github online.
 

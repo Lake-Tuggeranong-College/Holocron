@@ -18,10 +18,8 @@ Organising your code with functions is an important skill to have when coding in
 
 In Arduino, writing your own function requires the specific syntax of a C-based language. You can see in this example that the function declaration starts with the defining the return type, then the function name, and then any parameters.
 
-<aside>
-💡 If your function doesn’t return any data, the first keyword is void. Otherwise, you **must** declare the data type of the variable that will be returned.
+> [!info] If your function doesn’t return any data, the first keyword is void. Otherwise, you **must** declare the data type of the variable that will be returned.
 
-</aside>
 
 The curly brackets - `{}` - determine the start and the end of the function code block, which is run when the function is called.  
 
@@ -94,10 +92,8 @@ boolean validPotentiometerReading() {
 }
 ```
 
-<aside>
-💡 The first return function executed will immediately end the function. I.e. only one return function will be executed for each function call.
+> [!info]  The first return function executed will immediately end the function. I.e. only one return function will be executed for each function call.
 
-</aside>
 
 ![[modularisationPotReadDemo.gif]]
 
@@ -115,10 +111,8 @@ boolean validPotentiometerReading() {
 
 Log into [Tinkercad](https://www.tinkercad.com/) and access the classroom used previously. Open the activity `Bank Alarm`.
 
-<aside>
-‼️ Remember to sign in with your school google account.
+> [!info]  Remember to sign in with your school google account.
 
-</aside>
 
 With the Activity open, Under Shared with You, choose Copy and Tinker.
 
@@ -134,17 +128,15 @@ Currently, the code:
 
 ![[modularisationCodeStart.png]]
 
-<aside>
-‼️ **Explanation.**
+> [!info] **Explanation.**
+> 
+> With the predefined circuit there are two components attached to the Arduino Uno
+> 
+> 1. an LED on Pin 9 which is a simple light bulb, and
+> 2. a Potentiometer on Pin A0, which provides the ability to read analog values that changes based on the position of the dial.
+> 
+> The LED is an OUTPUT device and the Potentiometer is an INPUT device, hence the code configuring those pins as such. 
 
-With the predefined circuit there are two components attached to the Arduino Uno
-
-1. an LED on Pin 9 which is a simple light bulb, and
-2. a Potentiometer on Pin A0, which provides the ability to read analog values that changes based on the position of the dial.
-
-The LED is an OUTPUT device and the Potentiometer is an INPUT device, hence the code configuring those pins as such. 
-
-</aside>
 
 ![[modularisationLEDAndPot.png]]
 
@@ -152,16 +144,14 @@ The LED is an OUTPUT device and the Potentiometer is an INPUT device, hence the 
 
 After `loop()` create a new function to read the value from the potentiometer.
 
-<aside>
-‼️ The function header is made up of a number of sections:
+> [!info]  The function header is made up of a number of sections:
+> 
+> `int` indicates that this function will *return* a value as an **integer** (whole number).
+> 
+> `readPotentiometer` is the name given to the function. Functions can be named **almost** anything, but they must not start with a number, and have no spaces. It is  advisable to name functions descriptively to indicate what their purpose is (more on that later in the project).
+> 
+> `()` indicate what (if any) parameters are required by the function. As there are no parameters, the code requires just the open and close brackets.
 
-`int` indicates that this function will *return* a value as an **integer** (whole number).
-
-`readPotentiometer` is the name given to the function. Functions can be named **almost** anything, but they must not start with a number, and have no spaces. It is  advisable to name functions descriptively to indicate what their purpose is (more on that later in the project).
-
-`()` indicate what (if any) parameters are required by the function. As there are no parameters, the code requires just the open and close brackets.
-
-</aside>
 
 ![[modularisationCodeReadPotStart.png]]
 
@@ -173,10 +163,8 @@ int readPotentiometer() {
 
 Read the value of the potentiometer and store in a local variable. 
 
-<aside>
-‼️ More on variables later in the project. Just think of the code temporarily storing the value to use later.
+> [!info]  More on variables later in the project. Just think of the code temporarily storing the value to use later.
 
-</aside>
 
 ![[modularisationStorePotValue.png]]
 
@@ -211,10 +199,8 @@ Press **Start Simulation** and expand the Serial Monitor tab.
 
 Change the position of the potentiometer and notice the output change.
 
-<aside>
-‼️ Note how the values range from 0 to 1023. This will become important later.
+> [!info] Note how the values range from 0 to 1023. This will become important later.
 
-</aside>
 
 Stop the Simulation.
 
@@ -250,10 +236,8 @@ int brightness = map(potReading, 0, 1023, 0, 255);
 
 Create a new function to control the brightness of the LED - `setLEDBrightness(int LEDBrightness)`. 
 
-<aside>
-‼️ This function does not need to return any data, so the keyword used is `void`.
+> [!info]  This function does not need to return any data, so the keyword used is `void`.
 
-</aside>
 
 ![[modularisationCodeLEDBrightnessStub.png]]
 

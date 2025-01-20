@@ -164,10 +164,8 @@ This access the `Global.gd` script through the object name `GlobalVariables`. Th
 
 The `scoringInformation` dictionary is then used to access the `currentScore` entry and adds 10 to the value.
 
-<aside>
-💁 `+= 10` adds 10 to whatever the integer value is at that time.
+> [!info]  `+= 10` adds 10 to whatever the integer value is at that time.
 
-</aside>
 
 ![[dataDictionaryUpdate.png|Screen Shot 2022-02-26 at 2.22.17 pm.png]]
 

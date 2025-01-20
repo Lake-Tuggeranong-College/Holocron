@@ -5,9 +5,8 @@ The goals for this topic are:
 - Complete first draft of Evidence Guide
 - Submit for feedback.
 
-<aside> <img src="/icons/list_orange.svg" alt="/icons/list_orange.svg" width="40px" /> $\utilde {\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}}$
+$\color{black} \fcolorbox{darkorange}{darkorange} {Table of Contents}$
 
-</aside>
 
 $\color{black} \fcolorbox{lightblue}{lightblue} {Submission}$
 

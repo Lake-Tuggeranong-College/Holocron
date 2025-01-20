@@ -40,19 +40,14 @@ Over this course of this term, you will develop a website which will allow the u
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!info]  **Goal**
+> In this task, you’ll be creating the accounts and installing the software you’ll be using for this course.
 
-In this task, you’ll be creating the accounts and installing the software you’ll be using for this course.
-
-</aside>
 
 Create a Jetbrains Educational Account.
 
-<aside>
-‼️ Log in using Google, and use your school account!
+> [!info] Log in using Google, and use your school account!
 
-</aside>
 
 [https://www.jetbrains.com/community/education/#students](https://www.jetbrains.com/community/education/#students)
 ## Install PHPStorm (if not already installed)
@@ -96,10 +91,8 @@ After the XAMPP installation, test to ensure that it’s all working by access P
 
 ## Create a Github Account
 
-<aside>
-‼️ If you already have a github account, you can skip this step.
+> [!info]  If you already have a github account, you can skip this step.
 
-</aside>
 
 1. Go to [https://github.com/join](https://github.com/join).
 2. Using your school email address (...@schoolsnet.act.edu.au) create a Github account.

@@ -31,10 +31,8 @@ Inside your Project, right click on the project name and choose New → PlantUML
 
 Give the file a name and choose the type of diagram you’re creating.
 
-<aside>
-‼️ For Entity-Relationship Diagrams (ERD) choose Class
+> [!info] For Entity-Relationship Diagrams (ERD) choose Class
 
-</aside>
 
 ![[plantUMLChooseType.png|Screen Shot 2022-08-13 at 2.24.22 pm.png]]
 

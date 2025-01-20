@@ -86,15 +86,14 @@ define("school", "Lake Tuggeranong College");
 
 # Practical Exercises
 
-<aside>
-🏁 **Goal**
+> [!info]  **Goal**
+> 
+> In this task, you’ll learn:
+> 
+> - How to create a simple HTML form,
+> - The PHP code to collect the data the user entered in the form, and
+> - How to output variables onto a HTML page.
 
-In this task, you’ll learn:
-
-- How to create a simple HTML form,
-- The PHP code to collect the data the user entered in the form, and
-- How to output variables onto a HTML page.
-</aside>
 
 Open your `Software-Development Fundamentals-PHP` project. In this stage of the project, you will be creating a simple contact form, which will collect data from the user and then display it back to them to confirm. 
 
@@ -163,10 +162,8 @@ If the PHP code detects the post (meaning the user presses the submit button), t
 
 `$_POST['inputEmail'];` refers to the field with the name `inputEmail` created earlier. Likewise for `inputMessage`.
 
-<aside>
-‼️ `$emailAddress` and `$messageSubmitted` are two variables to store the data entered into the form. What data type would they be?
+> [!info] `$emailAddress` and `$messageSubmitted` are two variables to store the data entered into the form. What data type would they be?
 
-</aside>
 
 ![[variablesGetFormData.png|Screenshot 2022-11-22 at 9.55.38 am.png]]
 

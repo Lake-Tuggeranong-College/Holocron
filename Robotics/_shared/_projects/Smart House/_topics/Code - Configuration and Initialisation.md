@@ -19,10 +19,8 @@ Afterwards, then it’s the setup() function, then loop() then finally the Custo
 
 ![[Structure_of_an_Arduino_Sketch_example_with_code.png]]
 
-<aside>
-‼️ The pin numbers listed in this section must be individually confirmed to ensure they match your wiring diagram and other requirements.
+> [!info] The pin numbers listed in this section must be individually confirmed to ensure they match your wiring diagram and other requirements.
 
-</aside>
 
 If you need to install an external library, please see this guide.
 
@@ -148,13 +146,11 @@ These code snippets go **above** the setup() function in your sketch.
 
 After adding each code snippet, compile the code to ensure it is working correctly.
 
-<aside>
-‼️ The following code snippets may include some or all of the following:
-- Pin Definitions
-- “Object” configuration
-- Low Level Function code.
+> [!info] The following code snippets may include some or all of the following:
+> - Pin Definitions
+> - “Object” configuration
+> - Low Level Function code.
 
-</aside>
 
 ## “Includes and Variable” Configuration
 
@@ -251,10 +247,8 @@ void bluetoothConnectivity() {
 }
 ```
 
-<aside>
-‼️ You may find you need to install a library called `Adafruit nRF8001`. Follow the instructions for using the Library Manager.
+> [!info]  You may find you need to install a library called `Adafruit nRF8001`. Follow the instructions for using the Library Manager.
 
-</aside>
 
 It’s important to check to make sure it works - follow instructions on this page: 
 
@@ -262,10 +256,8 @@ It’s important to check to make sure it works - follow instructions on this pa
 
 ### GPS
 
-<aside>
-‼️ The GPS unit works MUCH better when run outside. If run inside, put it near a window, and it may take a minute or two to find a GPS location. Outside, it can work instantaneously.
+> [!info] The GPS unit works MUCH better when run outside. If run inside, put it near a window, and it may take a minute or two to find a GPS location. Outside, it can work instantaneously.
 
-</aside>
 
 ```arduino
 // GPS
@@ -285,10 +277,9 @@ TinyGPSPlus gps; // The TinyGPS++ object
 SoftwareSerial ss(RXPin, TXPin);// The serial connection to the GPS device
 ```
 
-<aside>
-‼️ You may find you need to install a library called `TinyGPSPlus`. Follow the instructions for using the Library Manager.
+> [!info] You may find you need to install a library called `TinyGPSPlus`. Follow the instructions for using the Library Manager.
 
-</aside>
+
 ### Infrared Remote
 
 ```arduino
@@ -299,10 +290,8 @@ IRrecv irrecv(IR_INPUT_PIN);
 decode_results results;
 ```
 
-<aside>
-‼️ You may find you need to install a library called `IRRemote`. Choose the one developed by **Armin Joachimsmeyer** Follow the instructions linked above for  installing a library.
+> [!info]  You may find you need to install a library called `IRRemote`. Choose the one developed by **Armin Joachimsmeyer** Follow the instructions linked above for  installing a library.
 
-</aside>
 
 ### Traffic Light Module
 
@@ -315,10 +304,7 @@ decode_results results;
 
 ### DC Motor (Blue Button version)
 
-<aside>
-‼️ This code works for the Motor Controller with the blue press button (on/off) on the board.
-
-</aside>
+> [!info]  This code works for the Motor Controller with the blue press button (on/off) on the board.
 
 ```arduino
 // DC Motor & Motor Module - L298N
@@ -334,13 +320,13 @@ L298N motor(EN, IN1, IN2);
 ```
 
 
-‼️ You may find you need to install a library called `L298N`. Follow the instructions for using the Library Manager.
+> [!info] You may find you need to install a library called `L298N`. Follow the instructions for using the Library Manager.
+
+
 ### DC Motor (DFRobot)
 
-<aside>
-‼️ This code works for the Motor module labelled DFRobot
+> [!info]  This code works for the Motor module labelled DFRobot
 
-</aside>
 
 ```arduino
 int E1 = 6;
@@ -398,10 +384,8 @@ Servo myservo;
 ```
 ### RFID
 
-<aside>
-‼️ The **MFRC522** library needs to be installed through the library manager.
+> [!info]  The **MFRC522** library needs to be installed through the library manager.
 
-</aside>
 
 ```arduino
 // RFID Start

@@ -44,12 +44,9 @@ Right-click on the Database in Pycharm and choose New Table. Call the table `use
 
 Create the fields as needed.
 
-<aside>
-‼️ Which ever field is going to be the users “username”, set that to be Unique in the database creation process.
+> [!info]  Which ever field is going to be the users “username”, set that to be Unique in the database creation process.
+> ![[Screen_Shot_2022-07-05_at_8.48.41_pm.png|Screen Shot 2022-07-05 at 8.48.41 pm.png]]
 
-![[Screen_Shot_2022-07-05_at_8.48.41_pm.png|Screen Shot 2022-07-05 at 8.48.41 pm.png]]
-
-</aside>
 
 ![[Screen_Shot_2022-08-03_at_9.16.36_pm.png|This is only an example. Create the fields as you need for the specific implementation requirements.]]
 
@@ -72,12 +69,8 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 ```
 
-<aside>
-‼️
+> [!info] Remember the class has to match the specific implementation of the database, not necessarily a direct copy from here.
 
-Remember the class has to match the specific implementation of the database, not necessarily a direct copy from here.
-
-</aside>
 
 The code for the user class is shown here.
 
@@ -134,19 +127,15 @@ def check_password (self, password):
 
 One of the fields shown in the example is `user_level`. This indicates whether the user is a normal user (1) or an administrator (2). 
 
-<aside>
-‼️ This could have been achieved with a boolean (True/False), however this limits the application from implementing another user type, such as content manager with more access than a normal user, but not be able to edit user details.
+> [!info]  This could have been achieved with a boolean (True/False), however this limits the application from implementing another user type, such as content manager with more access than a normal user, but not be able to edit user details.
 
-</aside>
 
 A simple helper function can be added to the User class to return a true or a false indicating if the user is an administrator or not. This will help the system when implementing administrator functions later.
 
 At this stage, the function can return true is the `user_level` value is a 1 and false for everything else.
 
-<aside>
-‼️ Implementing the function, rather than coding the remainder of the site to check `user_level` means that if this needs to be changed at a later stage (say, and administrator changes to 10), then only the `is_admin()` function needs to be changed, not all throughout the code.
+> [!info] Implementing the function, rather than coding the remainder of the site to check `user_level` means that if this needs to be changed at a later stage (say, and administrator changes to 10), then only the `is_admin()` function needs to be changed, not all throughout the code.
 
-</aside>
 
 ![[Screen_Shot_2022-08-03_at_9.19.09_pm.png|Screen Shot 2022-08-03 at 9.19.09 pm.png]]
 
@@ -176,10 +165,8 @@ Add a new validator in the import statements, this one `EqualTo`.
 
 The RegistrationForm class will be similar to this.
 
-<aside>
-‼️ Remember to match the form to the requirements of the database!
+> [!info]  Remember to match the form to the requirements of the database!
 
-</aside>
 
 Collecting the password is done a little differently, as per standard practice, the user should enter the password twice to confirm the passwords are identical.
 
@@ -280,11 +267,9 @@ The only parts that need to change for each field are highlighted red.
 
 The final version will appear similar to this.
 
-<aside>
-‼️ Remember: The form field names have to match **exactly** the variable names in the RegistrationForm class. For Example:
+> [!info]  Remember: The form field names have to match **exactly** the variable names in the RegistrationForm class. For Example:
 form.`email_address`.label
 
-</aside>
 
 ![[Screen_Shot_2022-07-05_at_10.19.28_pm.png|Screen Shot 2022-07-05 at 10.19.28 pm.png]]
 

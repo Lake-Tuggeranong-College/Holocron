@@ -34,12 +34,10 @@ In your description:
 
 Research to see if anything like your idea already exists, and include the details of the existing product into your theme.
 
-<aside>
-‼️ Keep It Simple. When defining the theme, start with :
-- one input only impacting one output
-- And conversely, one output being impacted by **one** input only.
+> [!info] Keep It Simple. When defining the theme, start with :
+> - one input only impacting one output
+> - And conversely, one output being impacted by **one** input only.
 
-</aside>
 
 ## Examples
 

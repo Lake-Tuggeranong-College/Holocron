@@ -92,15 +92,11 @@ Make sure just the `ESP32FS` folder is copied into the Tools folder, as can be s
 
 Quit and restart the IDE, and you should notice that under the Tools menu, there is now an option - `ESP Sketch Data Upload`
 
-<aside>
-‼️ You don't need to click it yet - just make sure it's there.
+> [!info] You don't need to click it yet - just make sure it's there.
 
-</aside>
 
-<aside>
-💡 If it doesn't appear, check the Tools folder that you've installed the plugin into is correct.
+> [!info]  If it doesn't appear, check the Tools folder that you've installed the plugin into is correct.
 
-</aside>
 
 ![[spiffsMenuOption.png]]
 
@@ -114,15 +110,12 @@ There are a number of parts of the code to update to include both Wifi and SPIFF
 
 At the start of the sketch, where libraries are included, and variables defined, ensure that the Wifi block appears as:
 
-<aside>
-⁉️ If the following lines of code appear, delete them!
+> [!info] If the following lines of code appear, delete them!
+> ```arduino
+> String loginIndex, serverIndex;
+> WebServer server(80);
+> ```
 
-```arduino
-String loginIndex, serverIndex;
-WebServer server(80);
-```
-
-</aside>
 
 ```arduino
 #define FORMAT_SPIFFS_IF_FAILED true
@@ -139,10 +132,8 @@ AsyncWebServer server(80);
 
 The steps to store data into a file stored in the SPIFFS partition is different from other formats. The Code shown here.
 
-<aside>
-💡 If the sketch already includes a `logEvent()` function, it should be replaced by this!
+> [!info] If the sketch already includes a `logEvent()` function, it should be replaced by this!
 
-</aside>
 
 ```arduino
 void logEvent(String dataToLog) {
@@ -194,19 +185,14 @@ Your code will need to match the HTML files you have in the data folder - explai
 
 You'll notice that each URL outputs information to the Serial Monitor (which is only used for debugging), and then `send`s a HTML or CSV file which sends that file, stored in the SPIFFS partition to the browser to display.
 
-<aside>
-⁉️ Notice the additional parameter for the `logOutput`? The additional `true` sets the file to be downloaded, rather than displayed in the browser. 
-Test what happens if you change this to `false` and access the page.
+> [!info] Notice the additional parameter for the `logOutput`? The additional `true` sets the file to be downloaded, rather than displayed in the browser. 
+> Test what happens if you change this to `false` and access the page.
 
-</aside>
 
 ### Remove SD Card functions
 
-<aside>
-💡 This section should only be performed if necessary. 
-If unsure - It is recommended that the code be commented out rather than deleted. You can select the lines of code and press **CTRL + / (CMD + /** for mac**)**
-
-</aside>
+> [!info] This section should only be performed if necessary. 
+> If unsure - It is recommended that the code be commented out rather than deleted. You can select the lines of code and press **CTRL + / (CMD + /** for mac**)**
 
 **If the sketch** has any SD card libraries or code, this can be deleted as this function is being replaced by the SPIFFS partition.
 
@@ -351,17 +337,13 @@ void deleteFile(fs::FS &fs, const char * path) {
 }
 ```
 
-<aside>
-💡 Try compiling the code at this stage and fix any errors as they appear.
+> [!info]  Try compiling the code at this stage and fix any errors as they appear.
 
-</aside>
 
 # Uploading data
 
-<aside>
-⛔ The uploader will overwrite anything you had already saved in the filesystem.
+> [!bug] The uploader will overwrite anything you had already saved in the filesystem.
 
-</aside>
 
 To upload files to the SPIFFS partition, you will need to create a data directory in the sketch directory. 
 
@@ -387,10 +369,7 @@ These HTML files have a index page, which includes
 
 Choose the upload tool from the Tools menu. 
 
-<aside>
-⁉️ Your Serial Monitor needs to be closed for this to work.
-
-</aside>
+> [!info] Your Serial Monitor needs to be closed for this to work.
 
 ![[spiffsDataUpload.png]]
 
@@ -470,14 +449,14 @@ Using a processor function, in this case cleverly named `processor()`, the HTML 
 
 In this case the `datetime` variable is created using the two functions `getTimeAsString()` and `getDateAsString()` but the value that is returned could be anything. Whatever content is returned will be replaced in the placeholder text that is being processed.
 
-<aside>
-⁉️ If you're just testing, you can replace the if statement to 
-`if (var == "DATETIME") {
-    return "Today";
-  }`
-which will test and demonstrate the process of replacing placeholders with data from Arduino sketches.
+> [!info] If you're just testing, you can replace the if statement to 
+> ```
+> if (var == "DATETIME") {
+ >   return "Today";
+  > }
+>  ```
+> which will test and demonstrate the process of replacing placeholders with data from Arduino sketches.
 
-</aside>
 
 ```arduino
 String processor(const String& var) {

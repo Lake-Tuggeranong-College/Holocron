@@ -7,10 +7,8 @@ tags:
 
 So far in the development process, there is very little access control. 
 
-<aside>
-‼️ Access control is the term to cover which users can access certain pages and other resources.
+> [!info]  Access control is the term to cover which users can access certain pages and other resources.
 
-</aside>
 
 A Quick Summary of what is implemented so far: 
 

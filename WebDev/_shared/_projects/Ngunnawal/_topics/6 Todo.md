@@ -54,10 +54,8 @@ Open `models.py`
 
 At the end of the file, and after any other classes, add the following `todo` class.
 
-<aside>
-‼️ Like with any other classes in this case, the names of the class and the variables need to match what the the names are in the database. If you’ve named them different, you will need to make them match.
+> [!info]  Like with any other classes in this case, the names of the class and the variables need to match what the the names are in the database. If you’ve named them different, you will need to make them match.
 
-</aside>
 
 ![[Screen_Shot_2022-06-29_at_10.09.05_pm.png|Screen Shot 2022-06-29 at 10.09.05 pm.png]]
 

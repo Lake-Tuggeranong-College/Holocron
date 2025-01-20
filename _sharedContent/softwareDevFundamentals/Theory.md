@@ -30,7 +30,7 @@ Some of the languages you may code in are:
 
 ![[overviewHighLevelLanguages.png|overviewHighLevelLanguages.png]]
 
-Essentially, programming (or software development) is problem-solving. Aside from learning syntax, and your programming languages’ additional functionality and libraries, one of the skills you will want to enhance is your problem-solving skills.
+Essentially, programming (or software development) is problem-solving. Apart from from learning syntax, and your programming languages’ additional functionality and libraries, one of the skills you will want to enhance is your problem-solving skills.
 
 ## History of Programming languages
 
@@ -588,7 +588,7 @@ Password is set to “securePassword”
 
 Once the values have been stored, you can retrieve the values by using the name of the box (variable name). For instance HighScore = HighScore + 5, would set the HighScore to 30.
 
-Memory in the device (desktop, laptop, phone, tablet, microcontroller etc) is sandboxed to the application, and sub-divided into various sections, one being set aside for variables. That section is then used as the application needs, allocating specific memory addresses for particular variables. The number and structure of the memory addresses is dependant on many things, one of which is the **data type** of the variable.
+Memory in the device (desktop, laptop, phone, tablet, microcontroller etc) is sandboxed to the application, and sub-divided into various sections, one being assigned for variables. That section is then used as the application needs, allocating specific memory addresses for particular variables. The number and structure of the memory addresses is dependant on many things, one of which is the **data type** of the variable.
 
 ## Data types
 
@@ -1203,9 +1203,31 @@ Variables, constants etc that are declared within a function, are only accessibl
 
 # Flowcharts
 
+Flowcharts are visual diagrams that depict the steps of a process, decision-making, or a workflow. Each step is represented by a symbol and connected by arrows to show the direction and flow of the process. Here are some common symbols used in flowcharts:
 
-## Resources
+1. **Oval**: Represents the start or end of a process.
+2. **Rectangle**: Denotes a process or action step. 
+3. **Diamond**: Indicates a decision point.
+4. **Parallelogram**: Used for input or output.
+5. **Arrow**: Shows the flow or direction from one step to another.
 
+### Example: Flowchart of a Simple Decision-Making Process
+
+
+```mermaid
+flowchart TD
+    A[Start] --> B{Is it raining?}
+    B -- Yes --> C[Take an umbrella]
+    B -- No --> D[Go out without an umbrella]
+    C --> E[End]
+    D --> E[End]
+```
+
+### Tips for Creating Effective Flowcharts:
+
+- **Keep it Simple**: Ensure clarity by keeping the flowchart simple and not overloading it with too many details.
+- **Consistent Symbols**: Use the appropriate symbols consistently to avoid confusion.
+- **Logical Flow**: Make sure the flow follows a logical sequence, and connections are clear.
 ### Flowcharts
 
 [Mermaid Flowcharts](https://mermaid-js.github.io/mermaid/#/./flowchart?id=flowcharts-basic-syntax)
@@ -1234,28 +1256,6 @@ Flowcharts show the *logic* of an algorithm without specific code syntax.
 ![[flowchartSymbols.jpg]]
 
 [https://www.smartdraw.com/flowchart/flowchart-symbols.htm](https://www.smartdraw.com/flowchart/flowchart-symbols.htm)
-
-## Sample Project
-
-For the purposes for this tutorial, an example of a project theme and behaviours could be:
-
-### Theme
-
-The electronics board project will be prototyping a **Smart Home** of the future. The concept of this Smart Home is that everything will be either automated or controlled through various environmental monitoring. 
-
-Example Functionality: 
-
-The system will monitor the temperature and respond appropriately.
-
-The users will be able to open and close blinds through different inputs.
-
-### Behaviours
-
-The expected behaviours of the system are:
-
-1. When a person gets too close (**sonar**) to the house, an alarm is sounded (**piezo)**.
-2. When the garage door button is pressed (**button**) the Door Opens (**servo**) and the red light is turned on (**Traffic Light Red LED**). There is a pause for 5 seconds, then the door is closed and the light turned off.
-3. The fan (**DC Motor**) speed is controlled through the controller (**potentiometer**).
 
 ## Flowcharts Example
 
@@ -1800,3 +1800,24 @@ The values (59% etc) could be stored in a Key Value Pair and accessed in code as
 ![https://www.youtube.com/watch?v=huOPVqztPdc](https://www.youtube.com/watch?v=huOPVqztPdc)
 
 
+# Sample Project
+
+For the purposes for this tutorial, an example of a project theme and behaviours could be:
+
+## Theme
+
+The electronics board project will be prototyping a **Smart Home** of the future. The concept of this Smart Home is that everything will be either automated or controlled through various environmental monitoring. 
+
+Example Functionality: 
+
+The system will monitor the temperature and respond appropriately.
+
+The users will be able to open and close blinds through different inputs.
+
+## Behaviours
+
+The expected behaviours of the system are:
+
+1. When a person gets too close (**sonar**) to the house, an alarm is sounded (**piezo)**.
+2. When the garage door button is pressed (**button**) the Door Opens (**servo**) and the red light is turned on (**Traffic Light Red LED**). There is a pause for 5 seconds, then the door is closed and the light turned off.
+3. The fan (**DC Motor**) speed is controlled through the controller (**potentiometer**).

@@ -89,10 +89,10 @@ Eventually, it will show a popup indicating that all the packages were installed
 
 ![[Screen_Shot_2022-06-15_at_10.35.55_am.png|Screen Shot 2022-06-15 at 10.35.55 am.png]]
 
-<aside>
-‼️ At this stage, the project is only stored locally. As you would be aware this is not ideal, so the next step involves publishing the project to Github.
 
-</aside>
+> [!info] At this stage, the project is only stored locally. As you would be aware this is not ideal, so the next step involves publishing the project to Github.
+
+
 
 ## Share the project to Github
 
@@ -106,10 +106,9 @@ Leave the system as Git and click Ok.
 
 After a moment, Pycharm will create a popup along the bottom indicating that the repository has been created. 
 
-<aside>
-‼️ This repository is still only saved on the local computer!
 
-</aside>
+> [!info] This repository is still only saved on the local computer!
+
 
 ![[Screen_Shot_2022-06-15_at_10.58.04_am.png|Screen Shot 2022-06-15 at 10.58.04 am.png]]
 
@@ -117,10 +116,9 @@ Add the `app.py` and requirements.txt files to the repository. Right click on th
 
 Do the same for the static and templates folders.
 
-<aside>
-‼️ DO NOT add the venv folder to Git.
 
-</aside>
+> [!info] DO NOT add the `venv` folder to Git.
+
 
 ![[Screen_Shot_2022-06-15_at_10.58.51_am.png|Screen Shot 2022-06-15 at 10.58.51 am.png]]
 
@@ -148,10 +146,9 @@ In your file Browser, find the project folder from your previous Ngunnawal Websi
 
 Drag those files into the **static folder** in your project.  
 
-<aside>
-‼️ Hold down Alt to copy the files, not move them.
 
-</aside>
+> [!info] Hold down Alt to copy the files, not move them.
+
 
 ![[2022-06-15_11-14-45.2022-06-15_11_23_50.gif|2022-06-15 11-14-45.2022-06-15 11_23_50.gif]]
 

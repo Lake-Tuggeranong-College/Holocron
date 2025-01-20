@@ -54,15 +54,9 @@ Watch the video/s supplied to understand the topics for this week.
 
   
 
-<aside>
+> [!info] Google Bard wrote this next section: [https://g.co/bard/share/910af69eda65](https://g.co/bard/share/910af69eda65)
 
-❓ Google Bard wrote this next section: [https://g.co/bard/share/910af69eda65](https://g.co/bard/share/910af69eda65)
 
-  
-
-</aside>
-
-  
 
 Python is a popular and powerful programming language used for a wide range of applications. Here's a summary of its key features:
 

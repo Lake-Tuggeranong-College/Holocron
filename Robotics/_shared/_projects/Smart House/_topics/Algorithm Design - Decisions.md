@@ -12,10 +12,8 @@ In Arduino, as with many other languages, the main decision block is the `IF..TH
 
 ![[decisionsIfBlock.png|Screen Shot 2021-12-16 at 2.07.37 pm.png]]
 
-<aside>
-💡 Note the condition is enclosed in parenthesis.
+> [!info] Note the condition is enclosed in parenthesis.
 
-</aside>
 
 For the code block to execute, the condition needs to equate to **true**. If the condition equates to **false**, the code block is skipped.
 
@@ -119,15 +117,13 @@ The standard *comparison* operators in Arduino are shown here and can be used in
 
 # Practical Exercises
 
-<aside>
-‼️ **Goal**
-
-In this task, you’ll be updating the Bank Alarm Project to :
-
-- include decision making, specifically to check if the potentiometer has reached a certain value (threshold) before the LED turns on.
-- You’ll then add additional components to build the final form of the Bank alarm which will operate under the following conditions:
-	- 3 of the Sensors must be “triggered” for the alarm to go off (LED turn on)
-</aside>
+> [!important] **Goal**
+> 
+> In this task, you’ll be updating the Bank Alarm Project to :
+> 
+> - include decision making, specifically to check if the potentiometer has reached a certain value (threshold) before the LED turns on.
+> - You’ll then add additional components to build the final form of the Bank alarm which will operate under the following conditions:
+>	- 3 of the Sensors must be “triggered” for the alarm to go off (LED turn on)
 
 Open the Bank Alarm project on [Tinkercad](https://www.tinkercad.com/). Before implementing decisions specifically in the code, some code base changes need to be made to reorganise the code. 
 
@@ -258,10 +254,8 @@ void determineLEDBrightness(int brightnessValue) {
 
 Update `loop()` to call this function **instead** of `setLEDBrightness()`.
 
-<aside>
-‼️ This new function is now going to act as intermediately between the main loop functionality and making the decision whether to turn the LED on or not, before setting the brightness.
+> [!info] This new function is now going to act as intermediately between the main loop functionality and making the decision whether to turn the LED on or not, before setting the brightness.
 
-</aside>
 
 ![[decisionsDetermineLEDBrightnessCall.png]]
 
@@ -271,10 +265,8 @@ Change the argument for calling  `determineLEDBrightness` to be `potReading` ins
 
 Add `//` to the front of the line of code which maps the brightness variable.
 
-<aside>
-‼️ This **comments** out the line of code, removing it from compilation and execution - essentially, the line of code is ignored by the computer.
+> [!info] This **comments** out the line of code, removing it from compilation and execution - essentially, the line of code is ignored by the computer.
 
-</aside>
 
 ![[decisionsCommentCode.png]]
 
@@ -451,10 +443,8 @@ boolean readDistance(int distanceThreshold) {
 
 To help the debugging process that may be required in the future, add a helper function which outputs all the values of the sensors. This will help you determine if and when there are any problems with the alarm triggering.
 
-<aside>
-‼️ Adding this as a function will allow this to be easily turned on and off by removing the function call.
+> [!info] Adding this as a function will allow this to be easily turned on and off by removing the function call.
 
-</aside>
 
 ![[decisionsDebugSensors.png]]
 

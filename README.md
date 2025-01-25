@@ -11,7 +11,7 @@ Clone the repository to your computer using GitHub Desktop (or any method).
 
 ![Fork the Repository](./_admin/_images/repoClone.png)
 
-> Note the directory that you cloned the repository into. 
+> [!info] Note the directory that you cloned the repository into. 
 
 Open Obsidian, and open the repository folder as a vault.
 

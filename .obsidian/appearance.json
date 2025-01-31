@@ -8,5 +8,6 @@
   "baseFontSizeAction": true,
   "showViewHeader": true,
   "nativeMenus": true,
-  "translucency": false
+  "translucency": false,
+  "showRibbon": true
 }

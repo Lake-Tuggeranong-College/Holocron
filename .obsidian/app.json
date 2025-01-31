@@ -11,6 +11,5 @@
   },
   "useMarkdownLinks": false,
   "newLinkFormat": "shortest",
-  "showInlineTitle": true,
-  "showRibbon": true
+  "showInlineTitle": true
 }

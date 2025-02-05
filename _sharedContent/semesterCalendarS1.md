@@ -8,15 +8,15 @@ tags:
 
 ### School Events - Week 2
 
-**Tuesday** - TRaC Interviews
-**Wednesday** - TRaC Interviews
-**Thursday** - TRaC Interviews
 **Thursday** - Year 11 AST Trial
-**Friday** - TRaC Interviews
 
 ### School Events - Week 3
 
+**Tuesday** - TRaC Interviews 8:45-9:45
+**Wednesday** - TRaC Interviews 8:45-9:45
 **Wednesday** - Parent Meet & Greet Night
+**Thursday** - TRaC Interviews 8:45-9:45
+**Friday** - TRaC Interviews 8:45-9:45
 
 ### School Events - Week 4
 

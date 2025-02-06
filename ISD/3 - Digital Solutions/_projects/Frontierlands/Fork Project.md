@@ -1,7 +1,12 @@
 
 Click on the link to the main repository for the project.
 
-> [!danger] https://github.com/Lake-Tuggeranong-College/FrontierLands
+> [!danger] Fork the project for the the group you are assigned!
+> https://github.com/Lake-Tuggeranong-College/FrontierLands
+> or...
+> https://github.com/Lake-Tuggeranong-College/WastelandWarriors
+
+
 
 Click the fork project by clicking the fork button.
 

@@ -8,7 +8,7 @@ tags:
 
 ### School Events - Week 2
 
-**Thursday** - Year 11 AST Trial
+**Thursday** - Year 11 AST Trial (afternoon)
 
 ### School Events - Week 3
 

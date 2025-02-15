@@ -93,8 +93,6 @@ if __name__ == "__main__": # Evaluates to True if this module is the script bein
 
 ![[smartLightsCodeIncluded.png]]
 
-Save the file.
-
 Press the Run button to execute the script.
 
 ![[smartLightsRunScript.png]]
@@ -175,6 +173,10 @@ Close the window.
 Holding ALT key, click on the switch to turn it On. After a brief pause, the lamp will turn on.
 
 ![[smartLightsWorking.gif]]
+
+Save the file.
+
+![[commonBlocks#Commit & Push]]
 
 # Automating Devices
 

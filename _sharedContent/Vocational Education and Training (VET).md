@@ -23,7 +23,7 @@
 
 The Qualification structure starts at Certificate I and goes up to Doctorate level qualifications.
 
-![[/_sharedContent/_images/vetAQFLevels.webp]]
+![[vetAQFLevels.webp]]
 
 The two Qualifications available to you in the IT classes are the following:
 
@@ -34,8 +34,6 @@ The two Qualifications available to you in the IT classes are the following:
 Students studying IT at Lake Tuggeranong College are required to read the VET handbook.
 
 [Please read the VET Handbook here](https://docs.google.com/document/d/1Y7Q4Tp6QEz93RfloNvqUfxUeLq9u_BIav68UQuc_yzQ/edit?usp=sharing).
-
-
 # VET - Student Enrolment Verification
 
 Students need to formally enrol in VET courses. Complete the enrolment form
@@ -73,8 +71,9 @@ The forms are complex, however you only need to focus on a few sections.
 | Blue      | Where you put your evidence.                    |
 | Yellow    | Mark with the current date and set as complete. |
 
-![[/_sharedContent/_images/vetEvidenceWorksheet.png]]
+![[vetEvidenceWorksheet.png]]
 
 ## Example Entry
 
-![[/_sharedContent/_images/vetEvidenceWorksheetExample.png]]
+![[vetEvidenceWorksheetExample.png]]
+

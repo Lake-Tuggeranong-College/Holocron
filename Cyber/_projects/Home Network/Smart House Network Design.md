@@ -15,7 +15,7 @@ Add the following devices to the network:
 | PC                        | 3      | Each `FastEthernet0` interface should be set to DHCP   |
 | Wireless                  | 3      | Remove existing card, and add `WPC300N`to each laptop. |
  The network should appear similar to this:
- ![[homeNetworkStep1.png]]
+ ![[homeNetworkStep1.png|566]]
 Check the network by running a ping command from one device to another, such as from a laptop to a PC.
 
 ![[step1Ping.png]]

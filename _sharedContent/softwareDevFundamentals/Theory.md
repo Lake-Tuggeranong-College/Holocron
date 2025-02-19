@@ -833,9 +833,9 @@ flowchart TB
   terminalStart([Start])
 	input1[/Get Student Store/]
 	case1{Score > 90}
-	case2{Score &#8805 75 AND Score &#8804 89}
-	case3{Score &#8805 55 AND Score &#8804 74}
-	case4{Score &#8805 45 AND Score &#8804 54}
+	case2{Score  ≥ 75 AND Score ≤ 89}
+	case3{Score  ≥ 55 AND Score &≤ 74}
+	case4{Score  ≥ 45 AND Score ≤ 54}
 	case5{Score &#8804 44}
 	grade1[/Grade = A/]
 	grade2[/Grade = B/]

@@ -46,13 +46,12 @@ N/A
 
 **Monday** - Cross-Line Exams
 **Tuesday** - Q2 Start
-**Wednesday** - Parent Teacher Interviews
-**Thursday** - Parent Teacher Interviews
-
 
 ### School Events - Week 11
 
 **Monday** - Student Free Day
+**Wednesday** - Parent Teacher Interviews
+**Thursday** - Parent Teacher Interviews
 
 ### School Events - Week 12
 

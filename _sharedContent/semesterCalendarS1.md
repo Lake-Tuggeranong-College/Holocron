@@ -36,7 +36,7 @@ N/A
 
 ### School Events - Week 8
 
-**Wednesday** - LTC Careers Expo
+**Thursday** - LTC Careers Expo
 
 ### School Events - Week 9
 **Thursday** - Last Day of Q1

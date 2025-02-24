@@ -17,6 +17,9 @@
 >  - 11 Cyber
 >  - 12 Cyber.
 
+> [!note] Change the Locale to Australian, under File -> Settings
+
+
 
 # Game Mechanics
 

@@ -32,9 +32,13 @@ var import_obsidian2 = require("obsidian");
 // src/settings.ts
 var import_obsidian = require("obsidian");
 var DEFAULT_SETTINGS = {
-  // File information defaults
+  // Menu options
   showFileInfo: true,
-  // Resize options defaults
+  showShowInFileExplorer: true,
+  showRenameOption: true,
+  showOpenInNewTab: true,
+  showOpenInDefaultApp: true,
+  showResizeOptions: true,
   customResizeWidth: 0,
   // disabled by default
   // Mousewheel zoom defaults
@@ -60,13 +64,33 @@ var PixelPerfectImageSettingTab = class extends import_obsidian.PluginSettingTab
   async display() {
     const { containerEl } = this;
     containerEl.empty();
+    new import_obsidian.Setting(containerEl).setName("Menu options").setHeading();
     new import_obsidian.Setting(containerEl).setName("Show file information").setDesc("Show file information in the context menu").addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.showFileInfo).onChange(async (value) => {
         this.plugin.settings.showFileInfo = value;
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian.Setting(containerEl).setName("Resize options").setHeading();
+    new import_obsidian.Setting(containerEl).setName("Show in file explorer").setDesc("Show option to reveal image in system file explorer").addToggle((toggle) => toggle.setValue(this.plugin.settings.showShowInFileExplorer).onChange(async (value) => {
+      this.plugin.settings.showShowInFileExplorer = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian.Setting(containerEl).setName("Show rename option").setDesc("Show option to rename image file").addToggle((toggle) => toggle.setValue(this.plugin.settings.showRenameOption).onChange(async (value) => {
+      this.plugin.settings.showRenameOption = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian.Setting(containerEl).setName("Show open in new tab").setDesc("Show option to open image in new tab").addToggle((toggle) => toggle.setValue(this.plugin.settings.showOpenInNewTab).onChange(async (value) => {
+      this.plugin.settings.showOpenInNewTab = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian.Setting(containerEl).setName("Show open in default app").setDesc("Show option to open image in default app").addToggle((toggle) => toggle.setValue(this.plugin.settings.showOpenInDefaultApp).onChange(async (value) => {
+      this.plugin.settings.showOpenInDefaultApp = value;
+      await this.plugin.saveSettings();
+    }));
+    new import_obsidian.Setting(containerEl).setName("Show resize options").setDesc("Show image resize options in the context menu").addToggle((toggle) => toggle.setValue(this.plugin.settings.showResizeOptions).onChange(async (value) => {
+      this.plugin.settings.showResizeOptions = value;
+      await this.plugin.saveSettings();
+    }));
     new import_obsidian.Setting(containerEl).setName("Custom resize width").setDesc("Set a custom resize width in pixels (leave empty to disable)").addText((text) => {
       text.setPlaceholder("e.g., 600").setValue(this.plugin.settings.customResizeWidth ? String(this.plugin.settings.customResizeWidth) : "").onChange(async (value) => {
         const width = parseInt(value);
@@ -151,6 +175,7 @@ var PixelPerfectImageSettingTab = class extends import_obsidian.PluginSettingTab
         });
       });
     }
+    new import_obsidian.Setting(containerEl).setName("Developer").setHeading();
     new import_obsidian.Setting(containerEl).setName("Debug mode").setDesc("Enable debug logging to console").addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.debugMode).onChange(async (value) => {
         this.plugin.settings.debugMode = value;
@@ -178,6 +203,7 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
     await this.loadSettings();
     this.addSettingTab(new PixelPerfectImageSettingTab(this.app, this));
     this.registerImageContextMenu();
+    this.registerDomEvent(document, "click", this.handleImageClick.bind(this));
     this.registerEvent(
       this.app.workspace.on("layout-change", () => this.registerWheelEvents(window))
     );
@@ -292,17 +318,41 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
    * The menu provides options to view image dimensions and resize the image.
    */
   registerImageContextMenu() {
-    this.registerDomEvent(document, "contextmenu", async (ev) => {
+    this.registerDomEvent(document, "contextmenu", this.handleContextMenu.bind(this));
+    let longPressTimer;
+    let isLongPress = false;
+    this.registerDomEvent(document, "touchstart", (ev) => {
       const img = this.findImageElement(ev.target);
       if (!img) return;
-      ev.preventDefault();
-      const menu = new import_obsidian2.Menu();
-      await this.addDimensionsMenuItem(menu, img);
-      await this.addResizeMenuItems(menu, ev);
+      isLongPress = false;
+      longPressTimer = setTimeout(() => {
+        isLongPress = true;
+        this.handleContextMenu(ev);
+      }, 500);
+    });
+    this.registerDomEvent(document, "touchend", () => {
+      clearTimeout(longPressTimer);
+    });
+    this.registerDomEvent(document, "touchmove", () => {
+      clearTimeout(longPressTimer);
+    });
+  }
+  async handleContextMenu(ev) {
+    const img = this.findImageElement(ev.target);
+    if (!img) return;
+    ev.preventDefault();
+    const menu = new import_obsidian2.Menu();
+    await this.addDimensionsMenuItem(menu, img);
+    await this.addResizeMenuItems(menu, ev);
+    if (!import_obsidian2.Platform.isMobile) {
       menu.addSeparator();
       this.addFileOperationMenuItems(menu, img);
-      menu.showAtPosition({ x: ev.pageX, y: ev.pageY });
-    });
+    }
+    const position = {
+      x: ev instanceof MouseEvent ? ev.pageX : ev.touches[0].pageX,
+      y: ev instanceof MouseEvent ? ev.pageY : ev.touches[0].pageY
+    };
+    menu.showAtPosition(position);
   }
   /**
    * Helper to find an image element from an event target
@@ -485,8 +535,8 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
       },
       "Failed to copy file path"
     );
-    const markdownView = this.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
-    if ((markdownView == null ? void 0 : markdownView.getMode()) !== "source") {
+    if (!this.settings.showResizeOptions) {
+      this.debugLog("Skipping resize options - disabled in settings");
       return;
     }
     menu.addSeparator();
@@ -497,13 +547,14 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
       const { width } = await this.readImageDimensions(result.imgFile);
       currentWidth = this.getCurrentImageWidth(img, result.activeFile, result.imgFile);
       currentScale = currentWidth !== null ? Math.round(currentWidth / width * 100) : null;
+      this.debugLog("Current image scale:", currentScale, "width:", currentWidth);
     }
     RESIZE_PERCENTAGES.forEach((percentage) => {
       this.addMenuItem(
         menu,
         `Resize to ${percentage}%`,
         "image",
-        async () => await this.resizeImage(ev, percentage),
+        async () => await this.resizeImage(img, percentage),
         `Failed to resize image to ${percentage}%`,
         currentScale === percentage
       );
@@ -513,7 +564,7 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
         menu,
         `Resize to ${this.settings.customResizeWidth}px`,
         "image",
-        async () => await this.resizeImage(ev, this.settings.customResizeWidth, true),
+        async () => await this.resizeImage(img, this.settings.customResizeWidth, true),
         `Failed to resize image to ${this.settings.customResizeWidth}px`,
         currentWidth === this.settings.customResizeWidth
       );
@@ -535,29 +586,63 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
    * Adds file operation menu items like Show in Finder/Explorer and Open in Default App
    */
   addFileOperationMenuItems(menu, target) {
+    if (import_obsidian2.Platform.isMobile) return;
     const isMac = import_obsidian2.Platform.isMacOS;
-    this.addMenuItem(
-      menu,
-      isMac ? "Show in Finder" : "Show in Explorer",
-      "folder-open",
-      async () => {
-        const result = await this.getImageFileWithErrorHandling(target);
-        if (!result) return;
-        await this.showInSystemExplorer(result.imgFile);
-      },
-      "Failed to open system explorer"
-    );
-    this.addMenuItem(
-      menu,
-      "Open in Default app",
-      "image",
-      async () => {
-        const result = await this.getImageFileWithErrorHandling(target);
-        if (!result) return;
-        await this.openInDefaultApp(result.imgFile);
-      },
-      "Failed to open in default app"
-    );
+    if (this.settings.showShowInFileExplorer) {
+      this.addMenuItem(
+        menu,
+        isMac ? "Show in Finder" : "Show in Explorer",
+        "folder-open",
+        async () => {
+          const result = await this.getImageFileWithErrorHandling(target);
+          if (!result) return;
+          await this.showInSystemExplorer(result.imgFile);
+        },
+        "Failed to open system explorer"
+      );
+    }
+    if (this.settings.showRenameOption) {
+      this.addMenuItem(
+        menu,
+        "Rename Image",
+        "pencil",
+        async () => {
+          const result = await this.getImageFileWithErrorHandling(target);
+          if (!result) return;
+          await this.renameImage(result.imgFile);
+        },
+        "Failed to rename image"
+      );
+    }
+    if (this.settings.showRenameOption || this.settings.showShowInFileExplorer) {
+      menu.addSeparator();
+    }
+    if (this.settings.showOpenInNewTab) {
+      this.addMenuItem(
+        menu,
+        "Open in New Tab",
+        "link-2",
+        async () => {
+          const result = await this.getImageFileWithErrorHandling(target);
+          if (!result) return;
+          await this.app.workspace.openLinkText(result.imgFile.path, "", true);
+        },
+        "Failed to open image in new tab"
+      );
+    }
+    if (this.settings.showOpenInDefaultApp) {
+      this.addMenuItem(
+        menu,
+        "Open in Default app",
+        "image",
+        async () => {
+          const result = await this.getImageFileWithErrorHandling(target);
+          if (!result) return;
+          await this.openInDefaultApp(result.imgFile);
+        },
+        "Failed to open in default app"
+      );
+    }
     const editorPath = getExternalEditorPath(this.settings);
     if (editorPath == null ? void 0 : editorPath.trim()) {
       const editorName = this.settings.externalEditorName.trim() || "External Editor";
@@ -578,15 +663,11 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
   // ----------------
   /**
    * Resizes an image in the editor by updating its wikilink width parameter.
-   * @param ev - Mouse event containing the target image
+   * @param img - The HTML image element
    * @param size - Either a percentage (e.g. 50) or absolute width in pixels (e.g. 600)
    * @param isAbsolute - If true, size is treated as pixels, otherwise as percentage
    */
-  async resizeImage(ev, size, isAbsolute = false) {
-    const img = this.findImageElement(ev.target);
-    if (!img) {
-      throw new Error("Could not find the image element");
-    }
+  async resizeImage(img, size, isAbsolute = false) {
     const result = await this.getImageFileWithErrorHandling(img);
     if (!result) {
       throw new Error("Could not find the image file");
@@ -884,14 +965,18 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
    * @returns The extracted filename or null if not found
    */
   parseFileNameFromSrc(src) {
-    const [pathWithoutQuery] = src.split("?");
-    const slashIdx = pathWithoutQuery.lastIndexOf("/");
-    if (slashIdx < 0 || slashIdx >= pathWithoutQuery.length - 1) {
+    try {
+      const decodedSrc = decodeURIComponent(src);
+      const [pathWithoutQuery] = decodedSrc.split("?");
+      const slashIdx = pathWithoutQuery.lastIndexOf("/");
+      if (slashIdx < 0 || slashIdx >= pathWithoutQuery.length - 1) {
+        return null;
+      }
+      return pathWithoutQuery.substring(slashIdx + 1);
+    } catch (error) {
+      this.debugLog("Error parsing src:", error);
       return null;
     }
-    let fileName = pathWithoutQuery.substring(slashIdx + 1);
-    fileName = decodeURIComponent(fileName);
-    return fileName;
   }
   // Platform & Debug Utilities
   // --------------------------
@@ -954,6 +1039,115 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
         this.debugLog(`Launched ${editorName}:`, cmd);
       }
     });
+  }
+  async renameImage(file) {
+    var _a;
+    const newName = await this.promptForNewName(file);
+    if (!newName) return;
+    try {
+      const dirPath = ((_a = file.parent) == null ? void 0 : _a.path) || "/";
+      const newPath = `${dirPath}/${newName}`;
+      await this.app.fileManager.renameFile(file, newPath);
+      new import_obsidian2.Notice("Image renamed successfully");
+    } catch (error) {
+      this.errorLog("Failed to rename file:", error);
+      new import_obsidian2.Notice("Failed to rename image");
+    }
+  }
+  async promptForNewName(file) {
+    return new Promise((resolve) => {
+      const modal = new FileNameInputModal(this.app, file.name, (result) => {
+        resolve(result);
+      });
+      modal.open();
+    });
+  }
+  /**
+   * Handles click events on images, opening them in a new tab when CMD/CTRL is pressed
+   */
+  handleImageClick(ev) {
+    if (!(ev.metaKey || ev.ctrlKey)) return;
+    const img = this.findImageElement(ev.target);
+    if (!img) return;
+    ev.preventDefault();
+    this.getImageFileWithErrorHandling(img).then((result) => {
+      if (result) {
+        this.app.workspace.openLinkText(result.imgFile.path, "", true);
+        this.debugLog("Opening image in new tab:", result.imgFile.path);
+      }
+    }).catch((error) => {
+      this.errorLog("Failed to open image in new tab:", error);
+      new import_obsidian2.Notice("Failed to open image in new tab");
+    });
+  }
+};
+var FileNameInputModal = class extends import_obsidian2.Modal {
+  constructor(app, originalName, onSubmit) {
+    super(app);
+    this.result = null;
+    this.originalName = originalName;
+    this.onSubmit = onSubmit;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.style.padding = "0.8em 1.2em";
+    contentEl.createEl("h2", {
+      text: "Rename image",
+      cls: "modal-title"
+      // Add class for consistency
+    }).style.marginTop = "0";
+    const form = contentEl.createEl("form");
+    form.style.display = "flex";
+    form.style.flexDirection = "column";
+    form.style.gap = "0.8em";
+    const input = form.createEl("input", {
+      type: "text",
+      value: this.originalName
+    });
+    input.style.width = "100%";
+    const lastDotIndex = this.originalName.lastIndexOf(".");
+    if (lastDotIndex > 0) {
+      const nameWithoutExt = this.originalName.substring(0, lastDotIndex);
+      input.setSelectionRange(0, nameWithoutExt.length);
+    }
+    const buttonContainer = form.createDiv();
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.justifyContent = "flex-end";
+    buttonContainer.style.gap = "0.8em";
+    buttonContainer.style.marginTop = "0.4em";
+    const submitButton = buttonContainer.createEl("button", {
+      text: "Rename",
+      type: "submit",
+      cls: "mod-cta"
+      // Add Obsidian's accent class
+    });
+    const cancelButton = buttonContainer.createEl("button", {
+      text: "Cancel",
+      type: "button"
+    });
+    cancelButton.addEventListener("click", () => {
+      this.onSubmit(null);
+      this.close();
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newName = input.value.trim();
+      if (newName && newName !== this.originalName) {
+        this.onSubmit(newName);
+      } else {
+        this.onSubmit(null);
+      }
+      this.close();
+    });
+    input.focus();
+  }
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
+    if (this.result === void 0) {
+      this.onSubmit(null);
+    }
   }
 };
 

@@ -19,6 +19,17 @@ Before adding any sensors or actuators, or any additional components, and focus 
 - self-documenting (to a point)
 - simplified at the high-level (i.e. the `loop()` function only contains function calls to other functions).
 
+# Required Theory
+
+In order to continue with the project, there are some theory topics that you will need to know:
+
+- [[Robotics/_shared/_projects/Smart House/_topics/Variables and Data Types|Variables and Data Types]]
+- [[Robotics/_shared/_projects/Smart House/_topics/Style Guide|Style Guide]]
+- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Sequence|Sequences]]
+- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Decisions|Decisions]]
+- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Loops|Loops]]
+- [[Robotics/_shared/_projects/Smart House/_topics/Data Structures|Data Structures]]
+
 # Code Design
 
 Let's assume you've got 5 robotic behaviours that you wish to implement. For instance:
@@ -37,18 +48,53 @@ The code design should follow the features discussed in [[Robotics/_shared/_proj
 > The low-level code is implemented in the specific functions. 
 > This benefits the code to make it easier for the programmer to know where the code is located for each part of the project.
 
-# Required Theory
-
-In order to continue with the project, there are some theory topics that you will need to know:
-
-- [[Robotics/_shared/_projects/Smart House/_topics/Variables and Data Types|Variables and Data Types]]
-- [[Robotics/_shared/_projects/Smart House/_topics/Style Guide|Style Guide]]
-- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Sequence|Sequences]]
-- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Decisions|Decisions]]
-- [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Loops|Loops]]
-- [[Robotics/_shared/_projects/Smart House/_topics/Data Structures|Data Structures]]
 
 
+# Code Implementation
+
+The first step is to define the code structure according to the code design. For instance, if implemting the above design, the code structure would be:
+
+```arduino
+void setup()
+{
+ 
+}
+
+void loop()
+{
+  
+  motionDetectionLights();
+  autoAirconditioner();
+  autoAlarmSystem();
+  autoBlinds();
+  autoWateringSystem();
+  
+  delay(100);
+}
 
 
+void motionDetectionLights() {
+  
+}
 
+void autoAirconditioner() {
+  
+}
+
+void autoAlarmSystem() {
+  
+}
+
+void autoBlinds() {
+  
+}
+
+void autoWateringSystem() {
+  
+}
+
+
+```
+
+
+## Function Comments

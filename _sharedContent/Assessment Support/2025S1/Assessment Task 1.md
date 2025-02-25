@@ -7,6 +7,8 @@
 >  - 11 Cyber
 >  - 12 Cyber.
 
+Tips:
+**Be specific** - be as specific as possible in your details. Imagine if you gave the document to another person and they had to implement your vision. 
 
 # Gantt Chart
 

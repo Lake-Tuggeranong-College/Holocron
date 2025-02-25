@@ -1,7 +1,7 @@
 ![[Assessment Task 1#Product Roadmap]]
 
-Some tips:
-**Be specific** - be as specific as possible in your details. Imagine if you gave the document to another person and they had to implement your vision. Instead of saying the challenge needs to work, specify what 'work' means. It could be the arduino needs to publish data, or host a website with a hidden file etc.
+
+Instead of saying the challenge needs to work, specify what 'work' means. It could be the arduino needs to publish data, or host a website with a hidden file etc.
 
 **Consider data** in the system for the challenges. The [ESP Feathers ](https://www.adafruit.com/product/3405) are capable of interfacing with sensors (like temperature sensors) and actuators (e.g. motors, lights etc). They can publish data to the database, receive data from the database, or store data. The players of the game may need to access or intercept some of this data to complete the challenges.
 

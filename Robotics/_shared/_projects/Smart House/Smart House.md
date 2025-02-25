@@ -19,7 +19,7 @@ The goal of the unit is to develop a Smart House prototype.
 2. [[Flowcharts]]
 3. [[Robotics/_shared/_projects/Smart House/_topics/Style Guide|Style Guide]]
 4. [[Robotics/_shared/_projects/Smart House/_topics/Variables and Data Types|Variables and Data Types]]
-5. [[Robotics/_shared/_projects/Smart House/_topics/_archived/Version Control|Version Control]]
+5. [[Robotics/_shared/_projects/_archived/Version Control|Version Control]]
 6. [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Modularisation]]
 7. [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Sequence]]
 8. [[Robotics/_shared/_projects/Smart House/_topics/Algorithm Design - Decisions]]

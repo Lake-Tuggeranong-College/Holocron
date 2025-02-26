@@ -1,6 +1,10 @@
 ---
 tag: Robotics
 ---
+# Presentation
+
+Presentation file can be found [[Variables & Data Types|here]].
+
 # Theory
 ![[Theory#Variables and Data Types]]
 
@@ -30,15 +34,15 @@ string loggedInUser = "None";
 
 In Arduino, there are a number of the standard primitive types. The syntax for each of these are:
 
-| Syntax | Data type | Description | Possible Values (on an Arduino Uno) |
-| --- | --- | --- | --- |
-| int | Integer | On the Arduino Uno an int stores a 16-bit (2-byte) value. | -32,768 to 32,767 |
-| bool | Boolean | Each **`bool`** variable occupies one byte of memory. | `true` or `false`.  |
-| char | Character | A data type used to store a character value - use single quotes for chars. Chars are stored as integers, meaning to can perform arithmetic. E.g. 'A' + 1 would equal 'B' | 'A', 'i' |
-| byte | Byte | A byte stores an 8-bit unsigned number | 0 to 255 |
-| float | Float | Numbers with decimal point values | 5.3, 0.1 |
-| String | String | Complex (non-primitive) data type. Comprised of a series of characters in an array. Use double quotes. An an array, Strings allow for more complex functionality, such as converting to integers, searching for substrings, converting to upper case etc. | "Lake Tuggeranong College", "32" |
-| long | Long | An integer data type which allocates and uses 32-bits (4 bytes). | 2,147,483,648 to 2,147,483,647 |
+| Syntax | Data type | Description                                                                                                                                                                                                                                               | Possible Values (on an Arduino Uno) |
+| ------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| int    | Integer   | On the Arduino Uno an int stores a 16-bit (2-byte) value.                                                                                                                                                                                                 | -32,768 to 32,767                   |
+| bool   | Boolean   | Each **`bool`** variable occupies one byte of memory.                                                                                                                                                                                                     | `true` or `false`.                  |
+| char   | Character | A data type used to store a character value - use single quotes for chars. Chars are stored as integers, meaning to can perform arithmetic. E.g. 'A' + 1 would equal 'B'                                                                                  | 'A', 'i'                            |
+| byte   | Byte      | A byte stores an 8-bit unsigned number                                                                                                                                                                                                                    | 0 to 255                            |
+| float  | Float     | Numbers with decimal point values                                                                                                                                                                                                                         | 5.3, 0.1                            |
+| String | String    | Complex (non-primitive) data type. Comprised of a series of characters in an array. Use double quotes. An an array, Strings allow for more complex functionality, such as converting to integers, searching for substrings, converting to upper case etc. | "Lake Tuggeranong College", "32"    |
+| long   | Long      | An integer data type which allocates and uses 32-bits (4 bytes).                                                                                                                                                                                          | 2,147,483,648 to 2,147,483,647      |
 
 This table describes some more of the data types available. 
 

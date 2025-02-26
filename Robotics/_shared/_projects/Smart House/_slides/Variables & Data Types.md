@@ -50,9 +50,29 @@ boolean isActive = true;
 
 ---
 
-# Arduino Data Types
 
 
+Data Types can be divided up into different categories, initially into `Primitives` and `Non-Primitives`.
+
+![[variablesDataTypeTree.png|541]]
+
+--
+### Primitive data types
+
+Primitives are the base types of data, including booleans, integers, characters etc. 
+
+![[variablesDataTypesExamples.png|700]]
+
+--
+### Non-Primitive Data Types
+
+These data types offer more complexity, but need to be understood and managed in more detail. 
+
+Examples:  Arrays, Lists, Dictionaries, `String`.
+
+A string is a collection of characters in a sequence. In a string, each character can be considered an individual (primitive) character. In the example here, each letter is a character.
+
+![[variablesStringsExample.png|Data Types - Strings example.png]]
 
 ---
 

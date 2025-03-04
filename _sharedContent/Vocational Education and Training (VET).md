@@ -37,7 +37,7 @@ Students studying IT at Lake Tuggeranong College are required to read the VET ha
 # VET - Student Enrolment Verification
 
 Students need to formally enrol in VET courses. Complete the enrolment form
-https://forms.gle/UTqQ8QkB4YRGnzdq8
+https://forms.gle/jgLcdkBKE5w5MEBp8
 
 # Student Competency Worksheets
 

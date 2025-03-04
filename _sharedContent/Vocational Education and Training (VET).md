@@ -37,8 +37,17 @@ Students studying IT at Lake Tuggeranong College are required to read the VET ha
 # VET - Student Enrolment Verification
 
 Students need to formally enrol in VET courses. Complete the enrolment form
-https://forms.gle/UTqQ8QkB4YRGnzdq8
+https://forms.gle/jgLcdkBKE5w5MEBp8
 
+# Qualification Progress
+
+To view your progress toward the certificate qualifications you are enrolled in, visit:
+
+https://student-profiles.ed.act.edu.au/
+
+Login, and access the `VET Progress` tab.
+
+![[vetQualificationProgress.png]]
 # Student Competency Worksheets
 
 In Google Classroom, there will be a number of VET Competency Worksheets that apply to recent work (possibly assessments).

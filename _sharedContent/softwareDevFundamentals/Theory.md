@@ -648,11 +648,11 @@ The expression (one the right-hand side of the equals) is calculated and the “
 
 Some examples:
 
-| Example | Explanation |
-| --- | --- |
-| `Age = 42` | Sets the `Age` variable to the integer 42 |
-| `Name = “Anakin Skywalker”` | Assigns “Anakin Skywalker” to the variable `Name`. |
-| `Answer = value1 + value2` | Calculates the addition of the contents of `value1` and `value2` and stores the result in the variable `Answer`. |
+| Example                     | Explanation                                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `Age = 42`                  | Sets the `Age` variable to the integer 42                                                                        |
+| `Name = “Anakin Skywalker”` | Assigns “Anakin Skywalker” to the variable `Name`.                                                               |
+| `Answer = value1 + value2`  | Calculates the addition of the contents of `value1` and `value2` and stores the result in the variable `Answer`. |
 
 The right hand side of the assignment statement can be incredibly complex, but the left hand side will (almost) always a single variable. But there’s always exceptions to the rule.
 
@@ -874,7 +874,7 @@ flowchart TB
 
 ## Video
 
-[https://youtu.be/2e0HmKTSq2k](https://youtu.be/2e0HmKTSq2k)
+![https://youtu.be/2e0HmKTSq2k](https://youtu.be/2e0HmKTSq2k)
 
 ## Notes
 

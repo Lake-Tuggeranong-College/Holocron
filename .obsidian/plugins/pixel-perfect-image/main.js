@@ -38,8 +38,8 @@ var DEFAULT_SETTINGS = {
   showRenameOption: true,
   showOpenInNewTab: true,
   showOpenInDefaultApp: true,
-  showResizeOptions: true,
-  customResizeWidth: 0,
+  showPercentageResize: true,
+  customResizeWidths: [],
   // disabled by default
   // Mousewheel zoom defaults
   enableWheelZoom: true,
@@ -87,14 +87,14 @@ var PixelPerfectImageSettingTab = class extends import_obsidian.PluginSettingTab
       this.plugin.settings.showOpenInDefaultApp = value;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian.Setting(containerEl).setName("Show resize options").setDesc("Show image resize options in the context menu").addToggle((toggle) => toggle.setValue(this.plugin.settings.showResizeOptions).onChange(async (value) => {
-      this.plugin.settings.showResizeOptions = value;
+    new import_obsidian.Setting(containerEl).setName("Show percentage resize").setDesc("Show percentage resize options (100%, 50%, 25%) in the context menu. Custom sizes will always be shown if defined.").addToggle((toggle) => toggle.setValue(this.plugin.settings.showPercentageResize).onChange(async (value) => {
+      this.plugin.settings.showPercentageResize = value;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian.Setting(containerEl).setName("Custom resize width").setDesc("Set a custom resize width in pixels (leave empty to disable)").addText((text) => {
-      text.setPlaceholder("e.g., 600").setValue(this.plugin.settings.customResizeWidth ? String(this.plugin.settings.customResizeWidth) : "").onChange(async (value) => {
-        const width = parseInt(value);
-        this.plugin.settings.customResizeWidth = !isNaN(width) && width > 0 ? width : 0;
+    new import_obsidian.Setting(containerEl).setName("Custom resize width").setDesc("Set custom resize widths in pixels (comma-separated, e.g. 600,800,1200)").addText((text) => {
+      text.setPlaceholder("e.g., 600,800,1200").setValue(this.plugin.settings.customResizeWidths.length > 0 ? this.plugin.settings.customResizeWidths.join(",") : "").onChange(async (value) => {
+        const widths = value.split(",").map((part) => parseInt(part.trim())).filter((width) => !isNaN(width) && width > 0);
+        this.plugin.settings.customResizeWidths = widths;
         await this.plugin.saveSettings();
       });
     }).addText((text) => {
@@ -134,12 +134,10 @@ var PixelPerfectImageSettingTab = class extends import_obsidian.PluginSettingTab
       const updateDisplay = (value) => {
         valueDisplay.setText(`${value}%`);
       };
-      slider.setDynamicTooltip().setValue(this.plugin.settings.wheelZoomPercentage).onChange(async (value) => {
-        if (!isNaN(value) && value > 0) {
-          updateDisplay(value);
-          this.plugin.settings.wheelZoomPercentage = value;
-          await this.plugin.saveSettings();
-        }
+      slider.setDynamicTooltip().setLimits(1, 100, 1).setValue(this.plugin.settings.wheelZoomPercentage).onChange(async (value) => {
+        updateDisplay(value);
+        this.plugin.settings.wheelZoomPercentage = value;
+        await this.plugin.saveSettings();
       });
       updateDisplay(this.plugin.settings.wheelZoomPercentage);
       (_a = slider.sliderEl.parentElement) == null ? void 0 : _a.prepend(valueDisplay);
@@ -423,7 +421,8 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
     let customWidth = null;
     const parseWidth = (pipeParams) => {
       if (pipeParams.length === 0) return null;
-      const width = parseInt(pipeParams[0]);
+      const lastParam = pipeParams[pipeParams.length - 1];
+      const width = parseInt(lastParam);
       return isNaN(width) ? null : width;
     };
     for (const match of docText.matchAll(WIKILINK_IMAGE_REGEX)) {
@@ -535,10 +534,6 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
       },
       "Failed to copy file path"
     );
-    if (!this.settings.showResizeOptions) {
-      this.debugLog("Skipping resize options - disabled in settings");
-      return;
-    }
     menu.addSeparator();
     const result = await this.getImageFileWithErrorHandling(img);
     let currentScale = null;
@@ -549,25 +544,29 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
       currentScale = currentWidth !== null ? Math.round(currentWidth / width * 100) : null;
       this.debugLog("Current image scale:", currentScale, "width:", currentWidth);
     }
-    RESIZE_PERCENTAGES.forEach((percentage) => {
-      this.addMenuItem(
-        menu,
-        `Resize to ${percentage}%`,
-        "image",
-        async () => await this.resizeImage(img, percentage),
-        `Failed to resize image to ${percentage}%`,
-        currentScale === percentage
-      );
-    });
-    if (this.settings.customResizeWidth > 0) {
-      this.addMenuItem(
-        menu,
-        `Resize to ${this.settings.customResizeWidth}px`,
-        "image",
-        async () => await this.resizeImage(img, this.settings.customResizeWidth, true),
-        `Failed to resize image to ${this.settings.customResizeWidth}px`,
-        currentWidth === this.settings.customResizeWidth
-      );
+    if (this.settings.showPercentageResize) {
+      RESIZE_PERCENTAGES.forEach((percentage) => {
+        this.addMenuItem(
+          menu,
+          `Resize to ${percentage}%`,
+          "image",
+          async () => await this.resizeImage(img, percentage),
+          `Failed to resize image to ${percentage}%`,
+          currentScale === percentage
+        );
+      });
+    }
+    if (this.settings.customResizeWidths.length > 0) {
+      this.settings.customResizeWidths.forEach((width) => {
+        this.addMenuItem(
+          menu,
+          `Resize to ${width}px`,
+          "image",
+          async () => await this.resizeImage(img, width, true),
+          `Failed to resize image to ${width}px`,
+          currentWidth === width
+        );
+      });
     }
     if (result && currentScale !== null) {
       this.addMenuItem(
@@ -888,7 +887,15 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
    * @param newWidth - The new width to set in pixels
    */
   async updateImageLinkWidth(imageFile, newWidth) {
-    const didChange = await this.updateImageLinks(imageFile, (_) => [String(newWidth)]);
+    const didChange = await this.updateImageLinks(imageFile, (params) => {
+      const lastParam = params.length > 0 ? params[params.length - 1] : null;
+      const lastParamIsNumber = lastParam !== null && !isNaN(parseInt(lastParam));
+      if (lastParamIsNumber) {
+        return [...params.slice(0, params.length - 1), String(newWidth)];
+      } else {
+        return [...params, String(newWidth)];
+      }
+    });
     if (didChange) {
       this.debugLog(`Updated image size to ${newWidth}px`);
     }
@@ -898,7 +905,15 @@ var PixelPerfectImage = class extends import_obsidian2.Plugin {
    * @param imageFile - The image file being referenced
    */
   async removeImageWidth(imageFile) {
-    const didChange = await this.updateImageLinks(imageFile, (_) => []);
+    const didChange = await this.updateImageLinks(imageFile, (params) => {
+      const lastParam = params.length > 0 ? params[params.length - 1] : null;
+      const lastParamIsNumber = lastParam !== null && !isNaN(parseInt(lastParam));
+      if (lastParamIsNumber) {
+        return params.slice(0, params.length - 1);
+      } else {
+        return params;
+      }
+    });
     if (didChange) {
       this.debugLog("Removed custom size from image");
     }

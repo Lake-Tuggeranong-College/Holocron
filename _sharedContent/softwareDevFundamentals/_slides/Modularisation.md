@@ -125,8 +125,7 @@ let sum = add(5, 3);
 
 ---
 
-# Modularisation in Software Development
-
+# Summary
 
 1. **Modularisation**: Dividing a software system into smaller, manageable parts.
 2. **Why Modularise**:

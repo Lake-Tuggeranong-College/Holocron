@@ -4,7 +4,7 @@
 
 In packet tracer, you'll develop a home network to support a smart house, with computing devices (PCs, laptops, tablets etc) as well as 'smart' devices such as a system to monitor and control the temperature in the house.
 
-## Step 1 - Computing Devices
+# Step 1 - Network Configuration
 
 Add the following devices to the network:
 
@@ -20,7 +20,9 @@ Check the network by running a ping command from one device to another, such as 
 
 ![[step1Ping.png]]
 
-# Requirements
+# Automated Devices
+
+## Requirements
 
 Prior to continuing with this stage of the project, there are some topics that are required reading:
 

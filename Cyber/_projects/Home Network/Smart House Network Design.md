@@ -20,6 +20,11 @@ Check the network by running a ping command from one device to another, such as 
 
 ![[step1Ping.png]]
 
+# Requirements
+
+Prior to continuing with this stage of the project, there are some topics that are required reading:
+
+> [!todo] Add in links to programming theory
 
 ## Simple 'Smart' Lamp
 

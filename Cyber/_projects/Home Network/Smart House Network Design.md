@@ -54,10 +54,14 @@ Now it's time to connect the components. Use the `Connections` -> `Connections` 
 
 When connecting the devices, connect `D0` on the lamp to `D1` on the MCU. Connect the MCU `D0` to pin `D0` on the switch, as shown below.
 
+> [!info] D0, D1 are examples of pins to connect devices to the MCU/Components. This is an equivalent concept as with Arduinos with digital pins.
+
 ![[smartLightsPins.png]]
 
 
 ### Programming the MCU
+
+> [!info] MCU stands for MicroController Unit. An Arduino is an example of a microcontroller unit.
 
 Click on the MCU and change to the Programming tab. Select the default `Blink (Javascript)` file and choose delete. When asked if you are sure you want to delete click Yes.
 ![[smartLightsDeleteBlink.png]]

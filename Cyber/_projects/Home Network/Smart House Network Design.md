@@ -27,7 +27,9 @@ Check the network by running a ping command from one device to another, such as 
 
 Prior to continuing with this stage of the project, there are some topics that are required reading:
 
-> [!todo] Add in links to programming theory
+- [[_sharedContent/softwareDevFundamentals/_slides/Decisions|Decisions]]
+- [[_sharedContent/softwareDevFundamentals/_slides/Loops|Loops]]
+- [[Modularisation]]
 
 ## Simple 'Smart' Lamp
 

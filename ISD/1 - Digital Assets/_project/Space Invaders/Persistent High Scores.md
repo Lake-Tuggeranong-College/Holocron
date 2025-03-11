@@ -5,7 +5,7 @@ tags:
 ---
 > [!important] This tutorial gives you the evidence to complete VET competency `ICTPRG302 Apply Introductory Programming Techniques`, performance criteria 4.1 & 4.3
 
-> [!important] Prerequisites: [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]]
+> [!important] Prerequisites: [[ISD/1 - Digital Assets/_project/Space Invaders/High Score System|High Score System]]
 # Saving the Score
 
 In this tutorial, you'll be storing the players score as persistent data, so subsequent playthroughs can keep a track of the high score.
@@ -39,7 +39,7 @@ User data uses the `user://` prefix which points to a different folder which is 
 
 # Update `Global.gd`
 
-Open `Global.gd`. The `scoring_information` dictionary containing the current score and high score keys will be already defined during the [[ISD/1 - Digital Assets/_project/Space Invaders/Data Structures|Data Structures]] stage. 
+Open `Global.gd`. The `scoring_information` dictionary containing the current score and high score keys will be already defined during the [[ISD/1 - Digital Assets/_project/Space Invaders/High Score System|High Score System]] stage. 
 
 Create a new variable to link to the save file.
 

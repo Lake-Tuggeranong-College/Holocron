@@ -29,7 +29,7 @@ tags:
 [[Enemy]]
 [[Enemy Pathfinding]]
 [[First Person Controller]]
-[[High Score System]]
+[[ISD/2 - Digital Applications/_projects/FPS/High Score System]]
 [[Lose Conditions]]
 [[Objects Taking Damage]]
 [[ISD/2 - Digital Applications/_projects/FPS/Player Health]]

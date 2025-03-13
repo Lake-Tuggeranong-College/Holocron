@@ -97,4 +97,26 @@ void autoWateringSystem() {
 ```
 
 
-## Function Comments
+# Approach coding
+
+With the initial setup complete, it's time to add addition components, both input and output.
+
+Follow these steps to implement code (if you're unsure):
+
+1. Components
+	1. Pins, find out what each of then pins are on the components (VCC, GND, signal etc)
+	2. Wire the pins to the Arduino. Find out where each pin needs to be connected to.
+2. Code
+	1. Configuration, define the pins and variables.
+	2. `setup()` - add the required code to the setup function.
+	3. Custom Function - use one of the functions created previously, or create a new one.
+		1. Input - test the input for the input device
+		2. Output - the the code for the output device
+		3. Processing - write the logic for how the input device impacts the output device.
+
+All these steps require research. You will need to google each component and specifically the options available in TinkerCad. 
+
+> [!important] Every component is different and requires different code.
+
+When googling, use keywords such as : `tinkercad <component> wiring`
+

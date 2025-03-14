@@ -20,6 +20,9 @@ You could add options, such as rapid fire, or easy/medium/hard mode.
 
 ![[challengesOptionsButtons.gif]]
 
+Time: 10 minutes
 # Make the game horizontal 
 
 ![[challengesHorizontal.gif]]
+
+Time: 10 minutes

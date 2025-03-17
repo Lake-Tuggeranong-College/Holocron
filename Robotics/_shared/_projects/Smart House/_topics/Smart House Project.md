@@ -52,7 +52,7 @@ The code design should follow the features discussed in [[Robotics/_shared/_proj
 
 # Code Implementation
 
-The first step is to define the code structure according to the code design. For instance, if implemting the above design, the code structure would be:
+The first step is to define the code structure according to the code design. For instance, if implementing the above design, the code structure would be:
 
 ```arduino
 void setup()

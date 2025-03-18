@@ -28,9 +28,13 @@ Most file access performed in Godot begins with `res://` (e.g. `res://Menu/Menu.
 User data uses the `user://` prefix which points to a different folder which is not in the project folder.
 
 > [!important] The `user://` prefix points to a different directory on the user's device. On mobile and consoles, this path is unique to the project. On desktop, the engine stores user files in:
-> `~/.local/share/godot/app_userdata/[project_name]` on Linux, 
-> `~/Library/Application Support/Godot/app_userdata/[project_name]` on macOS (since Catalina) and
-> `%APPDATA%\Godot\app_userdata\[project_name]` on Windows.
+> **Linux** 
+> `~/.local/share/godot/app_userdata/[project_name]` or,
+> `~/snap/gd-godot-engine-snapcraft/35/.local/share/godot/app_userdata/[project name]
+> **MacOS**
+> `~/Library/Application Support/Godot/app_userdata/[project_name]` (since Catalina) 
+> **Windows**
+> `%APPDATA%\Godot\app_userdata\[project_name]`
 > 
 > [https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html)
 
@@ -87,7 +91,7 @@ func save_data():
 
 Run through the game, killing all the enemies. 
 
-After the Win scene has been loaded, you should find `save.dat` in the user directory (see above). You'll notice that the structure of the file matches the `set_value` function with `"Player"` (the section) and `"score"` (the key).
+After the Win scene has been loaded, you should find `save.txt` in the user directory (see above). You'll notice that the structure of the file matches the `set_value` function with `"Player"` (the section) and `"score"` (the key).
 
 ![[ISD/1 - Digital Assets/_project/Space Invaders/_images/persistentDataFileContents.png]]
 

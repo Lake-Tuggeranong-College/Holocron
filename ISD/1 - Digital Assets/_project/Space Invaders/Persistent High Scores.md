@@ -28,16 +28,14 @@ Most file access performed in Godot begins with `res://` (e.g. `res://Menu/Menu.
 User data uses the `user://` prefix which points to a different folder which is not in the project folder.
 
 > [!important] The `user://` prefix points to a different directory on the user's device. On mobile and consoles, this path is unique to the project. On desktop, the engine stores user files in:
-> **Linux** 
-> `~/.local/share/godot/app_userdata/[project_name]` or,
-> `~/snap/gd-godot-engine-snapcraft/35/.local/share/godot/app_userdata/[project name]
-> **MacOS**
-> `~/Library/Application Support/Godot/app_userdata/[project_name]` (since Catalina) 
-> **Windows**
-> `%APPDATA%\Godot\app_userdata\[project_name]`
+> 
+> | OS      | Directory                                                                                                                                          |
+> | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | Linux   | > `~/.local/share/godot/app_userdata/[project_name]` or,<br>> `~/snap/gd-godot-engine-snapcraft/35/.local/share/godot/app_userdata/[project name]` |
+> | MacOS   | `~/Library/Application Support/Godot/app_userdata/[project_name]`                                                                                  |
+> | Windows | `%APPDATA%\Godot\app_userdata\[project_name]`                                                                                                      |
 > 
 > [https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html](https://docs.godotengine.org/en/stable/tutorials/io/data_paths.html)
-
 
 
 

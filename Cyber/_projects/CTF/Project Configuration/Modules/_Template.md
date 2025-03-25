@@ -1,18 +1,55 @@
-# Module Template
+This shows the default code needed to create a new module using MQTT.
 
-This code is the template to be used for the ESP32 Modules to transmit data to and from the server.
+To implement a new module, create a new project using PlatformIO (extension within VSCode). 
+Then:
+1) replace the contents of `src/main.cpp` with the code shown,
+2) add a new file called `sensitiveInformation.h` in the same `src` folder and replace contents with code shown.
+3) Replace contents of `platform.ini` with the code shown.
 
-It is configured to be used with PlatformIO within Visual Studio Code.
+After these steps, your project should appear similar to this:
 
-The files you will need to edit/replace are contained within the `src` folder in the PlatformIO project.
+![[moduleTemplate.png]]
 
-![Visual Studio Code](moduleVSCode.png)
+# Next steps
 
-## MQTT
+Once the template is built and running on the ESP32, confirm it's reading updates from the subscribed mqttTopic. You will need to open the Serial Monitor for this.
 
-### `main.cpp`
+After confirming that it works, add code in to read the sensor (if reuiqred) and to act on the updated data from the server (`(char)payload[i]`)
 
-```c++
+# Code 
+## `sensitiveInformation.h`
+
+```cpp
+/*
+ * Contains any sensitive Infomration that you do not want published to Github.
+ * 
+ * The SSID and Password variables will need to be changed if you’re connecting to another Wireless Access Point (such as at home).
+ *
+ * This file is supposed to be in the .gitignore
+ * 
+ */
+
+
+// Wifi network
+const char* ssid = "CyberRange";       // Wifi Network Name
+const char* password = "CyberRange";  // Wifi Password
+
+// MQTT client name
+const char* mqttClient = "ESP32";
+
+// MQTT Topic
+const char* mqttTopic = "RegisteredModules/Servo"; // It's worth noting that an ESP32 can subscribe to more than 1 topic
+
+// Replace with the MQTT broker IP address and port (default port for MQTT is 1883)
+const char* mqttServer = "192.168.1.10";  
+const int mqttPort = 1883;
+
+```
+
+
+## `main.cpp`
+
+```cpp
 /*
   This is a template for all ESP32's using MQTT within the CyberRange.
   Read through the steps and ensure everything is setup correctly.
@@ -204,37 +241,27 @@ void loop() { // The loop function likely does not require change in the majorit
   }
   client.loop();  // Check for incoming messages and keep the connection alive
 }
-
 ```
 
-
-### `sensitiveInformation.h`
-
-```c++
-/*
- * Contains any sensitive Infomration that you do not want published to Github.
- * 
- * The SSID and Password variables will need to be changed if you’re connecting to another Wireless Access Point (such as at home).
- *
- * This file is supposed to be in the .gitignore
- * 
- */
-
-
-// Wifi network
-const char* ssid = "CyberRange";       // Wifi Network Name
-const char* password = "CyberRange";  // Wifi Password
-
-// MQTT client name
-const char* mqttClient = "ESP32";
-
-// MQTT Topic
-const char* mqttTopic = "RegisteredModules/Servo"; // It's worth noting that an ESP32 can subscribe to more than 1 topic
-
-// Replace with the MQTT broker IP address and port (default port for MQTT is 1883)
-const char* mqttServer = "10.177.200.71";  
-const int mqttPort = 1883;
-
+## `platformio.ini`
 
 ```
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
 
+[env:featheresp32]
+platform = espressif32
+board = featheresp32
+framework = arduino
+lib_extra_dirs = ~/Documents/Arduino/libraries
+lib_deps = 
+	knolleary/PubSubClient@^2.8
+
+```

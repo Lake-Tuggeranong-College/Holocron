@@ -22,5 +22,10 @@ Add links to each of the modules here:
 
 [[Module Windmill]]
 
+
+## Creating New modules
+
+[[_Template]]
+
 # Website Development
 

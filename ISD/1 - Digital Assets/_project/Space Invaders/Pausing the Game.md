@@ -4,7 +4,7 @@ Like with other areas of game development, there are many methods and approaches
 
 To allow the code to work across multiple scenes and scripts, one way to store the name and location of the Pause Menu Node is in `global.gd`. The variable is defined here and accessed in the various scripts required.
 
-Open `global.gd`. Define a new global variable called `PauseMenu`
+Open `Global.gd`. Define a new global variable called `PauseMenu`
 
 ![[pauseMenuGlobal.png]]
 

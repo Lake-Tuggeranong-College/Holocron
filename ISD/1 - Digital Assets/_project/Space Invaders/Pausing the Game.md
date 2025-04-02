@@ -91,7 +91,7 @@ get_tree().paused = false
 
 Still in `MainGame.gd` add a new function to handle the input from the user
 
-![[Pasted image 20250401085930.png]]
+![[pauseMenuCheckPauseInput.png]]
 
 ```gdscript
 func _input(_event):

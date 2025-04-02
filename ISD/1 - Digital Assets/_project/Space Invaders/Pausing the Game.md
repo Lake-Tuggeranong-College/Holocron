@@ -1,4 +1,6 @@
-Like with other areas of game development, there are many methods and approaches to implement a pause menu. The one shown in this tutorial will be a simple popup menu that stops the execution of the game until the resume button or key is pressed.
+> [!info] Like with other areas of game development, there are many methods and approaches to implement a pause menu. The one shown in this tutorial will be a simple popup menu that stops the execution of the game until the resume button or key is pressed.
+
+![[pauseMenuDemo.gif]]
 
 # Global
 

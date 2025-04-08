@@ -122,7 +122,7 @@ When googling, use keywords such as : `tinkercad <component> wiring`
 
 
 
-# Code Design
+# Code Design Updates
 
 Update the code to meet the LTC style guide for Arduino.
 
@@ -145,3 +145,5 @@ Update the code to meet the LTC style guide for Arduino.
 // Explain logic / complex code
 // Explain the purpose and goals of functions
 ```
+
+Look here for more information : [[Style Guide - Arduino]]

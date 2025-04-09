@@ -91,11 +91,11 @@ var scoring_information = {
 
 Create the four entries inside the dictionary. 
 
-![[dataScoringInformationComplete.png|Screen Shot 2022-02-26 at 1.55.49 pm.png]]
+![[dataScoringInformationComplete.png]]
 
 
 ```python
-var scoringInformation = {
+var scoring_information = {
 	"currentScore": 0,
 	"currentPlayer": "User",
 	"highScore": 0,

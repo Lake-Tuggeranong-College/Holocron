@@ -337,8 +337,6 @@ etc etc.
 
 [https://drive.google.com/file/d/1XIH5EaND66qn8YTDQyDuOgrD8W7tUqmH/view?usp=drive_web](https://drive.google.com/file/d/1XIH5EaND66qn8YTDQyDuOgrD8W7tUqmH/view?usp=drive_web)
 
-- Tutorials
-
 ## Tutorials
 
 ### Written Tutorials
@@ -363,13 +361,10 @@ etc etc.
 
 [RPi Robotics Tutorial 3.mp4](https://drive.google.com/file/d/1lXi7TE0uahXAZ__-5nWQnoy_awzDeZ5o/view?usp=drivesdk)
 
-- Project Presentations
 
 ## Project Presentations
 
 [ProjectDone.mp4](https://drive.google.com/file/d/1TJv3TXDdRhYN_FEEOFj_WBfk6zBiXTaO/view?usp=drivesdk)
-
-- Pitches
 
 ## Pitches
 
@@ -384,8 +379,6 @@ etc etc.
 [Dope As Pirate Game Pitch](https://docs.google.com/presentation/d/1_FBu-oGvYnpIGhHsq7dGmxnQIGyrGrAL73Tl4X9BZpw/edit?usp=drivesdk)
 
 [StoryBoard 1](https://docs.google.com/presentation/d/1T9XbcyMmofcyCUv0J2EqtFcNvwiTKKcoDq_Qpq9SvN4/edit?usp=drivesdk)
-
-- Asset Creation Documents
 
 ## Asset Creation Documents
 
@@ -454,6 +447,6 @@ etc etc.
 
 ## More Examples
 
-See here for more examples.
+See [here](https://drive.google.com/drive/folders/1Jf6nOMkLRfz0zAtuinpARsQeJbSrfT9n?usp=drive_link) for more examples.
 
-[](https://drive.google.com/drive/folders/1Jf6nOMkLRfz0zAtuinpARsQeJbSrfT9n?usp=drive_link)
+

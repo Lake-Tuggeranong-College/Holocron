@@ -293,7 +293,7 @@ This project utilises the [werkzeug.security](http://werkzeug.securityhttps://we
 
 #### Points
 
-The points mechanic in this game is used to track the skill of the player, with the potential to compare it against other playthroughs. Currently, when the player successfully kills an enemy, they gane 10 points, as can be seen in the bullet.gd code sample below. The players score is stored in Global.gd - This script (referred as a singleton) is different from other scripts in the game in so much that it is **not** attached to any node, and the values stay in memory thoughout the execution of the game regardless of any change of scene or nodes in the game.
+The points mechanic in this game is used to track the skill of the player, with the potential to compare it against other playthroughs. Currently, when the player successfully kills an enemy, they gane 10 points, as can be seen in the bullet.gd code sample below. The players score is stored in Global.gd - This script (referred as a [[singleton]]) is different from other scripts in the game in so much that it is **not** attached to any node, and the values stay in memory thoughout the execution of the game regardless of any change of scene or nodes in the game.
 ![[assessmentSupportGlobalScoringInformation.png]]
 
 

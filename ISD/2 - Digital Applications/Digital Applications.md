@@ -25,7 +25,7 @@ tags:
 
 | Week                                            | Content                                                                                                                        | Submissions |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------- |
-| ![[semestercalendarS2#School Events - Week 1]]  | [[Project Context]]<br>[[Accept FPS Assignment]]<br>[[Building The Environment]]<br>[[First Person Controller]]                |             |
+| ![[semestercalendarS2#School Events - Week 1]]  | [[Project Context]]<br>[[Accept FPS Assignment]]<br>[[Building The Development Level]]<br>[[First Person Controller]]          |             |
 | ![[semestercalendarS2#School Events - Week 2]]  | [[Bullet Implementation]]<br>[[Shooting Bullet Instances]]<br>                                                                 |             |
 | ![[semestercalendarS2#School Events - Week 3]]  | [[Enemy]]<br>[[Enemy Pathfinding]]                                                                                             |             |
 | ![[semestercalendarS2#School Events - Week 4]]  | [[Reusable Assets]]<br>[[Simple Texturing of a Mesh]]                                                                          |             |

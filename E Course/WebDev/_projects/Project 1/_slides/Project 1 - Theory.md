@@ -347,7 +347,6 @@ note:
 | **Use case**       | Containerised applications | Full operating system virtualisation |
 
 Notes:
-
 - Docker containers share the host's kernel, reducing overhead and improving resource utilisation.
 - Virtual machines have their own isolated kernel, which incurs more resource consumption and slower startup times.
 
@@ -361,7 +360,7 @@ Notes:
 ***The kernel of an operating system is like the conductor of an orchestra.***
 
 
-note:
+notes:
 
 **Just as the conductor:**
 
@@ -389,8 +388,7 @@ Without a kernel, an operating system would be like an orchestra without a condu
 - Reduced downtime
 - Automation
 
-**Notes:**
-
+Notes:
 - Containers share the host's kernel, reducing overhead and improving resource utilisation.
 - Docker images can be easily moved between different hosts and platforms, ensuring consistent performance.
 - Containers can be quickly stopped and started, minimising downtime during application updates.
@@ -407,7 +405,7 @@ Without a kernel, an operating system would be like an orchestra without a condu
 - Enhanced security
 - Cost reduction
 
-**Notes:**
+Notes:
 
 - Reduced resource consumption and faster startup times improve efficiency.
 - Consistent performance across different environments increases portability.

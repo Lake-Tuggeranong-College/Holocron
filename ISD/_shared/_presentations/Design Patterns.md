@@ -419,7 +419,3 @@ func _input(event):
 |Observer|Notify multiple listeners| Decoupled, modular             |Harder to trace flow|
 |Component|Reusable behaviors| Flexible, promotes composition |Can be overused|
 |Command|Encapsulate actions| Decouples input, enables undo  |More boilerplate|
-
----
-
-Would you like this turned into a downloadable PDF or enhanced with diagrams for each pattern?

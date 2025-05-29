@@ -25,6 +25,8 @@ Singletons are often used for managing game-wide systems such as:
 - Input managers
 - Configuration settings
 
+In **Godot Engine**, singletons are often referred to as **autoloads**. 
+
 **Example:**
 
 ```csharp

@@ -3,7 +3,7 @@
 
 Click on the link to the GitHub Classroom assignment:
 
-> [!danger] Add link here.
+> [!danger] [https://classroom.github.com/a/I0ZgPH-p](https://classroom.github.com/a/I0ZgPH-p)
 
 Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
 ![[repoClone.png]]

@@ -6,7 +6,7 @@ tags:
 
 Click on the link to the GitHub Classroom assignment:
 
-https://classroom.github.com/a/ZX-p5hKr 
+[https://classroom.github.com/a/wIZrYpOW](https://classroom.github.com/a/wIZrYpOW)
 
 Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
 

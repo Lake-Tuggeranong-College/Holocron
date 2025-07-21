@@ -38,7 +38,7 @@ N/A
 **Friday** - Q3 Ends
 
 ### School Events - Week 9
-**Monday** - 
+**Monday** - Q4 Commences
 
 ### School Events - Week 10
 

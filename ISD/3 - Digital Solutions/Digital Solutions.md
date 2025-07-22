@@ -4,7 +4,7 @@ tags:
   - yr12
 ---
 > [!note]- Project Overview
-> ![[ISD/3 - Digital Solutions/_projects/Frontierlands/Project Overview|Project Overview]]
+> ![[ISD/_projects/Frontierlands/Project Overview|Project Overview]]
 
 # Semester Plan
 
@@ -13,7 +13,7 @@ tags:
 | ----------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | ![[semesterCalendarS1#School Events - Week 1]]  | [[Analyse FPSs]]<br>[[Brainstorming]]<br>[[Fork Project]]<br>                          |                                                                                     |
 | ![[semesterCalendarS1#School Events - Week 2]]  | [[Game Planning]]<br><br>                                                              |                                                                                     |
-| ![[semesterCalendarS1#School Events - Week 3]]  | [[ISD/3 - Digital Solutions/_projects/Frontierlands/Product Roadmap\|Product Roadmap]] |                                                                                     |
+| ![[semesterCalendarS1#School Events - Week 3]]  | [[ISD/_projects/Frontierlands/Product Roadmap\|Product Roadmap]] |                                                                                     |
 | ![[semesterCalendarS1#School Events - Week 4]]  | [[ISD/3 - Digital Solutions/_ap/2025S1/Assessment 1\|Assessment 1]]                    | [[ISD/3 - Digital Solutions/_ap/2025S1/Assessment 1\|Assessment 1 Due]]             |
 | ![[semesterCalendarS1#School Events - Week 5]]  | [[Vocational Education and Training (VET)]]<br>[[Project Implementation - Phase 1]]    | ICTICT214 - Google classroom                                                        |
 | ![[semesterCalendarS1#School Events - Week 6]]  | [[Project Implementation - Phase 1]]                                                   |                                                                                     |

@@ -182,4 +182,4 @@ Save the file.
 
 One of the major flaws of this approach, as it is, is that that any enemy shoots even the ones at the top which can't 'see' the player (because other enemy's are in the way).
 
-To avoid this issue, you could use [[ISD/1 - Digital Assets/_project/Space Invaders/Raycasts|Raycasts]] to check if the enemies have direct line-of-sight to the player before firing.
+To avoid this issue, you could use [[Raycasts|Raycasts]] to check if the enemies have direct line-of-sight to the player before firing.

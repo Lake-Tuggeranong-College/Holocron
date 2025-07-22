@@ -5,7 +5,7 @@ tags:
 ---
 > [!important] This tutorial gives you the evidence to complete VET competency `ICTPRG302 Apply Introductory Programming Techniques`, performance criteria 4.1 & 4.3
 
-> [!important] Prerequisites: [[ISD/1 - Digital Assets/_project/Space Invaders/High Score System|High Score System]]
+> [!important] Prerequisites: [[ISD/_projects/Space Invaders/High Score System|High Score System]]
 # Saving the Score
 
 In this tutorial, you'll be storing the players score as persistent data, so subsequent playthroughs can keep a track of the high score.
@@ -41,7 +41,7 @@ User data uses the `user://` prefix which points to a different folder which is 
 
 # Update `Global.gd`
 
-Open `Global.gd`. The `scoring_information` dictionary containing the current score and high score keys will be already defined during the [[ISD/1 - Digital Assets/_project/Space Invaders/High Score System|High Score System]] stage. 
+Open `Global.gd`. The `scoring_information` dictionary containing the current score and high score keys will be already defined during the [[ISD/_projects/Space Invaders/High Score System|High Score System]] stage. 
 
 Create a new variable to link to the save file.
 
@@ -91,7 +91,7 @@ Run through the game, killing all the enemies.
 
 After the Win scene has been loaded, you should find `save.txt` in the user directory (see above). You'll notice that the structure of the file matches the `set_value` function with `"Player"` (the section) and `"score"` (the key).
 
-![[ISD/1 - Digital Assets/_project/Space Invaders/_images/persistentDataFileContents.png]]
+![[ISD/_projects/Space Invaders/_images/persistentDataFileContents.png]]
 
 ![[commonBlocks#Commit & Push]]
 # Loading Data

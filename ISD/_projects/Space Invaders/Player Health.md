@@ -135,7 +135,7 @@ Download the heart images and copy them to the **Images** folder in your project
 
 ![[hud_heartFull.png]]
 
-![[ISD/1 - Digital Assets/_project/Space Invaders/_images/playerHealthHeartsImport.png]]
+![[playerHealthHeartsImport.png]]
 
 
 Open `MainGame.tscn`. Create a **HBoxContainer** as a child of **HUD**, renaming it `Health`. Create five **TextureRect**s as children of `Health`. Your hierarchy is to look like this.
@@ -203,7 +203,7 @@ func update_partial(value):
 This code is relatively complex and introduces a new variable type - ENUMs.
 
 > [!info]- Enums
-> More information on enums can be found here - [[enums]].
+> More information on enums can be found here - [[Enums]].
 
 Save the file.
 

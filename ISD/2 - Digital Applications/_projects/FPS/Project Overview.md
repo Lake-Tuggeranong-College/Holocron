@@ -9,4 +9,6 @@ In this tutorial, we will cover key aspects of game development such as setting 
 We will also delve into more advanced topics such as raycasting and scripting.  
 By the end of this tutorial, you will have a fully functional FPS game that you can further customise and expand upon.
 
-These instructions are written for Godot v4.3
+> [!note] These instructions are written for Godot v4.3
+
+![[projectOverview.jpeg]]

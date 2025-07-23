@@ -32,15 +32,10 @@ css: css/holocronSlides.css
 
 A singleton pattern ensures a class has only one instance and provides a global point of access to it.
 
---
-# 🧩 Pattern 1: Singleton
 ## Purpose
 
 Used to ensure a class has only one instance and provides a global point of access to it.
 
-##  Structure
-
-A singleton pattern ensures a class has only one instance and provides a global point of access to it.
 
 --
 

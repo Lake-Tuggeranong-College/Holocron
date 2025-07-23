@@ -570,7 +570,7 @@ Each one of these boxes can be given a unique name.
 Variables can be named *almost* anything. Generally, they cannot start with a number. 
 
 
-> [!info] The way you name variables is called the [[Naming Convention]] Each programming language has its own standard naming convention. This is discussed in [[WebDev/_shared/_projects/softwareDevFundamentals/PHP/Style Guide]]
+> [!info] The way you name variables is called the [[Naming Convention]] Each programming language has its own standard naming convention. This is discussed in [[WebDev/_projects/softwareDevFundamentals/PHP/Style Guide]]
 
 
 Now that variables have been named, you can store data in the box. For instance, you may set the following data to the four variables in the example:

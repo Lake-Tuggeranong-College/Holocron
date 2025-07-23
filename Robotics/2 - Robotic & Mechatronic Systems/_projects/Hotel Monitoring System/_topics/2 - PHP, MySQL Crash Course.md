@@ -17,7 +17,7 @@ This login is shared by all users of the system, so be careful if you change any
 
 ### CRUD
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/CRUD.jpeg|[https://www.atatus.com/glossary/crud/]]
+![[WebDev/_projects/Flask-Ngunnawal/_images/CRUD.jpeg|[https://www.atatus.com/glossary/crud/]]
 
 [https://www.atatus.com/glossary/crud/](https://www.atatus.com/glossary/crud/)
 
@@ -256,7 +256,7 @@ $sql = "INSERT INTO user (username, hashed_password, access_level) VALUES (:newU
 
 The login page will visually be very similar to the registration page, at this stage. The first part of the page can just be duplicated from `registration.php`. 
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 12.png|Untitled]]
+![[Untitled 12.png|Untitled]]
 
 ```php
 <?php include "template.php"; ?>
@@ -284,7 +284,7 @@ The login page will visually be very similar to the registration page, at this s
 
 And again, the first part of the PHP code from registration will be the same, namely collecting and sanitising the form data and searching for how many users of that user name are found in the database.
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 13.png|Untitled]]
+![[Untitled 13.png|Untitled]]
 
 ```php
 <?php
@@ -308,7 +308,7 @@ If a user has be found (i.e. if `$count > 0`) then the code will want to load al
 
 > [!important] A **record** in a database is a collection of data which is organised into fields and is stored within a table. Each record contains values which correspond to the fields in the table. These records are used to store and retrieve information, such as a user's name, address, and other personal data. Records are usually identified by a unique key or identifier, such as an ID number.
 > 
-> ![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 14.png|Untitled]]
+> ![[Untitled 14.png|Untitled]]
 
 
 
@@ -317,7 +317,7 @@ $query = $conn->query("SELECT * FROM `user` WHERE `username`='$username'");
 $row = $query->fetch();
 ```
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 15.png|Untitled]]
+![[Untitled 15.png|Untitled]]
 
 ---
 

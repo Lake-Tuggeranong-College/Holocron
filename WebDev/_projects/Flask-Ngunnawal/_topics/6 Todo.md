@@ -8,7 +8,7 @@ tags:
 
 # CRUD
 
-![[https://www.atatus.com/glossary/crud/](WebDev/_shared/_projects/Ngunnawal/_images/CRUD.jpeg)
+![[https://www.atatus.com/glossary/crud/](WebDev/_projects/Flask-Ngunnawal/_images/CRUD.jpeg)
 
 [https://www.atatus.com/glossary/crud/](https://www.atatus.com/glossary/crud/)
 

@@ -23,12 +23,12 @@ Before adding any sensors or actuators, or any additional components, and focus 
 
 In order to continue with the project, there are some theory topics that you will need to know:
 
-- [[Robotics/_projects/Smart House/_topics/Variables and Data Types|Variables and Data Types]]
-- [[Robotics/_projects/Smart House/_topics/Style Guide|Style Guide]]
-- [[Robotics/_projects/Smart House/_topics/Algorithm Design - Sequence|Sequences]]
-- [[Robotics/_projects/Smart House/_topics/Algorithm Design - Decisions|Decisions]]
-- [[Robotics/_projects/Smart House/_topics/Algorithm Design - Loops|Loops]]
-- [[Robotics/_projects/Smart House/_topics/Data Structures|Data Structures]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Variables and Data Types|Variables and Data Types]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Style Guide|Style Guide]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Algorithm Design - Sequence|Sequences]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Algorithm Design - Decisions|Decisions]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Algorithm Design - Loops|Loops]]
+- [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Data Structures|Data Structures]]
 
 # Code Design
 
@@ -39,7 +39,7 @@ Let's assume you've got 5 robotic behaviours that you wish to implement. For ins
 4) When the light sensor detects excessive sunlight, the motorised blinds lower automatically to reduce glare and heat. Conversely, they raise to allow more natural light when the sunlight is insufficient.
 5) When the soil moisture sensor detects that the soil in the garden is too dry, the smart sprinkler system activates, watering the garden. It turns off automatically once the desired moisture level is achieved.
 
-The code design should follow the features discussed in [[Robotics/_projects/Smart House/_topics/Algorithm Design - Modularisation|Modularisation]]. Therefore the high-level view of the code would appear to be something similar to this:
+The code design should follow the features discussed in [[Robotics/1 - Building and Programming Circuits/_projects/Smart House/_topics/Algorithm Design - Modularisation|Modularisation]]. Therefore the high-level view of the code would appear to be something similar to this:
 
 ![[smartHouseHighLevelCode.png]]
 

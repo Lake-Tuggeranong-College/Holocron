@@ -70,7 +70,7 @@ Open `static/site.css` and add the following CSS
 
 Test out a flash message and you should see it appear similar to the one shown.
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 14.png|Untitled]]
+![[Untitled 14.png|Untitled]]
 
 You can expand on this CSS to make the messages stand out even more by updating the CSS, as shown here.
 
@@ -92,7 +92,7 @@ Modify the CSS to make the messages appear the way you wish to.
 }
 ```
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 15.png|Untitled]]
+![[Untitled 15.png|Untitled]]
 
 # Demonstration
 

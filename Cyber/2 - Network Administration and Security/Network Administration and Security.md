@@ -8,14 +8,14 @@ tags:
 > You are being tasked to develop secure servers and clients to support the Northside Hospital Project.
 > The project name is: **Biomedical ACT Administration (BACTA)**
 > You will be building and configuring a server, a workstation client and the publishing and secure storage of patient health data.
-> Details can be found here. [[Cyber/_projects/BACTA/Project Overview|Project Overview]]
+> Details can be found here. [[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview|Project Overview]]
 
 # Semester Plan
 
 
 | Week                                            | Content                                                                                                                                            | Submissions |
 | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| ![[semestercalendarS2#School Events - Week 1]]  | [[Cyber/_projects/BACTA/Accept Assignment\|Accept Assignment]]<br>[[Cyber/_projects/BACTA/Project Overview\|Project Overview]]<br>[[Network Plan]] |             |
+| ![[semestercalendarS2#School Events - Week 1]]  | [[Cyber/2 - Network Administration and Security/_projects/BACTA/Accept Assignment\|Accept Assignment]]<br>[[Cyber/2 - Network Administration and Security/_projects/BACTA/Project Overview\|Project Overview]]<br>[[Network Plan]] |             |
 | ![[semestercalendarS2#School Events - Week 2]]  | [[Server Documentation]]<br>[[Databases]]                                                                                                          |             |
 | ![[semestercalendarS2#School Events - Week 3]]  |                                                                                                                                                    |             |
 | ![[semestercalendarS2#School Events - Week 4]]  | [[Docker]]<br>[[DevContainers]]<br>[[Bash Scripting]]                                                                                              |             |

@@ -44,7 +44,7 @@ return render_template("contactMessages.html", title="Contact Messages", user=cu
 
 Duplicate `index.html` and name the new file `contactMessages.html`. 
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 6.png|Untitled]]
+![[Untitled 6.png|Untitled]]
 
 To display the contact messages from the database, output the user's name, email address, message and the date it was submitted. This can be done using the bootstrap grid system as previously used.
 

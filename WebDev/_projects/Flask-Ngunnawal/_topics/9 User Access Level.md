@@ -70,11 +70,11 @@ Attempt to access the URL without logging in, and it should redirect you to the 
 
 Attempt to access the URL logged in as a user with an access level set to 1.
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 1.png|Untitled]]
+![[Untitled 1.png|Untitled]]
 
 Attempt to access the URL logged in as a user with an access level set to 2.
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 2.png|Untitled]]
+![[Untitled 2.png|Untitled]]
 
 ## Continue Implementing Access Control
 

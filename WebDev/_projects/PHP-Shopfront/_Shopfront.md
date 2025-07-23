@@ -14,7 +14,7 @@
 [[Products - Edit]]
 [[Products - Remove]]
 [[Project Development Environment]]
-[[WebDev/_shared/_projects/Shopfront/Project Overview]]
+[[WebDev/_projects/PHP-Shopfront/Project Overview]]
 [[Project Updates]]
 [[Session Variables]]
 [[Shopping Cart]]

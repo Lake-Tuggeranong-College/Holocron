@@ -13,4 +13,4 @@ Open `app.py` and **update EVERY route** **rendering a template** to include the
 
 For instance, the homepage route needs to have the `render_template` line of code updated as shown.
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 13.png|Untitled]]
+![[Untitled 13.png|Untitled]]

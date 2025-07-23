@@ -51,7 +51,7 @@ In `cellContent2`, add a message to the user to indicate that there is a problem
 
 You can choose how you want the messages to display. Using Bootstraps built-in Alerts can be a quick and easy solution, such as:
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 12.png|Untitled]]
+![[Untitled 12.png|Untitled]]
 
 ```html
 <div class="alert alert-danger" role="alert">

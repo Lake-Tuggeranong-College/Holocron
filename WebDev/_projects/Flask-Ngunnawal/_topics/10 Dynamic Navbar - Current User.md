@@ -35,4 +35,4 @@ The next step is to extend this by adding in an {% else %} section to only show 
 
 In the example shown, you can see that the **Registration** and **Login** links are shown if the user is not logged in (`is_anonymous`) and the **Profile**, **Photos**, **Logout** and **Reset Password** Links are shown if the user is logged in (`is_anonymous` is false)
 
-![[WebDev/_shared/_projects/Ngunnawal/_images/Untitled 3.png|Untitled]]
+![[Untitled 3.png|Untitled]]

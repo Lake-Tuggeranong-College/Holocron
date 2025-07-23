@@ -16,7 +16,7 @@ In the project, open the `Enemy.tscn` file to edit the enemy object.
 
 Add a child node to the Enemy. Search for RayCast2D in the list and choose Create.
 
-![[ISD/_projects/Space Invaders/_images/raycastAddChild.png]]
+![[ISD/1 - Digital Assets/_projects/Space Invaders/_images/raycastAddChild.png]]
 
 
 With the new RayCast2D node selected, change the Inspector values `Target Position Y` to 200.

@@ -31,7 +31,7 @@ Users will need to store:
 - Status (active or disabled)
 ```
 
-![[WebDev/_shared/_projects/Shopfront/_images/projectOverview.png]]
+![[WebDev/_projects/PHP-Shopfront/_images/projectOverview.png]]
 
 
 # Shopping Cart Overview

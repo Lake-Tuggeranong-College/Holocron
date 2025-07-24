@@ -113,6 +113,10 @@ Create new inputs for the following actions:
 
 Open `Player.tscn`. Right-click on the root node and attach a script. Leave the settings as they are, and click Create.
 
+> [!note]- Pay close Attention!
+> In the screenshot below, it shows creating the script from the player. In some versions of Godot (4.3 at least), the `Template` option is ticked by default. 
+> Double-check the Template option is ticked and CharacterBody3D is selected as this gives to default code to get the player movement implemented quickly.
+
 ![[fpcPlayerAddScript.png|Attach Script]]
 
 First, the jumping. Change the value for the jump input map to `player_jump` from ui_accept.

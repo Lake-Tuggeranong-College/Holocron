@@ -11,7 +11,8 @@ tags:
 
 Click on the link to the GitHub Classroom assignment:
 
-https://classroom.github.com/a/twWdTyhT
+[https://classroom.github.com/a/uqUtrAq_](https://classroom.github.com/a/uqUtrAq_)
+
 
 Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
 

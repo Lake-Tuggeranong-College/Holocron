@@ -218,11 +218,11 @@ Add the `shoot()` function. This function creates an instance of the bullet at t
 ![[bulletPlayerShoot.png]]
 
 ```gdscript
-func shoot ():
+func shoot():
+	#handles shooting
 	var bullet = bulletScene.instantiate()
-	get_node("/root/LevelOne").add_child(bullet)
+	get_parent().add_child(bullet)
 	bullet.global_transform = bulletSpawn.global_transform
-	bullet.scale = Vector3(0.1,0.1,0.1)
-
+	bullet.scale= Vector3(0.1, 0.1, 0.1)
 	ammo -= 1
 ```

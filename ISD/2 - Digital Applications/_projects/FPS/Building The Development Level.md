@@ -40,9 +40,13 @@ Set the `x` and `y` size values to something larger. In this case, 20 has been u
 
 ![[fpsEnvironment-ResizePlaneMesh.png|Resize Plane Mesh]]
 
-With the mesh selected, go to the Mesh Menu and choose Create `Trimesh Static Body`.
+With the mesh selected, go to the Mesh Menu and choose `Create Collision Shape`.
 
 ![[fpsEnvironment-CreateTriMesh.png|Create TriMesh]]
+
+Change the **Collision Shape Placement** to `Static Body Child`. Then click Create.
+
+![[fpsEnvironment-CreateTriMeshSettings.png]]
 
 This updates the mesh to include 2 child nodes.
 

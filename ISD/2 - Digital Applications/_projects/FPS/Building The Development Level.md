@@ -19,38 +19,38 @@ To start with, the player will need to walk on something, so the first step is t
 
 Right-Click on the Game scene and choose Add Child Node. Search for `MeshInstance3D.`
 
-![[fpsEnvironment-CreateNewNode.png|Create New Node]]
+![[fpsEnvironmentCreateNewNode.png|Create New Node]]
 
 Rename the node “Floor” or “Ground” or whatever is appropriate. In the Inspector, look for the Mesh attribute. in the dropdown box, choose `New PlaneMesh`.
 
-![[fpsEnvironment-FloorRename.png|Rename Floor]]
+![[fpsEnvironmentFloorRename.png|Rename Floor]]
 
 
 At this stage, the mesh is there, but the player (created later) will fall straight through it.
 
-![[fpsEnvironment-AddPlaneMesh.png|Add Plane Mesh]]
+![[fpsEnvironmentAddPlaneMesh.png|Add Plane Mesh]]
 
 Currently, the floor is quite small. The player object that will be created later will be quite significantly larger, so the relative scale will need to be addressed.
 
 Edit the mesh.
 
-![[fpsEnvironment-EditMesh.png|Edit The Mesh]]
+![[fpsEnvironmentEditMesh.png|Edit The Mesh]]
 
 Set the `x` and `y` size values to something larger. In this case, 20 has been used. This may need to be modified at a later date.
 
-![[fpsEnvironment-ResizePlaneMesh.png|Resize Plane Mesh]]
+![[fpsEnvironmentResizePlaneMesh.png|Resize Plane Mesh]]
 
 With the mesh selected, go to the Mesh Menu and choose `Create Collision Shape`.
 
-![[fpsEnvironment-CreateTriMesh.png|Create TriMesh]]
+![[fpsEnvironmentCreateTriMesh.png|Create TriMesh]]
 
 Change the **Collision Shape Placement** to `Static Body Child`. Then click Create.
 
-![[fpsEnvironment-CreateTriMeshSettings.png]]
+![[fpsEnvironmentCreateTriMeshSettings.png]]
 
 This updates the mesh to include 2 child nodes.
 
-![[fpsEnvironment-TriMeshNewNodes.png|New Nodes Created]]
+![[fpsEnvironmentTriMeshNewNodes.png|New Nodes Created]]
 
 ![[commonBlocks#Commit & Push]]
 
@@ -65,17 +65,17 @@ Find an image to suit the environment appropriate for the game.
 
 Store the image in a folder created for Images.
 
-![[fpsEnvironment-CreateImagesFolder.png|Create Images Folder]]
+![[fpsEnvironmentCreateImagesFolder.png|Create Images Folder]]
 
 Select the `Floor` node. In the inspector, expand out the Material dropdown.
 
-![[fpsEnvironment-ExpandMaterial.png|Expand to show Material]]
+![[fpsEnvironmentExpandMaterial.png|Expand to show Material]]
 
 There is currently no material attached, hence why the mesh is white. Click on the dropdown next to [empty] and choose `New StadardMaterial3D`.
 
-![[fpsEnvironment-NewStandardMaterial3D.png|New StandardMaterial3d]]
+![[fpsEnvironmentNewStandardMaterial3D.png|New StandardMaterial3d]]
 
-![[fpsEnvironment-NewStandardMaterial3D2.png|New StandardMaterial3D]]
+![[fpsEnvironmentNewStandardMaterial3D2.png|New StandardMaterial3D]]
 
 Click on the white sphere that appears. In the menu that appears, expand `Albedo`. 
 
@@ -83,11 +83,11 @@ Click on the white sphere that appears. In the menu that appears, expand `Albedo
 > [!info] Albedo is the default type for textures. There are many more as you can see in the list.
 
 
-![[fpsEnvironment-MaterialAlbedo.png|Albedo]]
+![[fpsEnvironmentMaterialAlbedo.png|Albedo]]
 
 Drag the texture from the FileSystem tab to the Texture option under Albedo. The texture on the plane has been updated.
 
-![[fpsEnvironment-ApplyMaterial.gif|Apply Texture to Material]]
+![[fpsEnvironmentApplyMaterial.gif|Apply Texture to Material]]
 
 > [!note] This is the same process to texture any of your other assets, unless they’ve been textured prior to importing.
 
@@ -97,13 +97,13 @@ This avoids the image being stretched the fit the size of the plane. s
 
 Choose values that suit the needs of the game and the desired effect. I.e. set the tiles value as high or as low as you wish to give the detail level you want.
 
-![[fpsEnvironment-MaterialTiling.png|Tiling]]
+![[fpsEnvironmentMaterialTiling.png|Tiling]]
 
 # Add Lighting
 
 The scene at this stage is too dark for the player. Right-click on the Root Node, choose Add Child Node, search for and add a `DirectionalLight3D`.
 
-![[fpsEnvironment-DirectionalLight.png|Create Directional Light]]
+![[fpsEnvironmentDirectionalLight.png|Create Directional Light]]
 
 With the `DirectionaLight3D` selected, enable Shadows in the Inspector.
 
@@ -111,7 +111,7 @@ Set the Rotational Degrees so that the light is roughly coming down from ‘the 
 
 The position of the directional light is not relevant, however the arrow shown in the image shows the direction the light will travel. 
 
-![[fpsEnvironment-DirectionalLightDirection.png|Set Direction of Light]]
+![[fpsEnvironmentDirectionalLightDirection.png|Set Direction of Light]]
 
 # Build your Environment
 

@@ -113,7 +113,7 @@ As is custom, start by creating a page which states "Hello World". Place the fol
 ```
 
 Launch the website to test the website:
-http://localhost:8000
+[http://localhost:8000](http://localhost:8000)
 
 ![[crashCourseIndexInitLaunch.png]]
 

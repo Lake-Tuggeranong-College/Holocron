@@ -226,3 +226,18 @@ func shoot():
 	bullet.scale= Vector3(0.1, 0.1, 0.1)
 	ammo -= 1
 ```
+
+
+# Issues?
+
+## Bullet facing the wrong direction?
+
+You may find that on the initial implementation of the instructions above, you may run into an issue where the bullet is 'facing' the wrong way.
+
+![[bulletErrorRotation.png]]
+
+To fix this, open `bullet.tscn`, and select the `CSGCombiner` node. Rotate the bullet on the Y axis to turn it 90 degrees to the left.
+
+![[bulletRotateCSGCombiner.png]]
+
+Try the game again and the bullet should be now facing away from the player when fired.

@@ -4,12 +4,12 @@
 | --------------- | ------------------------- | -------------------------------- |
 | ==4==           | 1) Technical Document<br> | [[Task 1 - Server Installation Coversheet]] |
 
-For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container.
+For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container, and supplying a timesheet for the work completed.
 
 
 # Server Option Comparison
 For the report, you will need to explain to your client the reasoning for choosing a Docker container as the server. 
-Create a spreadsheet with data to compare using Docker containers with having a dedicated server.
+Create a spreadsheet with data to include a timesheet, detailing the time spent on the installation of the server and writing the report.
 
 # Project Details
 

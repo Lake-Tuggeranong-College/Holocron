@@ -17,10 +17,10 @@ During the remainder of the course, you will be developing the sites on your loc
 flowchart LR
 	dev["`**Development** 
 	VSCode w/Docker 
-	or GitHub/CodeSpaces`"]
+	or GitHub/CodeSpaces (local device)`"]
 	prod["`**Production**
 	Docker Container 
-	on LTC server`"]
+	(LTC server)`"]
 dev -->|deploy| prod
 ```
 

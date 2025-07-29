@@ -35,22 +35,3 @@ mindmap
 
 ```
 
-
-# Face to Face Seminars
-
-At set times throughout the course, students will meet face-to-face at Lake Tuggeranong College to :
-
-- Learn Required Theory
-- Understand requirements
-- Engage in the practical tasks, and
-- Complete Competencies
-
-as required.
-
-The schedule for these will be (subject to change):
-
-Lake Tuggeranong College
-Room 6118
-Thursday 9am - 3pm
-
-Weeks 3, 5, 7 each term.

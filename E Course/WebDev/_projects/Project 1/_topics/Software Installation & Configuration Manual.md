@@ -22,7 +22,7 @@ You will need to read the full task and be able to provide evidence for the abov
 # Instructions
 
 
-## Timesheet
+## Timesheet Configuration
 
 Associated with the report, you will also create a timesheet spreadsheet to document the hours and cost to the client. This spreadsheet is to be embedded/linked into the Google Doc.
 
@@ -48,6 +48,7 @@ Paste the spreadsheet into the document.
 The document is now updated with the 'live' link with the Google Sheet
 
 ![[dockerTimeSheetDocsLinked.png]]
+
 
 
 

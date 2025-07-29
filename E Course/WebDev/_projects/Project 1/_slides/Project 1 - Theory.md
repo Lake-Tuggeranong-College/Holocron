@@ -37,7 +37,7 @@ Software development, focusing on Website Development technologies:
 
 note:
 NOT website design.
-Focus on programming skills with a strong emphasis on backend development.
+Focus on programming skills with a strong emphasis on backend development. 
 
 --
 
@@ -98,13 +98,18 @@ sequenceDiagram
 - **Back-End**: Behind-the-scenes functionality and data management
 - Both are essential for a fully functional web application
 
+note:
+During this course, you will be developing both front and back-end technologies.
 
 ---
 # Typical Process
 
-You'll code in VS Code or Codespaces, working towards the goal.
+During this project, you'll code in VS Code or Codespaces, working towards the goal.
 
-When you finish a feature, you'll commit changes to your GitHub repository.
+When you finish a feature, you'll **commit** and **push** changes to your GitHub repository.
+
+note:
+The project goes over the entire course.
 
 ---
 
@@ -309,22 +314,29 @@ note:
 --
 
 # Docker and Host OS
+![[dockerContainterisedApplications.png]]
+
+--
+
+# Docker Example
 
 ```mermaid
 graph LR
 subgraph Host OS e.g. Windows
-    A[Applications A]
-    B[Libraries B]
-    C[Kernel C]
+    A[Applications]
+    B[Libraries]
+    C[Kernel]
 end
 subgraph Docker Container
-    D[Application D]
-    E[Libraries E]
-    F[Docker Runtime F]
+    D[PHP Website Server]
+    E[Database Server]
+    F[File Server]
+    G[Docker Runtime]
 end
-F --> C
-D --> F
-E --> F
+G --> C
+D --> G
+E --> G
+F --> G
 ```
 
 
@@ -334,6 +346,7 @@ note:
 - The host operating system (OS) consists of applications (A), libraries (B), and the kernel (C).
 - Docker creates a container that includes the application (D), its necessary libraries (E), and the Docker runtime (F).
 - The Docker runtime acts as a bridge between the container and the host OS, allowing the container to access the host's kernel and resources.
+
 
 --
 # Docker vs. Other Virtualisation
@@ -415,7 +428,7 @@ Notes:
 
 ---
 
-# Task
+# Practical Task
 
 Follow the steps in the project instructions.
 

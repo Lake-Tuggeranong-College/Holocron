@@ -129,15 +129,37 @@ To continue learning PHP, practice the coding by following video.
 
 ![[commonBlocks#Commit & Push]]
 
+## New Files
 
-# config.php
+Start by creating new files in the root directory of the project:
+1. config.php
+2. template.php
+3. login.php
+4. logout.php
+5. register.php
 
+
+Update the following files according to the instructions below.
+
+### `config.php`
+
+This configuration file is extremely important for the whole project as it connects the PHP code to the database.
+
+It connects and maintains the connection to the database using PDO, which provides a standard interface between PHP and many different types of database types (e.g. MySQL, and SQLite).
+
+![[crashCoursePDO.png]]
+
+> [!note]- Why use PDO?
+> You can write PHP code to connect to a database without using PDO code, however code will need to be written for each type of database. If the website migrated from SQLite to MySQL for instance, most of the database code would need to be rewritten. Using PDO allows for the database specific code to be abstracted (*hidden*) behind standardised code.
+
+
+Create a new file in the root directory of the project, renaming it `config.php` and add the following code to the file. 
 ```php
 <?php
 // config.php
 
 // Path to the SQLite database file in the root directory
-define('DB_PATH', dirname(__DIR__) . '/site.db');
+define('DB_PATH', './site.db');
 
 try {
     // Create (connect to) SQLite database in file
@@ -149,3 +171,226 @@ try {
 }
 ?>
 ```
+
+![[crashCourseConfig.png]]
+
+Save the file.
+
+
+
+### `template.php`
+
+This page will be used to contain the common code used throughout the website that you're developing.
+
+```php
+<?php
+include "template.php"; 
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email_address'];
+    $password = $_POST['password'];
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email_address = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if ($user && $password === $user['password']) { // Assuming passwords are stored in plain text for simplicity
+        $_SESSION['email_address'] = $user['email_address'];
+        $_SESSION['name'] = $user['name']; // Store the user's name in the session
+        header("Location: index.php"); // Redirect to a protected page
+        exit;
+    } else {
+        $error = "Invalid email or password.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3bootstrap.min.css
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Login</div>
+        <div class="card-body">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email address</label>
+                    <input type="email" class="form-control" name="email_address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+```
+
+
+### `register.php`
+
+```php
+<?php include "template.php"; 
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+</head>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email_address'];
+    $password = $_POST['password'];
+
+    $stmt = $pdo->prepare("INSERT INTO users (name, email_address, password) VALUES (?, ?, ?)");
+    $stmt->execute([$name, $email, $password]);
+
+    echo "<div class='alert alert-success'>User registered successfully!</div>";
+}
+?>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Register</div>
+        <div class="card-body">
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email address</label>
+                    <input type="email" class="form-control" name="email_address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+```
+
+### `login.php`
+
+```php
+<?php
+include "template.php"; 
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email_address'];
+    $password = $_POST['password'];
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email_address = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+    if ($user && $password === $user['password']) { // Assuming passwords are stored in plain text for simplicity
+        $_SESSION['email_address'] = $user['email_address'];
+        $_SESSION['name'] = $user['name']; // Store the user's name in the session
+        header("Location: index.php"); // Redirect to a protected page
+        exit;
+    } else {
+        $error = "Invalid email or password.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3bootstrap.min.css
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Login</div>
+        <div class="card-body">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email address</label>
+                    <input type="email" class="form-control" name="email_address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+```
+
+
+### `logout.php`
+
+```php
+<?php
+session_start();
+session_unset();
+session_destroy();
+header("Location: login.php");
+exit;
+
+```
+
+Go to the website now and try to register a user, then login and log out!
+
+![[commonBlocks#Commit & Push]]
+
+
+## Is this site Secure? 
+
+Not on your life.
+
+After successfully demonstrating that the user management subsystem works (Register, login, logout), attempt to log in again with the following credentials:
+
+email_address: `' OR 1=1 --`
+password: anything at all
+
+
+![[crashCourseSQLInjection.png]]
+
+When the login button is pressed, the SQL in the login page gets converted to:
+
+`SELECT * FROM users WHERE email_address = '' OR 1=1 --' AND password = 'fake password'`
+
+With the system as it's currently coded, you will be able to successfully log in to the first user account, even though you haven't provided correct credentials. This is an example of an **SQL Injection**.
+
+![[crashCourseLittleBobbyTables.png]]
+https://xkcd.com/327/
+

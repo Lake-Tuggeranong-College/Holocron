@@ -183,61 +183,62 @@ Save the file.
 This page will be used to contain the common code used throughout the website that you're developing.
 
 ```php
-<?php
-include "template.php"; 
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email_address'];
-    $password = $_POST['password'];
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email_address = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user && $password === $user['password']) { // Assuming passwords are stored in plain text for simplicity
-        $_SESSION['email_address'] = $user['email_address'];
-        $_SESSION['name'] = $user['name']; // Store the user's name in the session
-        header("Location: index.php"); // Redirect to a protected page
-        exit;
-    } else {
-        $error = "Invalid email or password.";
-    }
-}
+<?php require_once 'config.php'; 
+session_start();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3bootstrap.min.css
-</head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">Login</div>
-        <div class="card-body">
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?= $error ?></div>
-            <?php endif; ?>
-            <form method="POST" action="">
-                <div class="mb-3">
-                    <label for="email_address" class="form-label">Email address</label>
-                    <input type="email" class="form-control" name="email_address" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" required>
-                </div>
-                <button type="submit" class="btn btn-success">Login</button>
-            </form>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <!-- You can change the title to reflect the page contents. -->
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Blocks logo button goes to index.php -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">Home</a>
+            </li>
+            <?php if (!isset($_SESSION["email_address"])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="register.php">Registration</a>
+                </li>
+            <?php endif; ?>
+            <?php if (isset($_SESSION["email_address"])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="logout.php">Logout</a>
+                </li>
+
+            <?php endif; ?>
+          
+            <?php if (isset($_SESSION["email_address"])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="logout.php" title="Logout">Logout</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+        <?php if (isset($_SESSION['name'])) : ?>
+            <span class="navbar-text text-success">Welcome, <?php echo $_SESSION['name']; ?></span>
+        <?php else : ?>
+            <a class="nav-link text-danger" href="login.php">Log In</a>
+        <?php endif; ?>
+    </div>
+</nav>
 ```
 
 
@@ -326,7 +327,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3bootstrap.min.css
+
 </head>
 <body class="bg-light">
 <div class="container mt-5">
@@ -369,6 +370,18 @@ exit;
 ```
 
 Go to the website now and try to register a user, then login and log out!
+
+
+### `index.php`
+
+Update `index.php` to include template.php
+
+```php
+<?php include "template.php"; ?>
+```
+
+![[crashCourseIndexUpdate.png]]
+
 
 ![[commonBlocks#Commit & Push]]
 

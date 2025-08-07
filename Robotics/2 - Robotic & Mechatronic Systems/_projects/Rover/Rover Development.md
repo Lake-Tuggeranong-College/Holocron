@@ -1,44 +1,27 @@
 This overarching stage of project development includes many different aspects of development.
 
-# Controller
-## Adding IDs to Transmission data
+# Additional Libraries
 
-In `comms.h` modify the `transmitData()` function to prefix all communication with an ID for the rover to receive.
+As the rover will be using some specialised Featherwings, some libraries will need to be added to the Arduino IDE. Search and add the following libraries into your Arduino IDE:
 
-Also, modify the code to transmit the newly created `packetToTx` instead of `radioPacket`.
+> [!note] When installing these libraries you may be asked if you wish to install dependencies. Click **Install All** on those popups.
 
-![[transmitDataID.png]]
+- Adafruit NeoPixel 
+- Adafruit Motor Shield V2
+- Adafruit ADT7410
+- Adafruit ADXL343
 
-```arduino
-const char* roverID = "1";
+![[roverLibraries.png]]
 
-char packetToTx[strlen(roverID)+strlen(radioPacket)+2];
-strcpy(packetToTx, roverID);
-strcat(packetToTx, ",");
-strcat(packetToTx, radioPacket);
-
-// radioPacket = roverID + radioPacket;
-Serial.println(packetToTx);      // Print message to Serial Monitor
-```
-
-
-# Cycle Through Basic Commands
-
-To test the code transmission and the rover accepting of commands, 
-
-# Rover
-
-## Comms.h Library
+# `Comms.h` Library
 
 In the `comms.h` library for the rover, update the `waitForReply()` function to **return** the command received to the calling function.
 
 ![[roverCommsWaitForReply.png]]
 
-## NeoPixel Library
 
-Search and add the **Adafruit NeoPixel** library into the sketch.
 
-## Main sketch
+# Main sketch
 
 With the `rover.ino` sketch open, add the following code at the top of the file:
 

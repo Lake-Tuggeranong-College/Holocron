@@ -1,3 +1,6 @@
+Want to Study and earn competencies towards the Certificate III in Infomration Technology? [[Why Study the Certificate III in Information Technology Course?|See this page]].
+
+
 See [[Course|Course]] for details on the course
 
 

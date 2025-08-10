@@ -407,3 +407,162 @@ With the system as it's currently coded, you will be able to successfully log in
 ![[crashCourseLittleBobbyTables.png]]
 https://xkcd.com/327/
 
+## "Secure" Code
+
+### `register.php`
+
+```php
+<?php include "template.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+</head>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email_address'];
+    $password = $_POST['password'];
+    // Hash the password for security
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("INSERT INTO users (name, email_address, password) VALUES (?, ?, ?)");
+    $stmt->execute([$name, $email, $password]);
+
+    echo "<div class='alert alert-success'>User registered successfully!</div>";
+}
+?>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Register</div>
+        <div class="card-body">
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email address</label>
+                    <input type="email" class="form-control" name="email_address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+```
+
+### `login.php`
+
+```php
+<?php
+include "template.php"; 
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email_address'];
+    $password = $_POST['password'];
+
+    // $sql = "SELECT * FROM users WHERE email_address = '$email' AND password = '$password'";
+    // $stmt = $pdo->query($sql);
+    // $user = $stmt->fetch();
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email_address = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+
+   if ($user && password_verify($password, $user['password'])) {
+        // echo "Login successful!";
+        $_SESSION['email_address'] = $user['email_address'];
+        $_SESSION['name'] = $user['name']; // Store the user's name in the session
+        // header("Location: index.php"); // Redirect to a protected page
+        exit;
+    } else {
+        $error = "Invalid email or password.";
+    }
+
+
+
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">Login</div>
+        <div class="card-body">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email address</label>
+                    <input type="text" class="form-control" name="email_address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="text" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-success">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+```
+
+### `org.php`
+
+```php
+<?php include "template.php"; ?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Organisational Data</title>
+</head>
+
+<body>
+    <h1>Organisational Data</h1>
+    <p>Welcome to the organisational data page.</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">Department Overview</div>
+            <div class="row">
+                <div class="col-3">HR</div>
+                <div class="col-3">Finance</div>
+                <div class="col-3">IT</div>
+                <div class="col-3">Marketing</div>
+            </div>
+            <div class="row">
+                <div class="col-3">Janet</div>
+                <div class="col-3">David</div>
+                <div class="col-3">Ryan</div>
+                <div class="col-3">Jackson</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+```

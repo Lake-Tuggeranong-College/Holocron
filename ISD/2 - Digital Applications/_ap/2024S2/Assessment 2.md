@@ -23,13 +23,13 @@ These are the details you are to cover in the topics in Assessment 2. More Speci
 
 
 
-![[Task 2#Project Overview|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Project Overview|Task 2]]
 
-![[Task 2#Code|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Code|Task 2]]
 
-![[Task 2#Data|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Data|Task 2]]
 
-![[Task 2#Development Process|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Development Process|Task 2]]
 
 Example: 
 
@@ -54,8 +54,8 @@ Given that the primary functions of the game had been completely tested before t
 When refining the game ready for submission there was an option to use Blender in order to create assets for the various in game models. The final product of the game has an almost discordant feeling due to the importation of assets that were created independently from one another. Creating assets from scratch or independently would have been an ideal solution to this issue. However time crunches and adherence to the strict MVPs of the project rendered this strategy inefficient and would have reduced the ability for the project to function as intended on the day of submission.  Furthermore animation was another 
 
 
-![[Task 2#Technical Analysis|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Technical Analysis|Task 2]]
 
 > [!info] For this assessment, as it's potentially difficult to research the pathfinding algorithm used in Godot, analyse the `A*` algorithm, and then discuss how pathfinding is implemented in the game. See [[Pathfinding]] for more details.
 
-![[Task 2#Work Skills|Task 2]]
+![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Work Skills|Task 2]]

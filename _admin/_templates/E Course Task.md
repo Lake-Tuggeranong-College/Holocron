@@ -3,9 +3,9 @@
 ==Add Details==
 # Details
 
-| Estimated Time | Deliverables | Related Project (if applicable) |
-| -------------- | ------------ | ------------------------------- |
-|                |              |                                 |
+| Estimated Time | Deliverables | Related Task (if applicable) |
+| -------------- | ------------ | ---------------------------- |
+|                |              |                              |
 
 ## Competencies
 

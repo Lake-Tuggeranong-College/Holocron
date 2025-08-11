@@ -1,19 +1,13 @@
 # Task Overview
 
-| Estimated Hours | Deliverables              | Related Task (if applicable)     |
-| --------------- | ------------------------- | -------------------------------- |
-| ==4==           | 1) Technical Document<br> | [[Task 1 - Server Installation Coversheet]] |
-
 For this task, you will be creating a document, detailing the installation, configuration and usage of the docker container, and supplying a timesheet for the work completed.
 
 
-# Server Option Comparison
-For the report, you will need to explain to your client the reasoning for choosing a Docker container as the server. 
-Create a spreadsheet with data to include a timesheet, detailing the time spent on the installation of the server and writing the report.
+# Details
 
-# Project Details
-
-
+| Deliverables       | Submitted via | Related Task (if applicable)                |
+| ------------------ | ------------- | ------------------------------------------- |
+| Technical Document | GitHub        | [[Task 1 Coversheet - Server Installation]] |
 
 
 ## Task 2 Competencies
@@ -23,8 +17,17 @@ Create a spreadsheet with data to include a timesheet, detailing the time spent 
 | [ICTICT214](https://training.gov.au/Training/Details/ICTICT214/unitdetails) | Operate application software packages |      ✅       |                  |               |         ✅         |
 | [BSBTEC201](https://training.gov.au/training/details/BSBTEC201/unitdetails) | Use business software applications    |              |        ✅         |               |         ✅         |
 
-# Task
+# Instructions
+
 [[Software Installation & Configuration Manual]]
+
+## Slides
+
+[[Markdown]]
+
+# Task
+
+[[E Course/WebDev/_tasks/_taskDocs/Task 2|Task 2]]
 
 # Student Guides
 

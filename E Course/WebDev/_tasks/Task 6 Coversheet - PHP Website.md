@@ -1,11 +1,11 @@
 # Task Overview
 
 
-# Project Details
+# Details
 
-| Estimated Time | Deliverables | Related Project (if applicable) |
-| -------------- | ------------ | ------------------------------- |
-|                |              | [[Task 5 - Website Design Coversheet]]       |
+| Deliverables | Submitted via | Related Task (if applicable)           |
+| ------------ | ------------- | -------------------------------------- |
+| Website      | GitHub        | [[Task 7 Coversheet - Website Design]] |
 
 ## Task 6 Competencies
 
@@ -18,7 +18,7 @@
 
 # Task
 
-
+[[Task 6]]
 # Marking Scheme
 
 The marking scheme for this task can be found on Google Classroom.

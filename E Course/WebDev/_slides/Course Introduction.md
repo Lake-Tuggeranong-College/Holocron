@@ -90,7 +90,20 @@ note:
 - Points depend on competencies completed
 - Points added to your Academic Record at the end
 
+--
 
+# Submission of Work
+
+To complete work, you will need a [GitHub](https://github.com/) account.
+
+All work, unless otherwise stated, will be submitted and assessed on GitHub.
+
+Your instructor will be able to access all of your work.
+
+note:
+
+You will need parental permission to create the GitHub account. 
+The form has been sent to parents email.
 
 ---
 # Course Structure

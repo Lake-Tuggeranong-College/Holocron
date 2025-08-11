@@ -51,10 +51,3 @@ The document is now updated with the 'live' link with the Google Sheet
 
 
 
-
-# Deliverables
-
-Both deliverables need to be submitted in their original format (e.g. Google Docs, Google Sheets) **and** as a PDF.
-
-1. Word Processed Report
-2. Timesheet Spreadsheet

@@ -301,8 +301,8 @@ It also keeps your application isolated from other applications, so they don't i
 
 - Application development and testing
 - Deployment and scaling
-- Cloud computing:
-- Microservices architecture:
+- Cloud computing
+- Microservices architecture
 
 note:
 - **Application development and testing:** Allows developers to create and test applications in isolated environments without affecting the host system.

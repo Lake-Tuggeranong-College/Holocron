@@ -1,11 +1,11 @@
 # Task Overview
 
 
-# Project Details
+# Details
 
-| Estimated Time | Deliverables | Related Project (if applicable) |
-| -------------- | ------------ | ------------------------------- |
-|                |              | [[Task 6 - PHP Website Coversheet]]          |
+| Deliverables | Submitted via | Related Task (if applicable)        |
+| ------------ | ------------- | ----------------------------------- |
+| ==??==       | ==GitHub==    | [[Task 6 Coversheet - PHP Website]] |
 
 ## Task 5 Competencies
 
@@ -19,7 +19,7 @@
 
 # Task
 
-
+[[Task 7]]
 # Marking Scheme
 
 The marking scheme for this task can be found on Google Classroom.

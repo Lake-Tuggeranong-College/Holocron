@@ -9,24 +9,28 @@ The programming languages and/or technology focus in this unit will be:
 - GitHub
 
 You will be developing two websites:
-- Project 1 - Covering the fundamentals of programming languages and websites.
-- Project 2 - Designing the layout of the site and applying programming techniques learned in a new project.
+- Task 3 - Covering the fundamentals of programming languages and websites.
+- Task 4 - Designing the layout of the site and applying programming techniques learned in a new project.
 
 
 # Competencies
 These competencies are covered throughout this semester.
 
-![[Task 3 - PHP Practical Coversheet#Task 3 Competencies]]
+![[Task 3 Coversheet - PHP Practical#Task 3 Competencies]]
 
-![[Task 4 - Project Highlights Coversheet#Task 4 Competencies]]
+![[Task 4 Coversheet - Project Showcase#Task 4 Competencies]]
+
+![[Task 5 Coversheet - Tutorial#Task 5 Competencies]]
 
 # Content
-This semester will be divided into two projects, *loosely* aimed at being completed each term.
+This semester will be divided into three tasks, *loosely* aimed at being completed in sequence.
 
 ## Project 2
 
 # Individual Tasks
 
-[[Task 3 - PHP Practical Coversheet]]
+[[Task 3 Coversheet - PHP Practical]]
 
-[[Task 4 - Project Highlights Coversheet]]
+[[Task 4 Coversheet - Project Showcase]]
+
+[[Task 5 Coversheet - Tutorial]]

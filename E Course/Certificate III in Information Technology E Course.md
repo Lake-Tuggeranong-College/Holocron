@@ -27,7 +27,7 @@ See [[Course|Course]] for details on the course
 
 
 > [!important]- ICT20120 Certificate II in Applied Digital Technologies EXIT POINT
-> If you wish to complete the Certificate II (and not continue to gain the Certificate III), you **can finish** this course at this point. 
+> If you wish to complete the Certificate II (and not continue to gain the Certificate III), it is possible to finish the course at this point. 
 > There are 3 additional Certificate II competencies to complete. Please talk to your teacher about these.
 > The remaining competencies are:
 > - BSBSUS211	Participate in sustainable work practices

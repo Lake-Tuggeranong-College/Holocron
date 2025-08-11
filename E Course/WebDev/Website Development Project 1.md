@@ -1,5 +1,4 @@
 # Overview
-This Semester covers several competencies working towards **ICT30120 Certificate III in Information Technology**.
 
 The programming languages and technology focus in this unit will be:
 - Docker Container
@@ -8,12 +7,14 @@ The programming languages and technology focus in this unit will be:
 - Spreadsheet
 	- formulas
 
+In this phase of the project, you will be learning about and configuring the server development environment. You will also be producing a report on the configuration and implementation of the server environment.
+
 # Competencies
 These competencies are covered throughout this semester.
 
-![[Task 1 - Server Installation Coversheet#Task 1 Competencies]]
+![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
 
-![[Task 2 - Server Installation Manual Coversheet#Task 2 Competencies]]
+![[Task 2 Coversheet - Server Installation Manual#Task 2 Competencies]]
 # Content
 This semester will cover two project comprised of a number of tasks.
 
@@ -25,9 +26,9 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 # Individual Tasks
 
-[[Task 1 - Server Installation Coversheet]]
+[[Task 1 Coversheet - Server Installation]]
 
-[[Task 2 - Server Installation Manual Coversheet]]
+[[Task 2 Coversheet - Server Installation Manual]]
 
 
 

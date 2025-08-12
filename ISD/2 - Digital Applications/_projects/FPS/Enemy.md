@@ -91,9 +91,9 @@ func _physics_process(delta):
 	look_at(next_location) # Enemy will turn to face player
 	
 	# Vector Maths
-	var new_veloicty = (next_location-current_location).normalized() * SPEED
+	var new_velocity = (next_location-current_location).normalized() * SPEED
 
-	velocity = new_veloicty
+	velocity = new_velocity
 	
 	move_and_slide()
 	

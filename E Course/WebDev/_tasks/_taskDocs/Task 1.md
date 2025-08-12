@@ -1,6 +1,4 @@
 > [!info] Coversheet : [[Task 1 Coversheet - Server Installation]]
-
-> [!tip] VET Competencies
 > ![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
 
 

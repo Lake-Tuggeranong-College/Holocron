@@ -566,3 +566,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </html>
 ```
+
+
+# Altering tables through SQL
+
+To add new columns, such as fields in the users table use the following SQL
+
+```sql
+ALTER TABLE users ADD COLUMN phone_number VARCHAR(15);
+ALTER TABLE users ADD COLUMN address TEXT;
+ALTER TABLE users ADD COLUMN date_of_birth DATE;
+ALTER TABLE users ADD COLUMN next_of_kin TEXT;
+ALTER TABLE users ADD COLUMN creation_date DATE;
+ALTER TABLE users ADD COLUMN sex VARCHAR(10);
+ALTER TABLE users ADD COLUMN gender VARCHAR(15);
+
+```

@@ -199,4 +199,3 @@ Some challenges may be linked with an Arduino-based device, and others may be as
 
 
 Note: Challenges can be assigned to multiple projects as required.
-

@@ -17,9 +17,9 @@ You will be developing two websites:
 # Competencies
 These competencies are covered throughout this semester.
 
-![[Task 7 Coversheet - Website Design#Task 5 Competencies]]
-
 ![[Task 6 Coversheet - PHP Website#Task 6 Competencies]]
+
+![[Task 7 Coversheet - Website Design#Task 7 Competencies]]
 
 # Content
 This semester will be divided into two projects, *loosely* aimed at being completed each term.

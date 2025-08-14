@@ -582,3 +582,20 @@ ALTER TABLE users ADD COLUMN sex VARCHAR(10);
 ALTER TABLE users ADD COLUMN gender VARCHAR(15);
 
 ```
+
+# Database Planning
+
+After a brainstorming session, we determined these tables & fields.
+
+| Medical Information | Patient Data     | Staff Data           | Users             |
+| ------------------- | ---------------- | -------------------- | ----------------- |
+| id                  | id               | id                   | id                |
+| current medication  | medicate number  | userId (foreign key) | email_address     |
+| conditions          | userId (foreign) | bank details         | password          |
+| history             |                  | pay rate             | name              |
+| family history      |                  | roster               | phone_number      |
+| GP                  |                  | position             | address           |
+| blood type          |                  | work history         | DOB               |
+|                     |                  | leave balance        | creation_datetime |
+|                     |                  | super details        | sex               |
+|                     |                  |                      | gender            |

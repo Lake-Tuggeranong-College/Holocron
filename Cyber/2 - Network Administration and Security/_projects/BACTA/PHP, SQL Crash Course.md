@@ -589,7 +589,7 @@ After a brainstorming session, we determined these tables & fields.
 
 | Medical Information | Patient Data     | Staff Data           | Users             |
 | ------------------- | ---------------- | -------------------- | ----------------- |
-| id                  | id               | id                   | id                |
+| id (primary key)    | id (primary key) | id (primary key)     | id (primary key)  |
 | current medication  | medicate number  | userId (foreign key) | email_address     |
 | conditions          | userId (foreign) | bank details         | password          |
 | history             |                  | pay rate             | name              |

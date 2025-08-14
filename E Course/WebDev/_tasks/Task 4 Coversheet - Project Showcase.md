@@ -31,13 +31,3 @@ Note: To be deemed competent, the video **must** be edited and include title and
 
 Prior to the submission, seek feedback from your instructor on the draft showcase (ICTICT215 1.1, 1.2, 1.3, 1.4, 3.1, 3.2, 3.3). Your final submission must be updated to incorporate the feedback provided. (ICTICT215 3.4).
 
-
-# Marking Scheme
-
-The marking scheme for this task can be found on Google Classroom.
-
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]

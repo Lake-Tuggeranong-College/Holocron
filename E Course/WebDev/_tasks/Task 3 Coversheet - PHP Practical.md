@@ -43,9 +43,3 @@ This setup will allow you to develop and test your website locally, and then eas
 # Marking Scheme
 
 The marking scheme for this task can be found on Google Classroom.
-
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]

@@ -1,5 +1,5 @@
-> [!info] Coversheet : [[Task 1 Coversheet - Server Installation]]
-> ![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
+
+# Task Details
 
 
 You are working in a simulated IT support role. Your task is to set up and manage a Docker-based server environment on a local machine.

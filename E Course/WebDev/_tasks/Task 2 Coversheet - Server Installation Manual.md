@@ -34,9 +34,3 @@ For this task, you will be creating a document, detailing the installation, conf
 These are required to be deemed competent. 
 
 They can be found on Google Classroom.
-
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]

@@ -25,16 +25,5 @@ In this project, you'll set up a dedicated environment to host the websites you 
 
 # Task Details
 
-[[Task 1]]
+https://docs.google.com/document/d/15c_4_vfHetELT05-AhxV1Dj_tiM7Uvw2zp8MUmzGkFg/edit?usp=sharing
 
-# Student Guides
-
-These are required to be deemed competent. 
-
-They can be found on Google Classroom.
-
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]

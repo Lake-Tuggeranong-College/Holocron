@@ -5,6 +5,17 @@
 > Set up your work station considering WHS requirements (ICTICT214 1.1).
 > Read all requirements and conditions for the task. (ICTICT214 1.2, 1.3, 1.4, 1.5)
 
+
+# Instructions
+
+[[Software Installation & Configuration Manual]]
+
+# Slides
+
+[[Markdown]]
+
+# Task Details
+
 As part of your assessment for "Software Installation & Configuration," you are required to submit a comprehensive report detailing your understanding of server technologies, specifically in the context of [[Task 1]]. 
 
 # Deliverables

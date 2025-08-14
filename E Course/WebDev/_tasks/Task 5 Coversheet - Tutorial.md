@@ -27,10 +27,3 @@ Your tutorial must include (ICTICT216 2.1, 2.2, 2.3):
 - A step by step explanation of how to complete the tutorial and an analysis of how this addition will improve the project as a whole.
 
 Prior to the final submission, seek feedback from your instructor on the draft tutorial (ICTICT216 3.1, 3.2.). Your final submission must be updated to incorporate the feedback provided.
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]
-
-

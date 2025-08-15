@@ -38,17 +38,19 @@ This semester will be divided into three tasks, *loosely* aimed at being complet
 ## Shopfront project
 
 1. [[E Course/WebDev/_tasks/_instructions/PHP-Shopfront/Project Overview|Project Overview]]
-2. [[User Management]]
-3. [[User Notifications]]
-4. [[Session Variables]]
-5. [[Project Updates]]
-6. [[Administrator Access]]
-7. [[Products - Add]]
-8. [[Products - Edit]]
-9. [[Products - Remove]]
-10. [[Order Form]]
-11. [[Shopping Cart]]
-12. [[Invoices]]
+2. [[Database Configuration]]
+3. [[Site Template]]
+4. [[User Management]]
+5. [[User Notifications]]
+6. [[Session Variables]]
+7. [[Project Updates]]
+8. [[Administrator Access]]
+9. [[Products - Add]]
+10. [[Products - Edit]]
+11. [[Products - Remove]]
+12. [[Order Form]]
+13. [[Shopping Cart]]
+14. [[Invoices]]
 
 
 

@@ -5,7 +5,7 @@ See [[Course|Course]] for details on the course
 
 
  
-# Semester 1
+# Project 1
 
 [[Website Development Project 1|Click here for details on the semester.]]
 
@@ -16,7 +16,7 @@ See [[Course|Course]] for details on the course
 
 
 
-# Semester 2
+# Project 2
 
 
 [[Website Development Project 2|Click here for details on the semester.]]
@@ -35,7 +35,7 @@ See [[Course|Course]] for details on the course
 > - BSBWHS211 Contribute to the health and safety of self and others
 
 
-# Semester 3
+# Project 3
 
 [[Website Development Project 3|Click here for details on the semester.]]
 

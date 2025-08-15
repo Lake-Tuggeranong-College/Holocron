@@ -3,9 +3,9 @@ In this project, you'll set up a dedicated environment to host the websites you 
 
 # Details
 
-| Deliverables                   | Submitted via  | Related Task (if applicable)                       |
-| ------------------------------ | -------------- | -------------------------------------------------- |
-| Docker Container configuration | GitHub project | [[Task 2 Coversheet - Server Installation Manual]] |
+| Deliverables                   | Submitted via  |
+| ------------------------------ | -------------- |
+| Docker Container configuration | GitHub project |
 
 ## Task 1 Competencies
 
@@ -13,15 +13,6 @@ In this project, you'll set up a dedicated environment to host the websites you 
 | -------------------------------------------------------------------------------- | ------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT213](https://training.gov.au/Training/Details/ICTICT213/unitdetails)	<br> | Use computer operating systems and hardware |      ✅       |                  |               |         ✅         |
 | [ICTICT223](https://training.gov.au/Training/Details/ICTICT223/unitdetails)      | Install software applications               |              |        ✅         |               |                   |
-
-# Presentation Slides
-
-[[Development Process]]
-[[Virtualisation]]
-
-# Instructions
-
-[[Software Installation & Configuration]]
 
 # Task Details
 

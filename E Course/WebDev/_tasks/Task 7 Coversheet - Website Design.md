@@ -3,9 +3,9 @@
 
 # Details
 
-| Deliverables | Submitted via | Related Task (if applicable)        |
-| ------------ | ------------- | ----------------------------------- |
-| ==??==       | ==GitHub==    | [[Task 6 Coversheet - PHP Website]] |
+| Deliverables | Submitted via |
+| ------------ | ------------- |
+| ==??==       | ==GitHub==    |
 
 ## Task 7 Competencies
 

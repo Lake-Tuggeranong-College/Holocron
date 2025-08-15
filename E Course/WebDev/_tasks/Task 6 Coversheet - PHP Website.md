@@ -3,9 +3,9 @@
 
 # Details
 
-| Deliverables | Submitted via | Related Task (if applicable)           |
-| ------------ | ------------- | -------------------------------------- |
-| Website      | GitHub        | [[Task 7 Coversheet - Website Design]] |
+| Deliverables | Submitted via |
+| ------------ | ------------- |
+| Website      | GitHub        |
 
 ## Task 6 Competencies
 

@@ -24,7 +24,13 @@ These competencies are covered throughout this semester.
 # Content
 This semester will be divided into two projects, *loosely* aimed at being completed each term.
 
-## Project 3
+
+# Presentation Slides
+
+
+# Instructions
+
+
 
 # Individual Tasks
 

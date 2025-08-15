@@ -1,1 +1,30 @@
-This is aimed to be a 'catch-up' semester for students who need to complete previous tasks and/or competencies.
+# Overview
+
+
+
+# Competencies
+These competencies are covered throughout this semester.
+
+![[Task 8 Coversheet#Task 8 Competencies]]
+
+![[Task 9 Coversheet#Task 9 Competencies]]
+
+# Content
+This semester will be divided into two projects, *loosely* aimed at being completed each term.
+
+
+# Presentation Slides
+
+
+# Instructions
+
+
+
+# Individual Tasks
+
+[[Task 6 Coversheet - PHP Website]]
+
+[[Task 7 Coversheet - Website Design]]
+
+
+

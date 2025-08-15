@@ -5,9 +5,9 @@ For this task, you will be creating a document, detailing the installation, conf
 
 # Details
 
-| Deliverables       | Submitted via | Related Task (if applicable)                |
-| ------------------ | ------------- | ------------------------------------------- |
-| Technical Document | GitHub        | [[Task 1 Coversheet - Server Installation]] |
+| Deliverables       | Submitted via |
+| ------------------ | ------------- |
+| Technical Document | GitHub        |
 
 
 ## Task 2 Competencies
@@ -16,14 +16,6 @@ For this task, you will be creating a document, detailing the installation, conf
 | --------------------------------------------------------------------------- | ------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT214](https://training.gov.au/Training/Details/ICTICT214/unitdetails) | Operate application software packages |      ✅       |                  |               |         ✅         |
 | [BSBTEC201](https://training.gov.au/training/details/BSBTEC201/unitdetails) | Use business software applications    |              |        ✅         |               |         ✅         |
-
-# Instructions
-
-[[Software Installation & Configuration Manual]]
-
-## Slides
-
-[[Markdown]]
 
 # Task
 

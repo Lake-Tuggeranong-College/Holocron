@@ -24,6 +24,18 @@ This project, comprised of two tasks, focuses on the creation and configuration 
 
 You will also produce a report, detailing the process and submitting a timesheet to your client as an invoice for your work.
 
+
+# Presentation Slides
+
+[[Development Process]]
+[[Virtualisation]]
+[[Markdown]]
+# Instructions
+
+[[Software Installation & Configuration]]
+[[Software Installation & Configuration Manual]]
+
+
 # Individual Tasks
 
 [[Task 1 Coversheet - Server Installation]]

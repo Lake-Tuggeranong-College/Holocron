@@ -5,9 +5,9 @@ This task involves you demonstrating the website you developed in [[Task 3 Cover
 You will produce a video demonstrating the features of the website, as if you are delivering it to a paying client. 
 # Details
 
-| Deliverables                                  | Submitted via                  | Related Task (if applicable)          |
-| --------------------------------------------- | ------------------------------ | ------------------------------------- |
-| 1. Video, demonstrating the Website features. | ==GitHub, linked to YouTube==. | [[Task 3 Coversheet - PHP Practical]] |
+| Deliverables                                  | Submitted via                  |
+| --------------------------------------------- | ------------------------------ |
+| 1. Video, demonstrating the Website features. | ==GitHub, linked to YouTube==. |
 
 ## Task 4 Competencies
 

@@ -25,7 +25,12 @@ These competencies are covered throughout this semester.
 # Content
 This semester will be divided into three tasks, *loosely* aimed at being completed in sequence.
 
-## Project 2
+
+# Presentation Slides
+
+
+# Instructions
+
 
 # Individual Tasks
 

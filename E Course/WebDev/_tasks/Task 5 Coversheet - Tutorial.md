@@ -3,9 +3,9 @@
 You are required to create a tutorial that teaches future students how to complete the technical aspects of your website project, with the goal of publishing it as a learning resource. 
 # Details
 
-| Deliverables     | Submitted via | Related Task (if applicable)          |
-| ---------------- | ------------- | ------------------------------------- |
-| Written Tutorial | ==GitHub==    | [[Task 3 Coversheet - PHP Practical]] |
+| Deliverables     | Submitted via |
+| ---------------- | ------------- |
+| Written Tutorial | ==GitHub==    |
 
 ## Task 5 Competencies
 

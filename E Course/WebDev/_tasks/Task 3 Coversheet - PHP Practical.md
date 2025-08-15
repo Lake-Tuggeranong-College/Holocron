@@ -8,9 +8,9 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 
 # Details
 
-| Deliverables | Submitted via | Related Task (if applicable)             |
-| ------------ | ------------- | ---------------------------------------- |
-| PHP Website  | GitHub        | [[Task 4 Coversheet - Project Showcase]] |
+| Deliverables | Submitted via |
+| ------------ | ------------- |
+| PHP Website  | GitHub        |
 
 ## Task 3 Competencies
 

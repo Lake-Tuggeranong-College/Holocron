@@ -166,13 +166,14 @@ Inside this folder, create a file called `devcontainer.json` and replace the con
   },
   "extensions": [
     "felixfbecker.php-debug",
-    "bmewburn.vscode-intelephense-client"
+    "bmewburn.vscode-intelephense-client",
+    "cweijan.dbclient-jdbc",
+    "cweijan.vscode-database-client2"
   ],
   "forwardPorts": [80, 3306],
   "postCreateCommand": "service mariadb start && docker-php-ext-install mysqli && apache2ctl restart",
   "postStartCommand": "bash .devcontainer/postStart.sh"
 }
-
 ```
 
 ### `Dockerfile`
@@ -195,8 +196,12 @@ RUN mkdir -p /var/run/mysqld && \
 
 EXPOSE 80 3306
 
-CMD service mysql start && apache2ctl -D FOREGROUND
+ENV MARIADB_ROOT_PASSWORD=root
+ENV MARIADB_DATABASE=root
+ENV MARIADB_USER=root
+ENV MARIADB_PASSWORD=root
 
+CMD service mysql start && apache2ctl -D FOREGROUND
 ```
 
 ### `postStart.sh`
@@ -217,3 +222,76 @@ At stages of the development, such as when features have been complete, it's imp
 > [!warning] This is especially important when developing in Codespaces. Changes you make to your files, DO NOT save back into your repository. You MUST commit and push the changes to have your repository updated.
 
 ![[commonBlocks#Commit & Push]]
+
+
+# Database Configuration
+
+Before the site can be developed, the database needs to be configured to allow for user access.
+
+Open the project in Visual Studio Code, open in the Docker Container.
+
+![[projectOpenIInContainer.png]]
+
+If the **terminal** is not open, open the bottom panel and then click on the Terminal tab, as shown below:
+
+![[dbOpenTerminal.png]]
+
+Enter the following command: `mariadb-secure-installation` and press Enter.
+
+![[dbSecureInstllation.png]]
+
+You'll be asked a number of questions. Answering as indicated here:
+
+
+| Question                               | Response                                         |
+| -------------------------------------- | ------------------------------------------------ |
+| the current root password              | enter the password you entered in the Dockerfile |
+| **Switch to unix_socker authentication | n                                                |
+| Remove anonymous users?                | Y                                                |
+| **Change the root password**           | n                                                |
+| Remove anonymous users?<br>            | Y                                                |
+| **Disallow root login remotely**<br>   | n                                                |
+| Remove test database and access to it? | Y                                                |
+| Reload privilege tables now?           | Y                                                |
+
+![[dbSecureInstllationComplete.png]]
+
+# Connect to Database Server
+
+Open the Database Client exctension throught eh iton on the left hand side of Visual Studio Code.
+
+![[dbExtension.png]]
+
+
+Click the `+` to create a new connection to a database.
+
+![[dbAddNewConnection.png]]
+
+Enter the settings for the database. Choose **MariaDB** first, then enter the database password. Click **Save** and then **Connect**.
+
+![[dbConnectionSettings.png]]
+
+## Create Database
+
+MariaDb can host many different databases within the server, and each databaase needs to be created.
+
+Press the `+` button next to the active connection to add a new database.
+
+![[dbNewDatabase.png]]
+
+Modify the SQL to add the word `shopfront`.
+
+```sql
+CREATE DATABASE shopfront
+    DEFAULT CHARACTER SET = 'utf8mb4';
+```
+
+Press the **Run** button to execute the script.
+
+![[dbExecuteSQL.png]]
+
+The new database will now appear in the server.
+
+![[dbShopfrontCreated.png]]
+
+**Congratulations** you've created a database on your database server!

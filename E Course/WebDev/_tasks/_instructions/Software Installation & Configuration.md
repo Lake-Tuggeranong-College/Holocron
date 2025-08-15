@@ -161,34 +161,40 @@ Inside this folder, create a file called `devcontainer.json` and replace the con
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      },
+      "extensions": [
+        "felixfbecker.php-debug",
+        "bmewburn.vscode-intelephense-client",
+        "cweijan.dbclient-jdbc",
+        "cweijan.vscode-database-client2"
+      ]
+    }
   },
-  "extensions": [
-    "felixfbecker.php-debug",
-    "bmewburn.vscode-intelephense-client",
-    "cweijan.dbclient-jdbc",
-    "cweijan.vscode-database-client2"
-  ],
   "forwardPorts": [80, 3306],
   "postCreateCommand": "service mariadb start && docker-php-ext-install mysqli && apache2ctl restart",
   "postStartCommand": "bash .devcontainer/postStart.sh"
 }
+
 ```
 
 ### `Dockerfile`
 
 Insite this file, include the following code:
 
-```bash
+```docker
 FROM php:8.2-apache
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install MariaDB and PHP extensions
 RUN apt-get update && \
-    apt-get install -y mariadb-server mariadb-client && \
-    docker-php-ext-install mysqli
+    apt-get install -y mariadb-server mariadb-client
+
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Configure MariaDB
 RUN mkdir -p /var/run/mysqld && \
@@ -202,6 +208,7 @@ ENV MARIADB_USER=root
 ENV MARIADB_PASSWORD=root
 
 CMD service mysql start && apache2ctl -D FOREGROUND
+
 ```
 
 ### `postStart.sh`
@@ -210,6 +217,8 @@ Add this code:
 
 ```bash
 service mariadb start
+php -S 0.0.0.0:8080
+
 ```
 
 Save the file.
@@ -246,7 +255,7 @@ You'll be asked a number of questions. Answering as indicated here:
 | Question                               | Response                                         |
 | -------------------------------------- | ------------------------------------------------ |
 | the current root password              | enter the password you entered in the Dockerfile |
-| **Switch to unix_socker authentication | n                                                |
+| **Switch to unix_socker authentication | Y                                                |
 | Remove anonymous users?                | Y                                                |
 | **Change the root password**           | n                                                |
 | Remove anonymous users?<br>            | Y                                                |
@@ -271,7 +280,7 @@ Enter the settings for the database. Choose **MariaDB** first, then enter the da
 
 ![[dbConnectionSettings.png]]
 
-## Create Database
+## Create Database and user
 
 MariaDb can host many different databases within the server, and each databaase needs to be created.
 
@@ -282,11 +291,22 @@ Press the `+` button next to the active connection to add a new database.
 Modify the SQL to add the word `shopfront`.
 
 ```sql
-CREATE DATABASE shopfront
-    DEFAULT CHARACTER SET = 'utf8mb4';
+
+-- Create the database
+CREATE DATABASE shopfront;
+
+-- Create the user and set a password
+CREATE USER 'shopfront'@'localhost' IDENTIFIED BY 'shopfront';
+
+-- Grant privileges to the user on the database
+GRANT ALL PRIVILEGES ON shopfront.* TO 'shopfront'@'localhost';
+
+-- Apply the changes
+FLUSH PRIVILEGES;
+
 ```
 
-Press the **Run** button to execute the script.
+Press the **Run** button on each command to execute the SQL commands.
 
 ![[dbExecuteSQL.png]]
 

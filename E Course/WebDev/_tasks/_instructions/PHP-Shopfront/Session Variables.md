@@ -1,6 +1,4 @@
 
-# Session Variables
-
 > [!info] PHP sessions are a way for a website to remember information about a user as they interact with the website.
 
 PHP sessions are a way for a web server to store and maintain information about a user's interaction with a website across multiple requests. Sessions are used to store user-specific data, such as login credentials, shopping cart contents, or user preferences, so that this data can be accessed by the server on subsequent requests.

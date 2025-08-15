@@ -28,8 +28,28 @@ This semester will be divided into three tasks, *loosely* aimed at being complet
 
 # Presentation Slides
 
+[[E Course/WebDev/_tasks/_slides/PHP|PHP]]
+[[Programming Fundamentals]]
 
 # Instructions
+
+[[PHP Introduction]]
+
+## Shopfront project
+
+1. [[E Course/WebDev/_tasks/_instructions/PHP-Shopfront/Project Overview|Project Overview]]
+2. [[User Management]]
+3. [[User Notifications]]
+4. [[Session Variables]]
+5. [[Project Updates]]
+6. [[Administrator Access]]
+7. [[Products - Add]]
+8. [[Products - Edit]]
+9. [[Products - Remove]]
+10. [[Order Form]]
+11. [[Shopping Cart]]
+12. [[Invoices]]
+
 
 
 # Individual Tasks

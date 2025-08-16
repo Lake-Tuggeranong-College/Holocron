@@ -232,12 +232,35 @@ At stages of the development, such as when features have been complete, it's imp
 
 ![[commonBlocks#Commit & Push]]
 
+# Test configuration
+
+In the root directory, create a new file called `index.php` and replace the contents with:
+
+```php
+<?php
+echo "Configuration Successful";
+?>
+```
+
+Save the file.
+
+Open in the Docker Container, and wait for Docker to download the image and configure the container.
+
+![[projectOpenIInContainer.png]]
+
+After the container is configured, launch the site using this URL:
+
+http://localhost:8080
+
+You will see the following if everything is configured correctly.
+
+![[configurationSuccess.png]]
 
 # Database Configuration
 
 Before the site can be developed, the database needs to be configured to allow for user access.
 
-Open the project in Visual Studio Code, open in the Docker Container.
+If not already opened, open the project in Visual Studio Code in the Docker Container.
 
 ![[projectOpenIInContainer.png]]
 

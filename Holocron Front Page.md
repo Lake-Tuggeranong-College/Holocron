@@ -10,16 +10,13 @@ Welcome to the Holocron - the central repository for IT subjects at LTC.
 
 ![[commonBlocks#Contact Details]]
 
-# How to Use the Holocron
-
-![[Viewing the Holocron|How to Use the Holocron]]
 # Career Paths
 
 This shows the *intended* career paths for the different IT options at LTC.
 
 ```mermaid
 mindmap
-	root((Information<br>Technology))
+	root))Information<br>Technology((
 		Tertiary
 			Digital Technologies<br>(Games Dev)
 				Academy of Interactive Development (AIE)

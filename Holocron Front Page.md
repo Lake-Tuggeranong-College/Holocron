@@ -13,3 +13,28 @@ Welcome to the Holocron - the central repository for IT subjects at LTC.
 # How to Use the Holocron
 
 ![[Viewing the Holocron|How to Use the Holocron]]
+# Career Paths
+
+This shows the *intended* career paths for the different IT options at LTC.
+
+```mermaid
+mindmap
+	root((Information<br>Technology))
+		Tertiary
+			Digital Technologies<br>(Games Dev)
+				Academy of Interactive Development (AIE)
+				University
+			Networking and Cyber Security
+				University
+		Accredited
+			Digital Technologies<br>(Games Dev)
+				Academy of Interactive Development (AIE)
+			Networking and Cyber Security
+				CIT
+				Apprentiships
+				ASbA
+		Certificate III in<br>Information Technoloiges<br>E Course
+			CIT
+			Apprentiships
+			ASbA
+```

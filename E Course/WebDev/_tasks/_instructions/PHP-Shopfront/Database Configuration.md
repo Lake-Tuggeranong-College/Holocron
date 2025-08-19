@@ -32,6 +32,8 @@ try {
         // echo "<br>PDO Error Info: ";
         // print_r($pdo->errorInfo(), true);
 }
+
+session_start();
 ?>
 
 ```

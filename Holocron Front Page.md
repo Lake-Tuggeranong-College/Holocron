@@ -10,7 +10,7 @@ Welcome to the Holocron - the central repository for IT subjects at LTC.
 
 ![[commonBlocks#Contact Details]]
 
-# Career Paths
+# Career Path Options
 
 This shows the *intended* career paths for the different IT options at LTC.
 

@@ -11,12 +11,11 @@ Create a new file in the root directory of the project, named `config.php`
 
 ```php
 <?php
-$host = '127.0.0.1';
+$host = 'db';
 $port = 3306;
-$dbname = 'dev'; 
-$username = 'root';
-$password = 'root';
-
+$dbname = 'shopfront'; 
+$username = 'shopfront';
+$password = 'shopfront';
 try {
     $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
     $pdo = new PDO($dsn, $username, $password);
@@ -24,9 +23,17 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Connection successful
 } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    // Catch the PDOException and get the detailed error message
+        echo "Database Error: " . $e->getMessage();
+        echo "<br>Error Code: " . $e->getCode();
+        echo "<br>File: " . $e->getFile();
+        echo "<br>Line: " . $e->getLine() . "<br>";
+        // For even more detail, you can use errorInfo()
+        // echo "<br>PDO Error Info: ";
+        // print_r($pdo->errorInfo(), true);
 }
 ?>
+
 ```
 
 ![[commonBlocks#Commit & Push]]

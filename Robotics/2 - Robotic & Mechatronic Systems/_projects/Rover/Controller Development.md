@@ -1,4 +1,9 @@
 This overarching stage of project development includes many different aspects of development.
+
+# Hardware
+
+The antenna used in the proejct, for both the Controller and the Rover is the https://core-electronics.com.au/915mhz-lora-antenna-rp-sma-1-2-wave-2dbi.html
+
 # Adding IDs to Transmission data
 
 In `comms.h` modify the `transmitData()` function to prefix all communication with an ID for the rover to receive.

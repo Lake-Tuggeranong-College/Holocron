@@ -76,3 +76,100 @@ String command = waitForReply();
 
 ![[roverLoop.png]]
 
+# Feature Implementation
+
+The process above needs to be repeated for each feature being implemented.  For instance, create a new function called `commandForward()` and then update loop, so that if `command == "1,forward"` it will call that function.
+
+For example:
+
+![[roverCommandsExample.png]]
+
+## Motor Usage
+
+Before implementation into your code, it's advisable to check whether the modules have been wired and powered correctly. Luckily the library includes some example code. Open the **DCMotorTest** example code.
+
+![[roverDCMotorTest.png]]
+
+Change the motor number to one that matches where you wired your motors.
+
+![[roverDCMotorNumber.png]]
+
+Upload the code to the Feather and the motor hopefully will move. After confirmation that it works, change the motor number to the other motor, upload and test that motor.
+
+> [!warning]- Troubleshooting: Motors Don't work?
+> Check the wiring of the motors, are they connected to the motor number you expect? Check the bottom of the Motor featherwing to confirm.
+> Is the power light turned on, on the Motor featherwing?
+> Do the motors work if powered directly? (only do so with teachers supervision).
+
+
+### Implementing Motors into the Rover code
+
+Assuming the motors work correctly with the example code, it's time to integrate the required code into the rover sketch. Luckily the example code used above is helpful with that and the code can be largely copied, with slight modifications.
+
+First, you'll need to import the library and define the two motors.
+
+> [!important] Obviously, the motor numbers will need to match the wiring on your robot.
+
+![[roverMotorDefinition.png]]
+
+```arduino
+#include <Adafruit_MotorShield.h>
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+// Select which 'port' M1, M2, M3 or M4. In this case, M1
+Adafruit_DCMotor *motorLeft = AFMS.getMotor(1);
+Adafruit_DCMotor *motorRight = AFMS.getMotor(2);
+```
+
+Create a new function `initialiseMotorShield()` which runs the initialisation code.
+
+![[roverInitialiseMotor.png]]
+
+```arduino
+if (!AFMS.begin()) {         // create with the default frequency 1.6KHz
+	// if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
+	Serial.println("Could not find Motor Shield. Check wiring.");
+	while (1);
+}
+Serial.println("Motor Shield found.");
+```
+
+Update `setup()` to call the function:
+
+![[roverSetupMotor.png]]
+
+
+
+Finally, update `commandForward()` to turn both motors forward.
+
+![[roverCommandForward.png]]
+
+
+```arduino
+void commandForward() {
+  leftMotor->setSpeed(150);
+  rightMotor->setSpeed(150);
+
+  leftMotor->run(FORWARD);
+  rightMotor->run(FORWARD);
+  delay(1000); // Runs the motors for 1 second
+
+  // Stops the motors
+  leftMotor->run(RELEASE);
+  rightMotor->run(RELEASE);
+}
+```
+
+This is a extremely simple implementation of the functionality, and it just serves to test the process. You may wish to consider how to program the robot to continue to move forward until another command is received.
+
+> [!warning]- Troubleshooting - Robot spinning or moving backwards?
+> If your robot is not moving forwards as intended, and either is spinning or moving backwards, there's a few ways to fix it.
+> Change the code so that the `commandforward()` function actually makes the motors run `BACKWARDS`, although this may be confusing when reading code.
+> The other (more preferred) option is to swap the two motor cables around where they are connected to the motor terminal.
+
+
+### Other motor functions
+
+Now that you've completed the forward command, repeat the process for the different Motor commands, changing the `FORWARD` commands for `leftMotor` and `rightMotor`.
+
+
+

@@ -11,7 +11,7 @@ Create a directory in the project called `images`.
 
 Download the logo, or use your own, and save it in this directory as `logo.png`.
 
-![[E Course/WebDev/_tasks/_images/logo.png]]
+![[E Course/WebDev/_images/logo.png]]
 
 
 

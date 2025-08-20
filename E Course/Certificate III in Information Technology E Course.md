@@ -5,26 +5,27 @@ See [[Course|Course]] for details on the course
 
 
  
-# Project 1
+# Project 1 - Infrastructure
 
 [[Website Development Project 1|Click here for details on the Project.]]
 
 ![[Website Development Project 1#Overview|Semester 1]]
 
-![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
-![[Task 2 Coversheet - Server Installation Manual#Task 2 Competencies]]
+![[Website Development Project 1#Task 1.1 Competencies]]
+
+![[Website Development Project 1#Task 1.2 Competencies]]
 
 
-# Project 2
+# Project 2 - Shopfront Website
 
 
 [[Website Development Project 2|Click here for details on the Project.]]
 
 ![[Website Development Project 2#Overview]]
-![[Task 3 Coversheet - PHP Practical#Task 3 Competencies]]
 
-![[Task 4 Coversheet - Project Showcase#Task 4 Competencies]]
-![[Task 5 Coversheet - Tutorial#Task 5 Competencies]]
+![[Website Development Project 2#Task 2.1 Competencies]]
+![[Website Development Project 2#Task 2.2 Competencies]]
+![[Website Development Project 2#Task 2.3 Competencies]]
 
 
 
@@ -37,15 +38,15 @@ See [[Course|Course]] for details on the course
 > - BSBWHS211 Contribute to the health and safety of self and others
 
 
-# Project 3
+# Project 3 - Group Practical Project
 
 [[Website Development Project 3|Click here for details on the Project.]]
 
 ![[Website Development Project 3#Overview]]
 
-![[Task 6 Coversheet - PHP Website#Task 6 Competencies]]
+![[Website Development Project 3#Task 3.1 Competencies]]
 
-![[Task 7 Coversheet - Website Design#Task 7 Competencies]]
+![[Website Development Project 3#Task 3.2 Competencies]]
 
 
 

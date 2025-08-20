@@ -22,9 +22,9 @@ This semester will be divided into two projects, *loosely* aimed at being comple
 
 # Individual Tasks
 
-[[Task 6 Coversheet - PHP Website]]
+[[Task 3.1 Coversheet - PHP Website]]
 
-[[Task 7 Coversheet - Website Design]]
+[[Task 3.2 Coversheet - Website Design]]
 
 
 

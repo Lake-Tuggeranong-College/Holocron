@@ -33,6 +33,7 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 # Instructions
 
+[[Account Creation & Software Installation]]
 [[Software Installation & Configuration]]
 [[Software Installation & Configuration Manual]]
 

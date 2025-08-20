@@ -3,6 +3,35 @@
 The goal/s of this set of instructions are:
 - Configure the Docker environment within Visual Studio Code
 
+This server environment will be created:
+
+```mermaid
+
+ flowchart TD
+ 
+	subgraph User["User"]
+		Client["User Client (Browser)"]
+		Developer["Developer (VSCode)"]
+	end
+ 
+    subgraph VSCode["VS Code Dev Container"]
+        PHP["PHP Container"]
+        MariaDB["MariaDB Container"]
+        phpMyAdmin["phpMyAdmin Container"]
+    end
+    
+    
+    Client --> PHP
+	
+	Developer --> PHP
+	Developer --> phpMyAdmin
+	Developer --> MariaDB
+	
+    PHP --> MariaDB
+    phpMyAdmin --> MariaDB 
+
+```
+
 # Prerequisites
 
 These are required prior to starting these instructions

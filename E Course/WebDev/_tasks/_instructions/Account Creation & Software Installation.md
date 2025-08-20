@@ -10,7 +10,7 @@ The suggested method of signing up is to use your Schoolsnet (@schoolsnet.act.ed
 
 Click on the link to the main repository for the project.
 
-> [!danger] Add link here.
+> [!danger] https://classroom.github.com/a/poUmRMG2
 
 ## Install Software
 

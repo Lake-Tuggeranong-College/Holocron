@@ -7,19 +7,19 @@ See [[Course|Course]] for details on the course
  
 # Project 1
 
-[[Website Development Project 1|Click here for details on the semester.]]
+[[Website Development Project 1|Click here for details on the Project.]]
 
 ![[Website Development Project 1#Overview|Semester 1]]
 
-![[Website Development Project 1#Competencies|Semester 1]]
+![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
 
-
+![[Task 2 Coversheet - Server Installation Manual#Task 2 Competencies]]
 
 
 # Project 2
 
 
-[[Website Development Project 2|Click here for details on the semester.]]
+[[Website Development Project 2|Click here for details on the Project.]]
 
 ![[Website Development Project 2#Overview]]
 
@@ -37,7 +37,7 @@ See [[Course|Course]] for details on the course
 
 # Project 3
 
-[[Website Development Project 3|Click here for details on the semester.]]
+[[Website Development Project 3|Click here for details on the Project.]]
 
 ![[Website Development Project 3#Overview]]
 
@@ -47,7 +47,7 @@ See [[Course|Course]] for details on the course
 
 # Semester 4
 
-[[Website Development Project 4|Click here for details on the semester.]]
+[[Website Development Project 4|Click here for details on the Project.]]
 
 This is aimed to be a 'catch-up' semester for students who need to complete previous tasks and/or competencies.
 

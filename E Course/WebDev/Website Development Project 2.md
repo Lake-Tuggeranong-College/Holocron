@@ -8,32 +8,25 @@ The programming languages and/or technology focus in this unit will be:
 - PHP
 - GitHub
 
+# Context
+
 You will be developing two websites:
 - Task 3 - Covering the fundamentals of programming languages and websites.
 - Task 4 - Designing the layout of the site and applying programming techniques learned in a new project.
 
 
-# Competencies
-These competencies are covered throughout this semester.
+# Tasks
+
+# Task 3 - Shopfront Website
 
 ![[Task 3 Coversheet - PHP Practical#Task 3 Competencies]]
 
-![[Task 4 Coversheet - Project Showcase#Task 4 Competencies]]
-
-![[Task 5 Coversheet - Tutorial#Task 5 Competencies]]
-
-# Content
-This semester will be divided into three tasks, *loosely* aimed at being completed in sequence.
+[[Task 3 Coversheet - PHP Practical]]
 
 
-# Presentation Slides
-
-[[E Course/WebDev/_tasks/_slides/PHP|PHP]]
-[[Programming Fundamentals]]
-
-# Instructions
-
-[[PHP Introduction]]
+1. [[E Course/WebDev/_tasks/_slides/PHP|PHP]]
+2. [[Programming Fundamentals]]
+3. [[PHP Introduction]]
 
 ## Shopfront project
 
@@ -54,10 +47,12 @@ This semester will be divided into three tasks, *loosely* aimed at being complet
 
 
 
-# Individual Tasks
-
-[[Task 3 Coversheet - PHP Practical]]
-
+# Task 4 - 
+![[Task 4 Coversheet - Project Showcase#Task 4 Competencies]]
 [[Task 4 Coversheet - Project Showcase]]
 
+# Task 5 - 
+![[Task 5 Coversheet - Tutorial#Task 5 Competencies]]
+
 [[Task 5 Coversheet - Tutorial]]
+

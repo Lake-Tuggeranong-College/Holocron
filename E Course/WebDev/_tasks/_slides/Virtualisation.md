@@ -148,6 +148,8 @@ There are different approaches to using Docker.
 
 Choose the best option for the server/s or development environment.
 
+This project will be using Docker Compose due to the complexity.
+
 --
 
 # .devcontainer
@@ -171,7 +173,6 @@ GitHub will delete Codespaces after a set time of inactivity.
 - Uses `docker-compose.yml` to define multi-container apps
 	- E.g. one container for PHP, another for MySQL server.
 - Great for **local development and production parity**
-- Supports **complex service orchestration**
 - Works independently of any IDE
 
 ![[exampleDockerCompose.png|400]]
@@ -184,12 +185,12 @@ Docker Compose can be used to 'launch' multiple `.devcontainer.json` files to ma
 
 # When to Use What?
 
-| Use Case                      |  .devcontainer           |  Docker Compose          |
-| ----------------------------- | ------------------------ | ------------------------ |
-| IDE Integration               |  ✅ VS Code               | ⚠️ Limited               |
-|  Multi-service architecture   | ⚠️ Limited               |  ✅                       |
-| GitHub Codespaces             |  ✅ Native support        |  ⚠️ Requires config      |
-| Production-like setup         | ❌ Individual Dev-focused |  ✅                       |
+| Use Case                     |  .devcontainer           |  Docker Compose          |
+| ---------------------------- | ------------------------ | ------------------------ |
+| IDE Integration              |  ✅ VS Code               | ⚠️ Limited               |
+| Multi-service architecture   | ⚠️ Limited               |  ✅                       |
+| GitHub Codespaces            |  ✅ Native support        |  ⚠️ Requires config      |
+| Production-like setup        | ❌ Individual Dev-focused |  ✅                       |
 
 
 ---

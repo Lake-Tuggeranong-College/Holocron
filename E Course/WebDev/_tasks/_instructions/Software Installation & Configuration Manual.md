@@ -21,6 +21,6 @@ You will need to read the full task and be able to provide evidence for the abov
 
 # Instructions
 
-> [!important] The report is to be written in markdown in the **task2.md** file in your repository.
+> [!important] The report is to be written in markdown in the **task2/report.md** file in your repository.
 
 

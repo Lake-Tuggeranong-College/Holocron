@@ -12,7 +12,6 @@ See [[Course|Course]] for details on the course
 ![[Website Development Project 1#Overview|Semester 1]]
 
 ![[Task 1 Coversheet - Server Installation#Task 1 Competencies]]
-
 ![[Task 2 Coversheet - Server Installation Manual#Task 2 Competencies]]
 
 
@@ -22,8 +21,11 @@ See [[Course|Course]] for details on the course
 [[Website Development Project 2|Click here for details on the Project.]]
 
 ![[Website Development Project 2#Overview]]
+![[Task 3 Coversheet - PHP Practical#Task 3 Competencies]]
 
-![[Website Development Project 2#Competencies]]
+![[Task 4 Coversheet - Project Showcase#Task 4 Competencies]]
+![[Task 5 Coversheet - Tutorial#Task 5 Competencies]]
+
 
 
 > [!important]- ICT20120 Certificate II in Applied Digital Technologies EXIT POINT
@@ -41,7 +43,9 @@ See [[Course|Course]] for details on the course
 
 ![[Website Development Project 3#Overview]]
 
-![[Website Development Project 3#Competencies]]
+![[Task 6 Coversheet - PHP Website#Task 6 Competencies]]
+
+![[Task 7 Coversheet - Website Design#Task 7 Competencies]]
 
 
 

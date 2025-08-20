@@ -20,22 +20,9 @@ Once the docker container is deployed to the LTC Server, the remainder of the co
 
 Depending on your local development environment, you to open your project using one of the following methods:
 
-1. Online Development: Open the project in Codespaces from your GitHub repository in your browser.
-2. Local Development: Open the repository folder using Visual Studio Code.
+1. Local Development: Open the repository folder using Visual Studio Code.
+2. Online Development: Open the project in Codespaces from your GitHub repository in your browser.
 
-### Online Development
-
-> [!info] Use this option if you're developing on a Chromebook.
-
-Open your browser and go to your repository that was created earlier.
-
-Click on the Code menu and choose **Create codespace on main**. This will open a new tab, and after some time, you will have an interface very similar to Visual Studio Code in the browser.
-
-![[gitHubCodespacesCreate.png]]
-
-Note: The first time the codespace is opened, it can take some time to install. You may need to wait for a few minutes.
-
-![[gitHubCodespacesOpened.png]]
 
 ### Local Development
 
@@ -68,3 +55,19 @@ After a short moment, it will then show you this page:
 ![[githubDesktopRepo.png]]
 
 Click on the Current Repository Download in the top left of the window. Right Click on the repository and choose to open it in the Visual Studio Code.
+
+
+### Online Development
+
+> [!info] Use this option if you're developing on a Chromebook.
+
+Open your browser and go to your repository that was created earlier.
+
+Click on the Code menu and choose **Create codespace on main**. This will open a new tab, and after some time, you will have an interface very similar to Visual Studio Code in the browser.
+
+![[gitHubCodespacesCreate.png]]
+
+Note: The first time the codespace is opened, it can take some time to install. You may need to wait for a few minutes.
+
+![[gitHubCodespacesOpened.png]]
+

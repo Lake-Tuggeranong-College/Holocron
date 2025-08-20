@@ -33,9 +33,10 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 # Instructions
 
-[[Account Creation & Software Installation]]
-[[Software Installation & Configuration]]
-[[Software Installation & Configuration Manual]]
+1. [[Account Creation & Software Installation]]
+2. [[Docker Configuration]]
+3. [[Software Installation & Configuration]]
+4. [[Software Installation & Configuration Manual]]
 
 
 # Individual Tasks

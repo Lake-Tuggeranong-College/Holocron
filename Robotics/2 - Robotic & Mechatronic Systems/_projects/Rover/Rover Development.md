@@ -146,16 +146,16 @@ Finally, update `commandForward()` to turn both motors forward.
 
 ```arduino
 void commandForward() {
-  leftMotor->setSpeed(150);
-  rightMotor->setSpeed(150);
+  motorLeft->setSpeed(150);
+  motorRight->setSpeed(150);
 
-  leftMotor->run(FORWARD);
-  rightMotor->run(FORWARD);
+  motorLeft->run(FORWARD);
+  motorRight->run(FORWARD);
   delay(1000); // Runs the motors for 1 second
 
   // Stops the motors
-  leftMotor->run(RELEASE);
-  rightMotor->run(RELEASE);
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
 }
 ```
 

@@ -19,9 +19,9 @@ your-project/
 
 ## 🧩 Basic Structure
 
-```Yaml
-version: '3.8'
+This shows an example `docker-compose.yaml` file that defines and configures two containers.
 
+```Yaml
 services:
   app:
     build: ./app
@@ -47,13 +47,10 @@ volumes:
 
 ## 🔧 Key Sections Explained
 
-### 1. `version`
-
-Specifies the Compose file format version. Common versions: `'3.8'`, `'3'`, `'2'`.
 
 ---
 
-### 2. `services`
+### 1. `services`
 
 Defines the containers to run.
 
@@ -77,7 +74,7 @@ db:
 
 ---
 
-### 3. `build`
+### 2. `build`
 
 Builds a container from a Dockerfile.
 
@@ -89,7 +86,7 @@ build:
 
 ---
 
-### 4. `ports`
+### 3. `ports`
 
 Maps container ports to host ports.
 
@@ -100,7 +97,7 @@ ports:
 
 ---
 
-### 5. `volumes`
+### 4. `volumes`
 
 Mounts host directories or named volumes.
 
@@ -118,7 +115,7 @@ volumes:
 
 ---
 
-### 6. `environment`
+### 5. `environment`
 
 Sets environment variables.
 
@@ -130,7 +127,7 @@ environment:
 
 ---
 
-### 7. `depends_on`
+### 6. `depends_on`
 
 Specifies service dependencies.
 
@@ -141,7 +138,7 @@ depends_on:
 
 ---
 
-### 8. `networks`
+### 7. `networks`
 
 Defines custom networks.
 
@@ -161,7 +158,7 @@ services:
 
 ---
 
-### 9. `command`
+### 8. `command`
 
 Overrides the default container command.
 
@@ -171,15 +168,26 @@ command: npm start
 
 ---
 
-### 10. `restart`
+### 9. `restart`
 
-Controls restart behavior.
+Controls restart behaviour.
+
+The `restart` option defines the restart policy for containers managed by Docker Compose. This policy tells Docker when and how to automatically restart a container if it **stops or crashes**.
 
 ```Yaml
 restart: always
 ```
 
 Options: `no`, `always`, `on-failure`, `unless-stopped`
+
+| Restart Policy   | Description                                                                                                        | Behavior on Docker Daemon Restart | Manual Stop Behavior                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------- | ------------------------------------ |
+| `no`             | Default. Container won't restart automatically.                                                                    | Does not restart                  | Stays stopped                        |
+| `always`         | Always restart the container regardless of exit status.                                                            | Restarts                          | Restarts even if manually stopped    |
+| `on-failure`     | Restart only if container exits with a non-zero status.                                                            | Does not restart                  | Stays stopped                        |
+| `on-failure:N`   | Same as `on-failure`, but limits restart attempts to N times. E.g `restart: on-failure:5` would retry 5 times.<br> | Does not restart                  | Stays stopped                        |
+| `unless-stopped` | Restart unless the container was manually stopped.                                                                 | Restarts                          | Does not restart if manually stopped |
+
 
 ---
 

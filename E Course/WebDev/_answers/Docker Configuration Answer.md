@@ -39,103 +39,137 @@ These are required prior to starting these instructions
 
 # Instructions
 
-## Container Configuration
+
+## Devcontainer
 
 With your project open, create a directory named `.devcontainer` (note the leading full stop!)
 
 Inside this directory, create three files:
 
-1. `.devcontainer/devcontainer.json`
-2. `.devcontainer/Dockerfile`
+1. `devcontainer.json`
+2. `Dockerfile`
 3. `docker_compose.yml`
-
-The file structure of this project (at this stage) should appear similar to:
-```
-your-project/
-├── .devcontainer
-│   └── Dockerfile
-│   └── devcontainer.json
-└── docker-compose.yml
-```
-
-Your task is to define the requirements for the system within the three files created.
 
 ### `devcontainer.json` file
 
 This file configures the container so when it starts up, it automatically configures software to work for our project and environment.
+
+
 In the repository folder, create a folder called `.devcontainer`. The folder starts with a `.` which may mean it is usually hidden in Windows Explorer/Finder etc.
 
+Inside this folder, create a file called `devcontainer.json` and replace the contents with the following:
 
-A few items to take note of:
+```json
+{
+    "name": "PHP Apache + MariaDB Dev Container",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "web",
+    "workspaceFolder": "/var/www/html",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "felixfbecker.php-debug",
+                "bmewburn.vscode-intelephense-client",
+                "cweijan.dbclient-jdbc",
+                "cweijan.vscode-database-client2"
+            ],
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php"
+            }
+        }
+    }
 
-1. Within a PHP container using a PHP image: 
-	1. The php executable pathwill most likely be `/usr/local/bin/php`
-	2. The workspace folder is `/var/www/html`
-2. Configure the following extensions to automatically install in Visual Studio Code within the container:
-	1. "felixfbecker.php-debug",
-	2. "bmewburn.vscode-intelephense-client",
-	3. "cweijan.dbclient-jdbc",
-	4. "cweijan.vscode-database-client2"
-3. As the `devcontainer.json` file is within the `.devcontainer` directory, to access the `docker-compose.yml` file, you will need to refer to it as `../docker-compose.yml`
-
+}
+```
 
 ### `Dockerfile`
 
-The Dockerfile will be used to configure the PHP container. 
+Inside this file, include the following code:
 
-Your Dockerfile needs to achieve these goals:
-- use `docker-php-ext-install` to install `pdo` and `pdo_mysql`
-- The apache webserver needs `mod_rewrite` enabled.
-- Include the following command:
-	- `RUN echo '#!/bin/bash\n\echo "Server is running at http://localhost:80"\n\exec apache2-foreground' > /usr/local/bin/startup.sh \&& chmod +x /usr/local/bin/startup.sh`
-- Finally execute the command `/usr/local/bin/startup.sh`
+```docker
+# Use official PHP image with Apache
+FROM php:8.2-apache
+
+# Install PDO and MariaDB extensions
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Enable Apache mod_rewrite (optional, useful for frameworks like Laravel)
+RUN a2enmod rewrite
+
+# Copy your PHP application into the container
+# COPY ./src /var/www/html/
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html
+# Add a startup script to print the server URL
+RUN echo '#!/bin/bash\n\
+echo "Server is running at http://localhost:80"\n\
+exec apache2-foreground' > /usr/local/bin/startup.sh \
+    && chmod +x /usr/local/bin/startup.sh
+
+# Use the custom startup script as the container's entrypoint
+CMD ["/usr/local/bin/startup.sh"]
+
+```
 
 ### `docker-compose.yml`
 
-The last file to create is the docker-compose.yml file which defines the different containers ("services") to create.
+Add this code:
 
-Define three services with the following specifications:
+```bash
+version: '3.8'
 
-1. `web`
-	1. The container name set to `php_apache`
-	2. load  the Dockerfile created.
-	3. set the directory that docker should look for files to be the current directory - named `.`
-	4. The image is the most current php image
-	5. Map the ports from 8080 on the localhost to port 80 in the container
-	6. The volume to be `.:/var/www/html`
-	7. Relies on the `db` container to be configured and working
-2. `db`
-	1. The image is the most current mariadb image
-	2. define the container name to `db`
-	3. set the `restart` option to **always**.
-	4. Define the default database usernames, passwords and database:
-		1. root password - rootpassword
-		2. database - shopfront
-		3. user - shopfront
-		4. password - shopfront
-	5. storage volume to be `db_data:/var/lib/mysql`
-	6. Map port 3306 on the localhost to 3306 in the container.
-3. `phpmyadmin`
-	1. The image for this container is `phpmyadmin/phpmyadmin`
-	2. define the container name to `phpmyadmin_container`
-	3. Define the database connection:
-		1. The host is `db`
-		2. The root password is `rootpassword` (defined above)
-		3. The port is 3306
-	4. Map the ports from 8081 on the localhost to port 80 in the container.
-	5. Relies on the `db` container to be configured and working
+services:
+  web:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    image: php:8.2-apache
+    container_name: php_apache
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
 
-Finally, define a persistent storage volume called `db_data`
+  db:
+    image: mariadb:latest
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shopfront
+      MYSQL_USER: shopfront
+      MYSQL_PASSWORD: shopfront
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    environment:
+      PMA_HOST: db # Link to the MariaDB container service name
+      MYSQL_ROOT_PASSWORD: rootpassword # Use the same root password as MariaDB
+      PMA_PORT: 3306 # MariaDB's internal port
+    ports:
+      - "8081:80" # Expose phpMyAdmin on host port 8081
+    depends_on:
+      - db # Ensure MariaDB starts before phpMyAdmin
 
-### Test configuration
+volumes:
+  db_data:
+```
 
-Attempt to open the project in the containers and fix any bugs that occur.
+Save the file.
 
-The configuration is working when Docker Desktop shows the three containers running:
 
-![[dockerContainersConfigured.png]]
-
-## Commit & Push Changes
+## Commit & Push changes
 
 At stages of the development, such as when features have been complete, it's important to commit these changes to your repository, and then push the changes to GitHub.
 

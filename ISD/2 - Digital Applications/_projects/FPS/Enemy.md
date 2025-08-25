@@ -81,6 +81,10 @@ extends CharacterBody3D
 
 @onready var nav_agent = $NavigationAgent3D
 var SPEED = 3.0
+var root_node
+
+func _ready():
+	root_node = get_parent()
 
 func update_target_location (target_location):
 	nav_agent.set_target_position(target_location)

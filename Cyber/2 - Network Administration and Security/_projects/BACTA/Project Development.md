@@ -306,3 +306,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 ```
+
+# Patients
+
+One of the major sections of the project is to store the patient data. In order to do this, we need a process to create new patients in the system.
+

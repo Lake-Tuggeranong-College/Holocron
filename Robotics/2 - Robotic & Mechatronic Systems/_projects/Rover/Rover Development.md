@@ -172,4 +172,119 @@ This is a extremely simple implementation of the functionality, and it just serv
 Now that you've completed the forward command, repeat the process for the different Motor commands, changing the `FORWARD` commands for `leftMotor` and `rightMotor`.
 
 
+**Sample Code:**
 
+```arduino
+
+
+void loop() {
+  // readGPS();
+  // transmitData("test");
+  String command = waitForReply();
+  Serial.println(command);
+  if (command == "1,test") {
+    commandTest();
+  }
+  if (command == "1,forward") {
+    commandForward();
+  }
+  if (command == "1,right") {
+    commandRight();
+  }
+  if (command == "1,start") {
+    commandStart();
+  }
+  if (command == "1,left") {
+    commandLeft();
+  }
+  if (command == "1,stop") {
+    commandStop();
+  }
+  if (command == "1,backward") {
+    commandBackward();
+  }
+  delay(1000);
+}
+
+void commandTest() {
+  Serial.println("Command: test");
+  pixels.clear();  // Set all pixel colors to 'off'
+  pixels.setPixelColor(0, pixels.Color(150, 0, 0));
+  pixels.show();  // Send the updated pixel colors to the hardware.
+  delay(1000);
+  pixels.setPixelColor(0, pixels.Color(0, 150, 0));
+  pixels.show();  // Send the updated pixel colors to the hardware.
+  delay(1000);
+  pixels.setPixelColor(0, pixels.Color(0, 0, 150));
+  pixels.show();  // Send the updated pixel colors to the hardware.
+  delay(1000);
+  pixels.clear();  // Set all pixel colors to 'off'
+  pixels.show();
+}
+
+
+
+void commandForward() {
+  motorLeft->setSpeed(150);
+  motorRight->setSpeed(150);
+
+  motorLeft->run(FORWARD);
+  motorRight->run(FORWARD);
+  delay(1000);  // Runs the motors for 1 second
+
+  // Stops the motors
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
+}
+
+void commandBackward() {
+  motorLeft->setSpeed(150);
+  motorRight->setSpeed(150);
+
+  motorLeft->run(BACKWARD);
+  motorRight->run(BACKWARD);
+  delay(1000);  // Runs the motors for 1 second
+
+  // Stops the motors
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
+}
+
+
+void commandRight() {
+  motorLeft->setSpeed(150);
+  motorRight->setSpeed(150);
+
+  motorLeft->run(FORWARD);
+  motorRight->run(BACKWARD);
+  delay(1000);  // Runs the motors for 1 second
+
+  // Stops the motors
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
+}
+
+
+void commandLeft() {
+  motorLeft->setSpeed(150);
+  motorRight->setSpeed(150);
+
+  motorLeft->run(BACKWARD);
+  motorRight->run(FORWARD);
+  delay(1000);  // Runs the motors for 1 second
+
+  // Stops the motors
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
+}
+
+void commandStop() {
+  // Stops the motors
+  motorLeft->run(RELEASE);
+  motorRight->run(RELEASE);
+}
+
+void commandStart() {
+  // to be implemented later.
+}
+```

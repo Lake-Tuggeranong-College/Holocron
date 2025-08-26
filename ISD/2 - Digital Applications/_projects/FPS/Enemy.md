@@ -12,7 +12,7 @@ Every FPS needs an enemy!
 
 # Create a Scene
 
-Create a new scene (`File`→ `New Scene`) and create the root node as a `RigidBody3D`. This will be the root node of the enemy object.
+Create a new scene (`Scene`→ `New Scene`) and create the root node as a `CharacterBody3D`. This will be the root node of the enemy object.
 
 ![[enemyNewRoot.png]]
 ![[enemyCharacterBody3d.png]]
@@ -37,7 +37,7 @@ Ensure that the capsule is *vertical*. This simulates the character's body, so n
 
 # Timer
 
-Add a Timer node as a child of enemy.
+Add a `Timer` node as a child of enemy.
 ![[enemyNewTimer.png]]
 
 With the Timer selected, set the wait time to something appropriate and set it to Autostart.
@@ -65,7 +65,6 @@ With the CollisionShape3D selected, set the Shape attribute to a Capsule.
 The next node to add is `NavigationAgent3D`. This is the node that will interact with the NavigationMesh created in another stage.
 
 ![[enemyNavAgent.png]]
-
 # Script
 
 Attach a new Script to the enemy node.
@@ -107,7 +106,9 @@ func _physics_process(delta):
 
 # Add Enemy Group
 
-With the main enemy node selected, set the group to `enemy`.
+With the main enemy node selected, change to the **Node** tab. Click the plus button, and set the Global option to on. Name the group to `enemy`. 
+
+> [!important] Note the capitalisation of **enemy**.
 
 ![[enemyGroup.png]]
 

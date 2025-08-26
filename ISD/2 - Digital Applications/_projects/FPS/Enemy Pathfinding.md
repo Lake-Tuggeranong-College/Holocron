@@ -10,7 +10,7 @@ tags:
 
 # Navmesh
 
-Open your first level (level_one.tscn) and add a `NavigationRegion3D` as a child to the root node.
+Open the level you are currently developing and add a `NavigationRegion3D` as a child to the root node.
 
 ![[pathfindingAddRegion.png]]
 

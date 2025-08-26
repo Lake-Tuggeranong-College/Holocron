@@ -101,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </html>
 ```
 
-
 ## Update `template.php`
 
 First, fix the boostrap library import and some css, as indicated here:

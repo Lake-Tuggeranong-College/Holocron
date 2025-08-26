@@ -38,13 +38,13 @@ N/A
 **Friday** - Q3 Ends
 
 ### School Events - Week 9
-**Monday** - Q4 Commences
+
+N/A
 
 ### School Events - Week 10
 
 **Wednesday** - Breakout Activities.
 **Thursday** - Breakout Activities. 
-**Friday** - Breakout Activities. 
 
 ### School Events - Week 11
 **Monday** - Student Free Day.

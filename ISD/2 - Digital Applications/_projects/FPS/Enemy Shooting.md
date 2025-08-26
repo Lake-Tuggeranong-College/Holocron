@@ -141,3 +141,28 @@ var player = root_node.get_node("Player")
 
 ![[enemyShootingCheckDistance.png]]
 
+# Phase 3 - Can the enemy 'see' the player?
+
+The third main check is whether the enemy can see the player or if there are any obstacles in the way. This is done using raycasts. Create a new function which programmatically generates the raycast and checks if the player is within sight.
+
+```gdscript
+func has_line_of_sight(player):
+	var space_state = get_world_3d().direct_space_state
+	var from = bullet_spawn.global_transform.origin
+	var to = player.global_transform.origin
+
+	var ray_params = PhysicsRayQueryParameters3D.new()
+	ray_params.from = from
+	ray_params.to = to
+	ray_params.exclude = [self]
+	ray_params.collision_mask = 1  # Adjust this to match your player's collision layer
+
+	var result = space_state.intersect_ray(ray_params)
+
+	return result and result.collider == player
+
+```
+
+and update `_on_FireTimer_timeout()` to check if the player is within the threshold and has line of sight as can be seen in the image below.
+
+![[enemyShootingLineOfSight.png]]

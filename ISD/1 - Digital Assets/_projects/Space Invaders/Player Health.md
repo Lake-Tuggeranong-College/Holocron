@@ -3,7 +3,7 @@ tags:
   - S1
   - ISD
 ---
-> [!important] Prerequisite: [[Enemy Shooting]]
+> [!important] Prerequisite: [[ISD/1 - Digital Assets/_projects/Space Invaders/Enemy Shooting]]
 
 During the game, the players health should be impacted by various game mechanics. These could include:
 

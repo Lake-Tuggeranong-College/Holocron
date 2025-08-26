@@ -112,7 +112,7 @@ Run the game, and your enemies now should be able to shoot at you 'randomly'. Yo
 fire_timer.wait_time = rng.randf_range(10.0, 15.0)
 ```
 
-# Phase 2
+# Phase 2 - Is the Player in Range?
 
 Phase 1 of the enemy shooting is basic and simplistic - the enemy simply shoots 'randomly' whichever way it's facing no matter how far away the player is. There are many different ways to upgrade this:
 - Only shoot if the enemy can 'see' the player.

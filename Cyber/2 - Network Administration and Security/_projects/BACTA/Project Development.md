@@ -325,8 +325,3 @@ The code under [[#Database Updates]] has been updated. Rerun the SQL on the data
 ## Login
 
 
-
-# Patients
-
-One of the major sections of the project is to store the patient data. In order to do this, we need a process to create new patients in the system.
-

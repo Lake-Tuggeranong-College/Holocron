@@ -155,7 +155,7 @@ Replace the default SQL with the following and execute it.
 
 ```sql
 CREATE TABLE medical_information (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     userId INT NOT NULL,
     current_medication TEXT,
     conditions TEXT,
@@ -168,14 +168,14 @@ CREATE TABLE medical_information (
 
 
 CREATE TABLE patient_data (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     medicate_number VARCHAR(50),
     userId INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE staff_data (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INTEGER PRIMARY KEY,
     userId INT NOT NULL,
     bank_details TEXT,
     pay_rate DECIMAL(10,2),
@@ -306,6 +306,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 ```
+
+# IMPORTANT
+
+Before continuing, an error was detected on the database with regards to the SQL. Unfortuantely to fix this, you will need to delete ("drop" is the database term) the tables and recreate them. 
+
+For each of the tables created, aside from the Users table, right-click on it and choose **Drop**.
+
+Drop:
+- `patient_data`
+- `medical_information`
+- `staff_data`
+
+![[patientsDropTable.png]]
+
+The code under [[#Database Updates]] has been updated. Rerun the SQL on the database to recreate the tables. 
+
+## Login
+
+
 
 # Patients
 

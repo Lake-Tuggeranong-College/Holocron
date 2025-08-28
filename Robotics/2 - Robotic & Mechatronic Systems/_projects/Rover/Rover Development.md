@@ -288,3 +288,77 @@ void commandStart() {
   // to be implemented later.
 }
 ```
+
+
+# Crash Sensor
+
+Attach the pins:
+- + -> VCC
+- - -> GND
+- OUT -> D12
+
+## Sample Code
+
+```arduino
+const int crashSensorPin = 12;  // Pin connected to the crash sensor
+int sensorState = 0;            // Variable to store the sensor state
+
+void setup() {
+  pinMode(crashSensorPin, INPUT);  // Set pin 12 as input
+  Serial.begin(9600);              // Start serial communication
+}
+
+void loop() {
+  sensorState = digitalRead(crashSensorPin);  // Read the sensor state
+
+  if (sensorState == HIGH) {
+    Serial.println("Crash detected!");
+  } else {
+    Serial.println("No crash.");
+  }
+
+  delay(500);  // Delay for readability
+}
+
+```
+
+
+# Piezo 
+
+- + -> VCC
+- - -> GND
+- S -> D10
+
+## Sample Code
+
+```arduino
+#define buzzerPin 10
+
+// Notes in the melody:
+int melody[] = {
+  262, 262, 0, 262, 0, 208, 262, 0, 311, 0, 262
+};
+
+// Note durations: 4 = quarter note, 8 = eighth note, etc.
+int noteDurations[] = {
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4
+};
+
+void setup() {
+  // No setup needed for piezo
+}
+
+void loop() {
+  for (int i = 0; i < 11; i++) {
+    int noteDuration = 1000 / noteDurations[i];
+    if (melody[i] != 0) {
+      tone(buzzerPin, melody[i], noteDuration);
+    }
+    delay(noteDuration * 1.3); // Slight pause between notes
+    noTone(buzzerPin);         // Stop the tone
+  }
+
+  delay(2000); // Wait before repeating the tune
+}
+
+```

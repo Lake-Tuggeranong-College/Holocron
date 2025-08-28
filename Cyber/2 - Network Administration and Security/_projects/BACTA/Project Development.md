@@ -324,4 +324,122 @@ The code under [[#Database Updates]] has been updated. Rerun the SQL on the data
 
 ## Login
 
+Update login.php with:
 
+```php
+$_SESSION['user_id'] = $user['id']; // Store the user's ID in the session
+```
+# Register Staff
+
+
+```php
+<?php
+require_once 'template.php'; // Update with your actual DB connection file
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize and collect form data
+    $userId = $_SESSION['user_id'];
+    $bank_details = $_POST['bank_details'] ?? '';
+    $pay_rate = $_POST['pay_rate'] ?? 0.00;
+    $roster = $_POST['roster'] ?? '';
+    $position = $_POST['position'] ?? '';
+    $work_history = $_POST['work_history'] ?? '';
+    $leave_balance = $_POST['leave_balance'] ?? 0.00;
+    $super_details = $_POST['super_details'] ?? '';
+
+    // Prepare and execute the insert query
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO staff_data (
+                userId, bank_details, pay_rate, roster, position,
+                work_history, leave_balance, super_details
+            ) VALUES (
+                :userId, :bank_details, :pay_rate, :roster, :position,
+                :work_history, :leave_balance, :super_details
+            )
+        ");
+
+        $stmt->execute([
+            ':userId' => $userId,
+            ':bank_details' => $bank_details,
+            ':pay_rate' => $pay_rate,
+            ':roster' => $roster,
+            ':position' => $position,
+            ':work_history' => $work_history,
+            ':leave_balance' => $leave_balance,
+            ':super_details' => $super_details
+        ]);
+
+        echo "<div class='alert alert-success'>Staff registration successful!</div>";
+    } catch (PDOException $e) {
+        echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
+    }
+} 
+?>
+
+<?php
+$userId = $_SESSION['user_id'];
+$message = $_GET['message'] ?? null;
+?>
+<div class="container mt-5">
+
+  <title>Register Staff</title>
+  <h2 class="mb-4 text-center">Register Staff</h2>
+
+  <?php if ($message): ?>
+    <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
+  <?php endif; ?>
+
+  <form action="" method="POST" novalidate>
+    <input type="hidden" name="userId" value="<?php echo htmlspecialchars($userId); ?>">
+
+    <!-- Employment Details -->
+    <fieldset class="border p-3 mb-4 rounded">
+      <legend class="float-none w-auto px-2">Employment Details</legend>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="position" name="position" placeholder="Position" maxlength="100" required>
+        <label for="position">Position</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="number" step="0.01" class="form-control" id="pay_rate" name="pay_rate" placeholder="Pay Rate" required>
+        <label for="pay_rate">Pay Rate ($)</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="number" step="0.01" class="form-control" id="leave_balance" name="leave_balance" placeholder="Leave Balance" required>
+        <label for="leave_balance">Leave Balance (days)</label>
+      </div>
+    </fieldset>
+
+    <!-- Additional Information -->
+    <fieldset class="border p-3 mb-4 rounded">
+      <legend class="float-none w-auto px-2">Additional Information</legend>
+
+      <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Bank Details" id="bank_details" name="bank_details" style="height: 100px"></textarea>
+        <label for="bank_details">Bank Details</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Roster" id="roster" name="roster" style="height: 100px"></textarea>
+        <label for="roster">Roster</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Work History" id="work_history" name="work_history" style="height: 100px"></textarea>
+        <label for="work_history">Work History</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea class="form-control" placeholder="Superannuation Details" id="super_details" name="super_details" style="height: 100px"></textarea>
+        <label for="super_details">Superannuation Details</label>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-success w-100">Register Staff</button>
+  </form>
+</div>
+
+```

@@ -302,22 +302,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php
 include "template.php"; 
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email_address'];
     $password = $_POST['password'];
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email_address = ?");
-    $stmt->execute([$email]);
+    // Vulnerable: Directly embedding user input into SQL
+    $sql = "SELECT * FROM users WHERE email_address = '$email' AND password = '$password'";
+    $stmt = $pdo->query($sql);
     $user = $stmt->fetch();
 
-    if ($user && $password === $user['password']) { // Assuming passwords are stored in plain text for simplicity
-        $_SESSION['email_address'] = $user['email_address'];
-        $_SESSION['name'] = $user['name']; // Store the user's name in the session
-        header("Location: index.php"); // Redirect to a protected page
-        exit;
+    if ($user) {
+        echo "Login successful!";
     } else {
-        $error = "Invalid email or password.";
+        echo "Invalid credentials.";
     }
 }
 ?>

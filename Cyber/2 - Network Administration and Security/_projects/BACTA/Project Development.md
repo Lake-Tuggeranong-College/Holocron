@@ -443,3 +443,37 @@ $message = $_GET['message'] ?? null;
 </div>
 
 ```
+
+# Authorised Access
+
+To standardise the Role Based Access Control (RBAC) accross the whole site, we're implementing a function in `template.php` to manage the granting permission or disallowing access.
+
+Open `template.php` and add this function to the top of the code:
+
+```php
+function authorisedAccess(bool $allow_unauth, bool $allow_staff, bool $allow_patients){
+    if (!isset($_SESSION['email_address'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    if (!$allow_unauth && !isset($_SESSION['email_address'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    if ($allow_staff && isset($_SESSION['isStaff'])) {
+        return true;
+    }
+
+    if ($allow_patients && isset($_SESSION['isPatient'])) {
+        return true;
+    }
+
+    // If we reach this point, the user is not authorized
+    header('Location: login.php');
+    exit;
+}
+```
+
+![[templateAuthorisedAccess.png]]

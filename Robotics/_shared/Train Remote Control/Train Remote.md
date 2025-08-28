@@ -5,11 +5,19 @@ tag: Robotics
 ---
 # Train Remote Control
 
+# Wiring
+
+> [!warning] Using the schools IR transmitter, The pin labels are incorrect
+
+The wiring needs to be completed as per this image NOT what is written on the IT transmitter itself.
+
+![[XC4426_duinotech-arduino-compatible-infrared-transmitter-module_60429.png]]
+
 # Library
 
 Download this zip file. You do **not** need to extract/unzip the file.
 
-[[Arduino-PowerFunctions-master.zip]]
+https://github.com/Lake-Tuggeranong-College/Holocron/blob/main/Robotics/_shared/Train%20Remote%20Control/Arduino-PowerFunctions-master.zip
 
 In Arduino IDE, go to the Sketch Menu, choose Include Library, then Add .ZIP Library.
 

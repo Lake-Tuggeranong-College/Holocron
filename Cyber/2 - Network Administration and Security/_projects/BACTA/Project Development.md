@@ -444,9 +444,39 @@ $message = $_GET['message'] ?? null;
 
 ```
 
-# Authorised Access
+# Role Based Access Control
 
-To standardise the Role Based Access Control (RBAC) accross the whole site, we're implementing a function in `template.php` to manage the granting permission or disallowing access.
+
+To standardise the Role Based Access Control (RBAC) across the whole site, we're updating the database and implementing a function in `template.php` to manage the granting permission or disallowing access.
+
+## Database Tables
+
+Run the following SQL on the users table:
+
+```sql
+ALTER TABLE users 
+    ADD COLUMN isPatient BOOLEAN;
+ALTER TABLE users 
+    ADD COLUMN isStaff BOOLEAN;
+```
+
+## Test Accounts
+
+Register three new accounts on the system, through the register page:
+
+
+| Account Role | Email address                 | Password     |
+| ------------ | ----------------------------- | ------------ |
+| Staff        | staff@staff.com               | staff        |
+| Patient      | patient@patient.com           | patient      |
+| StaffPatient | staffpatient@staffpatient.com | staffpatient |
+
+
+As there is no method to change a users role at this stage, you will then need to go into the `users` table and manually set the values for the three accounts. Make sure you save the changes back to the database!
+
+![[rbacNewUserAccounts.png]]
+
+## Template function
 
 Open `template.php` and add this function to the top of the code:
 
@@ -477,3 +507,17 @@ function authorisedAccess(bool $allow_unauth, bool $allow_staff, bool $allow_pat
 ```
 
 ![[templateAuthorisedAccess.png]]
+
+# Update Permissions
+
+Using `register_patients.php` as the test page, add the following check at the top of the page:
+
+```php
+if (!authorisedAccess(false,true,false)) {
+    // If the user is not authorized, redirect to login
+     header('Location: login.php');
+        exit;
+}
+```
+
+![[registerPatientsAuthorisationCheck.png]]

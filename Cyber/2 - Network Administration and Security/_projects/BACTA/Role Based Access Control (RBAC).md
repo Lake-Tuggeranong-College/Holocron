@@ -108,3 +108,36 @@ echo '</pre>';
 This outputs data similar to the output shown below, and you can use this to confirm if `isPatient` and `isStaff` are set correctly. If the roles are set correctly, it will appear as `int(1)`. In the example below the **patient** account has the role **isPatient** set, but **isStaff** is not set.
 
 ![[rbacVarDumpOutput.png]]
+
+# `authorisedAccess()` Version 2
+
+In `template.php` update the authorised access function for the new logic.
+
+```php
+
+function authorisedAccess(bool $allow_unauth, bool $allow_staff, bool $allow_patients){
+    if (!isset($_SESSION['email_address'])) {
+        // If the user's not logged in send them to the log in page.
+        // Do we need this????????
+        header('Location: login.php');
+        exit;
+    }
+
+    if (!$allow_unauth && !isset($_SESSION['email_address'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    if ($allow_staff && $_SESSION['isStaff'] == 1) {
+        return true;
+    }
+
+    if ($allow_patients && $_SESSION['isPatient'] == 1) {
+        return true;
+    }
+
+    // If we reach this point, the user is not authorized
+    header('Location: login.php');
+    exit;
+}
+```

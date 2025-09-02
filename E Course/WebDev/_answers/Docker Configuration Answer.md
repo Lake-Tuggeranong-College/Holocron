@@ -120,8 +120,6 @@ CMD ["/usr/local/bin/startup.sh"]
 Add this code:
 
 ```bash
-version: '3.8'
-
 services:
   web:
     build:

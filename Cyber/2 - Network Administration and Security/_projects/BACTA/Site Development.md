@@ -443,3 +443,7 @@ $message = $_GET['message'] ?? null;
 </div>
 
 ```
+
+# Accessing Patient Data
+
+Using the information and skills you have, create a page where doctors can access patient information.

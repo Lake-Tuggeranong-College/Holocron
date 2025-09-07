@@ -1,4 +1,37 @@
+# Overview
 
+In this phase you'll be migrating the backend of the system in two areas:
+1. Devcontainer → Docker Compose
+2. SQLite → MySQL
+
+
+# Docker Compose
+
+In order to migrate to the new system, you'll need to create two new files in the project. The first is the `docker-compose.yml` file which will contain the 'server' containers configuration. The second is `Dockerfile` within the `.devcontainer` directory, which defines some additional configuration for the PHP Apache site.
+
+The new files should be created like this in the project:
+
+```
+project root/
+├── docker-compose.yml
+├── .devcontainer
+│   └── Dockerfile
+```
+
+
+## `docker-compose.yml`
+
+TBA
+## `Dockerfile`
+
+TBA
+## `devcontainer.json` Updates
+
+To finalise the configuration, you will need to make some changes to the `devcontainer.json` file.
+
+TBA.
+
+---
 
 # Database Migration
 

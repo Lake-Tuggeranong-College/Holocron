@@ -444,6 +444,6 @@ $message = $_GET['message'] ?? null;
 
 ```
 
-# Accessing Patient Data
+# Challenge: Accessing Patient Data
 
-Using the information and skills you have, create a page where doctors can access patient information.
+Using the information and skills you have, create a page (`patient-data.php`) where doctors can access and edit patient information.

@@ -49,6 +49,7 @@ You will also produce a report, detailing the process and submitting a timesheet
 6. [[Docker Configuration]]
 
 
+---
 ## Task 1.2 - Report
 ### Task Overview
 
@@ -69,8 +70,8 @@ You will also produce a report, detailing the process and submitting a timesheet
 
 ### Learning Content
 
- 1. Slides - [[Markdown]]
- 2. Markdown Tutorial
+ 1. Slides - [[E Course/WebDev/_slides/Markdown]]
+ 2. [[Markdown Tutorial|Markdown Tutorial]]
  3. [[Software Installation & Configuration Manual]]
 
 

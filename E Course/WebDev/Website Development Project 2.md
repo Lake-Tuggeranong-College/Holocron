@@ -34,7 +34,7 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 
 ### Learning Content
 
-1. [[PHP 1|PHP 1]]
+1. [[E Course/WebDev/_slides/PHP|PHP]]
 2. [[Programming Fundamentals]]
 3. [[PHP Introduction]]
 
@@ -56,7 +56,7 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 14. [[Invoices]]
 
 
-
+---
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
@@ -88,6 +88,8 @@ Prior to the submission, seek feedback from your instructor on the draft showcas
 | [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages        |      ✅       |                  |               |         ✅         |
 
 ### Learning Content
+Slides - [[Showcase]]
+[[Showcase Development]]
 
 
 ### Assessment Task
@@ -95,7 +97,7 @@ Prior to the submission, seek feedback from your instructor on the draft showcas
 
 ==Link to Google Classroom==
 
-
+---
 ## Task 2.3 - Tutorial
 ### Task Overview
 
@@ -125,7 +127,8 @@ Prior to the final submission, seek feedback from your instructor on the draft t
 
 
 ### Learning Content
-
+Slides - [[Tutorials]]
+[[Tutorial Writing]]
 
 ### Assessment Task
 

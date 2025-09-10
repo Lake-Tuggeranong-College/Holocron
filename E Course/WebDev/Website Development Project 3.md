@@ -12,7 +12,12 @@ Not only will you be utilising your web development skills, you will also be man
 
 ### Task Overview
 
+In this task you will work in a small team to collaboratively develop a PHP website. In your group you will work in a formal project management structure, where you will communicate through Kanban boards, and stand up meetings. 
 
+You will need to determine the requirements of the project, make decisions based on these requirements and user requirements, and implement them quickly and effectively.
+
+> [!important] While the website developed for this project is a group task, this task is **individual**.
+>  It is therefore important that you are all active members of the development team, including the development of the website code, as well as the project management techniques.
 ### Deliverable/s
 
 | Deliverables       | Submitted via |
@@ -31,7 +36,8 @@ Not only will you be utilising your web development skills, you will also be man
 
 ### Learning Content
 
-
+1. Slides - [[E Course/WebDev/_slides/Project Management|Project Management]]
+2. [[Project 3 Development Process]]
 ### Assessment Task
 
 ==Link to Google Classroom==
@@ -39,11 +45,10 @@ Not only will you be utilising your web development skills, you will also be man
 
 
 
-
+---
 ## Task 3.2 - Security Report
 
 ### Task Overview
-
 
 
 > [!important] While the website developed for this project is a group task, this task is **individual**.
@@ -68,7 +73,8 @@ Not only will you be utilising your web development skills, you will also be man
 
 ### Learning Content
 
-
+- Slides - [[Security Audits]]
+- [[Perform Security Audits]]
 ### Assessment Task
 
 ==Link to Google Classroom==

@@ -86,3 +86,28 @@ INSERT INTO users VALUES(11,'staff@staff.com','$2y$12$Om4KX4eQazpYmL8RDh26zu4lsV
 INSERT INTO users VALUES(12,'patient@patient.com','$2y$12$75ipQV8fItTJczsF.BGrzO6RtuTZouwyfISq72ZbvlrSHSHCBdmTq','patient',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0);
 INSERT INTO users VALUES(13,'staffpatient@staffpatient.com','$2y$12$Ua.T0DhAUFR0YQEnzWNJPOup0kBx.T5chCJ/b.iGltI3R5OcUp15y','staffpatient',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1);
 ```
+
+## Config.php
+
+```php
+<?php
+$servername = "BACTA-db";
+$username = "bacta";
+$password = "bacta";
+$dbname = "bacta"; 
+$port = 3306;
+
+try {
+    $dsn = "mysql:host=$servername;port=$port;dbname=$dbname;charset=utf8mb4";
+    $pdo = new PDO($dsn, $username, $password);
+
+    // Set PDO error mode to exception
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    echo "Connected successfully using PDO";
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+?>
+
+```

@@ -17,7 +17,6 @@ Here is a summary of the key points for Assessment Task 2, converted into a seri
 
 - **Assessment Task 2: Product Status Update**
 - **Semester:** Semester 2 2025 (S2 2025)
-- **Course/Unit:** Networking and Security (1290 (A) / 1289 (T)) & Cloud and Distributed Systems
 - **Weighting:** 50%
 
 --
@@ -60,7 +59,7 @@ This assessment covers specific VET competencies:
 
 ---
 
-# Slide 3: The Presentation Structure
+# The Presentation Structure
 
 ## Task Type
 
@@ -110,9 +109,13 @@ This assessment covers specific VET competencies:
 ## Required Topics
 
 1. **Programming Logic**:
-    - Describe the logic of a specific script you contributed to (for 12 Cyber).
+    - Describe the logic of ONLY the specified script
     - Use a **flowchart or pseudocode**.
     - Include the final/implemented version of the code.
+
+![[task2Logic.png]]
+
+--
 2. **Technical/Methodological Approach**:
     - Explain the **tools** (code language, IDE, Github), **frameworks** (Bootstrap), or **methods** (Waterfall, Agile) you used.
 3. **Challenges and Solutions**:
@@ -120,6 +123,7 @@ This assessment covers specific VET competencies:
 4. **Outcome**:
     - Summarise the current state of your project.
     - Outline any future improvements you would consider.
+- 
 
 ---
 

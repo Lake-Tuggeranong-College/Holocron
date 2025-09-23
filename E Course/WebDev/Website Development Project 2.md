@@ -4,9 +4,6 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 - Decision-making (if/else statements)
 - Repetition (loops)
 - Functions
-# Context
-
-
 
 # Tasks
 
@@ -38,7 +35,9 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 2. [[Programming Fundamentals]]
 3. [[PHP Introduction]]
 
-#### Shopfront project Tutorials
+#### Shopfront Project
+
+Use these tutorials to build a comprehensive shopping cart website, written in PHP in the docker environment you developed in Task 1.1.
 
 1. [[E Course/WebDev/_instructions/PHP-Shopfront/Project Overview|Project Overview]]
 2. [[Database Configuration]]
@@ -89,9 +88,8 @@ Prior to the submission, seek feedback from your instructor on the draft showcas
 
 ### Learning Content
 Slides - [[Showcase]]
+[[Video Production]]
 [[Showcase Development]]
-
-
 ### Assessment Task
 
 

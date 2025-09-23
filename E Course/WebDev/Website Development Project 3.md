@@ -16,13 +16,15 @@ In this task you will work in a small team to collaboratively develop a PHP webs
 
 You will need to determine the requirements of the project, make decisions based on these requirements and user requirements, and implement them quickly and effectively.
 
-> [!important] While the website developed for this project is a group task, this task is **individual**.
+You will also need to meet (face-to-face and/or virtually) as required to make group-decisions and meet project goals and deadlines.
+
+> [!important] While the website developed for this project is a group task, you will be assessed **individually**. Read the Assessment Task for details. 
 >  It is therefore important that you are all active members of the development team, including the development of the website code, as well as the project management techniques.
 ### Deliverable/s
 
-| Deliverables       | Submitted via |
-| ------------------ | ------------- |
-| Technical Document | GitHub        |
+| Deliverables           | Submitted via |
+| ---------------------- | ------------- |
+| ==Technical Document== | GitHub        |
 
 ### Task 3.1 Competencies
 
@@ -50,6 +52,12 @@ You will need to determine the requirements of the project, make decisions based
 
 ### Task Overview
 
+This task involves you completing a Security Audit of the website you and your group have completed. This report will cover topics such as :
+- Role Based Access Control (RBAC)
+- Personal Identifiable Information (PII)
+- Intellectual Property (IP)
+- Ethics
+- Privacy
 
 > [!important] While the website developed for this project is a group task, this task is **individual**.
 
@@ -73,6 +81,7 @@ You will need to determine the requirements of the project, make decisions based
 
 ### Learning Content
 
+- Slides - Personally Identifiable Information (PII)
 - Slides - [[Security Audits]]
 - [[Perform Security Audits]]
 ### Assessment Task

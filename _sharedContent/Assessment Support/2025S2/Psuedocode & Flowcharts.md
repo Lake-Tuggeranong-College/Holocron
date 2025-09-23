@@ -4,7 +4,7 @@ highlightTheme: zenburn
 css: css/holocronSlides.css
 ---
 
-# Introduction to Algorithms
+# Programming Logic
 
 - Algorithms solve problems step-by-step
 - Pseudocode expresses logic, not syntax

@@ -2,7 +2,7 @@
 
 The programming languages and technology focus in this unit will be:
 - Docker Container
-	- Server development
+	- Server development`
 - Report Writing
 - Spreadsheet
 	- formulas
@@ -112,7 +112,9 @@ sequenceDiagram
 
  1. Slides - [[E Course/WebDev/_slides/Markdown|Markdown Slides]]
  2. [[Markdown Tutorial|Markdown Tutorial]]
- 3. [[Software Installation & Configuration Manual]]
+ 3. Slides - [[E Course/WebDev/_slides/Mermaid Diagrams|Mermaid Diagrams]]
+ 4. [[Mermaid Tutorial|Mermaid Tutorial]]
+ 5. [[Software Installation & Configuration Manual]]
 
 
 ### Task 1.2 Assessment Task

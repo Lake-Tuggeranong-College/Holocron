@@ -77,6 +77,17 @@ div.mermaid::after {
   color: black;
 }
 
+ol {
+  font-size: 1.5rem;
+  line-height: 1.5em;
+  color: black;
+}
+
+li::marker {
+  font-size: 0.7em;
+  color: teal;
+}
+
 
 /* Mermaid Charts */
 .nodeLabel p {

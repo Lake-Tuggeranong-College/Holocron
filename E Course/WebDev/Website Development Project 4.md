@@ -1,6 +1,6 @@
 # Overview
 
-This semester finalises topics for the Cert III
+This unit is a series of self-paced tasks that can be completed at any time before the end of the course. The competencies covered are **core** competencies for the ICT30120 Certificate III in Information Technology - therefore they are required to gain the qualification.
 
 # Tasks
 

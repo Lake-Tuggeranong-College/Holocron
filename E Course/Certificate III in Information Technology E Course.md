@@ -15,6 +15,7 @@ See [[Course|Course]] for details on the course
 
 ![[Website Development Project 1#Task 1.2 Competencies]]
 
+![[Website Development Project 1#Task 1.3 Competencies]]
 
 # Project 2 - Shopfront Website
 
@@ -54,6 +55,7 @@ See [[Course|Course]] for details on the course
 
 [[Website Development Project 4|Click here for details on the Project.]]
 
-This is aimed to be a 'catch-up' semester for students who need to complete previous tasks and/or competencies.
+![[Website Development Project 4#Overview]]
+![[Website Development Project 4#Task 4.1 Competencies]]
 
-
+![[Website Development Project 4#Task 4.2 Competencies]]

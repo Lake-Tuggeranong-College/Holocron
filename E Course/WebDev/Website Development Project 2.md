@@ -59,19 +59,9 @@ Use these tutorials to build a comprehensive shopping cart website, written in P
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
-This task involves you demonstrating the website you developed in this project. 
+You need to create a 10-minute video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
 
-You will produce a video demonstrating the features of the website, as if you are delivering it to a paying client. 
 
-You will create a Showcase video (ICTICT215 2.1) detailing how the project has met its goals and intentions. You will display the project being used and show the functionality with a voiced (recorded or AI generated) commentary that provides additional details. This will also involve giving or generating a narration that explains  how the project meets the needs of the user and/or the intentions of the project.
-
-The goal of the showcase is to convey the project’s completed status to shareholders, investors, and consumers. This showcase would be the kind of thing to be shown to crowds at press conferences, IT conventions, gaming conventions etc.
-
-The showcase should be 10 minutes (± 10%) in length.
-
-Note: To be deemed competent, the video **must** be edited and include title and credit sequences (ICTICT215 2.1, 2.2), and background music and voice over (ICTICT215 2.3, 2.4)
-
-Prior to the submission, seek feedback from your instructor on the draft showcase (ICTICT215 1.1, 1.2, 1.3, 1.4, 3.1, 3.2, 3.3). Your final submission must be updated to incorporate the feedback provided. (ICTICT215 3.4).
 
 
 ### Deliverables
@@ -99,16 +89,7 @@ Slides - [[Showcase]]
 ## Task 2.3 - Tutorial
 ### Task Overview
 
-You will create a tutorial that will teach future students how to complete an advanced part of your project. The intention is to publish this tutorial for future students to follow. (ICTICT216 1.1, 1.2, 1.3.)
-
-Your tutorial must include (ICTICT216 2.1, 2.2, 2.3):
-
-- A stated aim for what will be achieved by the end of the tutorial.
-- What the reader will learn (educational goals)
-- An explanation of the theoretical concepts that are involved in your tutorial (modularisation for example) and an analysis of why these concepts are important to the project as a whole.
-- A step by step explanation of how to complete the tutorial and an analysis of how this addition will improve the project as a whole.
-
-Prior to the final submission, seek feedback from your instructor on the draft tutorial (ICTICT216 3.1, 3.2.). Your final submission must be updated to incorporate the feedback provided.
+You're tasked with creating a tutorial for future students that explains an advanced part of your project. This tutorial must clearly state its aim and educational goals, explaining what the reader will learn and achieve. It needs to include an explanation of the underlying theoretical concepts, such as modularisation, and analyse why these concepts are important to the overall project. The core of the tutorial will be a step-by-step guide on how to complete the task, along with an analysis of how this addition improves the project. Finally, you must get feedback on a draft from your instructor and incorporate their suggestions into your final submission.
 
 ### Deliverable/s
 

@@ -1,30 +1,57 @@
 # Overview
 
+This semester finalises topics for the Cert III
+
+# Tasks
+
+## Task 4.1 - PII
+
+### Task Overview
 
 
-# Competencies
-These competencies are covered throughout this semester.
+### Deliverable/s
 
-![[Task 8 Coversheet#Task 8 Competencies]]
+| Deliverables           | Submitted via |
+| ---------------------- | ------------- |
+| ==Technical Document== | GitHub        |
 
-![[Task 9 Coversheet#Task 9 Competencies]]
+### Task 4.1 Competencies
 
-# Content
-This semester will be divided into two projects, *loosely* aimed at being completed each term.
-
-
-# Presentation Slides
-
-
-# Instructions
+| Unit Code                                                                       | Unit Title                                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBXCS303](https://training.gov.au/Training/Details/BSBXCS303/unitdetails)<br> | Securely manage personally identifiable information and workplace |              |        ✅         |       ✅       |                   |
 
 
+### Learning Content
 
-# Individual Tasks
+- Slides - Personally Identifiable Information (PII)]]
+### Assessment Task
 
-[[Task 3.1 Coversheet - PHP Website]]
+==Link to Google Classroom==
 
-[[Task 3.2 Coversheet - Website Design]]
+## Task 4.2 - IP
 
+### Task Overview
+
+
+### Deliverable/s
+
+| Deliverables           | Submitted via |
+| ---------------------- | ------------- |
+| ==Technical Document== | GitHub        |
+
+### Task 4.2 Competencies
+
+| Unit Code                                                                   | Unit Title                                                   | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT313](https://training.gov.au/Training/Details/ICTICT313/unitdetails) | Identify IP, ethics and privacy policies in ICT environments |              |                  |       ✅       |                   |
+
+
+### Learning Content
+
+- Slides - IP
+### Assessment Task
+
+==Link to Google Classroom==
 
 

@@ -12,7 +12,7 @@
 
 # Slides
 
-[[E Course/WebDev/_slides/Markdown]]
+[[Slides - Markdown]]
 
 # Task Details
 

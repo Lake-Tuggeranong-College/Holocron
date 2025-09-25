@@ -70,25 +70,19 @@ This task involves you completing a Security Audit of the website you and your g
 
 ### Task 3.2 Competencies
 
-| Unit Code                                                                       | Unit Title                                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| ------------------------------------------------------------------------------- | ----------------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [BSBXCS303](https://training.gov.au/Training/Details/BSBXCS303/unitdetails)<br> | Securely manage personally identifiable information and workplace |              |        ✅         |       ✅       |                   |
-| [ICTICT221](https://training.gov.au/Training/Details/ICTICT221/unitdetails)     | Identify and use specific industry standard technologies          |              |        ✅         |               |         ✅         |
-| [ICTICT309](https://training.gov.au/Training/Details/ICTICT309/unitdetails)     | Create ICT user documentation                                     |              |                  |               |         ✅         |
-| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails)     | Develop and apply thinking and problem solving skills             |              |                  |       ✅       |                   |
-| [ICTICT313](https://training.gov.au/Training/Details/ICTICT313/unitdetails)     | Identify IP, ethics and privacy policies in ICT environments      |              |                  |       ✅       |                   |
+| Unit Code                                                                   | Unit Title                                                   | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT221](https://training.gov.au/Training/Details/ICTICT221/unitdetails) | Identify and use specific industry standard technologies     |              |        ✅         |               |         ✅         |
+| [ICTICT309](https://training.gov.au/Training/Details/ICTICT309/unitdetails) | Create ICT user documentation                                |              |                  |               |         ✅         |
+| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills        |              |                  |       ✅       |                   |
+
 
 
 ### Learning Content
 
-- Slides - Personally Identifiable Information (PII)
+
 - Slides - [[Security Audits]]
 - [[Perform Security Audits]]
 ### Assessment Task
 
 ==Link to Google Classroom==
-
-
-
-
-

@@ -88,6 +88,13 @@ li::marker {
   color: teal;
 }
 
+code {
+  font-size: 1.2rem;
+  line-height: 1em;
+  /* color: steelblue; */
+  background-color: #f4f4f4;
+  color:blueviolet
+}
 
 /* Mermaid Charts */
 .nodeLabel p {

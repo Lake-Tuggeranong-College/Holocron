@@ -3,6 +3,11 @@ theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
 ---
+# Video
+
+![](https://youtu.be/LyPdpfAqPzs)
+
+---
 
 # Programming Logic
 
@@ -126,6 +131,8 @@ if (validate($input)) {
 - Easy to follow visually
 - Great for presentations
 - Complements pseudocode well
+
+Draw using: https://app.diagrams.net/
 
 --
 ## Flowchart Symbols Overview

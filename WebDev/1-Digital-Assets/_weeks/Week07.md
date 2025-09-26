@@ -25,7 +25,7 @@ Watch the video/s supplied to understand the topics for this week.
 
 ## Presentation Tips
 
-![[presentationTips]]
+![[Presentation Design Tips]]
 
 ## Presentation
 

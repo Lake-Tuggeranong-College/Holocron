@@ -34,7 +34,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 8     | [[Software Installation & Configuration Manual]]                                          |              |                 |
 | 9     | [[Software Installation & Configuration Manual]]                                          |              |                 |
 | 10    | [[Software Installation & Configuration Manual]]                                          |              | Task 1.2 Due    |
-| 11    | Spreadsheets                                                                              |              |                 |
+| 11    | [[Spreadsheets]]                                                                          |              |                 |
 | 12    | Spreadsheet formula                                                                       |              |                 |
 | 13    | Timesheet                                                                                 |              | Task 1.3 Due    |
 | 14    | Catchup Week                                                                              |              |                 |
@@ -107,8 +107,10 @@ You are required to write a technical report in a single Markdown file that docu
 # Task 1.3 - Timesheet
 ### Task Overview
 
-You are to submit a timesheet, written in Google Docs
+You are to submit a invoice, using a provided Google Sheet (on Google Classroom). The invoice should 
+reflect the amount of hours you have worked on Project 1, and be used to submit to your client to be paid.
 
+You will build the invoice, including adding specific details and then submit as part of the GitHub Repository.
 ### Deliverable/s
 
 | Deliverables                        | Submitted via |

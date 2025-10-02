@@ -1,3 +1,7 @@
+---
+Tutorial Currency Status:
+  - Current
+---
 Prior to any website development coding can be commenced, the database must be configured and have the necessary fields in order to facilitate the websites functionality.
 
 > [!important] The database *should* have been configured in the previous project. The MariaDB server should be running in the docker container.
@@ -11,7 +15,7 @@ Create a new file in the root directory of the project, named `config.php`
 
 ```php
 <?php
-$host = 'db';
+$host = 'certIII_db';
 $port = 3306;
 $dbname = 'shopfront'; 
 $username = 'shopfront';
@@ -37,6 +41,10 @@ session_start();
 ?>
 
 ```
+
+> [!important] `$host`, `$port`, `$dbname`, `$username` and `$password` values need to match the container details you defined in `docker-compose.yml` for the container hosting the database.
+
+
 
 ![[commonBlocks#Commit & Push]]
 

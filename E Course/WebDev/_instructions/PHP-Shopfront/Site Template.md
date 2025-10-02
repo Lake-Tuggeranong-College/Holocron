@@ -1,3 +1,7 @@
+---
+Tutorial Currency Status:
+  - Current
+---
 To simplify and standardise the look and feel to the website, you will create a php page which contains all the common code for all pages. Notably, this page will:
 - Load the Bootstrap libraries
 - Define the navigation bar (navbar)
@@ -26,7 +30,7 @@ Create a new file in the root directory, naming it `template.php` and copy the f
 ### 1. **Include Configuration File**
 
 ```Php
-&lt;?php require_once 'config.php'; ?&gt;
+<?php require_once 'config.php';?>
 ```
 
 - This line includes `config.php`, which typically contains database connection settings and session initialization.
@@ -35,8 +39,6 @@ Create a new file in the root directory, naming it `template.php` and copy the f
 
 ### 2. **HTML Structure and Bootstrap Integration**
 
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAKCAYAAAAnx3TwAAABBklEQVR4AezXMQqAMBAEQPH/jxabNIIixOTWjCCIQtybq3bfXAQIECBAgAABAgQIECBAgMB0gY8L+vT5BCBAgAABAgQIECBAgAABAhEC2QU9glhIAgQIECBAgAABAgQIECDwLKCg3xj5RIAAAQIECBAgQIAAAQIERgko6KOkr//xhgABAgQIECBAgAABAgQINAEFvVH87cE8BAgQIECAAAECBAgQIJAkoKAnbatSVlkIECBAgAABAgQIECBAoKuAgt6V02G9BJxDgAABAgQIECBAgACB1QQU9NU2bt5TwE2AAAECBAgQIECAAIFyAgp6uZUIlC9gAgIECBAgQIAAAQIECLwXOAAAAP//9cOhhAAAAAZJREFUAwBT4QAVqieVXgAAAABJRU5ErkJggg==)
-
 - This sets up the page with responsive design using Bootstrap.
 
 ---
@@ -44,28 +46,39 @@ Create a new file in the root directory, naming it `template.php` and copy the f
 ### 3. **Navigation Bar with PHP Logic**
 
 ```Php
-&lt;nav class="navbar navbar-expand-lg navbar-light bg-light"&gt;
-    &lt;div class="container-fluid"&gt;
-        &lt;a class="navbar-brand" href="index.php"&gt;
-            &lt;img src="images/logo.png" alt="Blocks" width="80" height="80"&gt;
-        &lt;/a&gt;
-        ...
-        &lt;ul class="navbar-nav me-auto mb-2 mb&gt;
-            &lt;li class="nav-item"&gt;&lt;a class="nav-link" href="contact.php"&gt;Contact us&lt;/a&gt;&lt;/li&gt;
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.php">
+            <img src="images/logo.png" alt="Blocks" width="80" height="80">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            &lt;?php if (!isset($_SESSION["username"])) : ?&gt;
-                &lt;li class="nav-item"&gt;&lt;a class="nav-link" href="registration.php"&gt;Registration&lt;/a&gt;&lt;/li&gt;
-            &lt;?php endif; ?&gt;
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.php">Contact us</a></li>
 
-            &lt;?php if (isset($_SESSION["username"])) : ?&gt;
-                &lt;li class="nav-item"&gt;&lt;a class="nav-link" href="logout.php" title="Logout"&gt;Logout&lt;/a&gt;&lt;/li&gt;
-            &lt;?php endif; ?&gt;
-        &lt;/ &lt;span class="navbar-text text-success"&gt;Welcome, &lt;?= htmlspecialchars($_SESSION['name']) ?&gt;&lt;/span&gt;
-        &lt;?php else : ?&gt;
-            &lt;a class="nav-link text-danger" href="index.php"&gt;Sign In&lt;/a&gt;
-        &lt;?php endif; ?&gt;
-    &lt;/div&gt;
-&lt;/nav&gt;
+                <?php if (!isset($_SESSION["username"])) : ?>
+                    <li class="nav-item"><a class="nav-link" href="registration.php">Registration</a></li>
+                <?php endif; ?>
+
+
+                <?php if (isset($_SESSION["username"])) : ?>
+                    <li class="nav-item"><a class="nav-link" href="logout.php" title="Logout">Logout</a></li>
+                <?php endif; ?>
+            </ul>
+
+            <?php if (isset($_SESSION['name'])) : ?>
+                <span class="navbar-text text-success">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
+            <?php else : ?>
+                <a class="nav-link text-danger" href="index.php">Sign In</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</nav>
 ```
 
 - This dynamic navbar shows different links based on the user's login status.
@@ -76,30 +89,23 @@ Create a new file in the root directory, naming it `template.php` and copy the f
 **Sanitisation Function**
 
 ```Php
-&lt;?php
+<?php
 function sanitise_data($data)
 {
     return htmlspecialchars(stripslashes(trim($data)));
 }
-?&gt;
+
+?>
 ```
 
 - This function helps clean user input to prevent XSS and other injection attacks.
 
 ---
 
-### 5. **Bootstrap JS Bundle**
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAKCAYAAAAnx3TwAAABBklEQVR4AezXMQqAMBAEQPH/jxabNIIixOTWjCCIQtybq3bfXAQIECBAgAABAgQIECBAgMB0gY8L+vT5BCBAgAABAgQIECBAgAABAhEC2QU9glhIAgQIECBAgAABAgQIECDwLKCg3xj5RIAAAQIECBAgQIAAAQIERgko6KOkr//xhgABAgQIECBAgAABAgQINAEFvVH87cE8BAgQIECAAAECBAgQIJAkoKAnbatSVlkIECBAgAABAgQIECBAoKuAgt6V02G9BJxDgAABAgQIECBAgACB1QQU9NU2bt5TwE2AAAECBAgQIECAAIFyAgp6uZUIlC9gAgIECBAgQIAAAQIECLwXOAAAAP//9cOhhAAAAAZJREFUAwBT4QAVqieVXgAAAABJRU5ErkJggg==)
-
-- This includes Bootstrap's JavaScript features like dropdowns and modals.
-
----
-
 ## ✅ Implementation Tips
 
 - **Session Management**: Always start sessions in `config.php` or at the top of each PHP file.
-- **Security**: Use `htmlspecialchars()` and `mysqli_real_escape_string()` for sanitizing inputs.
+- **Security**: Use `htmlspecialchars()` for sanitising inputs.
 - **Modularity**: Keep reusable components like headers and footers in separate files and include them using `require_once`.
 
 ---
@@ -113,7 +119,7 @@ function sanitise_data($data)
 
 ---
 
-Would you like help building the `registration.php` or `logout.php` functionality next?
+
 
 
 ```php

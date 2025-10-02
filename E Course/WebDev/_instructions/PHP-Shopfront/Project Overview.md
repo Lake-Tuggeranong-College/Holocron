@@ -1,3 +1,7 @@
+---
+Tutorial Currency Status:
+  - Current
+---
 The website being developed is an ecommerce site to sell products. Users will be able to select products and add them to a shopping cart and confirm the orders. Administrators will be able to see open orders and mark as completed.
 
 ![[overviewOrderForm.png]]

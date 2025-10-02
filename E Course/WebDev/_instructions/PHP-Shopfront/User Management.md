@@ -1,3 +1,7 @@
+---
+Tutorial Currency Status:
+  - Unconfirmed.
+---
 # User Registration
 
 To begin the process of User Management, the user will need to be able to register an account.

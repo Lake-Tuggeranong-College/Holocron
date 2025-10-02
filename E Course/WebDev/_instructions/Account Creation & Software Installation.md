@@ -53,4 +53,4 @@ Download the installer for your operating system and install it once the downloa
 
 Once opened, you will need to sign in to GitHub through the browser using your GitHub account.
 
-Clone the repository created when you accepted the GitHub Classroom assignment.
+

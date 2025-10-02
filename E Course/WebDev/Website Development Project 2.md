@@ -5,6 +5,35 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 - Repetition (loops)
 - Functions
 
+
+# Schedule
+
+Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
+Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
+
+| Weeks | Content                                                                                                                                        | Competencies | Assessments Due |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
+| 1     | Slides - [[E Course/WebDev/_slides/PHP\|PHP]]<br>Slides - [[Programming Fundamentals]]<br>[[PHP Introduction]]                                 |              |                 |
+| 2     | 1. [[E Course/WebDev/_instructions/PHP-Shopfront/Project Overview\|Project Overview]]<br>2. [[Database Configuration]]<br>3. [[Site Template]] |              |                 |
+| 3     | 1. [[User Management]]<br>2. [[User Notifications]]<br>3. [[Session Variables]]                                                                |              |                 |
+| 4     | 1. [[Project Updates]]<br>2. [[Administrator Access]]                                                                                          |              |                 |
+| 5     | 1. [[Products - Add]]<br>2. [[Products - Edit]]<br>3. [[Products - Remove]]                                                                    |              |                 |
+| 6     | 1. [[Order Form]]<br>2. [[Shopping Cart]]<br>3. [[Invoices]]<br>                                                                               |              |                 |
+| 7     |                                                                                                                                                |              | Task 2.1 Due    |
+| 8     | Slides - [[Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                                                                      |              |                 |
+| 9     | Showcase Development                                                                                                                           |              |                 |
+| 10    | Showcase Development                                                                                                                           |              |                 |
+| 11    | Showcase Development                                                                                                                           |              | Task 2.2 Due    |
+| 12    | Slides - [[Tutorials]]<br>[[Tutorial Writing]]                                                                                                 |              |                 |
+| 13    | Tutorial Development                                                                                                                           |              |                 |
+| 14    | Tutorial Development                                                                                                                           |              | Task 2.3 Due    |
+| 15    | Assessment Second Sitting                                                                                                                      |              |                 |
+| 16    | Assessment Second Sitting                                                                                                                      |              |                 |
+| 17    | Assessment Second Sitting                                                                                                                      |              |                 |
+| 18    | Assessment Second Sitting                                                                                                                      |              |                 |
+
+
+
 # Tasks
 
 ## Task 2.1 - Shopfront Website
@@ -29,39 +58,12 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 
 ==Link to Google Classroom==
 
-### Learning Content
-
-1. [[E Course/WebDev/_slides/PHP|PHP]]
-2. [[Programming Fundamentals]]
-3. [[PHP Introduction]]
-
-#### Shopfront Project
-
-Use these tutorials to build a comprehensive shopping cart website, written in PHP in the docker environment you developed in Task 1.1.
-
-1. [[E Course/WebDev/_instructions/PHP-Shopfront/Project Overview|Project Overview]]
-2. [[Database Configuration]]
-3. [[Site Template]]
-4. [[User Management]]
-5. [[User Notifications]]
-6. [[Session Variables]]
-7. [[Project Updates]]
-8. [[Administrator Access]]
-9. [[Products - Add]]
-10. [[Products - Edit]]
-11. [[Products - Remove]]
-12. [[Order Form]]
-13. [[Shopping Cart]]
-14. [[Invoices]]
-
 
 ---
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
 You need to create a 10-minute video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
-
-
 
 
 ### Deliverables
@@ -76,10 +78,7 @@ You need to create a 10-minute video showcasing a website you developed, present
 | ------------------------------------------------------------------------------- | ------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages        |      ✅       |                  |               |         ✅         |
 
-### Learning Content
-Slides - [[Showcase]]
-[[Video Production]]
-[[Showcase Development]]
+
 ### Assessment Task
 
 
@@ -105,9 +104,6 @@ You're tasked with creating a tutorial for future students that explains an adva
 | [ICTICT216](https://training.gov.au/Training/Details/ICTICT216/unitdetails) | Design and create basic organisational documents |              |        ✅         |               |         ✅         |
 
 
-### Learning Content
-Slides - [[Tutorials]]
-[[Tutorial Writing]]
 
 ### Assessment Task
 

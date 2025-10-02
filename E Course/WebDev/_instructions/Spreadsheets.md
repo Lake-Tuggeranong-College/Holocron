@@ -97,7 +97,7 @@ This will download the invoice as a PDF.
 
 ## GitHub Repository
 
-Move both the Excel and PDF versions of the invoice into the `task1.3` directory in your GitHub Repository.
+Move both the Excel and PDF versions of the invoice into the **_tasks/task1.3** directory in your GitHub Repository.
 
 ![[commonBlocks#Commit & Push]]
 

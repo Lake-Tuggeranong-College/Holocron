@@ -37,9 +37,9 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 11    | [[Spreadsheets]]                                                                          |              |                 |
 | 12    | Spreadsheet formula                                                                       |              |                 |
 | 13    | Timesheet                                                                                 |              | Task 1.3 Due    |
-| 14    | Catchup Week                                                                              |              |                 |
-| 15    | Catchup Week                                                                              |              |                 |
-| 16    | Catchup Week                                                                              |              |                 |
+| 14    | Assessment Second Sitting                                                                 |              |                 |
+| 15    | Assessment Second Sitting                                                                 |              |                 |
+| 16    | Assessment Second Sitting                                                                 |              |                 |
 | 17    |                                                                                           |              |                 |
 | 18    |                                                                                           |              |                 |
 

@@ -21,7 +21,7 @@ You will need to read the full task and be able to provide evidence for the abov
 
 # Instructions
 
-> [!important] The report is to be written in markdown in the **task1.2/manual.md** file in your repository.
+> [!important] The report is to be written in markdown in the **_tasks/task1.2/manual.md** file in your repository.
 
 Your task is to write a report detailing the **final** installation configuration for the Docker server environment you developed.
 

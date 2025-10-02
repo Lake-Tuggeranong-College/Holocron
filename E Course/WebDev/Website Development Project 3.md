@@ -6,6 +6,34 @@ Not only will you be utilising your web development skills, you will also be man
 
 > [!important] During this task, your instructor will be acting in the role as the **client**, which you will be developing a site for.
 
+
+# Schedule
+
+Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
+Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
+
+| Weeks | Content                                                                                                                | Competencies | Assessments Due |
+| ----- | ---------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
+| 1     | 1. Slides - [[E Course/WebDev/_slides/Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                 |
+| 2     |                                                                                                                        |              |                 |
+| 3     |                                                                                                                        |              |                 |
+| 4     |                                                                                                                        |              |                 |
+| 5     |                                                                                                                        |              |                 |
+| 6     |                                                                                                                        |              |                 |
+| 7     |                                                                                                                        |              |                 |
+| 8     |                                                                                                                        |              |                 |
+| 9     |                                                                                                                        |              |                 |
+| 10    |                                                                                                                        |              | Task 3.1 Due    |
+| 11    | - Slides - [[Security Audits]]<br>- [[Perform Security Audits]]                                                        |              |                 |
+| 12    |                                                                                                                        |              |                 |
+| 13    |                                                                                                                        |              |                 |
+| 14    |                                                                                                                        |              |                 |
+| 15    |                                                                                                                        |              |                 |
+| 16    |                                                                                                                        |              |                 |
+| 17    |                                                                                                                        |              |                 |
+| 18    |                                                                                                                        |              |                 |
+
+
 # Tasks
 
 ## Task 3.1 - Team-based Development
@@ -36,10 +64,7 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 | [ICTSAS305](https://training.gov.au/Training/Details/ICTSAS305/unitdetails)     | Provide ICT advice to clients                     |              |                  |       ✅       |                   |
 
 
-### Learning Content
 
-1. Slides - [[E Course/WebDev/_slides/Project Management|Project Management]]
-2. [[Project 3 Development Process]]
 ### Assessment Task
 
 ==Link to Google Classroom==
@@ -81,8 +106,7 @@ This task involves you completing a Security Audit of the website you and your g
 ### Learning Content
 
 
-- Slides - [[Security Audits]]
-- [[Perform Security Audits]]
+
 ### Assessment Task
 
 ==Link to Google Classroom==

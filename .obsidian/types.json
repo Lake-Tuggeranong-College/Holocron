@@ -5,6 +5,7 @@
     "tags": "tags",
     "date": "date",
     "versionTested": "multitext",
-    "yearSemester": "multitext"
+    "yearSemester": "multitext",
+    "Tutorial Currency Status": "multitext"
   }
 }

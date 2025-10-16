@@ -3,6 +3,10 @@
   "host": "publish-01.obsidian.md",
   "included": [],
   "excluded": [
-    "E Course/WebDev/_answers"
+    "E Course/WebDev/_answers",
+    "ISD/2 - Digital Applications/_topics/Archived",
+    "Robotics/_projects/_archived",
+    "Cyber/2 - Network Administration and Security/_projects/BACTA/archived",
+    "_admin"
   ]
 }

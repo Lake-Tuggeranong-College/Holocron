@@ -8,6 +8,7 @@ css: css/holocronSlides.css
 
 PHP (Hypertext Preprocessor) is a **server-side scripting language** designed for web development but also used as a general-purpose language.
 
+--
 ### Key Features:
 
 - Runs on the server
@@ -40,6 +41,7 @@ PHP is:
 
 Learning PHP is valuable for cybersecurity because:
 
+--
 ## Understanding Web Vulnerabilities
 
 PHP developers often deal with:
@@ -94,10 +96,7 @@ Explore these resources to dive deeper:
 
 ---
 
-Would you like this saved as a downloadable `.md` file or styled for a specific presentation tool like Marp or Reveal.js?
-
-  
-References
+# References
 
 [1] [What Every PHP Developer Needs to Know About Cyber Security](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
@@ -106,6 +105,7 @@ References
 [3] [PHP And Cybersecurity - Shielding Your Web Applications](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
 
 [4] [Building Secure PHP Applications: A Comprehensive Guide to Protecting ...](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
+
 ---
 
 # Questions?

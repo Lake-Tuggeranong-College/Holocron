@@ -1,8 +1,6 @@
 > [!note]- Project Overview
-> ![[Cyber/3 - Designing & Securing Enterprise Networks/_projects/CTF/Project Overview#Project Overview|Project Overview]]
+> ![[2026S1 Project Overview]]
 
-
-[[LTC Server]] details can be found here.
 
 # Semester Plan
 

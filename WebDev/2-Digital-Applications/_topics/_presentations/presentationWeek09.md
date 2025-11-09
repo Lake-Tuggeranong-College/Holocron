@@ -16,7 +16,7 @@ Goals for this week:
 
 # Theory Content
 
-[[_sharedContent/Design/Personas|Personas]]
+[[Personas|Personas]]
 - Theoretical users/user-groups that you are going to guide the creation of your product
 - Very important process for market research and scoping a project
 - Template for persona creation will be on google classroom

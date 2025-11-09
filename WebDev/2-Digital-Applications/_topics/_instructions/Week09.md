@@ -20,7 +20,7 @@
 
 
 # Theory
-- [[_sharedContent/Design/Personas|Personas]]
+- [[Personas|Personas]]
 
 # Practical
 - [[shoppingListPart3]]

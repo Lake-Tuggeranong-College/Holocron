@@ -42,11 +42,11 @@ Resources used for the VET competencies could potentially be used for the interv
 --
 # How to complete
 
-![[/_sharedContent/_images/vetEvidenceWorksheet.png]]
+![[vetEvidenceWorksheet.png]]
 
 ## Example Entry
 
-![[/_sharedContent/_images/vetEvidenceWorksheetExample.png]]
+![[vetEvidenceWorksheetExample.png]]
 
 ---
 

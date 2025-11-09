@@ -1,10 +1,18 @@
 ---
-tags: ANH
+versionTested:
+  - 4.2.2
+  - "4.3"
+tags:
+  - ISD
+  - yr11
 ---
+
+> [!tip] Sign into GitHub in the browser, before proceeding.
 
 Click on the link to the GitHub Classroom assignment:
 
-https://classroom.github.com/a/6DQ8yZw8
+[https://classroom.github.com/a/uqUtrAq_](https://classroom.github.com/a/uqUtrAq_)
+
 
 Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
 

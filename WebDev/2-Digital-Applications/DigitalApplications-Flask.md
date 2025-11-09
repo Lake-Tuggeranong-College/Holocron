@@ -169,7 +169,7 @@ N/A
 #### Class Tasks
 - [[presentationWeek09]]
 #### Theory
-- [[_sharedContent/Design/Personas|Personas]]
+- [[Personas|Personas]]
 #### Practical
 - [[shoppingListPart3]]
 

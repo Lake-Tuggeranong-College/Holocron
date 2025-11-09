@@ -9,7 +9,7 @@ yearSemester:
 
 For suggestions on how to structure your report, see this page:
 
-[[technicalReportWriting.md|Technical Report Writing]]
+[[technicalReportWriting|Technical Report Writing]]
 
 
 # Assessable Topics 
@@ -100,7 +100,7 @@ Focus on how data is transmitted within the project from one sub-system to anoth
 
 ## Development Process
 
-![[_sharedContent/Assessment Support/Assessments2024S2/Task 2#Development Process|Task 2]]
+![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Development Process|Task 2]]
 
 
 ## Technical Analysis

@@ -11,28 +11,28 @@ tag: Robotics
 # Semester Plan
 
 
-| Week                                            | Content | Submissions |
-| ----------------------------------------------- | ------- | ----------- |
-| ![[semesterCalendarS1#School Events - Week 1]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 2]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 3]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 4]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 5]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 6]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 7]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 8]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 9]]  |         |             |
-| ![[semesterCalendarS1#School Events - Week 10]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 11]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 12]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 13]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 14]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 15]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 16]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 17]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 18]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 19]] |         |             |
-| ![[semesterCalendarS1#School Events - Week 20]] |         |             |
+| Week                                            | Content                      | Submissions |
+| ----------------------------------------------- | ---------------------------- | ----------- |
+| ![[semesterCalendarS1#School Events - Week 1]]  | Project Definition and Scope |             |
+| ![[semesterCalendarS1#School Events - Week 2]]  | Goals definition             |             |
+| ![[semesterCalendarS1#School Events - Week 3]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 4]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 5]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 6]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 7]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 8]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 9]]  | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 10]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 11]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 12]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 13]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 14]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 15]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 16]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 17]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 18]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 19]] |                              |             |
+| ![[semesterCalendarS1#School Events - Week 20]] |                              |             |
 
 # Subject Information
 

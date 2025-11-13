@@ -14,7 +14,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 | Weeks | Content                                                                                                                | Competencies | Assessments Due |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
-| 1     | 1. Slides - [[_Certificate III E Course/WebDev/_slides/Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                 |
+| 1     | 1. Slides - [[Slides - Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                 |
 | 2     |                                                                                                                        |              |                 |
 | 3     |                                                                                                                        |              |                 |
 | 4     |                                                                                                                        |              |                 |
@@ -24,7 +24,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 8     |                                                                                                                        |              |                 |
 | 9     |                                                                                                                        |              |                 |
 | 10    |                                                                                                                        |              | Task 3.1 Due    |
-| 11    | - Slides - [[Security Audits]]<br>- [[Perform Security Audits]]                                                        |              |                 |
+| 11    | - Slides - [[Slides - Security Audits]]<br>- [[Perform Security Audits]]                                                        |              |                 |
 | 12    |                                                                                                                        |              |                 |
 | 13    |                                                                                                                        |              |                 |
 | 14    |                                                                                                                        |              |                 |
@@ -60,8 +60,7 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 | ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTWEB304](https://training.gov.au/Training/Details/ICTWEB304/unitdetails)<br> | Build simple web pages                            |              |                  |               |         ✅         |
 | [ICTWEB431](https://training.gov.au/Training/Details/ICTWEB431/unitdetails)     | Create and style simple markup language documents |              |                  |               |         ✅         |
-| [BSBXTW301](https://training.gov.au/Training/Details/BSBXTW301/unitdetails)     | Work in a team                                    |              |                  |       ✅       |                   |
-| [ICTSAS305](https://training.gov.au/Training/Details/ICTSAS305/unitdetails)     | Provide ICT advice to clients                     |              |                  |       ✅       |                   |
+
 
 
 
@@ -69,11 +68,36 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 
 ==Link to Google Classroom==
 
+---
+## Task 3.2 Group Work Interactions
 
+### Task Overview
+
+During the development of the website, you will be assessed on your skills in working in a team, and how you present information to others. 
+
+This interview will be a combination of interview and observational assessment. 
+
+### Deliverable/s
+
+| Deliverables           | Submitted via |
+| ---------------------- | ------------- |
+| ==Technical Document== | GitHub        |
+
+### Task 3.2 Competencies
+
+| Unit Code                                                                       | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBXTW301](https://training.gov.au/Training/Details/BSBXTW301/unitdetails)     | Work in a team                                    |              |                  |       ✅       |                   |
+| [ICTSAS305](https://training.gov.au/Training/Details/ICTSAS305/unitdetails)     | Provide ICT advice to clients                     |              |                  |       ✅       |                   |
+
+
+### Assessment Task
+
+==Link to Google Classroom==
 
 
 ---
-## Task 3.2 - Security Report
+## Task 3.3 - Security Report
 
 ### Task Overview
 
@@ -93,13 +117,13 @@ This task involves you completing a Security Audit of the website you and your g
 | ------------------------------- | ------------- |
 | Technical Document, in Markdown | GitHub        |
 
-### Task 3.2 Competencies
+### Task 3.3 Competencies
 
-| Unit Code                                                                   | Unit Title                                                   | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT221](https://training.gov.au/Training/Details/ICTICT221/unitdetails) | Identify and use specific industry standard technologies     |              |        ✅         |               |         ✅         |
-| [ICTICT309](https://training.gov.au/Training/Details/ICTICT309/unitdetails) | Create ICT user documentation                                |              |                  |               |         ✅         |
-| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills        |              |                  |       ✅       |                   |
+| Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT221](https://training.gov.au/Training/Details/ICTICT221/unitdetails) | Identify and use specific industry standard technologies |              |        ✅         |               |         ✅         |
+| [ICTICT309](https://training.gov.au/Training/Details/ICTICT309/unitdetails) | Create ICT user documentation                            |              |                  |               |         ✅         |
+| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills    |              |                  |       ✅       |                   |
 
 
 

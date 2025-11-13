@@ -24,7 +24,7 @@ This unit is a series of **self-paced tasks** that can be completed at any time 
 
 ### Learning Content
 
-- Slides - Personally Identifiable Information (PII)]]
+- [[Slides - Personal Identifiable Information (PII)]]
 ### Assessment Task
 
 ==Link to Google Classroom==
@@ -45,11 +45,12 @@ This unit is a series of **self-paced tasks** that can be completed at any time 
 | Unit Code                                                                   | Unit Title                                                   | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT313](https://training.gov.au/Training/Details/ICTICT313/unitdetails) | Identify IP, ethics and privacy policies in ICT environments |              |                  |       ✅       |                   |
+|                                                                             |                                                              |              |                  |               |                   |
 
 
 ### Learning Content
 
-- Slides - IP
+- [[Slides - Intellectual Property]]
 ### Assessment Task
 
 ==Link to Google Classroom==

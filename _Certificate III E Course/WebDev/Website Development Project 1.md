@@ -15,7 +15,7 @@ This project, comprised of two tasks, focuses on the creation and configuration 
 
 You will also produce a report, detailing the process and submitting a timesheet to your client as an invoice for your work.
 
-[[Development Process]]
+[[Slides - Development Process]]
 
 # Schedule
 

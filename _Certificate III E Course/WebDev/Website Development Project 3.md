@@ -69,7 +69,7 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 ==Link to Google Classroom==
 
 ---
-## 3.2 Group Work Interactions
+## Task 3.2 Group Work Interactions
 
 ### Task Overview
 
@@ -83,7 +83,7 @@ This interview will be a combination of interview and observational assessment.
 | ---------------------- | ------------- |
 | ==Technical Document== | GitHub        |
 
-### Task 3.1 Competencies
+### Task 3.2 Competencies
 
 | Unit Code                                                                       | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
@@ -117,7 +117,7 @@ This task involves you completing a Security Audit of the website you and your g
 | ------------------------------- | ------------- |
 | Technical Document, in Markdown | GitHub        |
 
-### Task 3.2 Competencies
+### Task 3.3 Competencies
 
 | Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |

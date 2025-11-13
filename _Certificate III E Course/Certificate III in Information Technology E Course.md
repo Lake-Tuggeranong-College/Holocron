@@ -51,6 +51,7 @@ See [[Course|Course]] for details on the course
 
 ![[Website Development Project 3#Task 3.2 Competencies]]
 
+![[Website Development Project 3#Task 3.3 Competencies]]
 
 
 # Self-paced units

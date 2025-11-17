@@ -49,7 +49,7 @@ PHP developers often deal with:
 - SQL Injection
 - Cross-Site Scripting (XSS)
 - Cross-Site Request Forgery (CSRF)
-- File inclusion vulnerabilities[[2]](https://clouddevs.com/php/security-best-practices/)
+- File inclusion vulnerabilities(https://clouddevs.com/php/security-best-practices/)
 
 --
 ## Securing Web Applications
@@ -58,7 +58,7 @@ Knowing PHP helps you:
 
 - Audit and secure PHP-based apps
 - Implement secure coding practices
-- Understand how attackers exploit web apps[[3]](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
+- Understand how attackers exploit web apps(https://wpwebinfotech.com/blog/php-and-cybersecurity/)
 
 ---
 
@@ -70,7 +70,7 @@ Knowing PHP helps you:
 - Output encoding (`htmlspecialchars()`)
 - Secure password handling (`password_hash()`)
 - HTTPS and secure headers
-- Safe file uploads and session management[[2]](https://clouddevs.com/php/security-best-practices/)
+- Safe file uploads and session management(https://clouddevs.com/php/security-best-practices/)
 
 ---
 
@@ -78,10 +78,10 @@ Knowing PHP helps you:
 
 Explore these resources to dive deeper:
 
-- [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)[[4]](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
-- [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)[[3]](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
+- [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)(https://link.springer.com/book/10.1007/979-8-8688-0932-3)
+- [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)(https://wpwebinfotech.com/blog/php-and-cybersecurity/)
 - [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)[[2]](https://clouddevs.com/php/security-best-practices/)
-- [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)[[1]](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
+- [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)(https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
 ---
 

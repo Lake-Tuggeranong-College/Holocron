@@ -1,5 +1,3 @@
-> [!info] Coversheet: [[Task 1.2 Coversheet - Server Installation Manual]]
-> ![[Task 1.2 Coversheet - Server Installation Manual#Task 2 Competencies]]
 
 > [!important] Before starting the assessment
 > Set up your work station considering WHS requirements (ICTICT214 1.1).

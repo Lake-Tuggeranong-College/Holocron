@@ -74,9 +74,9 @@ You need to create a 10-minute video showcasing a website you developed, present
 
 ### Task 2.2 Competencies
 
-| Unit Code                                                                       | Unit Title                                       | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| ------------------------------------------------------------------------------- | ------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages        |      ✅       |                  |               |         ✅         |
+| Unit Code                                                                       | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages |      ✅       |                  |               |         ✅         |
 
 
 ### Assessment Task

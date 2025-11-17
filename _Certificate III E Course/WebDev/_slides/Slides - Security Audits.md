@@ -39,7 +39,7 @@ css: css/holocronSlides.css
 5. **Generate Report:**
     - Menu → _Report_ → _Generate HTML Report_
 
-**Screenshot:** ![ZAP Scan Interface](https://www.webasha.com/blog/step-by-step-guide-to-owasp-zap-for-vulnerability-testing)[[1]](https://www.webasha.com/blog/step-by-step-guide-to-owasp-zap-for-vulnerability-testing)
+**Screenshot:** ![ZAP Scan Interface](https://www.webasha.com/blog/step-by-step-guide-to-owasp-zap-for-vulnerability-testing)(https://www.webasha.com/blog/step-by-step-guide-to-owasp-zap-for-vulnerability-testing)
 
 ---
 
@@ -56,7 +56,7 @@ css: css/holocronSlides.css
 6. **View Issues:**
     - _Dashboard_ → _Issues_ tab
 
-**Screenshot:** ![Burp Suite Scan](https://portswigger.net/burp/documentation/desktop/getting-started/running-your-first-scan)[[2]](https://portswigger.net/burp/documentation/desktop/getting-started/running-your-first-scan)
+**Screenshot:** ![Burp Suite Scan](https://portswigger.net/burp/documentation/desktop/getting-started/running-your-first-scan)(https://portswigger.net/burp/documentation/desktop/getting-started/running-your-first-scan)
 
 ---
 
@@ -80,7 +80,7 @@ vendor/bin/phpstan analyse src --level=max
 vendor/bin/phpstan analyse src --configuration=phpstan.neon
 ```
 
-**Screenshot:**\ [PHPStan CLI Usage](https://phpstan.org/user-guide/command-line-usage)[[3]](https://phpstan.org/user-guide/command-line-usage)
+**Screenshot:**\ [PHPStan CLI Usage](https://phpstan.org/user-guide/command-line-usage)(https://phpstan.org/user-guide/command-line-usage)
 
 ---
 
@@ -133,7 +133,7 @@ composer audit --format=json
 
 - Non-zero exit code indicates vulnerabilities
 
-**Screenshot:**\ [Composer Audit Guide](https://php.watch/articles/composer-audit)[[4]](https://php.watch/articles/composer-audit)
+**Screenshot:**\ [Composer Audit Guide](https://php.watch/articles/composer-audit)(https://php.watch/articles/composer-audit)
 
 ---
 
@@ -163,7 +163,7 @@ snyk test
 snyk monitor
 ```
 
-**Screenshot:**\ [Snyk CLI Docs](https://docs.snyk.io/developer-tools/snyk-cli/cli-commands-and-options-summary)[[5]](https://docs.snyk.io/developer-tools/snyk-cli/cli-commands-and-options-summary)
+**Screenshot:**\ [Snyk CLI Docs](https://docs.snyk.io/developer-tools/snyk-cli/cli-commands-and-options-summary)(https://docs.snyk.io/developer-tools/snyk-cli/cli-commands-and-options-summary)
 
 ---
 

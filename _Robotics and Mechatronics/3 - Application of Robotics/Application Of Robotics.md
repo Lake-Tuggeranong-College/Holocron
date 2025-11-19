@@ -5,7 +5,7 @@ tags:
 tag: Robotics
 ---
 > [!note]- Project Overview
-> The project will be explained in due time...
+> ![[_Robotics and Mechatronics/3 - Application of Robotics/_projects/SITH/Project Overview|Project Overview]]
 
 
 # Semester Plan
@@ -15,22 +15,22 @@ tag: Robotics
 | ----------------------------------------------- | ---------------------------- | ----------- |
 | ![[semesterCalendarS1#School Events - Week 1]]  | Project Definition and Scope |             |
 | ![[semesterCalendarS1#School Events - Week 2]]  | Goals definition             |             |
-| ![[semesterCalendarS1#School Events - Week 3]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 4]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 5]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 6]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 7]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 8]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 9]]  | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 10]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 11]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 12]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 13]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 14]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 15]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 16]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 17]] | Project Development          |             |
-| ![[semesterCalendarS1#School Events - Week 18]] | Project Development          |             |
+| ![[semesterCalendarS1#School Events - Week 3]]  | [[SITH - Phase 1]]           |             |
+| ![[semesterCalendarS1#School Events - Week 4]]  | [[SITH - Phase 1]]           |             |
+| ![[semesterCalendarS1#School Events - Week 5]]  | [[SITH - Phase 1]]           |             |
+| ![[semesterCalendarS1#School Events - Week 6]]  | [[SITH - Phase 2]]           |             |
+| ![[semesterCalendarS1#School Events - Week 7]]  | [[SITH - Phase 2]]           |             |
+| ![[semesterCalendarS1#School Events - Week 8]]  | [[SITH - Phase 2]]           |             |
+| ![[semesterCalendarS1#School Events - Week 9]]  | [[SITH - Phase 2]]           |             |
+| ![[semesterCalendarS1#School Events - Week 10]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 11]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 12]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 13]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 14]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 15]] | [[SITH - Phase 3]]           |             |
+| ![[semesterCalendarS1#School Events - Week 16]] |                              |             |
+| ![[semesterCalendarS1#School Events - Week 17]] |                              |             |
+| ![[semesterCalendarS1#School Events - Week 18]] |                              |             |
 | ![[semesterCalendarS1#School Events - Week 19]] |                              |             |
 | ![[semesterCalendarS1#School Events - Week 20]] |                              |             |
 

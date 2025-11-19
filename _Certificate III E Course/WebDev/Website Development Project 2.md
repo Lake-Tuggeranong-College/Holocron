@@ -13,18 +13,18 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 | Weeks | Content                                                                                                                                                         | Competencies | Assessments Due |
 | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
-| 1     | Slides - [[Slides - PHP\|PHP]]<br>Slides - [[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]                                 |              |                 |
+| 1     | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]                                                                               |              |                 |
 | 2     | 1. [[_Certificate III E Course/WebDev/_instructions/PHP-Shopfront/Project Overview\|Project Overview]]<br>2. [[Database Configuration]]<br>3. [[Site Template]] |              |                 |
 | 3     | 1. [[User Management]]<br>2. [[User Notifications]]<br>3. [[Session Variables]]                                                                                 |              |                 |
 | 4     | 1. [[Project Updates]]<br>2. [[Administrator Access]]                                                                                                           |              |                 |
 | 5     | 1. [[Products - Add]]<br>2. [[Products - Edit]]<br>3. [[Products - Remove]]                                                                                     |              |                 |
 | 6     | 1. [[Order Form]]<br>2. [[Shopping Cart]]<br>3. [[Invoices]]<br>                                                                                                |              |                 |
 | 7     |                                                                                                                                                                 |              | Task 2.1 Due    |
-| 8     | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                                                                                       |              |                 |
+| 8     | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                                                                              |              |                 |
 | 9     | Showcase Development                                                                                                                                            |              |                 |
 | 10    | Showcase Development                                                                                                                                            |              |                 |
 | 11    | Showcase Development                                                                                                                                            |              | Task 2.2 Due    |
-| 12    | Slides - [[Slides - Tutorials]]<br>[[Tutorial Writing]]                                                                                                                  |              |                 |
+| 12    | Slides - [[Slides - Tutorials]]<br>[[Tutorial Writing]]                                                                                                         |              |                 |
 | 13    | Tutorial Development                                                                                                                                            |              |                 |
 | 14    | Tutorial Development                                                                                                                                            |              | Task 2.3 Due    |
 | 15    | Assessment Second Sitting                                                                                                                                       |              |                 |

@@ -16,7 +16,5 @@ The main reason for building SITH is to create a strong system that can grow as 
 When SITH is successfully deployed, it will give us major advantages:
 
 - **Proactive Maintenance:** We’ll be able to fix robots _before_ they break down by seeing warning signs in the live telemetry.
-    
 - **Operational Efficiency:** We can assign tasks and plan routes much better using accurate, unified data, meaning better work and less wasted time.
-    
 - **Clearer Reports:** We will have one central spot to run all reports on robot performance, usage, and health, making everything easier to track.

@@ -38,18 +38,16 @@ N/A
 ~~**Thursday** - LTC Careers Expo~~
 
 ### School Events - Week 9
-~~**Thursday** - Last Day of Q1~~
-~~**Friday** - Cross-Line Exams~~
+**Thursday** - Last Day of Term
+**Friday** - Good Friday
 
 ### School Events - Week 10
 
-~~**Monday** - Cross-Line Exams~~
-~~**Tuesday** - Q2 Start~~
-**Friday** - Good Friday Public Holiday
+**Monday** - Student Free Day
+**Tuesday** - Students Return
 
 ### School Events - Week 11
 
-**Monday** - Student Free Day
 ~~**Wednesday** - Parent Teacher Interviews~~
 ~~**Thursday** - Parent Teacher Interviews~~
 
@@ -71,19 +69,17 @@ N/A
 
 ### School Events - Week 16
 
-N/A
+**Monday** - Reconciliation Day Public Holiday
 ### School Events - Week 17
 
-**Monday** - Reconciliation Day Public Holiday
-
+**Monday** - Sovereign's Birthday Public Holiday
+**Tuesday** - Cross-line Exams.
+**Wednesday** - Cross-line Exams.
+**Thursday** - Cross-line Exams.
+**Friday** - Cross-line Exams.
 ### School Events - Week 18
 
-**Monday** - Sovereign's Birthday Public Holiday
 ~~**Monday** - Last day of Q2 classes.~~
-~~**Tuesday** - Cross-line Exams.~~
-~~**Wednesday** - Cross-line Exams.~~
-~~**Thursday** - Cross-line Exams.~~
-~~**Friday** - Cross-line Exams.~~
 
 ### School Events - Week 19
 

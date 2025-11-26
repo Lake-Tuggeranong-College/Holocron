@@ -1,26 +1,21 @@
-# Task Overview
+## Task Tile
 
-==Add Details==
-# Details
+### Task Overview
 
-| Estimated Time | Deliverables | Related Task (if applicable) |
-| -------------- | ------------ | ---------------------------- |
-|                |              |                              |
+==TODO Add Details==
 
-## Competencies
+### Deliverable/s
+
+| Deliverables | Submitted via |
+| ------------ | ------------- |
+| ==TODO==     | ==TODO==      |
+
+### Competencies
 
 | Unit Code | Unit Title | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------- | ---------- | :----------: | :--------------: | :-----------: | :---------------: |
 |           |            |              |                  |               |                   |
 
+### Assessment Task
 
-# Task
-
-==Insert Link==
-# Task Conditions
-
-![[Competency Task Conditions#Conditions]]
-
-![[Competency Task Conditions#Instructions]]
-
-
+==TODO Link to Google Classroom==

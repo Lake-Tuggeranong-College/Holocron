@@ -76,7 +76,7 @@ Your `docker-compose.yml` file must:
 
 ### Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 
 ---
@@ -101,7 +101,7 @@ You are required to write a technical report in a single Markdown file that docu
 
 ### Task 1.2 Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 
 # Task 1.3 - Timesheet
@@ -125,4 +125,4 @@ You will build the invoice, including adding specific details and then submit as
 
 ### Task 1.3 Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==

@@ -56,7 +56,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 
 ---
@@ -68,9 +68,9 @@ You need to create a 10-minute video showcasing a website you developed, present
 
 ### Deliverables
 
-| Deliverables                                  | Submitted via                  |
-| --------------------------------------------- | ------------------------------ |
-| 1. Video, demonstrating the Website features. | ==GitHub, linked to YouTube==. |
+| Deliverables                                  | Submitted via                       |
+| --------------------------------------------- | ----------------------------------- |
+| 1. Video, demonstrating the Website features. | ==TODO GitHub, linked to YouTube==. |
 
 ### Task 2.2 Competencies
 
@@ -82,7 +82,7 @@ You need to create a 10-minute video showcasing a website you developed, present
 ### Assessment Task
 
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 ---
 ## Task 2.3 - Tutorial
@@ -92,9 +92,9 @@ You're tasked with creating a tutorial for future students that explains an adva
 
 ### Deliverable/s
 
-| Deliverables                 | Submitted via |
-| ---------------------------- | ------------- |
-| Written Tutorial in Markdown | ==GitHub==    |
+| Deliverables                 | Submitted via   |
+| ---------------------------- | --------------- |
+| Written Tutorial in Markdown | ==TODO GitHub== |
 
 
 ### Task 2.3 Competencies
@@ -108,6 +108,6 @@ You're tasked with creating a tutorial for future students that explains an adva
 ### Assessment Task
 
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 

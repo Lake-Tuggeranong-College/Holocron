@@ -25,6 +25,7 @@ See [[Course|Course]] for details on the course
 ![[Website Development Project 2#Overview]]
 
 ![[Website Development Project 2#Task 2.1 Competencies]]
+
 ![[Website Development Project 2#Task 2.2 Competencies]]
 ![[Website Development Project 2#Task 2.3 Competencies]]
 
@@ -56,9 +57,28 @@ See [[Course|Course]] for details on the course
 
 # Self-paced units
 
-[[Website Development Project 4|Click here for details on the Project.]]
+## ICT30120 - Certificate III Competencies
 
-![[Website Development Project 4#Overview]]
-![[Website Development Project 4#Task 4.1 Competencies]]
+> [!info] These competencies are only required when completing **ICT30120 Certificate II in Information Technology**. 
+> DO NOT complete if you are completing the Certificate II in Applied Digital Technologies.
 
-![[Website Development Project 4#Task 4.2 Competencies]]
+[[Self Paced Assessments - Certificate III in Information Technology|Click here for details on the Project.]]****
+
+![[Self Paced Assessments - Certificate III in Information Technology#Overview]]
+![[Self Paced Assessments - Certificate III in Information Technology#Task 4.1 Competencies]]
+
+![[Self Paced Assessments - Certificate III in Information Technology#Task 4.2 Competencies]]
+
+
+## ICT20120 Certificate II Competencies
+
+> [!warning] These competencies are only required when completing ICT20120 Certificate II in Applied Digital Technologies. 
+> DO NOT complete if you are completing the Certificate III in Information Technology.
+
+[[Self Paced Assessments - Certificate III in Information Technology|Click here for details on the Project.]]
+
+![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.1 - Competencies]]
+
+![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.2 - Competencies]]
+
+![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.3 - Competencies]]

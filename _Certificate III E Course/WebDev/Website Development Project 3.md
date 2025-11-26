@@ -12,26 +12,26 @@ Not only will you be utilising your web development skills, you will also be man
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
 Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
 
-| Weeks | Content                                                                                                                | Competencies | Assessments Due |
-| ----- | ---------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
-| 1     | 1. Slides - [[Slides - Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                 |
-| 2     |                                                                                                                        |              |                 |
-| 3     |                                                                                                                        |              |                 |
-| 4     |                                                                                                                        |              |                 |
-| 5     |                                                                                                                        |              |                 |
-| 6     |                                                                                                                        |              |                 |
-| 7     |                                                                                                                        |              |                 |
-| 8     |                                                                                                                        |              |                 |
-| 9     |                                                                                                                        |              |                 |
-| 10    |                                                                                                                        |              | Task 3.1 Due    |
-| 11    | - Slides - [[Slides - Security Audits]]<br>- [[Perform Security Audits]]                                                        |              |                 |
-| 12    |                                                                                                                        |              |                 |
-| 13    |                                                                                                                        |              |                 |
-| 14    |                                                                                                                        |              |                 |
-| 15    |                                                                                                                        |              |                 |
-| 16    |                                                                                                                        |              |                 |
-| 17    |                                                                                                                        |              |                 |
-| 18    |                                                                                                                        |              |                 |
+| Weeks | Content                                                                                                 | Competencies | Assessments Due                     |
+| ----- | ------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------- |
+| 1     | 1. Slides - [[Slides - Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                                     |
+| 2     |                                                                                                         |              |                                     |
+| 3     | Sprint 1                                                                                                |              |                                     |
+| 4     | Sprint 1                                                                                                |              |                                     |
+| 5     | Sprint 1 Finalisation                                                                                   |              |                                     |
+| 6     | Sprint 2                                                                                                |              |                                     |
+| 7     | Sprint 2                                                                                                |              | Task 3.2 Observations               |
+| 8     | Sprint 2 Finalisation                                                                                   |              | Task 3.2 Observations Second Chance |
+| 9     | Sprint 3                                                                                                |              |                                     |
+| 10    | Sprint 3                                                                                                |              |                                     |
+| 11    | - Slides - [[Slides - Security Audits]]<br>- [[Perform Security Audits]]                                |              |                                     |
+| 12    | Sprint 3 Finalisation                                                                                   |              | Task 3.1 Due                        |
+| 13    | Security Report                                                                                         |              |                                     |
+| 14    | Security Report                                                                                         |              |                                     |
+| 15    | Security Report                                                                                         |              | Task 3.3 Due                        |
+| 16    |                                                                                                         |              |                                     |
+| 17    |                                                                                                         |              |                                     |
+| 18    |                                                                                                         |              |                                     |
 
 
 # Tasks
@@ -50,9 +50,9 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 >  It is therefore important that you are all active members of the development team, including the development of the website code, as well as the project management techniques.
 ### Deliverable/s
 
-| Deliverables           | Submitted via |
-| ---------------------- | ------------- |
-| ==Technical Document== | GitHub        |
+| Deliverables                | Submitted via |
+| --------------------------- | ------------- |
+| ==TODO Technical Document== | GitHub        |
 
 ### Task 3.1 Competencies
 
@@ -66,7 +66,7 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 
 ### Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 ---
 ## Task 3.2 Group Work Interactions
@@ -79,9 +79,9 @@ This interview will be a combination of interview and observational assessment.
 
 ### Deliverable/s
 
-| Deliverables           | Submitted via |
-| ---------------------- | ------------- |
-| ==Technical Document== | GitHub        |
+| Deliverables                | Submitted via |
+| --------------------------- | ------------- |
+| ==TODO Technical Document== | GitHub        |
 
 ### Task 3.2 Competencies
 
@@ -93,7 +93,7 @@ This interview will be a combination of interview and observational assessment.
 
 ### Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==
 
 
 ---
@@ -133,4 +133,4 @@ This task involves you completing a Security Audit of the website you and your g
 
 ### Assessment Task
 
-==Link to Google Classroom==
+==TODO Link to Google Classroom==

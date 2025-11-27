@@ -7,5 +7,23 @@
       ],
       "key": "S"
     }
+  ],
+  "publish:open-in-live-site": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "H"
+    }
+  ],
+  "publish:publish-file": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "P"
+    }
   ]
 }

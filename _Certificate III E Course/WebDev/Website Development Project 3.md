@@ -15,8 +15,8 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | Weeks | Content                                                                                                 | Competencies | Assessments Due                     |
 | ----- | ------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------- |
 | 1     | 1. Slides - [[Slides - Project Management\|Project Management]]<br>2. [[Project 3 Development Process]] |              |                                     |
-| 2     |                                                                                                         |              |                                     |
-| 3     | Sprint 1                                                                                                |              |                                     |
+| 2     |                                                                                                         |              | Task 3.1 Observations               |
+| 3     | Sprint 1                                                                                                |              | Task 3.1 Observations Second Chance |
 | 4     | Sprint 1                                                                                                |              |                                     |
 | 5     | Sprint 1 Finalisation                                                                                   |              |                                     |
 | 6     | Sprint 2                                                                                                |              |                                     |
@@ -24,11 +24,11 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 8     | Sprint 2 Finalisation                                                                                   |              | Task 3.2 Observations Second Chance |
 | 9     | Sprint 3                                                                                                |              |                                     |
 | 10    | Sprint 3                                                                                                |              |                                     |
-| 11    | - Slides - [[Slides - Security Audits]]<br>- [[Perform Security Audits]]                                |              |                                     |
-| 12    | Sprint 3 Finalisation                                                                                   |              | Task 3.1 Due                        |
-| 13    | Security Report                                                                                         |              |                                     |
-| 14    | Security Report                                                                                         |              |                                     |
-| 15    | Security Report                                                                                         |              | Task 3.3 Due                        |
+| 11    | Sprint 3 Finalisation                                                                                   |              |                                     |
+| 12    | Sprint 4                                                                                                |              |                                     |
+| 13    | Sprint 4                                                                                                |              |                                     |
+| 14    | Sprint 4 Finalisation                                                                                   |              | Task 3.3 Due                        |
+| 15    |                                                                                                         |              |                                     |
 | 16    |                                                                                                         |              |                                     |
 | 17    |                                                                                                         |              |                                     |
 | 18    |                                                                                                         |              |                                     |
@@ -36,31 +36,31 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 # Tasks
 
-## Task 3.1 - Team-based Development
+## Task 3.1 - Brainstorming
 
 ### Task Overview
 
-In this task you will work in a small team to collaboratively develop a PHP website. In your group you will work in a formal project management structure, where you will communicate through Kanban boards, and stand up meetings. 
+This task involves you and your group designing, planning and documenting the website to be developed.
 
-You will need to determine the requirements of the project, make decisions based on these requirements and user requirements, and implement them quickly and effectively.
+You will be assessed via observation.
 
-You will also need to meet (face-to-face and/or virtually) as required to make group-decisions and meet project goals and deadlines.
+> [!important] While the website developed for this project is a group task, this task is **individual**.
 
-> [!important] While the website developed for this project is a group task, you will be assessed **individually**. Read the Assessment Task for details. 
->  It is therefore important that you are all active members of the development team, including the development of the website code, as well as the project management techniques.
+
 ### Deliverable/s
 
-| Deliverables                | Submitted via |
-| --------------------------- | ------------- |
-| ==TODO Technical Document== | GitHub        |
+| Deliverables | Submitted via |
+| ------------ | ------------- |
+| Observations | N/A           |
 
 ### Task 3.1 Competencies
 
-| Unit Code                                                                       | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTWEB304](https://training.gov.au/Training/Details/ICTWEB304/unitdetails)<br> | Build simple web pages                            |              |                  |               |         ✅         |
-| [ICTWEB431](https://training.gov.au/Training/Details/ICTWEB431/unitdetails)     | Create and style simple markup language documents |              |                  |               |         ✅         |
+| Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills    |              |                  |       ✅       |                   |
 
+
+### Learning Content
 
 
 
@@ -68,7 +68,6 @@ You will also need to meet (face-to-face and/or virtually) as required to make g
 
 ==TODO Link to Google Classroom==
 
----
 ## Task 3.2 Group Work Interactions
 
 ### Task Overview
@@ -96,38 +95,31 @@ This interview will be a combination of interview and observational assessment.
 ==TODO Link to Google Classroom==
 
 
----
-## Task 3.3 - Security Report
+## Task 3.3- Team-based Development
 
 ### Task Overview
 
-This task involves you completing a Security Audit of the website you and your group have completed. This report will cover topics such as :
-- Role Based Access Control (RBAC)
-- Personal Identifiable Information (PII)
-- Intellectual Property (IP)
-- Ethics
-- Privacy
+In this task you will work in a small team to collaboratively develop a PHP website. In your group you will work in a formal project management structure, where you will communicate through Kanban boards, and stand up meetings. 
 
-> [!important] While the website developed for this project is a group task, this task is **individual**.
+You will need to determine the requirements of the project, make decisions based on these requirements and user requirements, and implement them quickly and effectively.
 
+You will also need to meet (face-to-face and/or virtually) as required to make group-decisions and meet project goals and deadlines.
 
+> [!important] While the website developed for this project is a group task, you will be assessed **individually**. Read the Assessment Task for details. 
+>  It is therefore important that you are all active members of the development team, including the development of the website code, as well as the project management techniques.
 ### Deliverable/s
 
-| Deliverables                    | Submitted via |
-| ------------------------------- | ------------- |
-| Technical Document, in Markdown | GitHub        |
+| Deliverables                | Submitted via |
+| --------------------------- | ------------- |
+| ==TODO Technical Document== | GitHub        |
 
 ### Task 3.3 Competencies
 
-| Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT221](https://training.gov.au/Training/Details/ICTICT221/unitdetails) | Identify and use specific industry standard technologies |              |        ✅         |               |         ✅         |
-| [ICTICT309](https://training.gov.au/Training/Details/ICTICT309/unitdetails) | Create ICT user documentation                            |              |                  |               |         ✅         |
-| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills    |              |                  |       ✅       |                   |
+| Unit Code                                                                       | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTWEB304](https://training.gov.au/Training/Details/ICTWEB304/unitdetails)<br> | Build simple web pages                            |              |                  |               |         ✅         |
+| [ICTWEB431](https://training.gov.au/Training/Details/ICTWEB431/unitdetails)     | Create and style simple markup language documents |              |                  |               |         ✅         |
 
-
-
-### Learning Content
 
 
 

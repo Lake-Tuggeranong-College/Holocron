@@ -16,10 +16,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 2     |                                                                                                                                                         |              | 4.1 Interviews                |
 | 3     |                                                                                                                                                         |              | 4.1 Interviews Second Sitting |
 | 4     | PII Workshop                                                                                                                                            |              | 4.1 Written                   |
-| 5     |                                                                                                                                                         |              |                               |
-| 6     |                                                                                                                                                         |              |                               |
-| 7     |                                                                                                                                                         |              |                               |
-| 8     |                                                                                                                                                         |              |                               |
+| 5     | - [[Slides - Intellectual Property]]<br>- [[ICTICT313 Identify IP, ethics and privacy policies in ICT environments]]                                    |              |                               |
+| 6     |                                                                                                                                                         |              | 4.2 Interviews                |
+| 7     |                                                                                                                                                         |              | 4.2 Interviews Second Sitting |
+| 8     |                                                                                                                                                         |              | 4.2 Written.                  |
 | 9     |                                                                                                                                                         |              |                               |
 | 10    |                                                                                                                                                         |              |                               |
 | 11    |                                                                                                                                                         |              |                               |
@@ -42,9 +42,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Deliverable/s
 
-| Deliverables                | Submitted via |
-| --------------------------- | ------------- |
-| ==TODO Technical Document== | GitHub        |
+| Deliverables   | Submitted via                |
+| -------------- | ---------------------------- |
+| Interview      | In-person or via video call. |
+| Written Report | Google Classroom             |
 
 ### Task 4.1 Competencies
 
@@ -63,9 +64,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Deliverable/s
 
-| Deliverables                | Submitted via |
-| --------------------------- | ------------- |
-| ==TODO Technical Document== | GitHub        |
+| Deliverables   | Submitted via                |
+| -------------- | ---------------------------- |
+| Interview      | In-person or via video call. |
+| Written Report | Google Classroom             |
 
 ### Task 4.2 Competencies
 
@@ -76,7 +78,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Learning Content
 
-- [[Slides - Intellectual Property]]
+
 ### Assessment Task
 
 ==TODO Link to Google Classroom==

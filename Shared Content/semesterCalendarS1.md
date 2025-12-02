@@ -42,6 +42,7 @@ N/A
 ### School Events - Week 9
 **Thursday** - Last Day of Term
 **Friday** - Good Friday
+HOLIDAYS
 
 ### School Events - Week 10
 
@@ -55,11 +56,14 @@ N/A
 
 ### School Events - Week 12
 
-N/A
+**Monday** - ANZAC Day Public Holiday
 
 ### School Events - Week 13
 
-N/A
+**Tuesday** - Breakout week
+**Wednesday** - Breakout week
+**Thursday** - Breakout week
+**Friday** - Breakout week
 
 ### School Events - Week 14
 

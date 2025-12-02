@@ -28,6 +28,8 @@ tags:
 ### School Events - Week 6
 
 **Monday** - Canberra Day Public Holiday
+**Friday** - Sydney Trip
+**Saturday** - Sydney Trip
 
 ### School Events - Week 7
 

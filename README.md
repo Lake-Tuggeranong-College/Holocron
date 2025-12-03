@@ -1,3 +1,8 @@
+---
+publish: false
+---
+
+
 # LTC Holocron
 
 It is suggested that you fork this repository and view it in Obsidian.

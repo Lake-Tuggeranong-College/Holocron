@@ -1,13 +1,10 @@
 # Overview
 
-==TODO==
+The focus of this semester is to learn and develop the architecture and infrastructure required for the remainder of the projects in subsequent projects.
 
-==The programming languages and technology focus in this unit will be:==
-- ==[[Docker]] Container==
-	- ==Server development==
-- ==Report Writing==
-- ==Spreadsheet==
-	- ==formulas==
+This includes learning about Virtualisation and Docker Containers, and how they benefit application development.
+
+You will also write a technical report to document the infrastructure you developed to submit to your manager.
 
 # Context
 

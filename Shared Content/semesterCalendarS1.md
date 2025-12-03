@@ -11,15 +11,12 @@ tags:
 
 ### School Events - Week 3
 
-N/A
 
 ### School Events - Week 4
 
-N/A
 
 ### School Events - Week 5
 
-N/A
 ### School Events - Week 6
 
 **Tuesday** - Moderation Day. **No Classes**.
@@ -32,7 +29,6 @@ N/A
 
 ### School Events - Week 8
 
-N/A
 
 ### School Events - Week 9
 
@@ -60,14 +56,10 @@ HOLIDAYS
 
 ### School Events - Week 14
 
-N/A
 
 ### School Events - Week 15
 
-N/A
-
 ### School Events - Week 16
-
 
 ### School Events - Week 17
 

@@ -24,20 +24,20 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 | Weeks | Content                                                                                   | Competencies | Assessments Due |
 | ----- | ----------------------------------------------------------------------------------------- | ------------ | --------------- |
-| 1     | [[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]] |              |                 |
-| 2     | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]                           |              |                 |
-| 3     | [[Docker Compose Tutorial]]<br>                                                           |              |                 |
-| 4     | [[Docker Configuration]]                                                                  |              |                 |
-| 5     | [[Docker Configuration]]                                                                  |              | Task 1.1 Due    |
-| 6     | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]                         |              |                 |
-| 7     | [[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                   |              |                 |
-| 8     | [[Software Installation & Configuration Manual]]                                          |              |                 |
+| 1     |                                                                                           |              |                 |
+| 2     | [[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]] |              |                 |
+| 3     | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]                           |              |                 |
+| 4     | [[Docker Compose Tutorial]]<br>                                                           |              |                 |
+| 5     | [[Docker Configuration]]                                                                  |              |                 |
+| 6     | [[Docker Configuration]]                                                                  |              | Task 1.1 Due    |
+| 7     | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]                         |              |                 |
+| 8     | [[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                   |              |                 |
 | 9     | [[Software Installation & Configuration Manual]]                                          |              |                 |
-| 10    | [[Software Installation & Configuration Manual]]                                          |              | Task 1.2 Due    |
-| 11    | [[Spreadsheets]]                                                                          |              |                 |
-| 12    | Spreadsheet formula                                                                       |              |                 |
-| 13    | Timesheet                                                                                 |              | Task 1.3 Due    |
-| 14    | Assessment Second Sitting                                                                 |              |                 |
+| 10    | [[Software Installation & Configuration Manual]]                                          |              |                 |
+| 11    | [[Software Installation & Configuration Manual]]                                          |              | Task 1.2 Due    |
+| 12    | [[Spreadsheets]]                                                                          |              |                 |
+| 13    | Spreadsheet formula                                                                       |              |                 |
+| 14    | Timesheet                                                                                 |              | Task 1.3 Due    |
 | 15    | Assessment Second Sitting                                                                 |              |                 |
 | 16    | Assessment Second Sitting                                                                 |              |                 |
 | 17    |                                                                                           |              |                 |

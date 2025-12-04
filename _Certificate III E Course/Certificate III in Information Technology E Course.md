@@ -76,8 +76,8 @@ See [[Course|Course]] for details on the course
 
 [[Website Development Semester 4|Click here for details on the Project.]]
 
-![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.1 - Competencies]]
+![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.1 - Competencies]]
 
-![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.2 - Competencies]]
+![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.2 - Competencies]]
 
-![[Self Paced Assessments - Certificate II in Applied Digital Technology#Task 5.3 - Competencies]]
+![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.3 - Competencies]]

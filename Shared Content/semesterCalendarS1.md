@@ -40,6 +40,7 @@ tags:
 **Monday** - Last day of Q1 Classes
 **Tuesday** - Cross Line Exams
 **Wednesday** - Cross Line Exams
+**Thursday** - Cross Line Exams
 **Thursday** - Last Day of Term
 **Friday** - Good Friday
 HOLIDAYS

@@ -17,6 +17,8 @@ tags:
 
 ### School Events - Week 5
 
+**Wednesday** - Careers Expo
+
 ### School Events - Week 6
 
 **Tuesday** - Moderation Day. **No Classes**.
@@ -35,13 +37,18 @@ tags:
 
 ### School Events - Week 10
 
+**Monday** - Last day of Q1 Classes
+**Tuesday** - Cross Line Exams
+**Wednesday** - Cross Line Exams
 **Thursday** - Last Day of Term
 **Friday** - Good Friday
 HOLIDAYS
 ### School Events - Week 11
 
 **Monday** - Student Free Day
-**Tuesday** - Classes commence
+**Tuesday** - Classes commence. First day of Q2 Classes.
+**Wednesday** - Parent Teacher Interviews
+**Thursday** - Parent Teacher Interviews
 
 ### School Events - Week 12
 
@@ -56,6 +63,8 @@ HOLIDAYS
 
 ### School Events - Week 14
 
+**Wednesday** - Sydney Trip
+**Thursday** - Sydney Trip
 
 ### School Events - Week 15
 
@@ -64,6 +73,7 @@ HOLIDAYS
 ### School Events - Week 17
 
 **Monday** - Reconciliation Day Public Holiday
+**Friday** - Last day of classes
 ### School Events - Week 18
 
 **Monday** - Sovereign's Birthday Public Holiday

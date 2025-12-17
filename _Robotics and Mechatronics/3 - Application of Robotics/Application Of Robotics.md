@@ -24,10 +24,10 @@ tag: Robotics
 | ![[semesterCalendarS1#School Events - Week 9]]  | [[SITH - Phase 2]]                               |                                                                                                         |
 | ![[semesterCalendarS1#School Events - Week 10]] | [[SITH - Phase 3]]                               |                                                                                                         |
 | ![[semesterCalendarS1#School Events - Week 11]] | [[SITH - Phase 3]]                               |                                                                                                         |
-| ![[semesterCalendarS1#School Events - Week 12]] | [[SITH - Phase 3]]                               | [[_Robotics and Mechatronics/3 - Application of Robotics/_ap/2026S1/Task 2\|Task 2 (throughout week)]]  |
-| ![[semesterCalendarS1#School Events - Week 13]] | [[SITH - Phase 3]]                               |                                                                                                         |
-| ![[semesterCalendarS1#School Events - Week 14]] | [[SITH - Phase 3]]                               |                                                                                                         |
-| ![[semesterCalendarS1#School Events - Week 15]] | [[SITH - Phase 3]]                               |                                                                                                         |
+| ![[semesterCalendarS1#School Events - Week 12]] | [[SITH - Phase 3]]                               |                                                                                                         |
+| ![[semesterCalendarS1#School Events - Week 13]] | Project Deadline                                 |                                                                                                         |
+| ![[semesterCalendarS1#School Events - Week 14]] | Structured Learning                              | [[_Robotics and Mechatronics/3 - Application of Robotics/_ap/2026S1/Task 2\|Task 2 (throughout week)]]  |
+| ![[semesterCalendarS1#School Events - Week 15]] | Hard Project Deadline - Last minute changes.     |                                                                                                         |
 | ![[semesterCalendarS1#School Events - Week 16]] |                                                  | [[_Robotics and Mechatronics/3 - Application of Robotics/_ap/2026S1/Task 3\|Task 3 (due Friday)]]       |
 | ![[semesterCalendarS1#School Events - Week 17]] |                                                  |                                                                                                         |
 | ![[semesterCalendarS1#School Events - Week 18]] |                                                  |                                                                                                         |

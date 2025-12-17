@@ -14,7 +14,7 @@
 
 # Task Details
 
-As part of your assessment for "Software Installation & Configuration," you are required to submit a comprehensive report detailing your understanding of server technologies, specifically in the context of [[Task 1]]. 
+As part of your assessment for "Software Installation & Configuration," you are required to submit a comprehensive report detailing your understanding of server technologies, specifically in the context of [[_Certificate III E Course/WebDev/_tasks/_taskDocs/Task 1]]. 
 
 # Deliverables
 

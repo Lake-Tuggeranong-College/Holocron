@@ -68,3 +68,6 @@ Using the database information provided, create the tables and fields required t
 The document is to be written in markdown and included in the Holocron repository/website.
 
 It can be co-developed using Google Docs (for example), however the final version needs to be converted to markdown.
+
+> [!important]- Google Docs can export to Markdown (.md) files.
+> ![[docsMarkdownExport.png]]

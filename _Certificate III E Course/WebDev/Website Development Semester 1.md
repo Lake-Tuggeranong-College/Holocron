@@ -11,26 +11,28 @@ You will also be producing a report on the configuration and implementation of t
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
 Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
 
-| Weeks | Content                                                                                                                       | Competencies | Assessments Due |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
-| 1     |                                                                                                                               |              |                 |
-| 2     | [[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]]<br>[[Slides - Development Process]] |              |                 |
-| 3     | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]                                                               |              |                 |
-| 4     | [[Docker Compose Tutorial]]<br>                                                                                               |              |                 |
-| 5     | [[Docker Configuration]]                                                                                                      |              |                 |
-| 6     | [[Docker Configuration]]                                                                                                      |              | Task 1.1 Due    |
-| 7     | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]                                                             |              |                 |
-| 8     | [[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                                                       |              |                 |
-| 9     | [[Software Installation & Configuration Manual]]                                                                              |              |                 |
-| 10    | [[Software Installation & Configuration Manual]]                                                                              |              |                 |
-| 11    | [[Software Installation & Configuration Manual]]                                                                              |              | Task 1.2 Due    |
-| 12    | [[Spreadsheets]]                                                                                                              |              |                 |
-| 13    | Spreadsheet formula                                                                                                           |              |                 |
-| 14    | Timesheet                                                                                                                     |              | Task 1.3 Due    |
-| 15    | Assessment Second Sitting                                                                                                     |              |                 |
-| 16    | Assessment Second Sitting                                                                                                     |              |                 |
-| 17    |                                                                                                                               |              |                 |
-| 18    |                                                                                                                               |              |                 |
+| Week                                           | Content                                                                                                                       | Competencies | Assessments Due |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- |
+| ![[semesterCalendarS1#School Events - Week 1]] |                                                                                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 2]] | [[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]]<br>[[Slides - Development Process]] |              |                 |
+| ![[semesterCalendarS1#School Events - Week 3]] | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 4]] | [[Docker Compose Tutorial]]<br>                                                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 5]] | [[Docker Configuration]]                                                                                                      |              |                 |
+| ![[semesterCalendarS1#School Events - Week 6]] | [[Docker Configuration]]                                                                                                      |              | Task 1.1 Due    |
+| ![[semesterCalendarS1#School Events - Week 7]] | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]                                                             |              |                 |
+| ![[semesterCalendarS1#School Events - Week 8]] | [[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                                                       |              |                 |
+| ![[semesterCalendarS1#School Events - Week 9]] | [[Software Installation & Configuration Manual]]                                                                              |              |                 |
+| ![[semesterCalendarS1#School Events - Week 10]] | [[Software Installation & Configuration Manual]]                                                                              |              |                 |
+| ![[semesterCalendarS1#School Events - Week 11]] | [[Software Installation & Configuration Manual]]                                                                              |              | Task 1.2 Due    |
+| ![[semesterCalendarS1#School Events - Week 12]] | [[Spreadsheets]]                                                                                                              |              |                 |
+| ![[semesterCalendarS1#School Events - Week 13]] | Spreadsheet formula                                                                                                           |              |                 |
+| ![[semesterCalendarS1#School Events - Week 14]] | Timesheet                                                                                                                     |              | Task 1.3 Due    |
+| ![[semesterCalendarS1#School Events - Week 15]] | Assessment Second Sitting                                                                                                     |              |                 |
+| ![[semesterCalendarS1#School Events - Week 16]] | Assessment Second Sitting                                                                                                     |              |                 |
+| ![[semesterCalendarS1#School Events - Week 17]] |                                                                                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 18]] |                                                                                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 19]] |                                                                                                                               |              |                 |
+| ![[semesterCalendarS1#School Events - Week 20]] |                                                                                                                               |              |                 |
 
 
 

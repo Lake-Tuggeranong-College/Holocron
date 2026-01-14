@@ -3,7 +3,7 @@
 Prepare for Interview
 
 # School Events
-![[semesterCalendarS2#School Events - Week 14]] 
+![[S2 Calendar#School Events - Week 14]] 
 
 # Video
 

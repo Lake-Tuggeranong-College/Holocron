@@ -3,7 +3,7 @@
 
 
 # School Events
-![[semesterCalendarS2#School Events - Week 8]] 
+![[S2 Calendar#School Events - Week 8]] 
 
 # Video
 ![Introduction](https://youtu.be/7B6QERTeYYU)

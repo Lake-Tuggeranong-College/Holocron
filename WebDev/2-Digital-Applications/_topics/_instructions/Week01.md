@@ -6,7 +6,7 @@ Set up Development Environment
 
 # School Events
 
-![[semesterCalendarS2#School Events - Week 1]] 
+![[S2 Calendar#School Events - Week 1]] 
 
 # Video
 

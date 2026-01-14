@@ -3,7 +3,7 @@
 
 
 # School Events
-![[semesterCalendarS2#School Events - Week 2]] 
+![[S2 Calendar#School Events - Week 2]] 
 
 # Video
 ![Week 2](https://youtu.be/UAeLuI6xGvo)

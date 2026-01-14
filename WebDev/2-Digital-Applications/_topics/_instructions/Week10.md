@@ -3,7 +3,7 @@
 
 
 # School Events
-![[semesterCalendarS2#School Events - Week 10]] 
+![[S2 Calendar#School Events - Week 10]] 
 
 # Video
 

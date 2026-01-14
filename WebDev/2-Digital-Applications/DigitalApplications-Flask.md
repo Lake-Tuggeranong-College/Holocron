@@ -20,7 +20,7 @@ Submissions are due **11:59pm Friday** each week.
 ## Term 3
 
 ### Week 1
-![[semesterCalendarS2#School Events - Week 1]] 
+![[S2 Calendar#School Events - Week 1]] 
 #### Video
 
 ![Welcome](https://youtu.be/BNpE9kGOL3o)
@@ -47,7 +47,7 @@ Submit the assigned Google Doc with the following information:
 - Screenshots of the database showing a registered user.
 
 ### Week 2
-![[semesterCalendarS2#School Events - Week 2]] 
+![[S2 Calendar#School Events - Week 2]] 
 #### Video
 
 ![Week 2](https://youtu.be/UAeLuI6xGvo)
@@ -64,7 +64,7 @@ Submit the assigned Google Doc with the following information:
 - Screenshots/Gif of TODO list working
 
 ### Week 3 - Assessment Week
- ![[semesterCalendarS2#School Events - Week 3]]
+ ![[S2 Calendar#School Events - Week 3]]
 ![Assessment 1 Overview](https://youtu.be/mkUcSVH3ZUY)
  
 
@@ -84,7 +84,7 @@ The task will be posted to Google Classroom, as per normal.
 
 
 ### Week 4
- ![[semesterCalendarS2#School Events - Week 4]]
+ ![[S2 Calendar#School Events - Week 4]]
 ![Week 4 - Resume Builder](https://youtu.be/k9czbai5BGo)
 
 #### Class Tasks
@@ -95,7 +95,7 @@ N/A
 - [[resumeBuilder]]
 
 ### Week 5
- ![[semesterCalendarS2#School Events - Week 5]]
+ ![[S2 Calendar#School Events - Week 5]]
 ![https://youtu.be/FLWyW1CZVUI](https://youtu.be/FLWyW1CZVUI)
 
 #### Class Tasks
@@ -107,7 +107,7 @@ N/A
 
 
 ### Week 6
- ![[semesterCalendarS2#School Events - Week 6]]
+ ![[S2 Calendar#School Events - Week 6]]
 ![https://youtu.be/N5Szle-XleU](https://youtu.be/N5Szle-XleU)
 
 #### Class Tasks
@@ -117,7 +117,7 @@ N/A
 #### Practical
 - [[resumeFinalTouches]]
 ### Week 7
- ![[semesterCalendarS2#School Events - Week 7]]
+ ![[S2 Calendar#School Events - Week 7]]
 #### Videos
 ![https://youtu.be/Uv18cXzvRL0](https://youtu.be/Uv18cXzvRL0)
 
@@ -137,7 +137,7 @@ N/A
 - [[shoppingListPart1]]
 
 ### Week 8
- ![[semesterCalendarS2#School Events - Week 8]]
+ ![[S2 Calendar#School Events - Week 8]]
 #### Videos
 
  ![Introduction](https://youtu.be/7B6QERTeYYU)
@@ -154,7 +154,7 @@ N/A
 - [[shoppingListPart2]]
 
 ### Week 9
- ![[semesterCalendarS2#School Events - Week 9]]
+ ![[S2 Calendar#School Events - Week 9]]
 #### Videos
 ![Week 9 Introduction](https://youtu.be/15H9SwzX5Qo)
 
@@ -174,7 +174,7 @@ N/A
 - [[shoppingListPart3]]
 
 ### Week 10
- ![[semesterCalendarS2#School Events - Week 10]]  
+ ![[S2 Calendar#School Events - Week 10]]  
 
 #### Videos
 
@@ -194,7 +194,7 @@ N/A
 
 ## Term 4
 ### Week 11
- ![[semesterCalendarS2#School Events - Week 11]]
+ ![[S2 Calendar#School Events - Week 11]]
 #### Class Tasks
 - [[WebDev/2-Digital-Applications/_ap/2024S2/Assessment 2]]
 #### Theory
@@ -203,7 +203,7 @@ N/A
 N/A
 
 ### Week 12
- ![[semesterCalendarS2#School Events - Week 12]]
+ ![[S2 Calendar#School Events - Week 12]]
  ![https://youtu.be/M-PTSMAd8Jk](https://youtu.be/M-PTSMAd8Jk)
 
 #### Class Tasks
@@ -214,7 +214,7 @@ N/A
 N/A
 
 ### Week 13 - Assessment Due
- ![[semesterCalendarS2#School Events - Week 13]]
+ ![[S2 Calendar#School Events - Week 13]]
 ![https://youtu.be/Oof9__xg5UI](https://youtu.be/Oof9__xg5UI)
 
 **Assessment Due**  
@@ -232,7 +232,7 @@ N/A
 
 
 ### Week 14
- ![[semesterCalendarS2#School Events - Week 14]]
+ ![[S2 Calendar#School Events - Week 14]]
 ![https://youtu.be/4cTeJIScWKs](https://youtu.be/4cTeJIScWKs)
 #### Class Tasks
 N/A
@@ -241,7 +241,7 @@ N/A
 #### Practical
 N/A
 ### Week 15
- ![[semesterCalendarS2#School Events - Week 15]]
+ ![[S2 Calendar#School Events - Week 15]]
 ![https://youtu.be/yx012Us7-mk](https://youtu.be/yx012Us7-mk)
 
 **Assessment Week**  
@@ -259,7 +259,7 @@ The task will be posted to Google Classroom, as per normal.
 #### Practical
 N/A
 ### Week 16
- ![[semesterCalendarS2#School Events - Week 16]]
+ ![[S2 Calendar#School Events - Week 16]]
 #### Class Tasks
 N/A
 #### Theory
@@ -268,9 +268,9 @@ N/A
 N/A
 
 ### Week 17
- ![[semesterCalendarS2#School Events - Week 17]]
+ ![[S2 Calendar#School Events - Week 17]]
 ### Week 18
- ![[semesterCalendarS2#School Events - Week 18]]
+ ![[S2 Calendar#School Events - Week 18]]
 
 
 # Subject Information

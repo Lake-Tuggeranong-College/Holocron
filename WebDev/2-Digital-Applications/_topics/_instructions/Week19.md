@@ -3,7 +3,7 @@
 No Classes
 
 # School Events
-![[semesterCalendarS2#School Events - Week 19]] 
+![[S2 Calendar#School Events - Week 19]] 
 
 # Video
 

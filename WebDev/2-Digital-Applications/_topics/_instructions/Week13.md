@@ -6,7 +6,7 @@ Worth 50%.
 The task will be posted to Google Classroom, as per normal.
 
 # School Events
-![[semesterCalendarS2#School Events - Week 13]] 
+![[S2 Calendar#School Events - Week 13]] 
 
 # Video
 

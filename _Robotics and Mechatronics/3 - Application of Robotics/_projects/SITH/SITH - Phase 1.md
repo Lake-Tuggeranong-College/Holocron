@@ -69,3 +69,11 @@ Hopefully, you will see some files and directories on the left hand side, and th
 
 
 ![[vsCodeOpenInContainer.png]]
+
+# Build Rovers
+
+Build all the rovers, following this video.
+
+![](https://www.youtube.com/watch?v=Ll2Du7q0W_U)
+
+

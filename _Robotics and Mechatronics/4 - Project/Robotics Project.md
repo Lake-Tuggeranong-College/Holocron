@@ -11,7 +11,7 @@ tag: Robotics
 ## Term 3
 
 > [!info]- Week 1
-> ![[semesterCalendarS2#School Events - Week 1]]
+> ![[S2 Calendar#School Events - Week 1]]
 > #### Class Tasks
 > - [[CloneHolocron]]
 > - [[Discussion Points]]
@@ -22,7 +22,7 @@ tag: Robotics
 > - [[Project Status Breakdown]]
 
 > [!info]- Week 2
-> ![[semesterCalendarS2#School Events - Week 2]] 
+> ![[S2 Calendar#School Events - Week 2]] 
 > #### Class Tasks
 > N/A
 > #### Theory
@@ -31,7 +31,7 @@ tag: Robotics
 > - [[Project Rebuild & Focus]]
 
 > [!danger]- Week 3
-> ![[semesterCalendarS2#School Events - Week 3]]
+> ![[S2 Calendar#School Events - Week 3]]
 > 
 > [[Task1|Assessment Assistance]]
 > 
@@ -41,7 +41,7 @@ tag: Robotics
 > The task will be posted to Google Classroom, as per normal.
 
 > [!info]- Week 4
-> ![[semesterCalendarS2#School Events - Week 4]]
+> ![[S2 Calendar#School Events - Week 4]]
 > #### Class Tasks
 > N/A
 > #### Theory
@@ -50,7 +50,7 @@ tag: Robotics
 > - [[_Robotics and Mechatronics/4 - Project/_projects/CyberRange/Phase 1 Development]]
 
 > [!info]- Week 5
-> ![[semesterCalendarS2#School Events - Week 5]]
+> ![[S2 Calendar#School Events - Week 5]]
 > #### Class Tasks
 > - [[_Robotics and Mechatronics/4 - Project/_projects/CyberRange/Assessment Documentation]]
 > #### Theory
@@ -59,7 +59,7 @@ tag: Robotics
 > - [[_Robotics and Mechatronics/4 - Project/_projects/CyberRange/Phase 1 Development]]
 
 > [!info]- Week 6
-> ![[semesterCalendarS2#School Events - Week 6]]
+> ![[S2 Calendar#School Events - Week 6]]
 > #### Class Tasks
 > N/A
 > #### Theory
@@ -68,7 +68,7 @@ tag: Robotics
 > N/A
 
 > [!info]- Week 7
-> ![[semesterCalendarS2#School Events - Week 7]]
+> ![[S2 Calendar#School Events - Week 7]]
 > #### Class Tasks
 > -  [[_Robotics and Mechatronics/4 - Project/_ap/2024S2/Assessment 2]]
 > #### Theory
@@ -77,7 +77,7 @@ tag: Robotics
 > N/A
 
 > [!important]- Week 8
-> ![[semesterCalendarS2#School Events - Week 8]]
+> ![[S2 Calendar#School Events - Week 8]]
 > #### Class Tasks
 > [[_Robotics and Mechatronics/4 - Project/_ap/2024S2/Assessment 2|Assessment 2]]
 >Development Process scaffold has been added. With the scaffold it should be very easy to write out this section to be up to date this week.
@@ -91,7 +91,7 @@ tag: Robotics
 > N/A
 
 > [!info]- Week 9
-> ![[semesterCalendarS2#School Events - Week 9]]
+> ![[S2 Calendar#School Events - Week 9]]
 > #### Class Tasks
 >  - [VET Competencies](https://classroom.google.com/c/NjQ5OTU4MzU4NjY5/a/NzExMjY0MDk4MTUw/details)
 > 	 - By the end of this week this competency should be entirely complete. Ensure you have all of your evidence added and are tagging Ryan in the document so that he can confirm that the **Client only** sections have been completed. 
@@ -103,7 +103,7 @@ tag: Robotics
 > N/A
 
 > [!info]- Week 10
-> ![[semesterCalendarS2#School Events - Week 10]]
+> ![[S2 Calendar#School Events - Week 10]]
 > #### Class Tasks
 > - VET Competency
 > 	- Ensure that you have at least done competency [# ICTSAS305 Provide ICT advice to clients](https://classroom.google.com/c/NjQ5OTU4MzU4NjY5/a/NzExMjY0MDk4MTUw/details) by the end of term. There are more competencies on the Google Classroom that will help you towards your Cert III. At this stage in your college career you are more than capable of providing evidence for every single one.
@@ -117,7 +117,7 @@ tag: Robotics
 
 ## Term 4
 > [!info]- Week 11
-> ![[semesterCalendarS2#School Events - Week 11]]
+> ![[S2 Calendar#School Events - Week 11]]
 > #### Class Tasks
 > - [[Cyber Challenge Planning]]
 > #### Theory
@@ -126,7 +126,7 @@ tag: Robotics
 > N/A
 
 > [!info]- Week 12
-> ![[semesterCalendarS2#School Events - Week 12]]
+> ![[S2 Calendar#School Events - Week 12]]
 > 
 > #### Class Tasks
 > - [[_Robotics and Mechatronics/4 - Project/_ap/2024S2/Assessment 2|Assessment 2]]
@@ -136,7 +136,7 @@ tag: Robotics
 > N/A
 
 > [!danger]- Week 13
-> ![[semesterCalendarS2#School Events - Week 13]]
+> ![[S2 Calendar#School Events - Week 13]]
 >- Finalise Project
 > - [[_Robotics and Mechatronics/4 - Project/_ap/2024S2/Assessment 2]]
 >
@@ -146,7 +146,7 @@ tag: Robotics
 > The task will be posted to Google Classroom, as per normal.
 
 > [!info]- Week 14
-> ![[semesterCalendarS2#School Events - Week 14]]
+> ![[S2 Calendar#School Events - Week 14]]
 > #### Class Tasks
 > - [[_Robotics and Mechatronics/4 - Project/_ap/2024S2/Assessment 3|Assessment 3]]
 > #### Theory
@@ -155,7 +155,7 @@ tag: Robotics
 > N/A
 
 > [!danger]- Week 15
-> ![[semesterCalendarS2#School Events - Week 15]]
+> ![[S2 Calendar#School Events - Week 15]]
 > 
 > **Assessment Week** 
 > This assessment task is an interview. 
@@ -166,16 +166,16 @@ tag: Robotics
 > The task will be posted to Google Classroom, as per normal.
 
 > [!info]- Week 16
-> ![[semesterCalendarS2#School Events - Week 16]]
+> ![[S2 Calendar#School Events - Week 16]]
 > 
 > **Catchup Week** for assessments.
 > If you have completed assessment tasks, focus on your VET competencies.
 
 > [!info]- Week 17
-> ![[semesterCalendarS2#School Events - Week 17]]
+> ![[S2 Calendar#School Events - Week 17]]
 
 > [!info]- Week 18
-> ![[semesterCalendarS2#School Events - Week 18]]
+> ![[S2 Calendar#School Events - Week 18]]
 
 
 

@@ -23,26 +23,26 @@ Submissions are due **11:59pm Friday** each week.
 
 | Week                                            | Details                                                                                                                                               |
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![[semesterCalendarS2#School Events - Week 1]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week01\|Week01]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week01#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 2]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week02\|Week02]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week02#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 3]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week03\|Week03]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week03#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 4]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week04\|Week04]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week04#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 5]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week05\|Week05]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week05#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 6]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week06\|Week06]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week06#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 7]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week07\|Week07]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week07#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 8]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week08\|Week08]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week08#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 9]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week09\|Week09]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week09#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 10]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week10\|Week10]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week10#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 11]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week11\|Week11]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week11#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 12]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week12\|Week12]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week12#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 13]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week13\|Week13]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week13#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 14]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week14\|Week14]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week14#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 15]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week15\|Week15]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week15#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 16]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week16\|Week16]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week16#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 17]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week17\|Week17]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week17#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 18]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week18\|Week18]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week18#Summary]] |
-| ![[semesterCalendarS2#School Events - Week 19]] | ![[WebDev/2-Digital-Applications/_topics/_instructions/Week19#Summary]]                                                                               |
-| ![[semesterCalendarS2#School Events - Week 20]] | ![[WebDev/2-Digital-Applications/_topics/_instructions/Week20#Summary]]                                                                               |
+| ![[S2 Calendar#School Events - Week 1]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week01\|Week01]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week01#Summary]] |
+| ![[S2 Calendar#School Events - Week 2]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week02\|Week02]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week02#Summary]] |
+| ![[S2 Calendar#School Events - Week 3]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week03\|Week03]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week03#Summary]] |
+| ![[S2 Calendar#School Events - Week 4]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week04\|Week04]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week04#Summary]] |
+| ![[S2 Calendar#School Events - Week 5]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week05\|Week05]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week05#Summary]] |
+| ![[S2 Calendar#School Events - Week 6]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week06\|Week06]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week06#Summary]] |
+| ![[S2 Calendar#School Events - Week 7]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week07\|Week07]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week07#Summary]] |
+| ![[S2 Calendar#School Events - Week 8]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week08\|Week08]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week08#Summary]] |
+| ![[S2 Calendar#School Events - Week 9]]  | [[WebDev/2-Digital-Applications/_topics/_instructions/Week09\|Week09]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week09#Summary]] |
+| ![[S2 Calendar#School Events - Week 10]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week10\|Week10]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week10#Summary]] |
+| ![[S2 Calendar#School Events - Week 11]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week11\|Week11]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week11#Summary]] |
+| ![[S2 Calendar#School Events - Week 12]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week12\|Week12]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week12#Summary]] |
+| ![[S2 Calendar#School Events - Week 13]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week13\|Week13]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week13#Summary]] |
+| ![[S2 Calendar#School Events - Week 14]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week14\|Week14]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week14#Summary]] |
+| ![[S2 Calendar#School Events - Week 15]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week15\|Week15]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week15#Summary]] |
+| ![[S2 Calendar#School Events - Week 16]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week16\|Week16]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week16#Summary]] |
+| ![[S2 Calendar#School Events - Week 17]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week17\|Week17]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week17#Summary]] |
+| ![[S2 Calendar#School Events - Week 18]] | [[WebDev/2-Digital-Applications/_topics/_instructions/Week18\|Week18]]<br><br>![[WebDev/2-Digital-Applications/_topics/_instructions/Week18#Summary]] |
+| ![[S2 Calendar#School Events - Week 19]] | ![[WebDev/2-Digital-Applications/_topics/_instructions/Week19#Summary]]                                                                               |
+| ![[S2 Calendar#School Events - Week 20]] | ![[WebDev/2-Digital-Applications/_topics/_instructions/Week20#Summary]]                                                                               |
 
 
 

@@ -59,10 +59,6 @@ Consider all the data that needs to be transmitted across the SITH system. Draw 
 Using the database information provided, create the tables and fields required to store the data.
 
 
-# Build the Rovers
-
-![](https://www.youtube.com/watch?v=Ll2Du7q0W_U)
-
 # Deliverable
 
 The document is to be written in markdown and included in the Holocron repository/website.

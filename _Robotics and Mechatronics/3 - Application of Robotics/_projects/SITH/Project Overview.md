@@ -1,20 +1,21 @@
 # Project Overview: SITH (Systems Integration & Telemetry Handler)
 
-## 1. Executive Summary
+## 1. What's the Project About?
 
-The **Systems Integration & Telemetry Handler (SITH)** project is our main plan to build a powerful, **centralised** data system for our robots. Think of it as creating the internet for our entire fleet! SITH’s goal is to take all the different bits of data (called **telemetry**) from every single robot and bring them into one main, organised system. This lets us monitor their status live, predict when a robot might break down, and make sure every robot is **optimised** to do its job properly.
+The **SITH** project is all about creating a powerful system that will help us manage and analyse data from our robots in a centralised way. Think of it like setting up a super-efficient internet connection for all our robots! SITH aims to collect data from every robot, make sense of it, and use it to improve their performance.
 
-## 2. Project Objective
+## 2. What's the Goal of SITH?
 
-The main reason for building SITH is to create a strong system that can grow as we get more robots and data. This system will:
-1. **Standardise Telemetry:** We will **standardise** how all the robots talk. This means creating one set of universal rules for sending live information—like where the robot is, how healthy it is, and if it has any errors.
-2. **Ensure Data Integrity:** We'll gather all this data into one secure, **centralised** database. This way, we always have the same, accurate history for analysis and reports—it's the **single source of truth**.
-3. **Facilitate Integration:** The SITH system will also act as a secure gateway (the 'Handler'). This lets other programmes we use, like our analysis tools and mission control systems, easily grab and use the combined data stream.
+The main reason we're building SITH is so that we can create a system that will grow with us as new robots and more data become available. This system will do three main things:
 
-## 3. Expected Outcomes
+1. **Standardise How Robots Communicate:** We'll create universal rules for how all our robots send and receive information about their status, location, and condition.
+2. **Keep Data Safe and Intact:** All this data will be stored in a secure, centralised database, so we have one accurate and consistent history to analyse and report on.
+3. **Make It Easy for Other Programs to Use:** SITH acts as a secure gateway that lets our analysis tools, mission control systems, and other programs easily access and use the combined data stream.
 
-When SITH is successfully deployed, it will give us major advantages:
+## 3. What Can We Expect?
 
-- **Proactive Maintenance:** We’ll be able to fix robots _before_ they break down by seeing warning signs in the live telemetry.
-- **Operational Efficiency:** We can assign tasks and plan routes much better using accurate, unified data, meaning better work and less wasted time.
-- **Clearer Reports:** We will have one central spot to run all reports on robot performance, usage, and health, making everything easier to track.
+When SITH is up and running, we'll have some powerful advantages:
+
+* **Troubleshooting Made Easier:** We can fix robots before they break down by spotting warning signs in the live telemetry.
+* **More Efficient Use of Resources:** With accurate, unified data, we can plan tasks, assign routes, and make decisions much better.
+* **Simplified Reporting:** We'll have one place to look at reports on robot performance, usage, and health, making it easier to keep track of everything.

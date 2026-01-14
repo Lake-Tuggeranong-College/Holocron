@@ -60,7 +60,7 @@ See [[Course|Course]] for details on the course
 > [!info] These competencies are only required when completing **ICT30120 Certificate II in Information Technology**. 
 > DO NOT complete if you are completing the Certificate II in Applied Digital Technologies.
 
-[[Website Development Semester 4|Click here for details on the Project.]]****
+[[Website Development Semester 4|Click here for details on the Project.]]
 
 ![[Website Development Semester 4#Overview]]
 ![[Website Development Semester 4#Task 4.1 Competencies]]

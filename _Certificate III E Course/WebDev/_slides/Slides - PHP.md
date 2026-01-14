@@ -80,7 +80,7 @@ Explore these resources to dive deeper:
 
 - [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)(https://link.springer.com/book/10.1007/979-8-8688-0932-3)
 - [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)(https://wpwebinfotech.com/blog/php-and-cybersecurity/)
-- [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)[[2]](https://clouddevs.com/php/security-best-practices/)
+- [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)(https://clouddevs.com/php/security-best-practices/)
 - [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)(https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
 ---

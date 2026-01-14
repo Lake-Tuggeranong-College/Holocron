@@ -2,7 +2,7 @@
 
 In this initial step, your task is to define the project and what it aims to achieve. 
 
-> This is to finalised as a group
+> [!note] This is to finalised as a group
 
 The results of this will be documented so it can be referred to at a later stage.
 

@@ -173,7 +173,7 @@ $conn->close();
 
 - **Prepared Statements:** Prevent SQL injection attacks by using parameterized queries.
 - **Transactions:** Group multiple SQL queries into a single unit of work, ensuring data integrity.
-- **Database Abstraction Layers (DALs):** Provide a consistent interface for interacting with different database systems.
+- **Database [[Abstraction]] Layers (DALs):** Provide a consistent interface for interacting with different database systems.
 
 **Example**
 

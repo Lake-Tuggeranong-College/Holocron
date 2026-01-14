@@ -84,7 +84,7 @@ Introduces more programming structures:
 
 ![[overviewFourthGeneration.png|Untitled]]
 
-**Higher abstraction**
+**Higher [[abstraction]]**
 
 Aims to run faster code than 3GL and with fewer lines
 
@@ -279,7 +279,7 @@ There are four key techniques (cornerstones) to computational thinking:
 
 - **decomposition** - breaking down a complex problem or system into smaller, more manageable parts
 - **pattern recognition** – looking for similarities among and within problems
-- **abstraction** – focusing on the important information only, ignoring irrelevant detail
+- **[[abstraction]]** – focusing on the important information only, ignoring irrelevant detail
 - **algorithms** - developing a step-by-step solution to the problem, or the rules to follow to solve the problem
 
 Each cornerstone is as important as the others. They are like legs on a table - if one leg is missing, the table will probably collapse. Correctly applying all four techniques will help when programming a computer.
@@ -290,7 +290,7 @@ Each cornerstone is as important as the others. They are like legs on a table - 
 
 A complex problem is one that, at first glance, we don't know how to solve easily.
 
-Computational thinking involves taking that complex problem and breaking it down into a series of small, more manageable problems (**decomposition**). Each of these smaller problems can then be looked at individually, considering how similar problems have been solved previously (**pattern recognition**) and focusing only on the important details while ignoring irrelevant information (**abstraction**). Next, simple steps or rules to solve each of the smaller problems can be designed (**algorithms**).
+Computational thinking involves taking that complex problem and breaking it down into a series of small, more manageable problems (**decomposition**). Each of these smaller problems can then be looked at individually, considering how similar problems have been solved previously (**pattern recognition**) and focusing only on the important details while ignoring irrelevant information (**[[abstraction]]**). Next, simple steps or rules to solve each of the smaller problems can be designed (**algorithms**).
 
 Finally, these simple steps or rules are used to **program** a computer to help solve complex problems in the best way.
 
@@ -1007,7 +1007,7 @@ Functions are used to break the larger program into smaller, more manageable sec
 
 Additionally, it can allow multiple developers to work on the same code base, but focusing on different functionality minimising interference. 
 
-Functions allow you to reuse your functions in different parts of your code (and avoid repeating blocks of code), or in other programs, as well as provide you with a level of abstraction. 
+Functions allow you to reuse your functions in different parts of your code (and avoid repeating blocks of code), or in other programs, as well as provide you with a level of [[abstraction]]. 
 
 > [!info] Functions can have many names. Depending on the context, they can be called **methods, modules, procedures** and many others.  They are all *functionally* the same, pun intended.
 
@@ -1022,13 +1022,13 @@ For instance, using the pancake analogy, you would first identify the higher lev
 2. Cook Pancakes
 3. Eat Pancakes
 
-The implementation of (the details on how to complete) each of these stages would be a function. This is known as **abstraction.** 
+The implementation of (the details on how to complete) each of these stages would be a function. This is known as **[[abstraction]].** 
 
-> [!info] Abstraction is the process of identifying the overall logic (e.g. "buy ingredients") and ignoring the details (for now) of what that entails.
+> [!info] [[Abstraction]] is the process of identifying the overall logic (e.g. "buy ingredients") and ignoring the details (for now) of what that entails.
 
 ![https://www.youtube.com/watch?v=L1-zCdrx8Lk](https://www.youtube.com/watch?v=L1-zCdrx8Lk)
 
-Another example of abstraction
+Another example of [[abstraction]]
 
 ## DRY vs WET
 

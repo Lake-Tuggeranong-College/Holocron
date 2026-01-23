@@ -3,7 +3,8 @@ Want to Study and earn competencies towards the Certificate III in Information T
 
 See [[Course|Course]] for details on the course
 
-
+> [!important]- Meeting Schedule
+> https://docs.google.com/spreadsheets/d/1CRYXbGF72FOSdTZk5OMBUAiqRUMKscUmO3pwiwMV3-A/edit?usp=sharing
  
 # Semester 1 - Infrastructure
 

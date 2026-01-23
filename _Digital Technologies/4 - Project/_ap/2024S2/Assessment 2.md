@@ -19,9 +19,9 @@ These are the details you are to cover in the topics in Assessment 2. More Speci
 
 ![[_Digital Technologies/4 - Project/_ap/2024S2/_images/assessment2Topics.png]]
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Project Overview|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Project Overview|Task 2]]
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Code|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Code|Task 2]]
 
 Suggestions:
 - receive_damage 
@@ -30,12 +30,12 @@ Suggestions:
 - Weapon switching functions
 
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Data|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Data|Task 2]]
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Development Process|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Development Process|Task 2]]
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Technical Analysis|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Technical Analysis|Task 2]]
 
 
 
-![[Shared Content/Assessment Support/Assessments2024S2/Task 2#Work Skills|Task 2]]
+![[Shared Content/Assessment Support/2024S2/Task 2#Work Skills|Task 2]]

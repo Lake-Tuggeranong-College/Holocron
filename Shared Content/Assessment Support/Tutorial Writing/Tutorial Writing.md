@@ -33,7 +33,7 @@ https://www.uwb.edu/it/addie
 
 ## 🔍 A – Analysis
 
-**Audience**:\ Beginner programmers with basic Python knowledge and no prior experience with Flask.
+**Audience**: Beginner programmers with basic Python knowledge and no prior experience with Flask.
 
 **Learning Objectives**:
 

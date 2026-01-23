@@ -4,7 +4,6 @@ highlightTheme: zenburn
 css: css/holocronSlides.css
 ---
 # Writing Technical Tutorials Using the ADDIE Model
-### A guide for students developing PHP website projects
 
 ---
 
@@ -14,7 +13,6 @@ css: css/holocronSlides.css
 - Explains concepts, code, and processes clearly.
 - Helps others learn by doing.
 
----
 
 ## Why Use the ADDIE Model?
 

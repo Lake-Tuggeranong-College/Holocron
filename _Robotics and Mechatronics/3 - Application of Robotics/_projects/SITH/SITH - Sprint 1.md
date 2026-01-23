@@ -1,6 +1,6 @@
 # Objective
 
-This phase of the project developed is aimed at developing the Minimum Viable Product (MVP) from the Project Roadmap.
+This sprint of the project developed is aimed at developing the Minimum Viable Product (MVP) from the Project Roadmap.
 
 Using the GitHub Project jobs board, keep track of the tasks that are actively being developed, and yet to be developed.
 

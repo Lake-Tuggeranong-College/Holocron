@@ -26,7 +26,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 9     | Showcase Development                                                                                                                                            |              |                 |
 | 10    | Showcase Development                                                                                                                                            |              |                 |
 | 11    | Showcase Development                                                                                                                                            |              | Task 2.2 Due    |
-| 12    | Slides - [[Slides - Tutorials]]<br>[[Tutorial Writing]]                                                                                                         |              |                 |
+| 12    | Slides - [[Slides - Tutorial Writing]]<br>[[Tutorial Writing]]                                                                                                         |              |                 |
 | 13    | Tutorial Development                                                                                                                                            |              |                 |
 | 14    | Tutorial Development                                                                                                                                            |              | Task 2.3 Due    |
 | 15    | Assessment Second Sitting                                                                                                                                       |              |                 |

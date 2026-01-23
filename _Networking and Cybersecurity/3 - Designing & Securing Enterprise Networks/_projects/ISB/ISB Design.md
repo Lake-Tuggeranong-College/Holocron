@@ -1,9 +1,9 @@
 > [!note] Based on the outcome of the [[Analysis Outcomes]].
 
 
-# Goals
+# Objective/s
 
-In this phase you will, as a group, plan the end goals for the project. This may include:
+In this stage you will, as a group, plan the end goals for the project. This may include:
 
 - The visual design of the CTF site
 - The visual design of the CTF challenges page

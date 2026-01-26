@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Docker Compose uses a YAML file (`docker-compose.yml`) to configure application services, networks, and volumes. It simplifies the process of managing multi-container environments.
 
 ---

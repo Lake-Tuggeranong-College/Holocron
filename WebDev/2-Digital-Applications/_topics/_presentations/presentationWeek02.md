@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Welcome to Week 2
 
 - Development Environment is configured and ready to start.

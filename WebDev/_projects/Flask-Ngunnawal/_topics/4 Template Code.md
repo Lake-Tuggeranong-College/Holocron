@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 Copy the contents of the `index.html` from the previous iteration of the site and replace the contents of `template.html`.

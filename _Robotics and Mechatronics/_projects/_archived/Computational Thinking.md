@@ -1,5 +1,6 @@
 ---
 tag: Robotics
+isCurrent: false
 ---
 # Theory
 ![[Theory#**What is Computational Thinking?**]]

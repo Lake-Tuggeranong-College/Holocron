@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Introduction to PHP
 
 PHP (Hypertext Preprocessor) is a popular open-source, server-side scripting language widely used for developing dynamic and interactive web applications. It integrates seamlessly with HTML and can be embedded into web pages to execute specific tasks.

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Defintion
 
 How the names of variables, functions etc are structured.

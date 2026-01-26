@@ -6,6 +6,8 @@ order: 13
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!info]- Goal - How does the player win the game?
 > Certain conditions need to be met before the player can win. These may be 

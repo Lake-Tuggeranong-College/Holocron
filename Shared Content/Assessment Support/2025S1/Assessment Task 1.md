@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Product Roadmap
 
 > [!important] This is relevant for the following subjects:

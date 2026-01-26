@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 
 ## Position Description: Robotics Intern – Mars Rover Prototype

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 The type of information being stored in a variable. Instructs the device to allocate and structure the required memory.
 

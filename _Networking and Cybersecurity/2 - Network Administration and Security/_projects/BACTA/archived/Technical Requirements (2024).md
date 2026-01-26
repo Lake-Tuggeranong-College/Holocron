@@ -3,6 +3,7 @@ tags:
   - Cyber
   - yr11
   - "#archived"
+isCurrent: false
 ---
 The project will have the following technical requirements
 

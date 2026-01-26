@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Objective
 
 In this initial step, your task is to define the project and what it aims to achieve. 

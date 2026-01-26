@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 A value that is passed to a function.
 

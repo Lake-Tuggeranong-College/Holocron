@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 > [!info] This is sprint 1 of the project. The deadline for this sprint is Week 7.
 
 # Home network design

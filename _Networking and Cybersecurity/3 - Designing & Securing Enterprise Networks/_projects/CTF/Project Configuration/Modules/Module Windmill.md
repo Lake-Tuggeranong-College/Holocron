@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Windmill Module
 
 This is a sample document to show how to and what to write for the configration of a module.

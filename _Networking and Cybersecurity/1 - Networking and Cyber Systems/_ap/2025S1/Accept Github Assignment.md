@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 Click on the link to the GitHub Classroom assignment:
 

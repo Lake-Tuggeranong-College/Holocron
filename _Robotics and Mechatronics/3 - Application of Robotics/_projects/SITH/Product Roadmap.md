@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Objective
 
 As a group, plan out the implementation, as a best-guess, for the project. Create a Product Roadable table which defines the different functionality or major components of the project. 

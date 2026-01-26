@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 IoT devices are physical devices that are embedded with sensors, software, and other technologies that allow them to connect to the internet and exchange data. They can range from simple devices like smartwatches to complex systems like self-driving cars.
 
 **Characteristics of IoT Devices:**

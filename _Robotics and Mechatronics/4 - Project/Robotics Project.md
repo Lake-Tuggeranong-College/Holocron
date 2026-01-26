@@ -3,6 +3,7 @@ tags:
   - S2
   - Robotics
 tag: Robotics
+isCurrent: false
 ---
 > [!note]- Project Overview
 > The project will be explained in due time...

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 ![[logoKyberSpark.png|kyberSparkLogo]]
 # Company Overview: Kyber Spark

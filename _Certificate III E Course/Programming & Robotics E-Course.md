@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 > [!info] Course Details
 > The goal of this course is to deliver a Certificate III in Information Technology focusing on Programming & Robotics.
 

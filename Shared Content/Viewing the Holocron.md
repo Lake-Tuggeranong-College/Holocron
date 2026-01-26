@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 There are two ways to view/interact with the Holocron.
 
 # Website

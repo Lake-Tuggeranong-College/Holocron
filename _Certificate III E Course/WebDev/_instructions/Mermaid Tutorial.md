@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # A Comprehensive Guide to Mermaid Diagrams
 
 ### What is Mermaid?

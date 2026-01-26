@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Objective
 
 This sprint of the project developed is aimed at developing the Minimum Viable Product (MVP) from the Project Roadmap.

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Install the OS
 
 # Raspbian

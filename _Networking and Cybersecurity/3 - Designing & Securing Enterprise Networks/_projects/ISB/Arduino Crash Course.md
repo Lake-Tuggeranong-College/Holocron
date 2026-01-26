@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Hardware
 
 The hardware being used for this crash course are Arduino-based devices, meaning they can be programmed using the Arduino IDE and the Arduino language, but may not be specifically Arduino devices.

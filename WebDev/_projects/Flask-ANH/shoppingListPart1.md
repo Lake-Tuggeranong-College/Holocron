@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 > [!info]- Goal
 > The goal of this part of the project is the implementation of a shopping list where users can add and remove items. Users will be able to create and manage different shopping lists for their own purposes (such as "Dinner Party" and "Weekly Items")

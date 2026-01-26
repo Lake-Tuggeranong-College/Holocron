@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Assessment Examples
 
 Below are some examples of Assessments that students have submitted in the past. Use them as suggestions or inspirations for what you can develop.

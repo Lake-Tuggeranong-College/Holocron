@@ -1,6 +1,7 @@
 ---
 Tutorial Currency Status:
   - Current
+isCurrent: true
 ---
 Prior to any website development coding can be commenced, the database must be configured and have the necessary fields in order to facilitate the websites functionality.
 

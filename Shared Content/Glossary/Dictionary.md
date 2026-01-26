@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 See [[Key Value Pair]]

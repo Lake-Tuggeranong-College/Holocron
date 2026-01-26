@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 The bottom-up approach to software development starts with the implementation of individual modules and gradually combines them to build the complete system. It focuses on creating reusable, independent components that can be assembled to meet the system requirements.

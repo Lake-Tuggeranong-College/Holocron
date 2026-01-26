@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Project Overview
 **Project Goal:**
 

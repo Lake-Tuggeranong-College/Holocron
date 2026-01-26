@@ -3,6 +3,7 @@ tags:
   - S2
   - DigitalTechnologies/DigitalApplications
   - Flask
+isCurrent: false
 ---
 > [!note]- Project Overview
 > This semester you will develop A New Homepage (ANH), which will be based in the Flask environment. 

@@ -1,6 +1,7 @@
 ---
 Tutorial Currency Status:
   - Unconfirmed.
+isCurrent: true
 ---
 # User Registration
 

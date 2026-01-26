@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 In this stage, you’ll develop the overall logic required for the smart device, without the specific code implementation.  This stage focuses on the sequence of steps in the loop() function and ‘method stubs’. 
 
 Stubs are functions that in effect “empty” that will be developed at a later stage.

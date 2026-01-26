@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Position Description: Game Development Intern – FPS Prototype
 
 Position Title: Game Development Intern  

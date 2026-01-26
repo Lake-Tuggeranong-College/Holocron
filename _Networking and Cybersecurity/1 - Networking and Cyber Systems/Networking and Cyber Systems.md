@@ -3,6 +3,7 @@ tags:
   - S1
   - Cyber
   - yr11
+isCurrent: false
 ---
 > [!note]- Project Overview
 > ![[Home Network#Project Overview]]

@@ -2,6 +2,8 @@
 tags:
   - S1
   - ISD
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!note]- Project Overview 
 > ![[_Digital Technologies/1 - Digital Assets/_projects/Space Invaders/Project Overview|Project Overview]]

@@ -2,6 +2,8 @@
 tags:
   - S1
   - ISD
+isCurrent: false
+softwareVersion: "4.3"
 ---
 
 There are many approaches to take to implement the enemy shooting game mechanic. The approach taken in this tutorial is:

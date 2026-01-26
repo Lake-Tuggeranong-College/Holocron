@@ -1,5 +1,7 @@
 ---
 tags: ISD
+isCurrent: false
+softwareVersion: "4.3"
 ---
 
 Game Design Documents (GDDs) are specifications that describe the design and key features of a video game. They help the game development team understand the vision for the game and stay organised throughout the creation process.

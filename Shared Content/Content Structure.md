@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 For the beginning of the course, the lessons are structured in the following way.
 
 1. Theory

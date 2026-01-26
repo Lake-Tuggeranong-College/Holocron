@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 **JavaScript** is a high-level, interpreted programming language that is used for both client-side and server-side development. It is a dynamic language, meaning that it allows for changes to the code during runtime.
 

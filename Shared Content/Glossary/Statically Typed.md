@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 The data type of a variable/constant is set at compile time, and cannot change throughout the execution of the program.
 

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ## GitHub account
 
 Sign up an account here: https://github.com/signup

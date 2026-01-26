@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 The requirements for the site indicate that the users should be allowed to upload images to celebrate Ngunnawal Country. The site should enable this functionality with users self selecting images to upload once they’ve logged in, where they can see the images they’ve uploaded. There should also be a page where anyone (unregistered users, registered users and administrators) can see all the images uploaded across the site.

@@ -1,3 +1,7 @@
+---
+isCurrent: false
+softwareVersion: "4.3"
+---
 In this tutorial, we will break down how computers talk to each other in games using two main "blueprints": **Client-Server** and **Peer-to-Peer (P2P)**.
 
 To help you visualise this, we’ll use examples from **Godot 4**, a modern game engine where you can build these systems yourself.

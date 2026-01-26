@@ -3,6 +3,7 @@ tags:
   - S1
   - DigitalTechnologies
   - Flask
+isCurrent: false
 ---
 > [!note]- Project Overview
 > The project will be explained in due time...

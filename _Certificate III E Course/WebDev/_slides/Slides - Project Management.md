@@ -2,6 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
+isCurrent: true
 ---
 # Project Management in Software Development
 notes:

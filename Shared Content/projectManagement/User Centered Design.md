@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 A lot of IT projects are designed with the end-user in mind (which was not always the case!) 
 
 User-centered design (UCD) is an approach to designing products, systems, and services that prioritises the needs and preferences of the end-users. It involves understanding the users' goals, tasks, and contexts, and using that understanding to inform every stage of the design process.

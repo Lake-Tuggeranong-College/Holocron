@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 # Overview
 
 The focus of this semester is to learn and develop the architecture and infrastructure required for the remainder of the projects in subsequent projects.

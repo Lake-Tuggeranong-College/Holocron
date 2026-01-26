@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 A variable which controls how many iterations are executed in a loop.

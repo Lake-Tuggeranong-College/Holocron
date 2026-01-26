@@ -4,6 +4,8 @@ versionTested:
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 Open `level_one.tscn`
 # Develop your level environment

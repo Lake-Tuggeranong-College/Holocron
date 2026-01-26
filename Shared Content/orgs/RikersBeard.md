@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ![[logoRikersBeard.png]]
 Riker’s Beard is a small business with only a few staff members. The boss - Richard - manages the staff and the overall business. There are two main sales people - Jeff and Milo - who are full time employees and deal with the customers and make sales. They also order products from their suppliers, which could be specific orders as well as the new releases. There are multiple part-time staff, who perform the similar roles to Jeff and Milo, without ordering products. Because Richard refuses to do any accounting of any sort, he hires Ryan from Rehtac & Associates to perform all the accounting for the business.
 

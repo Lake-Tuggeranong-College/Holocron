@@ -2,6 +2,8 @@
 theme: white
 highlightTheme: zenburn
 css: css/holocronSlides.css
+isCurrent: false
+softwareVersion: "4.3"
 ---
 
 

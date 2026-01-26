@@ -1,6 +1,7 @@
 ---
 tags:
   - S2
+isCurrent: true
 ---
 ### School Events - Week 1
 **Monday** - Student Free Day

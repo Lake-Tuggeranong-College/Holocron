@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Binary
 
 > [!info] Written by Google Gemini…

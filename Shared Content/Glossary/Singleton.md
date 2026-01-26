@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 A **singleton** in game development, as in general software engineering, is a **design pattern** that restricts the instantiation of a class to **one object**. It ensures that there is only ever one instance of that class throughout the entire game's execution, and it provides a global point of access to that instance.
 
 ---

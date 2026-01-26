@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 In software development, a constant is a named value that cannot be changed during the execution of a program. Constants are used to store values that are known at compile time and that should not change during the execution of a program.

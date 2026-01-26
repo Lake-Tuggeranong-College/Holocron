@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Goals
 
 The goal/s of this set of instructions are:

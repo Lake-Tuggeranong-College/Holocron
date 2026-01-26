@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Welcome to Week 8
 
 - Introducing Jacob

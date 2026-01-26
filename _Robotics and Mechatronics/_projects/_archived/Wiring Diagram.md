@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 ## Overview
 
 The goal of a wiring diagram is to demonstrate how the components are connected to each other. They are to be used as a **guide** to show which pins on the devices to connect to each other.

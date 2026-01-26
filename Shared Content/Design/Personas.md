@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 [https://wpamelia.com/user-persona-template/](https://wpamelia.com/user-persona-template/)
 
 ## Personas

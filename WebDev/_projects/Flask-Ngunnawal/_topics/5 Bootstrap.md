@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 Go to [https://getbootstrap.com/](https://getbootstrap.com/) and click on the Read Installation docs link.

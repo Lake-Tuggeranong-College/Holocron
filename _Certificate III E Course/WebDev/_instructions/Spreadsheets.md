@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 A timesheet is an excellent tool for tracking your study or work hours. Here is a comprehensive tutorial on how to design one, including formulas for calculating time and totals.
 
 This tutorial shows you how to design and create your own timesheet, to be delivered to the client to invoice them for the work provided in Project 1.

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 SQL lets you access and manipulate databases.

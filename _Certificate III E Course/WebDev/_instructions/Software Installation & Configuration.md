@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Goal
 Using your PC or laptop, or a school supplied one, install and configure
 - a docker container for your future projects.

@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 HyperText Markup Language (HTML) is the language used to create the content and structure of a webpage.
 
 ![[htmlIntroduction.jpg]]

@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 ![[webDesign1.png]]
 
 ![[webDesign2.png]]

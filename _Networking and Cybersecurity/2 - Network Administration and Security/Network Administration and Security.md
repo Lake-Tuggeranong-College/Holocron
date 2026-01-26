@@ -3,6 +3,7 @@ tags:
   - S2
   - Cyber
   - yr11
+isCurrent: false
 ---
 > [!note]- Project Overview
 > You are being tasked to develop secure servers and clients to support the Northside Hospital Project.

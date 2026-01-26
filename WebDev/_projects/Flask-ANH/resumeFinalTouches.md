@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 > [!important]- Goal
 > Add a few more features to the resume, namely:

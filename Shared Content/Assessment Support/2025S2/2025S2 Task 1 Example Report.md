@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 You may shows possible ways you could write your report for this task, for each class.
 
 > [!note] Not all details have been verified

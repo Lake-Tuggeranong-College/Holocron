@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 # Overview
 
 > [!warning] Only required to complete the Certificate II in Information Technology

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 The core of Australian privacy law is the **Privacy Act 1988 (Cth)**, which includes the **13 Australian Privacy Principles (APPs)**. These principles govern how most private sector organisations (with an annual turnover of over $3 million, plus all health service providers and a few other specific entities) and all Australian government agencies must handle **Personal Identification Information (PII)**.
 
 ---

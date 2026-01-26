@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Welcome to Semester 2
 
 - Continuing Flask development.

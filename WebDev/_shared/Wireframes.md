@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 These are a sketch of a plan of a website, focusing on the layout of the site, **with no content.**
 
 An example could be something similar to the one shown here.

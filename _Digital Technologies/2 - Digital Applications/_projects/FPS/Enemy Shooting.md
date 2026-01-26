@@ -1,3 +1,7 @@
+---
+isCurrent: false
+softwareVersion: "4.3"
+---
 > [!important] Prerequisites: [[Enemy]]
 
 ## Overview: How Enemy Shooting Works

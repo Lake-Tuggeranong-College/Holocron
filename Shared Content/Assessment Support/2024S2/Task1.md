@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Assessment Overview
 
 > [!important] Regularly update your fork of the Holocron. This page may be updated throughout assessment week.

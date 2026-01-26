@@ -2,6 +2,7 @@
 yearSemester:
   - 2024S2
 tag: Robotics
+isCurrent: false
 ---
 
 > [!important] View the assessment on Google Classroom for specific details.

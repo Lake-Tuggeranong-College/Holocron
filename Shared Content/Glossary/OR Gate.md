@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 #logicgate 
 # Definition
 An **OR gate** is a digital logic gate that implements the logical OR operation. It has multiple inputs and one output. The output is True (1) if any of the inputs are True (1), and False (0) if all inputs are False (0).

@@ -4,6 +4,7 @@ yearSemester:
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 # Project Goals
 

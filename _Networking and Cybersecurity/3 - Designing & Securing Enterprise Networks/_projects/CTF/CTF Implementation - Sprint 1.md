@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 In this phase you will be working in your team, using the jobs board as an active snapshot of the status of the project.
 
 # Sprint 1

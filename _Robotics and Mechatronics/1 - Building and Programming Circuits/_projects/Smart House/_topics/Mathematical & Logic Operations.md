@@ -1,5 +1,6 @@
 ---
 tag: Robotics
+isCurrent: false
 ---
 # Theory
 ![[Theory#Mathematical & Logic Operations]]

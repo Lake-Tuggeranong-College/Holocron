@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 > [!note] The purpose of this course is to develop a Capture The Flag (CTF) game. In order to do so, you will need to understand what that involves. To do so, you'll analyse existing CTF games available and identify key elements.
 

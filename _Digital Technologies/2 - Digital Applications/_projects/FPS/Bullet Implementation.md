@@ -6,6 +6,8 @@ order: 4
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 
 There are numerous ways to implement shooting in an FPS (or other type of) game. 

@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Shopping Cart Project
 
 The goal of implementing a database and SQL into the project is to implement CRUD - Create, Retrieve, Update and Delete - operations on the database.

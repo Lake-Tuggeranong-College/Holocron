@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 > [!important] Prior to beginning, ensure that 
 > 1. Docker is running, and
 > 2. Visual Studio Code is connected to the Docker container.  ![[crashCourseContainerConnected.png]]

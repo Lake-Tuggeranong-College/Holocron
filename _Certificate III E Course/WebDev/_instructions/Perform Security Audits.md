@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 # 🔐 Security Scanning Guide for PHP Websites
 

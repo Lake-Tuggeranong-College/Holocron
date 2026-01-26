@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 Wait for the project to be fully opened in Codespaces. Once completed, go to the Terminal tab, and enter the two separate commands (hitting enter after each).
 

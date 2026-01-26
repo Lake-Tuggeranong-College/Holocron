@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 
 # Simple Input → Output

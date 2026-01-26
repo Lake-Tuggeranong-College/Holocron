@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 Looking for similarities among and within problems
 

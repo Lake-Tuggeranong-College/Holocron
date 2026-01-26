@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 > [!Important]- Goal
 > The goal for this stage of the development is to improve the Resume User Interface and Experience. You will improve the website's rendering in the browser, and for printing. You will also make changes across the project to add User Profile Pictures & contact numbers to add to the resume.

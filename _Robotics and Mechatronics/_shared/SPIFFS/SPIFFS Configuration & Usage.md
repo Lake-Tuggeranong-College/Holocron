@@ -2,6 +2,7 @@
 tags:
   - Robotics/esp32
 tag: Robotics
+isCurrent: false
 ---
 
 # What is SPIFFS?

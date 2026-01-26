@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 This shows how to use Advanced Slides within the holocron.
 
 # CSS

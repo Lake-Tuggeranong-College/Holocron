@@ -4,6 +4,8 @@ tags:
   - DigitalTechnologies
   - ISD
   - yr12
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!note]- Project Overview
 > The project will be explained in due time...

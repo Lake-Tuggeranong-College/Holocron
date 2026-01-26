@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 Using the information learned in the previous step: [[CTF Analysis]]
 
 Design learning challenges to implement in this project.

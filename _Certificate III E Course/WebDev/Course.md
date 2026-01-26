@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Course Details
 The goal of this course is to deliver a Certificate III in Information Technology focusing on Website Development.
 Therefore the course will focus on the completion of competencies, without the BSSS requirements of attendance and assessment.

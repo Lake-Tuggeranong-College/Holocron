@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # What is Password Hashing
 
 Password hashing is used to store a password in the database without actually storing the password. The password is taken by the website or application, hashed and the hash is stored in the database. Therefore if anyone read the database, they wouldn't know the original file.

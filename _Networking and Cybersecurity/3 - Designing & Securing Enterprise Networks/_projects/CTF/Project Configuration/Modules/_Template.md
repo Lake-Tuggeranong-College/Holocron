@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 This shows the default code needed to create a new module using MQTT.
 
 To implement a new module, create a new project using PlatformIO (extension within VSCode). 

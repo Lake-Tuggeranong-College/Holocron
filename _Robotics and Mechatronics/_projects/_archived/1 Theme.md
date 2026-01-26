@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Smart Device Theme
 
 Decide on a Device that you wish to automate. Some examples could be:

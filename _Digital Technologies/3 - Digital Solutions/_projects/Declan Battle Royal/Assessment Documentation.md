@@ -2,6 +2,8 @@
 tags:
   - ISD
   - yr12
+isCurrent: false
+softwareVersion: "4.3"
 ---
 Prepare for Assessment 2 documentation by creating a new Google Doc.
 

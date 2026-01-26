@@ -2,6 +2,7 @@
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 > [!tip] The goal of this stage is to document the implementation of the project.
 

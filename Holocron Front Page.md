@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 Welcome to the Holocron - the central repository for IT subjects at LTC. 
 

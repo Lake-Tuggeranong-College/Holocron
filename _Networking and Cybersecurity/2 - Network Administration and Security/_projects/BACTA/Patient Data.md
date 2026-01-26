@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 To load the patient data, two PHP pages are required:
 1. A list of patients (`patient_list.php`), and
 2. Patient data (`patient_data.php`)

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 The “test” to evaluate whether the loop should continue iterating.

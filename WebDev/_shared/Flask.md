@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 ## What is Flask?
 
 [Flask](http://www.google.com/url?q=http%3A%2F%2Fflask.pocoo.org%2F&sa=D&sntz=1&usg=AFQjCNEJ9V-_HcnDs2ho4QdgKcuzcvyZwA) is a web framework. This means flask provides you with tools, libraries and technologies that allow you to build a web application. This web application can be some web pages, a blog, a wiki or go as big as a web-based calendar application or a commercial website.

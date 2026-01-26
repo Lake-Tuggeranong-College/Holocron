@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 `Mosquitto` is installed on the server.
 
 The script `DatabaseToMQTT.py` (stored in the root of the project) runs on a continual loop on the server.

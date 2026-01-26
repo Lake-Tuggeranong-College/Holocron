@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 To standardise the Role Based Access Control (RBAC) across the whole site, we're updating the database and implementing a function in `template.php` to manage the granting permission or disallowing access.
 

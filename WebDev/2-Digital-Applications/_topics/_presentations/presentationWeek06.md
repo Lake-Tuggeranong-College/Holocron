@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Welcome to Week 6
 
 Final Touches to the Resume

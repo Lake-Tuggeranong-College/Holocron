@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 In preparation for the assessment task, you are to prepare and plan for future development. **The information you produce can be used in your first assessment task.**
 
 You are to create a plan for the data being communicated between your Controller and Rover devices. This has already been started by indicating our ‘test’ commands:

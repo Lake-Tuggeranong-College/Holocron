@@ -2,6 +2,7 @@
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 The goal is to install a fresh new installation of Raspberry Pi OS onto a SD card.
 # Flash SD Card

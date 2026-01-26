@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Holocron Repository: [GitHub repository](https://github.com/Lake-Tuggeranong-College/Holocron)
 
 There are two ways to use the Holocron.

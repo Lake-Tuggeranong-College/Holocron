@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 “Running” a function at a given stage of execution.

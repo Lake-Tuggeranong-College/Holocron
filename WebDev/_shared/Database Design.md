@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 Database design is the process of creating a structure for storing and managing data. One of the main goals of database design is to create a system that is efficient, secure, and easy to use. Normalisation is a key concept in database design that involves organising data in a way that reduces redundancy and ensures data integrity. The process involves breaking down large tables into smaller, more manageable tables and creating relationships between them. This reduces data duplication and inconsistencies, making it easier to maintain and update the database. There are several normal forms, with the most commonly used being first normal form (1NF), second normal form (2NF), and third normal form (3NF).
 
 ![https://www.youtube.com/watch?v=wR0jg0eQsZA](https://www.youtube.com/watch?v=wR0jg0eQsZA)

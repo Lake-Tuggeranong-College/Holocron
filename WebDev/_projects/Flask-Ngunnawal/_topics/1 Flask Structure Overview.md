@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 This video gives you an overview of a sample Flask project.

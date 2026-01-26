@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 Not a Number. Value used when a variable is used in a way that is assumed to be a number, but is not.
 

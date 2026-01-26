@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 **Indexes** are used with arrays to access individual elements within the array. Each element in an array has a unique index, starting from 0.

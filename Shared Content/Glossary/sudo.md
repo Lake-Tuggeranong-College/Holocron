@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ### What is `sudo`?
 
 `sudo` stands for **"superuser do"**. It lets a **regular user** run commands with **administrator (root) privileges**.

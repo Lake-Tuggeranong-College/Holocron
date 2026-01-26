@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Install file
 Download this file:
 https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64&_gl=1*1ovvf3d*_gcl_au*NjYyNTYxNDkyLjE3NTMyNDQxMjY.*_ga*MTYwOTc4NjUwMy4xNzQzNTQ3ODQ5*_ga_XJWPQMJYHQ*czE3NTMyNDQxMjYkbzQkZzEkdDE3NTMyNDQ3NzIkajYwJGwwJGgw

@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 
 # Conditions
 

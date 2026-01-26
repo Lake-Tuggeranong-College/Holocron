@@ -1,5 +1,7 @@
 ---
 tag: Robotics
+isCurrent: false
+needsUpdating: true
 ---
 # Motors
 

@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 > [!important] Before starting the assessment
 > Set up your work station considering WHS requirements (ICTICT214 1.1).

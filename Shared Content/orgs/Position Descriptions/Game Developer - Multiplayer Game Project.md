@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 
 ## Position Title: Intern Game Developer – Multiplayer Game Project

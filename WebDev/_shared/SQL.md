@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 SQL is a computer language for working with sets of facts and the relationships between them. Relational database programs, such as Access, use SQL to work with data. Like many computer languages, SQL is an international standard that is recognised by standards bodies such as ISO and ANSI.
 
 You use SQL to describe sets of data that can help you answer questions. When you use SQL, you must use the correct syntax. Syntax is the set of rules by which the elements of a language are correctly combined. SQL syntax is based on English syntax, and uses many of the same elements as Visual Basic for Applications (VBA) syntax.

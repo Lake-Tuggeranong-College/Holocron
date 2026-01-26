@@ -3,6 +3,7 @@ yearSemester: 2024S2
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 > [!important] View the assessment on Google Classroom for specific details.
 

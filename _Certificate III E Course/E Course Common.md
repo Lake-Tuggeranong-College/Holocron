@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # What is an E Course?
 
 An[ E Course](https://www.bsss.act.edu.au/act_senior_secondary_system/curriculum/e_courses) focuses on the delivery and completion of Vocational Competencies, without the BSSS requirements of attendance and assessment.

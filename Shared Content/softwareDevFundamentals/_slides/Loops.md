@@ -2,6 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
+isCurrent: true
 ---
 # Loops in Software Development
 

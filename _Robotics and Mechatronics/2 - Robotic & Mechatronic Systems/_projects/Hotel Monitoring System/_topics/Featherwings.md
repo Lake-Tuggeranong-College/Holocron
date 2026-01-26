@@ -2,6 +2,7 @@
 tags:
   - Robotics
   - Robotics/esp32
+isCurrent: false
 ---
 
 # Featherwings

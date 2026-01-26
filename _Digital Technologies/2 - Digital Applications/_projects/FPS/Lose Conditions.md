@@ -6,6 +6,8 @@ order: 13
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!info] **Lose conditions** in game development define the specific criteria that, when met, result in the player losing the game. They provide a sense of challenge and stakes to the gameplay and encourage players to avoid making mistakes.
 > 

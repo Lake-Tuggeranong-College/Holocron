@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ## Project Overview
 
 ### Project Introduction

@@ -2,6 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
+isCurrent: true
 ---
 ## Slide 1: 🛡️ Security Audits for PHP Websites
 

@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Objective
 
 Create a circuit that flashes an LED light on and off using code.

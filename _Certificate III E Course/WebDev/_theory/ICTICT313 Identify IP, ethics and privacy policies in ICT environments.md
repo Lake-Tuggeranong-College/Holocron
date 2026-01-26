@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 
 This tutorial explains the key principles behind **organisational** policies on **Intellectual Property (IP)**, **Ethics**, and **Privacy**, and how you fit into those rules.

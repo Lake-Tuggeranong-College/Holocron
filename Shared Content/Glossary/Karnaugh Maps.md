@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 Karnaugh maps are a graphical method used to simplify Boolean functions by identifying patterns and reducing the number of terms. They were developed by Maurice Karnaugh in 1953.

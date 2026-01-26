@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Sitemaps are a visual diagram for the structure of your entire website. They impact navigation and the organisation of content.
 
 For example, this site shows that there are 5 main categories of pages at the top level (shown in blue). For _some_ of those categories, there are sub-pages (shown in green).

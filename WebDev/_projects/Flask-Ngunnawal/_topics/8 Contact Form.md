@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 This task implements the back-end functIonality for the “contact us” page. To do this, there are a number of steps, and areas of the project to modify, namely the database, model, form and html. 

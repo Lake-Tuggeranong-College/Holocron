@@ -2,6 +2,8 @@
 tags:
   - S1
   - ISD
+isCurrent: false
+softwareVersion: "4.3"
 ---
 The Space Invaders game mechanic where the enemies move back and forth across the screen is a classic example of simple yet engaging gameplay. The player controls a cannon at the bottom of the screen and must shoot down waves of aliens that descend from the top. The aliens move in a grid formation, alternating between moving left and right, gradually moving down the screen as they do. The player must carefully aim and shoot to destroy the aliens before they reach the bottom of the screen and destroy the player's cannon. This back-and-forth movement creates a sense of urgency and tension, as the player must constantly adjust their aim and react quickly to the changing positions of the aliens.
 

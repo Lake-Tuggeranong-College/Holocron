@@ -1,5 +1,6 @@
 ---
 tags: php
+isCurrent: false
 ---
 ![[Theory#Variables and Data Types]]
 

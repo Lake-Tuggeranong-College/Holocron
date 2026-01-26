@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 ## Instructions
 
 Using the template provided, or your own version, create a banner to demonstrate your project.

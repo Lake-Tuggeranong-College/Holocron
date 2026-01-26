@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 ## Explanation Video
 
 ![Made for Semester 1, 2023](https://www.youtube.com/watch?v=QRXc9KyWyz8)

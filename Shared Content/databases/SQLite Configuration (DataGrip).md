@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 In DataGrip, you can configure a SQLite database which runs from a single file, which is easy to manage.
 

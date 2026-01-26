@@ -4,6 +4,7 @@ tags:
   - Robotics/esp32
   - Robotics/Arduino
   - S1
+isCurrent: false
 ---
 # Project Overview
 

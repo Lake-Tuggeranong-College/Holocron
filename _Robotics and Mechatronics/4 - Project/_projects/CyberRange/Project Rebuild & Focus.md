@@ -1,5 +1,6 @@
 ---
 tag: Robotics
+isCurrent: false
 ---
 
 Using the projects board:

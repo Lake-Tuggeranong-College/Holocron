@@ -1,5 +1,6 @@
 ---
 tag: Robotics
+isCurrent: false
 ---
 These topics (at least) need to be discussed and have some form out outcome or answer.
 

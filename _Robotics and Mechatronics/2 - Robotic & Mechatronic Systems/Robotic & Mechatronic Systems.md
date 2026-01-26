@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 > [!note]- Project Overview
 > ![[Smart Car#Project Overview]]
 

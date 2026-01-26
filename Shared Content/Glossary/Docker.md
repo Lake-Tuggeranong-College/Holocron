@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ## What is Docker? (Simplified)
 
 Docker is a tool that **packages an application and everything it needs** (like code, libraries, and settings) into a single, standard unit called a **container**.

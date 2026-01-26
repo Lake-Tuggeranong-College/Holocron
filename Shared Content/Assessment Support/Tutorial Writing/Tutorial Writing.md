@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Goal
 
 The goal is to understand the approach you need to take to develop a technical tutorial, and give you the skills to create a tutorial for the development of your PHP site.

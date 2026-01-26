@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 
 > [!Note] The implementation of this may differ depending on the IDE (Visual Studio Code, PHPStorm etc) being used.

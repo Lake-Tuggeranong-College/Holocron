@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Welcome to Week 10
 
 Goals for this week:

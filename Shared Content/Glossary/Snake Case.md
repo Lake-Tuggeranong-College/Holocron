@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 All lowercase, each word separated by an underscore `_`

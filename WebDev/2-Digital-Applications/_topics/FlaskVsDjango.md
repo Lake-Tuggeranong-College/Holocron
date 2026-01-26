@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 https://g.co/gemini/share/4f0ea83f5b96
 
 Both Flask and Django are popular Python frameworks for web development, but they take different approaches:

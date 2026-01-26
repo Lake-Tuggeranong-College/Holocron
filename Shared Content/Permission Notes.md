@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 A number of external websites & services are required by the subject/s you've enrolled in.
 
 They could include:

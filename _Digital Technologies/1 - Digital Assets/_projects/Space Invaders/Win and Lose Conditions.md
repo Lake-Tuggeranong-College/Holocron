@@ -2,6 +2,8 @@
 tags:
   - S1
   - ISD
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!important] Prerequisites : [[_Digital Technologies/1 - Digital Assets/_projects/Space Invaders/High Score System|High Score System]]
 ## Win & Lose Conditions

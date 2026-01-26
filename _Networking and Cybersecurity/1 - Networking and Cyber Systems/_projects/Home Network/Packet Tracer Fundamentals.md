@@ -2,6 +2,7 @@
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 
 ⚠️ Check to see if Packet Tracer is installed on your device already. If not, download the installer for your OS on the front page of the subject website.

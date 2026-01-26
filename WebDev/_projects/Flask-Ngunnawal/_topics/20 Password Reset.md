@@ -2,6 +2,7 @@
 tags:
   - "2022"
   - archived
+isCurrent: false
 ---
 
 The Password Reset form is relatively easy compared to other parts of the website. Registered Users can reset their passwords once they’re logged in. 

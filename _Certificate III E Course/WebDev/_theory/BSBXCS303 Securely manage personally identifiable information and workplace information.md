@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # What is Personal Identifiable Information
 
 > Your personally identifiable information is any piece of information, or ‘data’, that can help to confirm who you are or how to find you. It may be information used on its own or in context with other information.

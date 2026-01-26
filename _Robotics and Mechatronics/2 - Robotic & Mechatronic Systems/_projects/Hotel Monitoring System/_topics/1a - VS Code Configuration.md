@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 Open the project.
 

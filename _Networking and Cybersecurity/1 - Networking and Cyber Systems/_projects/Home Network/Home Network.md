@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Project Overview
 
 This semester-long course introduces students to the fundamentals of networking and programming with the end-goal to build a secure automated home network.

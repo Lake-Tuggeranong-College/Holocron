@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 > [!note]- Project Overview
 > The project will be explained in due time...
 

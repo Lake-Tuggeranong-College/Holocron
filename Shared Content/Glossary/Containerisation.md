@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Containerisation is a way of packaging and running applications on a computer. It's like a digital box that holds everything you need to run an app, including the code, libraries, and settings.
 
 Think of it like a suitcase: just as your clothes, toiletries, and documents are packed into a suitcase so you can take them with you on a trip, a containerisation "suitcase" holds all the bits and bobs needed to run an application. This means that no matter where you're running the app from (like your home computer or a server in a data centre), it'll work exactly the same way.

@@ -6,6 +6,8 @@ order: 2
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 
 As this game is a First-Person Shooter, there is no need to create a mesh for the player object, as in game, the player will never see it.

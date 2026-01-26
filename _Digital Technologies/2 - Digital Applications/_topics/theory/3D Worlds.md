@@ -2,6 +2,8 @@
 tags:
   - ISD
   - yr11
+isCurrent: false
+softwareVersion: "4.3"
 ---
 > [!note] In Godot, 1 unit is the equivalent of 1 metre.
 

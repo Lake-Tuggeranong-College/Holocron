@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 
 Flask operates in a Model View Controller structure. This allows different parts of the project to focus on different aspects:
 

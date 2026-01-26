@@ -2,6 +2,7 @@
 tags:
   - Cyber
   - yr11
+isCurrent: false
 ---
 Network and Host IDs
 ![[ipAddress.png]]

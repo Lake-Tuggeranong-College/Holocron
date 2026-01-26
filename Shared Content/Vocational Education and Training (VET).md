@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # What is VET?
 
 **VET = Vocational Education and Training** - This lets you learn job skills in school!

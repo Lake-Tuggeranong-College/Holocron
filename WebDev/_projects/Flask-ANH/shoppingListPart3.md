@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 >[!info]- Goal
 >This week we will be enabling A New Hope to be able to add items to the shopping lists and also to be able to tick items off of the shopping lists so they read as completed.

@@ -1,6 +1,7 @@
 ---
 yearSemester:
   - 2024S2
+isCurrent: false
 ---
 # Project Goals
 

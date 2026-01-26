@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 Unique identifier of an entry in a dictionary
 

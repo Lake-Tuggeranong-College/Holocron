@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # Project Overview: SITH (Systems Integration & Telemetry Handler)
 
 ## 1. What's the Project About?

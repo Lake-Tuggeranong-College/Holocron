@@ -1,3 +1,7 @@
+---
+isCurrent: false
+softwareVersion: "4.3"
+---
 Following on from the FPS analysis, it's now time to decide and document the specifics of the game.
 
 # Game Mechanics

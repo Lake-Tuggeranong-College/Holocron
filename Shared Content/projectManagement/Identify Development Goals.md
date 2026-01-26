@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 # Development Goals
 

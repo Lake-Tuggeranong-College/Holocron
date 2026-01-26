@@ -1,3 +1,6 @@
+---
+isCurrent: false
+---
 # SQLite Database
 
 There are a number of steps to creating and using a database in your project through Codespaces.

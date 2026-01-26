@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 
 Click on the link to the main repository for the project.
 

@@ -1,6 +1,7 @@
 ---
 yearSemester:
   - 2024S2
+isCurrent: false
 ---
 
 > [!important] View the assessment on Google Classroom for specific details.

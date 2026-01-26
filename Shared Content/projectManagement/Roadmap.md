@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 >[!info] This example shown is only the start. You may wish to add other documents to add depth to your submission.
 
 

@@ -1,5 +1,6 @@
 ---
 tags: ANH
+isCurrent: false
 ---
 >[!info]- Learning Outcome
 >This page covers the complex nature of the multidimensional array produced by the `join` command used in Flask

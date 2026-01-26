@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Visual Studio Code
 
 **Introduction**

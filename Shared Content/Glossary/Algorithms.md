@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 An algorithm is a set of well-defined, step-by-step instructions that, when followed, will solve a specific problem or accomplish a specific task. It provides a finite set of instructions that are unambiguous and lead to a desired output.

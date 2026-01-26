@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 # Definition
 
 Variables and constants apply only within the module/function in which they are declared.

@@ -35,6 +35,12 @@ isCurrent: true
 
 The Unit Outline can be found on Google Classroom.
 
+## Required Software
+
+Download Packet Tracer here:
+
+https://drive.google.com/drive/folders/1zWASw3kY9UA9nLQUbnCorzvR8Xtfmve9?usp=sharing
+
 ## Assessments
 
 This unit has a number of assessments, the details can be found in the unit outline.

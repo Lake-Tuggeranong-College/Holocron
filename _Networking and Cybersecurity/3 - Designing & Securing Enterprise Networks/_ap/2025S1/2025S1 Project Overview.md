@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+publish: false
 ---
 # Project Overview
 **Project Goal:**

@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+publish: false
 ---
 ## Project Overview
 

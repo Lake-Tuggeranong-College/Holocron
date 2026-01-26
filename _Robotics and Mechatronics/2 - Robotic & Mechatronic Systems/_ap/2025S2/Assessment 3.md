@@ -1,4 +1,5 @@
 ---
 isCurrent: false
+publish: false
 ---
 How to create a feedback form: [[Feedback Form Development]]

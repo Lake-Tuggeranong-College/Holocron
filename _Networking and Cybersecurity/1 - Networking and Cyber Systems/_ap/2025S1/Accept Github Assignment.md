@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+publish: false
 ---
 
 Click on the link to the GitHub Classroom assignment:

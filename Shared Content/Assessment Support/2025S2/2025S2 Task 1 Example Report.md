@@ -1,6 +1,7 @@
 ---
-isCurrent: true
-needsUpdating: true
+isCurrent: false
+needsUpdating: false
+publish: false
 ---
 You may shows possible ways you could write your report for this task, for each class.
 

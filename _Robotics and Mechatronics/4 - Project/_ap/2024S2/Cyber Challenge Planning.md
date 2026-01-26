@@ -1,6 +1,7 @@
 ---
 tag: Robotics
 isCurrent: false
+publish: false
 ---
 > [!info] Week 14 - Wednesday 6th November, 2-3pm.
 

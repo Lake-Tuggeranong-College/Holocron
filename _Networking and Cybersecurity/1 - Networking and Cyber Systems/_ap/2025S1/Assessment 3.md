@@ -1,3 +1,4 @@
 ---
 isCurrent: false
+publish: false
 ---

@@ -1,0 +1,51 @@
+views:
+  - type: table
+    name: Needs Updating
+    filters:
+      and:
+        - needsUpdating == true
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 485
+  - type: table
+    name: Not Current
+    filters:
+      and:
+        - isCurrent == false
+    order:
+      - file.name
+      - file.folder
+  - type: table
+    name: Not set
+    filters:
+      and:
+        - '!file.hasProperty("isCurrent")'
+        - file.ext == "md"
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.name
+        direction: ASC
+  - type: table
+    name: Current
+    filters:
+      and:
+        - isCurrent == true
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.folder
+        direction: ASC

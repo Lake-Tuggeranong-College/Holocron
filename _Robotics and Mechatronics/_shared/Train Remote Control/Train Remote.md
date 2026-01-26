@@ -1,7 +1,4 @@
 ---
-tags:
-  - Robotics/esp32
-tag: Robotics
 isCurrent: false
 ---
 # Train Remote Control

@@ -1,5 +1,4 @@
 ---
-tags: ANH
 isCurrent: false
 ---
 >[!info]- Learning Outcome

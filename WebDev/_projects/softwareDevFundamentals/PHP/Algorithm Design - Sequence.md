@@ -1,5 +1,4 @@
 ---
-tags: php
 isCurrent: false
 ---
 ![[Theory#Algorithm Design - Sequence]]

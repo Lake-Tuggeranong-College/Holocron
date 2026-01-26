@@ -1,7 +1,4 @@
 ---
-tags:
-  - Cyber
-  - yr11
 isCurrent: false
 ---
 **BACTA Hospital: Bringing Advanced Care and Compassion to Your Community**

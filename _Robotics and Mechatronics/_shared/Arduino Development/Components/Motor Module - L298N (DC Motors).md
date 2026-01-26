@@ -1,5 +1,4 @@
 ---
-tag: Robotics
 isCurrent: false
 ---
 # Motor Module - L298N (DC Motors)

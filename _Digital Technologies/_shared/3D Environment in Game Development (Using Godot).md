@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion:
+  - "4.3"
 ---
 Creating a 3D environment in game development involves simulating a three-dimensional space where objects can move, rotate, and interact. In **Godot Engine**, this is achieved using a combination of nodes, spatial math, and rendering systems.
 

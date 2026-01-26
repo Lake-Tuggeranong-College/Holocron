@@ -1,8 +1,4 @@
 ---
-tags:
-  - Robotics
-  - Robotics/esp32
-  - S2
 isCurrent: false
 ---
 [[1 - Software Installation]]

@@ -1,7 +1,4 @@
 ---
-yearSemester:
-  - 2024S2
-tag: Robotics
 isCurrent: false
 publish: false
 ---

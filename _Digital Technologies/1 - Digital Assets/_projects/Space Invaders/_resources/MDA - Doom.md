@@ -1,9 +1,5 @@
 ---
-tags:
-  - S1
-  - ISD
 isCurrent: false
-softwareVersion: "4.3"
 ---
 > [!info] Google Gemini, 7 Oct 2024
 

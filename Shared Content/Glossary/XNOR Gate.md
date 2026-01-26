@@ -1,7 +1,6 @@
 ---
 isCurrent: true
 ---
-#logicgate 
 # Definition
 
 The XNOR logic gate, also known as the equivalence gate or exclusive NOR gate, is a digital logic gate that performs the logical XNOR operation. It has two inputs and one output. The XNOR operation is defined as the negation of the XOR operation, meaning that the output of an XNOR gate is true if and only if both of its inputs are the same.

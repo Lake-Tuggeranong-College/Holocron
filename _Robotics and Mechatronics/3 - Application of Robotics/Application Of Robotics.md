@@ -1,9 +1,5 @@
 ---
-tags:
-  - S1
-  - Robotics
-tag: Robotics
-isCurrent: false
+isCurrent: true
 ---
 > [!note]- Project Overview
 > ![[_Robotics and Mechatronics/3 - Application of Robotics/_projects/SITH/Project Overview|Project Overview]]

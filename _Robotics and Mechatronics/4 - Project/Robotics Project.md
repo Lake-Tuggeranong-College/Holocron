@@ -1,8 +1,4 @@
 ---
-tags:
-  - S2
-  - Robotics
-tag: Robotics
 isCurrent: false
 ---
 > [!note]- Project Overview

@@ -1,8 +1,4 @@
 ---
-tags:
-  - Cyber
-  - yr11
-  - archived
 isCurrent: false
 ---
 Follow the instructions below to configure the servers in packet tracer.

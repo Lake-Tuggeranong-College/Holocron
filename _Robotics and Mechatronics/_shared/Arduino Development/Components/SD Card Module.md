@@ -1,5 +1,4 @@
 ---
-tag: Robotics
 isCurrent: false
 ---
 # SD Card Module

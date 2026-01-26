@@ -1,7 +1,4 @@
 ---
-tags:
-  - Cyber
-  - yr11
 isCurrent: false
 ---
 **Types of Networking Topologies**

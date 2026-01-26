@@ -1,10 +1,4 @@
 ---
-versionTested:
-  - 4.2.2
-  - "4.3"
-tags:
-  - ISD
-  - yr11
 isCurrent: false
 softwareVersion: "4.3"
 ---

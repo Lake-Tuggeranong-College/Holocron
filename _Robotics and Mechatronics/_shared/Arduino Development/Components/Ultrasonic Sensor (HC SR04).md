@@ -1,5 +1,4 @@
 ---
-tag: Robotics
 isCurrent: false
 ---
 # Ultrasonic Sensor (HC SR04)

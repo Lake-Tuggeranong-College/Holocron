@@ -1,8 +1,4 @@
 ---
-tags:
-  - S2
-  - Cyber
-  - yr11
 isCurrent: false
 ---
 > [!note]- Project Overview

@@ -1,7 +1,6 @@
 ---
 isCurrent: true
 ---
-#logicgate 
 # Definition
 
 The NOT logic gate, also known as an inverter, is a basic digital logic gate that performs the logical NOT operation. It has one input and one output.

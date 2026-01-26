@@ -1,5 +1,4 @@
 ---
-tag: Robotics
 isCurrent: false
 ---
 # Infrared Receiver

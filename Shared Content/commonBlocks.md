@@ -1,6 +1,4 @@
 ---
-tags:
-  - common
 isCurrent: true
 ---
 # Git

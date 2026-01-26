@@ -1,9 +1,5 @@
 ---
-tags:
-  - ISD
-  - yr12
-isCurrent: false
-softwareVersion: "4.3"
+isCurrent: true
 ---
 > [!note]- Project Overview
 > ![[_Digital Technologies/3 - Digital Solutions/_projects/Frontierlands/Project Overview|Project Overview]]

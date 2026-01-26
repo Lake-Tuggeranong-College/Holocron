@@ -1,6 +1,4 @@
 ---
-tags:
-  - S2
 isCurrent: true
 ---
 ### School Events - Week 1

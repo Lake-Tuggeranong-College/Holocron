@@ -1,5 +1,4 @@
 ---
-Tutorial Currency Status: Unconfirmed.
 isCurrent: true
 ---
 

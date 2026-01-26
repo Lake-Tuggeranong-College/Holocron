@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion:
 ---
 > [!bug] Use the Jobs Board to manage tasks for the project.
 > Move tasks to the Done column when completed.

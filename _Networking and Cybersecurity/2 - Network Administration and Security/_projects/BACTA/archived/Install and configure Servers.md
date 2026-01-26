@@ -1,7 +1,4 @@
 ---
-tags:
-  - Cyber
-  - yr11
 isCurrent: false
 ---
 > [!important] Goal - Complete the installation and configuration of the Raspberry Pi Servers

@@ -1,9 +1,6 @@
 ---
 isCurrent: true
 ---
-#logicgate
-
-
 # Definition
 
 An AND gate is a logic gate that implements logical conjunction. It takes two or more input signals and produces an output signal that is 1 (true) only if all inputs are 1. Otherwise, the output is 0 (false).

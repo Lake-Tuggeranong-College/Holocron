@@ -1,6 +1,5 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
 publish: false
 ---
 Continue working on the project!

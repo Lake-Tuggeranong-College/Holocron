@@ -1,9 +1,6 @@
 ---
-tags:
-  - ISD
-  - yr11
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion:
 ---
 To Demonstrate understanding of code, you can use code comments (or internal documentation).
 

@@ -1,8 +1,4 @@
 ---
-tags:
-  - Cyber
-  - yr11
-  - archived
 isCurrent: false
 needsUpdating: false
 ---

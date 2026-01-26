@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion:
 ---
 There are decisions to make
 

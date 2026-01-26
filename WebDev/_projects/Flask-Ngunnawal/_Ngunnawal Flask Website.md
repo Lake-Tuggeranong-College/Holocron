@@ -1,9 +1,4 @@
 ---
-tags:
-  - Flask
-  - WebDev
-  - "2022"
-  - archived
 isCurrent: false
 ---
 

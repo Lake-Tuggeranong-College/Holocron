@@ -1,6 +1,4 @@
 ---
-yearSemester:
-  - 2026S1
 isCurrent: false
 ---
 # Overview

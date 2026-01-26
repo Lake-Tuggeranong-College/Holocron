@@ -1,8 +1,4 @@
 ---
-tags:
-  - S1
-  - DigitalTechnologies
-  - Flask
 isCurrent: false
 ---
 > [!note]- Project Overview

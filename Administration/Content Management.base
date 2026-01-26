@@ -49,3 +49,20 @@ views:
     sort:
       - property: file.folder
         direction: ASC
+  - type: table
+    name: Software Versions
+    filters:
+      not:
+        - softwareVersion.isEmpty()
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+      - softwareVersion
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 485

@@ -1,7 +1,6 @@
 ---
 isCurrent: true
 ---
-#logicgate 
 # Definition
 
 The NOR logic gate is a digital logic gate that performs the logical NOR operation. It has two or more inputs and one output. The NOR operation is defined as the negation of the OR operation, meaning that the output of a NOR gate is only true if all of its inputs are false.

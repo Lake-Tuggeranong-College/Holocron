@@ -1,8 +1,4 @@
 ---
-tags:
-  - S2
-  - DigitalTechnologies/DigitalApplications
-  - Flask
 isCurrent: false
 ---
 > [!note]- Project Overview

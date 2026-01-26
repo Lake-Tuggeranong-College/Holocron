@@ -6,6 +6,7 @@
     "date": "date",
     "versionTested": "multitext",
     "yearSemester": "multitext",
-    "Tutorial Currency Status": "multitext"
+    "Tutorial Currency Status": "multitext",
+    "softwareVersion": "multitext"
   }
 }

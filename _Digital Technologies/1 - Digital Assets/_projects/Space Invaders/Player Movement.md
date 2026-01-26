@@ -1,7 +1,4 @@
 ---
-tags:
-  - S1
-  - ISD
 isCurrent: false
 softwareVersion: "4.3"
 ---

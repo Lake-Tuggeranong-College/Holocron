@@ -1,5 +1,7 @@
 ---
 isCurrent: true
+softwareVersion:
+  - PlatformIO
 ---
 # Objective/s
 

@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+softwareVersion: Packet Tracer 8.2.2
 ---
 > [!info] This is sprint 1 of the project. The deadline for this sprint is Week 7.
 

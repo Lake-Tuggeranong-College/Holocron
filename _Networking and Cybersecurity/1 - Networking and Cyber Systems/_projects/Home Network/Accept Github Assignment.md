@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+softwareVersion: Packet Tracer 8.2.2
 ---
 # Accept GitHub Assignment
 

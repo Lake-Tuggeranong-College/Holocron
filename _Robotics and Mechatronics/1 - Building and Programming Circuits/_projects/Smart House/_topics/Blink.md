@@ -1,5 +1,8 @@
 ---
 isCurrent: false
+softwareVersion:
+  - TinkerCAD
+needsUpdating: true
 ---
 # Objective
 

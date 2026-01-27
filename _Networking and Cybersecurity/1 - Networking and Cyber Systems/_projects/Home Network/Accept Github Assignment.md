@@ -1,15 +1,21 @@
 ---
-isCurrent: false
-publish: false
+isCurrent: true
 ---
+# Accept GitHub Assignment
+
+First, log into GitHub using your school Google account.
 
 Click on the link to the GitHub Classroom assignment:
 
-> [!danger] https://classroom.github.com/a/9S-aGpCQ
+> [!note] https://classroom.github.com/a/pBy2ToQa
 
-Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
-![[repoClone.png]]
+This process creates a [[Repository|repository]] which you will use throughout this semester to maintain your project files.
 
+---
+
+# Clone Repository
+
+We are going to [[clone]] your project. Think of **cloning** as downloading a live version of your school assignment folder that stays connected to GitHub so you can turn in your work easily.
 
 > [!info] Github desktop is the GUI interface to clone, commit, push etc repositories to and from Github that runs on your local computer.
 
@@ -19,6 +25,8 @@ Now, open **Github Desktop** on your computer and click "Clone Repository" under
 
 
 Select the new repository you just created on GitHub.
+
+> [!important] Choose the repo you just created, not the one shown.
 
 Choose the path where you want to save it.
 
@@ -32,5 +40,4 @@ Click Clone.
 After a short moment, it will then show you this page:
 ![[githubDesktopRepo.png]]
 
-Click on the Current Repository Download in the top left of the window. Right Click on the repository and choose to open it in the file explorer.
-![[gitHubDesktopReveal.png]]
+

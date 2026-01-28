@@ -2,9 +2,9 @@
 
 Signals are Godot’s implementation of the **Observer Pattern**. They allow nodes to communicate without being "coupled" (directly dependent on each other), making your code cleaner, more modular, and easier to debug.
 
-## 1. Visualizing the Concept: One-to-Many
+In Godot, **Signals** are how we get nodes to talk to each other without making a mess of our code. Think of it like a radio broadcast: the DJ (Emitter) sends out a song, and anyone with their radio turned on (Listener) hears it. The DJ doesn't need to know who's listening to do their job.
 
-In a decoupled system, the **Emitter** (the source of the event) doesn't need to know who is listening. It simply broadcasts a message.
+## 1. Visualising the Concept: The "Broadcast"
 
 <div class="godot-signal-container" style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 300px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box; display: block; clear: both; color: white;"> <style> @keyframes pulse-signal-fix { 0% { transform: scale(1); opacity: 1; border: 2px solid #e06c75; } 100% { transform: scale(30); opacity: 0; border: 1px solid #e06c75; } } .signal-ring-fix { position: absolute; left: 8%; top: 52%; width: 25px; height: 25px; border-radius: 50%; animation: pulse-signal-fix 5s infinite; pointer-events: none; } @keyframes data-flow-one-fix { 0% { left: 10%; opacity: 0; transform: translateY(-50%) scale(0.5); } 10% { opacity: 1; transform: translateY(-50%) scale(1); } 90% { opacity: 1; transform: translateY(-50%) scale(1); } 100% { left: 85%; opacity: 0; transform: translateY(-50%) scale(0.5); } } .data-packet-one-fix { position: absolute; top: 52%; font-size: 14px; background: #e06c75; color: white; padding: 4px 12px; border-radius: 20px; animation: data-flow-one-fix 5s infinite; font-family: monospace; z-index: 5; } </style> <div style="position: absolute; left: 5%; top: 40%; text-align: center; z-index: 10;"> <div style="font-size: 40px;">👤</div> <div style="color: #478cbf; font-weight: bold; font-family: sans-serif;">Player</div> </div> <div class="signal-ring-fix"></div> <div class="data-packet-one-fix">health_changed(80)</div> <div style="position: absolute; right: 5%; height: 90%; display: flex; flex-direction: column; justify-content: space-around; z-index: 10;"> <div style="color: #98c379; font-family: sans-serif; background: rgba(152,195,121,0.1); padding: 8px; border-radius: 5px; border: 1px solid rgba(152,195,121,0.2);">📊 UI Bar</div> <div style="color: #98c379; font-family: sans-serif; background: rgba(152,195,121,0.1); padding: 8px; border-radius: 5px; border: 1px solid rgba(152,195,121,0.2);">🔊 Audio</div> </div> </div>
 
@@ -25,18 +25,23 @@ Notice how the **Enemy** and **Achievement Manager** never touch, yet the messag
 signal enemy_died(type)
 
 # Enemy.gd
-func die():
-    GameEvents.enemy_died.emit("Slime")
+func _on_death():
+    # Tell the whole game an enemy was defeated
+    GameEvents.score_increased.emit(100)
     queue_free()
 
-# AchievementManager.gd
+# ScoreManager.gd
 func _ready():
-    GameEvents.enemy_died.connect(_unlock_check)
+    # Start listening for the score signal
+    GameEvents.score_increased.connect(_on_score_up)
+
+func _on_score_up(points):
+    total_score += points
 ```
 
-## 3. The "Await" Pattern: Sequencing
+## 3. The "Await" Pattern: Sequencing Events
 
-Signals can be used to "pause" code until an event happens. This is much cleaner than using timers with complex boolean logic.
+In programming, we often need to wait for one thing to finish before starting the next. In Godot, you can tell your code to "wait" for a signal. This is much cleaner than using timers with complex logic.
 
 ### The Animation: Sequencing
 
@@ -54,21 +59,23 @@ func start_next_level():
     get_tree().change_scene_to_file("res://Level2.tscn")
 ```
 
-## 4. Comparison Summary
+## 4. Quick Comparison
 
 |   |   |   |
 |---|---|---|
-|**Approach**|**Architecture**|**Best For**|
-|**Direct Call**|Tight|Parents talking to immediate children.|
-|**Unique Name (%)**|Loose-ish|Quick UI access within a single scene.|
-|**Local Signal**|Decoupled|Children telling parents something happened.|
-|**Signal Bus**|Modular|Global events (Score, Death, Game State).|
-|**Await Signal**|Sequential|Handling multi-step logic (Cutscenes, VFX).|
+|**Method**|**Communication Style**|**Best For**|
+|**Direct Call**|Explicit Command|Parents telling their children what to do.|
+|**Unique Name (%)**|Direct Search|Fast UI tweaks within the same scene.|
+|**Signals**|Broadcast|Letting multiple nodes know an event occurred.|
+|**Signal Bus**|Global Broadcast|Major events like "Game Over" or "Level Up".|
 
-## Summary Best Practices
+## Pro-Tips for Students
 
-- **Signal Up:** Use signals when a child needs to talk to a parent.
+- **Signal Up, Call Down:** Children nodes should use signals to talk to parents. Parents should call functions directly on their children.
     
-- **Call Down:** Use direct functions when a parent talks to children.
+- **Keep it Simple:** If two nodes are always together in the same scene, a direct reference is often better than a signal.
     
-- **Don't Over-Signal:** If two nodes are always together in the same scene, a direct reference is often fine.
+- **Visual Connections:** You can connect signals using the "Node" tab in the Godot Editor if you prefer not to write the connection code manually.
+    
+
+**Any questions? Feel free to ask in the chat!**

@@ -5,42 +5,102 @@ Network and Host IDs
 ![[ipAddress.png]]
 
 ![[ipAddressClasses.png]]
-## Explanation
+# Understanding IP Addresses and Subnet Masks
 
-> [!info]  Written by Google Gemini
+## Objective
 
-### **IP Addresses: Navigating the Digital Highway**
+By the end of this lesson, students will be able to:
 
-Think of an IP address like a unique house number assigned to your device on the vast network of the internet. It helps information find its way to the right "door" and ensures data delivery happens smoothly. This address has two key parts: **network** and **host**.
+- Define the structure of an IPv4 address.
+- Distinguish between the **Network ID** and **Host ID**.
+- Categorize addresses into **Classes A, B, C, D, and E**.
+- Explain the difference between **Public** and **Private** IP addresses.
+- Relate subnet masks to network sizing and device capacity.
 
-**The Network Section:**
+## 1. The Structure of an IP Address
 
-This part identifies the network your device belongs to, similar to how a neighborhood name precedes your house number. Imagine a large apartment building with many residents. They all share the same "apartment building address" (network address), but each has a unique apartment number (host address) to differentiate them.
+An IPv4 address is a string of **32 bits**, visually represented as four decimal numbers (octets) separated by dots.
 
-- **IPv4 format:** It's made of four numbers between 0 and 255, separated by periods (e.g., 192.168.1.100). The first part typically identifies the larger network, while subsequent parts pinpoint smaller subnetworks within it.
-- **IPv6 format:** This newer version uses eight groups of four hexadecimal digits (e.g., 2a02:0db8:85a3:0000:0000:8a2e:0370:7334). It offers significantly more addresses and a more complex hierarchical structure.
+### The Octet System
 
-**The Host Section:**
+In binary, each bit has a value based on its position, represented by powers of 2:
 
-This final part uniquely identifies your specific device within the network, analogous to your apartment number. It allows devices on the same network to communicate with each other directly.
+| Power of 2 | 2$^7$ | 2$^6$ | 2$^5$ | 2$^4$ | 2$^3$ | 2$^2$ | 2$^1$ | 2$^1$ |
+| ---------- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
+| Value      | 128   | 64    | 32    | 16    | 8     | 4     | 2     | 1     |
 
-- **IPv4:** The last number in the address identifies the individual host.
-- **IPv6:** The last few groups of digits represent the unique host identifier.
+**Example Conversion: 192** 
 
-**Understanding the Importance:**
+| Place Value    |  128  |  64   |  32   |  16   |   8   |   4   |   2   |   1   |
+| :------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Binary Bit** | **1** | **1** | **0** | **0** | **0** | **0** | **0** | **0** |
 
-IP addresses serve several crucial functions:
+## 2. IP Address Classes
 
-- **Routing:** They guide data packets to the correct destination device, similar to how mail gets sorted and delivered based on addresses.
-- **Device identification:** They act like digital name tags, allowing devices to recognize and communicate with each other.
-- **Network organization:** They enable the creation of different network segments (e.g., home network, office network) within a larger system.
+Historically, IP addresses were divided into five classes to help manage the size of different networks. The first few bits of the first octet determine the class.
 
-**Additional Notes:**
+| **Class** | **First Octet Range** | **Default Subnet Mask** | **Network/Host Split** | **Purpose**                       |
+| --------- | --------------------- | ----------------------- | ---------------------- | --------------------------------- |
+| **A**     | 1 – 126               | 255.0.0.0               | N.H.H.H                | Massive networks (16M+ hosts)     |
+| **B**     | 128 – 191             | 255.255.0.0             | N.N.H.H                | Medium/Large networks (65k hosts) |
+| **C**     | 192 – 223             | 255.255.255.0           | N.N.N.H                | Small networks (254 hosts)        |
+| **D**     | 224 – 239             | N/A                     | Multicast              | Reserved for Multicasting         |
+| **E**     | 240 – 255             | N/A                     | Experimental           | Reserved for research/future use  |
 
-- There are two main IP address versions: IPv4 (the older, more common one) and IPv6 (the newer, larger capacity version).
-- IP addresses can be static (fixed) or dynamic (assigned temporarily).
-- Understanding how network and host sections work is essential for various networking tasks, troubleshooting, and general tech knowledge.
+_Note: 127.x.x.x is reserved for **Loopback** (testing your own machine)._
 
-I hope this explanation clarifies the concept of IP addresses and their network/host sections. Feel free to ask if you have any further questions!
+## 3. Network ID vs. Host ID
 
-![https://youtu.be/EDAnsWpOjGM?si=8bqM2c-NyiKWaUa6](https://youtu.be/EDAnsWpOjGM?si=8bqM2c-NyiKWaUa6)
+The **Subnet Mask** defines the boundary between the Network and the Host.
+
+- **Network ID:** The portion of the address that identifies the specific network.
+- **Host ID:** The portion that identifies the specific device on that network.
+
+### How it works (Binary Visualization)
+
+Let's look at the IP `192.168.10.15` (Class C) with a Subnet Mask of `255.255.255.0`.
+
+**Bitwise Animation:**
+
+| **Part**            | **Octet 1**      | **Octet 2** | **Octet 3** | **Octet 4** |
+| ------------------- | ---------------- | ----------- | ----------- | ----------- |
+| **IP (Decimal)**    | 192              | 168         | 10          | 15          |
+| **IP (Binary)**     | `11000000`       | `10101000`  | `00001010`  | `00001111`  |
+| **Mask (Binary)**   | `11111111`       | `11111111`  | `11111111`  | `00000000`  |
+| **Result (Net ID)** | **192.168.10.0** |             |             |             |
+
+## 4. Public vs. Private Addresses
+
+Not all IP addresses are the same. Some are reachable via the global internet, while others are restricted to local networks.
+
+### Public IP Addresses
+
+- Assigned by ISPs (Internet Service Providers).
+- Globally unique; no two devices on the internet can have the same public IP.
+- Required to access the World Wide Web directly.
+
+### Private IP Addresses
+
+- Used within a local network (Home, School, Office).
+- Not routable on the global internet.
+- **Private Ranges (RFC 1918):**
+    - **Class A:** 10.0.0.0 – 10.255.255.255
+    - **Class B:** 172.16.0.0 – 172.31.255.255
+    - **Class C:** 192.168.0.0 – 192.168.255.255
+
+> **Why use Private IPs?** We have a limited supply of IPv4 addresses. Private ranges allow thousands of devices to share a single Public IP through a process called **NAT (Network Address Translation)**.
+
+## Summary
+
+- **Classes A, B, C:** Define network size based on the first octet.
+- **Network ID:** The "Street Address" of the network.
+- **Host ID:** The "House Number" of the device.
+- **Public IP:** Your identity on the global internet.
+- **Private IP:** Your identity inside your local LAN (Local Area Network).
+
+## Checklist for Understanding
+
+- [ ] Can I identify a Class B address just by looking at the first octet?
+- [ ] Do I know the three main Private IP ranges?
+- [ ] Can I explain why the Host ID cannot be all binary 1s?
+- [ ] Do I understand that a Class A network has fewer networks but more hosts per network?

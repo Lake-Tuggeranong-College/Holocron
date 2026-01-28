@@ -16,27 +16,7 @@ Signals allow nodes to communicate without knowing who is receiving the message.
 
 Signals allow nodes to communicate without knowing who is receiving the message. It is a "one-to-many" broadcast system.
 
-<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 350px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box;"> <!-- Emitter --> <div style="position: absolute; left: 5%; top: 40%; text-align: center; z-index: 2;"> <div style="font-size: 50px;">👤</div> <div style="color: #478cbf; font-weight: bold; font-family: sans-serif; font-size: 1.2em;">Player <small style="display: block; font-size: 0.6em; opacity: 0.8;">(Emitter)</small></div> </div>
-
-<!-- Signal Pulse Animation -->
-
-<style> @keyframes pulse { 0% { transform: scale(1); opacity: 1; border: 2px solid #e06c75; } 100% { transform: scale(30); opacity: 0; border: 1px solid #e06c75; } } .signal-ring { position: absolute; left: 8%; top: 52%; width: 25px; height: 25px; border-radius: 50%; animation: pulse 5s infinite; pointer-events: none; } @keyframes data-flow { 0% { left: 10%; opacity: 0; transform: translateY(-50%) scale(0.5); } 10% { opacity: 1; transform: translateY(-50%) scale(1); } 90% { opacity: 1; transform: translateY(-50%) scale(1); } 100% { left: 85%; opacity: 0; transform: translateY(-50%) scale(0.5); } } .data-packet { position: absolute; top: 52%; font-size: 14px; background: #e06c75; color: white; padding: 4px 12px; border-radius: 20px; animation: data-flow 5s infinite; font-family: monospace; white-space: nowrap; box-shadow: 0 0 10px rgba(224, 108, 117, 0.5); z-index: 1; } </style>
-
-<div class="signal-ring"></div> <div class="signal-ring" style="animation-delay: 1.5s"></div> <div class="signal-ring" style="animation-delay: 3s"></div> <div class="data-packet">health_changed(80)</div>
-
-<!-- Listeners -->
-
-<div style="position: absolute; right: 5%; height: 90%; display: flex; flex-direction: column; justify-content: space-around; z-index: 2;"> <div style="text-align: left; display: flex; align-items: center; gap: 15px; background: rgba(152, 195, 121, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid #98c379;"> <div style="font-size: 30px;">📊</div> <div style="color: #98c379; font-family: sans-serif;"><b>UI Bar</b>
-
-<small style="color: #abb2bf;">Update HUD</small></div> </div>
-
-<div style="text-align: left; display: flex; align-items: center; gap: 15px; background: rgba(152, 195, 121, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid #98c379;"> <div style="font-size: 30px;">🔊</div> <div style="color: #98c379; font-family: sans-serif;"><b>Audio</b>
-
-<small style="color: #abb2bf;">Play "Ouch"</small></div> </div>
-
-<div style="text-align: left; display: flex; align-items: center; gap: 15px; background: rgba(152, 195, 121, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid #98c379;"> <div style="font-size: 30px;">🛡️</div> <div style="color: #98c379; font-family: sans-serif;"><b>Achievements</b>
-
-<small style="color: #abb2bf;">Check Unlocks</small></div> </div> </div> </div>
+<div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Sound FX</div> </div> </div>
 
 ---
 ## The Problem: Spaghetti Code 🍝

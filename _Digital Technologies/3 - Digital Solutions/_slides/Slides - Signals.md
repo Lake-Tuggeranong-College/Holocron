@@ -16,7 +16,7 @@ Signals allow nodes to communicate without knowing who is receiving the message.
 
 Signals allow nodes to communicate without knowing who is receiving the message. It is a "one-to-many" broadcast system.
 
-<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 550px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box;"> <!-- Emitter --> <div style="position: absolute; left: 5%; top: 40%; text-align: center; z-index: 2;"> <div style="font-size: 50px;">👤</div> <div style="color: #478cbf; font-weight: bold; font-family: sans-serif; font-size: 1.2em;">Player <small style="display: block; font-size: 0.6em; opacity: 0.8;">(Emitter)</small></div> </div>
+<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 350px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box;"> <!-- Emitter --> <div style="position: absolute; left: 5%; top: 40%; text-align: center; z-index: 2;"> <div style="font-size: 50px;">👤</div> <div style="color: #478cbf; font-weight: bold; font-family: sans-serif; font-size: 1.2em;">Player <small style="display: block; font-size: 0.6em; opacity: 0.8;">(Emitter)</small></div> </div>
 
 <!-- Signal Pulse Animation -->
 

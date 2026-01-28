@@ -4,12 +4,7 @@ Signals are Godot’s implementation of the **Observer Pattern**. They allow nod
 
 In a decoupled system, the **Emitter** (the source of the event) doesn't need to know who is listening. It simply broadcasts a message.
 
-
-<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 300px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box;">
-
-<style>
-
-@keyframes pulse {
+<div class="godot-signal-container" style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 300px; width: 100%; overflow: hidden; border: 2px solid #478cbf; box-sizing: border-box; display: block;"> <style> @keyframes pulse-signal {
 
 0% { transform: scale(1); opacity: 1; border: 2px solid #e06c75; }
 
@@ -21,11 +16,11 @@ In a decoupled system, the **Emitter** (the source of the event) doesn't need to
 
 position: absolute; left: 8%; top: 52%; width: 25px; height: 25px;
 
-border-radius: 50%; animation: pulse 5s infinite; pointer-events: none;
+border-radius: 50%; animation: pulse-signal 5s infinite; pointer-events: none;
 
 }
 
-@keyframes data-flow {
+@keyframes data-flow-one {
 
 0% { left: 10%; opacity: 0; transform: translateY(-50%) scale(0.5); }
 
@@ -35,15 +30,13 @@ border-radius: 50%; animation: pulse 5s infinite; pointer-events: none;
 
 100% { left: 85%; opacity: 0; transform: translateY(-50%) scale(0.5); }
 
-}
-
-.data-packet {
+} .data-packet-one {
 
 position: absolute; top: 52%; font-size: 14px; background: #e06c75;
 
 color: white; padding: 4px 12px; border-radius: 20px;
 
-animation: data-flow 5s infinite; font-family: monospace; z-index: 1;
+animation: data-flow-one 5s infinite; font-family: monospace; z-index: 1;
 
 }
 
@@ -59,7 +52,7 @@ animation: data-flow 5s infinite; font-family: monospace; z-index: 1;
 
 <div class="signal-ring"></div>
 
-<div class="data-packet">health_changed(80)</div>
+<div class="data-packet-one">health_changed(80)</div>
 
 <div style="position: absolute; right: 5%; height: 90%; display: flex; flex-direction: column; justify-content: space-around; z-index: 2;">
 
@@ -79,11 +72,7 @@ A Signal Bus (Autoload) allows two nodes that don't know each other to communica
 
 Notice how the **Enemy** and **Achievement Manager** never touch, yet the message arrives.
 
-<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 250px; width: 100%; overflow: hidden; border: 2px solid #c678dd; box-sizing: border-box; margin-bottom: 20px;">
-
-<style>
-
-@keyframes bus-flow {
+<div class="godot-bus-container" style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 250px; width: 100%; overflow: hidden; border: 2px solid #c678dd; box-sizing: border-box; margin-bottom: 20px; display: block;"> <style> @keyframes bus-flow-anim {
 
 0% { left: 10%; top: 75%; opacity: 0; }
 
@@ -95,13 +84,11 @@ Notice how the **Enemy** and **Achievement Manager** never touch, yet the messag
 
 100% { left: 80%; top: 75%; opacity: 0; }
 
-}
-
-.bus-packet {
+} .bus-packet-ui {
 
 position: absolute; font-size: 12px; background: #c678dd; color: white;
 
-padding: 4px 10px; border-radius: 4px; animation: bus-flow 4s infinite; font-family: monospace;
+padding: 4px 10px; border-radius: 4px; animation: bus-flow-anim 4s infinite; font-family: monospace;
 
 }
 
@@ -115,7 +102,7 @@ padding: 4px 10px; border-radius: 4px; animation: bus-flow 4s infinite; font-fam
 
 <div style="position: absolute; left: 5%; bottom: 10%; color: #e06c75;">👹 Enemy</div>
 
-<div class="bus-packet">enemy_died</div>
+<div class="bus-packet-ui">enemy_died</div>
 
 <div style="position: absolute; right: 5%; bottom: 10%; color: #61afef;">🏆 Achievements</div>
 
@@ -123,7 +110,7 @@ padding: 4px 10px; border-radius: 4px; animation: bus-flow 4s infinite; font-fam
 
 **The Code:**
 
-```gdscript
+```
 # GameEvents.gd (Autoload)
 signal enemy_died(type)
 
@@ -145,11 +132,7 @@ Signals can be used to "pause" code until an event happens. This is much cleaner
 
 The code "waits" at the yield point until the signal pulse returns.
 
-<div style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 200px; width: 100%; overflow: hidden; border: 2px solid #d19a66; box-sizing: border-box;">
-
-<style>
-
-@keyframes await-flow {
+<div class="godot-await-container" style="background: #1e1e2e; padding: 20px; border-radius: 12px; position: relative; height: 200px; width: 100%; overflow: hidden; border: 2px solid #d19a66; box-sizing: border-box; display: block;"> <style> @keyframes await-flow-anim {
 
 0% { width: 0%; background: #d19a66; }
 
@@ -159,17 +142,15 @@ The code "waits" at the yield point until the signal pulse returns.
 
 100% { width: 100%; background: #98c379; }
 
-}
+} .progress-line-ui {
 
-.progress-line {
-
-position: absolute; left: 0; top: 50%; height: 4px; animation: await-flow 4s infinite;
+position: absolute; left: 0; top: 50%; height: 4px; animation: await-flow-anim 4s infinite;
 
 }
 
 </style>
 
-<div style="font-family: monospace; color: #abb2bf; font-size: 14px; position: relative; z-index: 2;">
+<div style="font-family: monospace; color: #abb2bf; font-size: 14px; position: relative; z-index: 2; line-height: 1.6;">
 
 func play_sequence():
 
@@ -187,13 +168,13 @@ func play_sequence():
 
 </div>
 
-<div class="progress-line"></div>
+<div class="progress-line-ui"></div>
 
 </div>
 
 **The Code:**
 
-```gdscript
+```
 func start_next_level():
     transition_screen.fade_in()
     # Wait for the UI animation to finish before loading

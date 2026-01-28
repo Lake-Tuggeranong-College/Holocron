@@ -6,7 +6,8 @@ isCurrent: true
 **Friday** - New Students Attend
 ### School Events - Week 2
 
-**Monday** - All Students Return
+**Monday** - Somehow, all Students Returned....
+![[somehow.webp|200]]
 
 ### School Events - Week 3
 

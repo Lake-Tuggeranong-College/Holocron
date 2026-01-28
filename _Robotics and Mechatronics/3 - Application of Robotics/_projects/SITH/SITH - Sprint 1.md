@@ -77,7 +77,13 @@ Hopefully, you will see some files and directories on the left hand side, and th
 
 # Build Rovers
 
-Build all the rovers, following this video.
+Build all the rovers, following these videos. The following two videos are the official build instructions.
+
+![](https://www.youtube.com/watch?v=_R0e7sdB-xM)
+![](https://www.youtube.com/watch?v=FO_mJcxquqk&pp=2AZs)
+
+
+This video may also assist.
 
 ![](https://www.youtube.com/watch?v=Ll2Du7q0W_U)
 

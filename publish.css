@@ -13,6 +13,600 @@
 .internal-embed {
     border-left:0px;
 }
+
+
+
+/* Obsidian CSS Snippet for Godot Signals Guide
+   Save this file as 'godot_animations.css' in your .obsidian/snippets/ folder
+   and enable it in Settings > Appearance.
+*/
+
+.godot-anim-box {
+    background: #1e1e2e !important;
+    padding: 20px !important;
+    border-radius: 12px !important;
+    position: relative !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
+    color: white !important;
+    box-sizing: border-box !important;
+}
+
+/* 1. Signal Broadcast Animation */
+.signal-broadcast {
+    height: 300px !important;
+    border: 2px solid #478cbf !important;
+}
+
+.player-node {
+    position: absolute;
+    left: 5%;
+    top: 40%;
+    text-align: center;
+    z-index: 10;
+}
+
+.player-node .icon { font-size: 40px; }
+.player-node .label { color: #478cbf; font-weight: bold; font-family: sans-serif; }
+
+.sig-ring {
+    position: absolute;
+    left: 8%;
+    top: 52%;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    animation: pulse-signal-final 5s infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.sig-packet {
+    position: absolute;
+    top: 52%;
+    font-size: 14px;
+    background: #e06c75;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    animation: data-flow-one-final 5s infinite;
+    font-family: monospace;
+    z-index: 5;
+}
+
+.listeners {
+    position: absolute;
+    right: 5%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    z-index: 10;
+}
+
+.listener-item {
+    color: #98c379;
+    font-family: sans-serif;
+    background: rgba(152,195,121,0.1);
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(152,195,121,0.2);
+}
+
+/* 2. Signal Bus Animation */
+.signal-bus {
+    height: 250px !important;
+    border: 2px solid #c678dd !important;
+    margin-bottom: 20px;
+}
+
+.bus-node {
+    position: absolute;
+    left: 45%;
+    top: 10%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #c678dd;
+    border: 1px dashed #c678dd;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: sans-serif;
+    white-space: nowrap;
+}
+
+.emitter-node {
+    position: absolute;
+    left: 5%;
+    bottom: 10%;
+    color: #e06c75;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.receiver-node {
+    position: absolute;
+    right: 5%;
+    bottom: 10%;
+    color: #61afef;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.bus-packet {
+    position: absolute;
+    font-size: 12px;
+    background: #c678dd;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    animation: bus-flow-final 4s infinite;
+    font-family: monospace;
+    z-index: 5;
+}
+
+/* 3. Await Sequence Animation */
+.await-sequence {
+    height: 200px !important;
+    border: 2px solid #d19a66 !important;
+}
+
+.code-display {
+    font-family: monospace;
+    color: #abb2bf;
+    font-size: 14px;
+    position: relative;
+    z-index: 2;
+    line-height: 1.6;
+}
+
+.highlight-await { color: #d19a66; }
+.highlight-success { color: #98c379; }
+.comment { font-style: italic; opacity: 0.5; }
+
+.await-progress-line {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 4px;
+    animation: await-line-final 4s infinite;
+    z-index: 1;
+}
+
+/* Keyframes */
+@keyframes pulse-signal-final { 
+    0% { transform: scale(1); opacity: 1; border: 2px solid #e06c75; } 
+    100% { transform: scale(30); opacity: 0; border: 1px solid #e06c75; } 
+}
+
+@keyframes data-flow-one-final { 
+    0% { left: 10%; opacity: 0; transform: translateY(-50%) scale(0.5); } 
+    10% { opacity: 1; transform: translateY(-50%) scale(1); } 
+    90% { opacity: 1; transform: translateY(-50%) scale(1); } 
+    100% { left: 85%; opacity: 0; transform: translateY(-50%) scale(0.5); } 
+}
+
+@keyframes bus-flow-final { 
+    0% { left: 10%; top: 75%; opacity: 0; } 
+    20% { left: 10%; top: 75%; opacity: 1; } 
+    50% { left: 45%; top: 20%; opacity: 1; } 
+    80% { left: 80%; top: 75%; opacity: 1; } 
+    100% { left: 80%; top: 75%; opacity: 0; } 
+}
+
+@keyframes await-line-final { 
+    0% { width: 0%; background: #d19a66; } 
+    40% { width: 50%; background: #d19a66; } 
+    41% { background: #98c379; } 
+    100% { width: 100%; background: #98c379; } 
+}
+
+/* Bus Topology Styles */
+.bus-packet-logic {
+    position: absolute;
+    top: 46%;
+    left: 5%;
+    padding: 2px 6px;
+    background: #f1c40f;
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    animation: bus-broadcast 5s infinite linear;
+}
+
+@keyframes bus-broadcast {
+    0% { left: 5%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: 85%; opacity: 0; }
+}
+
+/* Star Topology Styles */
+.star-packet-logic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 2px 6px;
+    background: #2ecc71;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
+    animation: star-switch 4s infinite ease-in-out;
+}
+
+@keyframes star-switch {
+    0% { transform: translate(-50%, -50%); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(-50%, -90px); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Mesh Topology Styles */
+.mesh-packet-logic {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #e67e22;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e67e22;
+    animation: mesh-reroute 6s infinite ease-in-out;
+}
+
+@keyframes mesh-reroute {
+    0% { top: 80%; left: 15%; opacity: 0; }
+    10% { opacity: 1; }
+    /* Attempt direct path */
+    40% { top: 20%; left: 80%; }
+    /* Show failure/reroute */
+    45% { top: 20%; left: 80%; background: #e74c3c; }
+    75% { top: 80%; left: 80%; background: #e67e22; }
+    90% { opacity: 1; }
+    100% { top: 80%; left: 80%; opacity: 0; }
+}
+
+/* Hybrid/Internet Architecture Styles */
+.hybrid-packet-logic {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #00ffcc;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ffcc;
+    animation: hybrid-flow 8s infinite linear;
+}
+
+@keyframes hybrid-flow {
+    0% { top: 80%; left: 10%; opacity: 0; }
+    5% { opacity: 1; }
+    /* Local Star to Router */
+    20% { top: 70%; left: 25%; }
+    /* Router to ISP */
+    40% { top: 40%; left: 45%; }
+    /* ISP into Global Mesh */
+    60% { top: 30%; left: 65%; }
+    80% { top: 20%; left: 85%; }
+    95% { opacity: 1; }
+    100% { top: 20%; left: 85%; opacity: 0; }
+}
+
+/* Visual Comparison Box Styles */
+.topology-box {
+    border: 1px solid #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    height: 120px;
+    background: #1e1e1e;
+    color: white;
+}
+
+.backbone-line {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: #555;
+}
+
+.node-label {
+    position: absolute;
+    font-size: 9px;
+    color: #3498db;
+}
+
+.bus-packet-demo {
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    background: #f1c40f;
+    color: black;
+    font-size: 8px;
+    padding: 1px 3px;
+    animation: bus-broadcast 5s infinite linear;
+}
+
+.center-switch {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e74c3c;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 8px;
+    line-height: 20px;
+    border-radius: 2px;
+}
+
+.dest-node {
+    position: absolute;
+    background: #3498db;
+    width: 15px;
+    height: 15px;
+    font-size: 7px;
+    text-align: center;
+    line-height: 15px;
+}
+
+.star-packet-demo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #2ecc71;
+    font-size: 7px;
+    padding: 1px 3px;
+    animation: star-switch-mini 4s infinite ease-in-out;
+}
+
+@keyframes star-switch-mini {
+    0% { transform: translate(-50%, -50%); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(-50%, -40px); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Bus Topology Styles */
+.bus-packet-logic {
+    position: absolute;
+    top: 46%;
+    left: 5%;
+    padding: 2px 6px;
+    background: #f1c40f;
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    animation: bus-broadcast 5s infinite linear;
+}
+
+@keyframes bus-broadcast {
+    0% { left: 5%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: 85%; opacity: 0; }
+}
+
+/* Star Topology Styles */
+.star-packet-logic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 2px 6px;
+    background: #2ecc71;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
+    animation: star-switch 4s infinite ease-in-out;
+}
+
+@keyframes star-switch {
+    0% { transform: translate(-50%, -50%); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(-50%, -90px); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Mesh Topology Styles */
+.mesh-packet-logic {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #e67e22;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e67e22;
+    animation: mesh-reroute 6s infinite ease-in-out;
+}
+
+@keyframes mesh-reroute {
+    0% { top: 80%; left: 15%; opacity: 0; }
+    10% { opacity: 1; }
+    /* Attempt direct path */
+    40% { top: 20%; left: 80%; }
+    /* Show failure/reroute */
+    45% { top: 20%; left: 80%; background: #e74c3c; }
+    75% { top: 80%; left: 80%; background: #e67e22; }
+    90% { opacity: 1; }
+    100% { top: 80%; left: 80%; opacity: 0; }
+}
+
+/* Hybrid/Internet Architecture Styles */
+.hybrid-packet-logic {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #00ffcc;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ffcc;
+    animation: hybrid-flow 8s infinite linear;
+}
+
+@keyframes hybrid-flow {
+    0% { top: 80%; left: 10%; opacity: 0; }
+    5% { opacity: 1; }
+    /* Local Star to Router */
+    20% { top: 70%; left: 25%; }
+    /* Router to ISP */
+    40% { top: 40%; left: 45%; }
+    /* ISP into Global Mesh */
+    60% { top: 30%; left: 65%; }
+    80% { top: 20%; left: 85%; }
+    95% { opacity: 1; }
+    100% { top: 20%; left: 85%; opacity: 0; }
+}
+
+/* Visual Comparison Box Styles */
+.topology-box {
+    border: 1px solid #444;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    height: 120px;
+    background: #1e1e1e;
+    color: white;
+}
+
+.backbone-line {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: #555;
+}
+
+.node-label {
+    position: absolute;
+    font-size: 9px;
+    color: #3498db;
+}
+
+.bus-packet-demo {
+    position: absolute;
+    top: 45%;
+    left: 5%;
+    background: #f1c40f;
+    color: black;
+    font-size: 8px;
+    padding: 1px 3px;
+    animation: bus-broadcast 5s infinite linear;
+}
+
+.center-switch {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e74c3c;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 8px;
+    line-height: 20px;
+    border-radius: 2px;
+}
+
+.dest-node {
+    position: absolute;
+    background: #3498db;
+    width: 15px;
+    height: 15px;
+    font-size: 7px;
+    text-align: center;
+    line-height: 15px;
+}
+
+.star-packet-demo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #2ecc71;
+    font-size: 7px;
+    padding: 1px 3px;
+    animation: star-switch-mini 4s infinite ease-in-out;
+}
+
+@keyframes star-switch-mini {
+    0% { transform: translate(-50%, -50%); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(-50%, -40px); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.bit-cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    font-family: monospace;
+    font-weight: bold;
+  }
+
+  .result-cell {
+    opacity: 0;
+    animation: revealBit 0.3s forwards;
+  }
+
+  .highlight-box {
+    position: absolute;
+    width: 40px;
+    height: 130px;
+    border: 2px solid #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
+    border-radius: 4px;
+    pointer-events: none;
+    animation: moveHighlight 15s infinite linear;
+  }
+
+  @keyframes revealBit {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes moveHighlight {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    90% {
+      transform: translateX(calc(32 * 41px + 3 * 12px));
+    }
+  }
+
+  .bit-0 { animation-delay: 0.2s; }
+  .bit-1 { animation-delay: 0.4s; }
+  .bit-2 { animation-delay: 0.6s; }
+  .bit-3 { animation-delay: 0.8s; }
+  .bit-4 { animation-delay: 1.0s; }
+  .bit-5 { animation-delay: 1.2s; }
+  .bit-6 { animation-delay: 1.4s; }
+  .bit-7 { animation-delay: 1.6s; }
+  .bit-8 { animation-delay: 1.8s; }
+  .bit-9 { animation-delay: 2.0s; }
+
+  .res-1 {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .res-0 {
+    background-color: #fee2e2;
+    color: #991b1b;
+
+
+
+
 /* @settings
 
 name: Theme Info

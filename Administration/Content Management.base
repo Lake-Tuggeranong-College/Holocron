@@ -1,9 +1,10 @@
 views:
   - type: table
-    name: Needs Updating
+    name: Needs Updating - Ryan
     filters:
       and:
         - needsUpdating == true
+        - note["For Jacob"] != true
     groupBy:
       property: file.folder
       direction: ASC

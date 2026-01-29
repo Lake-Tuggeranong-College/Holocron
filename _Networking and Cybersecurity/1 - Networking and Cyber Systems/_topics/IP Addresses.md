@@ -104,3 +104,4 @@ Not all IP addresses are the same. Some are reachable via the global internet, w
 - [ ] Do I know the three main Private IP ranges?
 - [ ] Can I explain why the Host ID cannot be all binary 1s?
 - [ ] Do I understand that a Class A network has fewer networks but more hosts per network?
+

@@ -6,13 +6,99 @@ isCurrent: true
 ---
 # Network Architectures
 
-### From Local Classrooms to the Global Internet
-
-**BSSS IT Curriculum**
-
 ## Learning Objective
 
 Understand how we connect computers using **Bus**, **Star**, and **Mesh** topologies and how these build the **Internet**.
+
+---
+
+
+## What is Network Architecture?
+
+The design and framework of a communications network.
+
+- **Physical Topology:** Cabling and physical layout.
+- **Logical Topology:** The path data takes (Data flow).
+- **Scale:** The geographic area covered.
+- **Security:** Access control and boundary protection.
+
+---
+## The Hierarchy of Scale
+
+### Classifying by Geographic Scope
+
+| Network Type | Abbreviation | Description                     |
+| ------------ | ------------ | ------------------------------- |
+| Personal     | PAN          | Directly connected devices      |
+| Local        | LAN          | Within a building or small area |
+| Campus       | CAN          | Multiple buildings connected    |
+| Metropolitan | MAN          | A city or metropolitan area     |
+| Wide Area    | WAN          | Spans a large geographic area   |
+| Global       | GAN          | Worldwide network               |
+
+
+---
+
+# Local & Regional Systems
+
+## LAN - Local Area Network
+
+- Connects devices within a single building. 
+- High bandwidth (1Gbps-100Gbps) and very low latency.
+
+--
+## WAN - Wide Area Network
+
+The pinnacle of network scale, traversing nations and oceans.
+
+- Uses leased lines, satellite, and sub-sea fiber.
+- Managed via **BGP** (Border Gateway Protocol).
+- **Security:** High exposure to public threats; requires robust perimeter defense.
+
+
+---
+
+# CANs and MANs
+
+
+| Network Type                        | Description                                                                                                      | Typical Span                                        | Example Use Cases                                                                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CAN - Campus Area Network**       | Interconnects multiple Local Area Networks (LANs) within a limited geographical area, typically a single campus. | University Campus, Hospital Complex, Corporate Park | **University**: Connecting classrooms, labs, libraries, administrative offices, and student housing.                                        |
+| **MAN - Metropolitan Area Network** | Spans a larger geographical area, typically an entire city or metropolitan region.                               | City-wide, Regional Area                            | **Municipal Services:** Connecting city government offices, public safety systems (police, fire, emergency services), and public utilities. |
+
+
+---
+
+### The Internet
+
+The ultimate global WAN—a "network of networks."
+
+---
+# Modern Architectures
+
+### Cloud Networking
+
+Moving infrastructure to IaaS providers like AWS or Azure. The "Cloud Core" is now the backbone of modern enterprise.
+
+### SDN (Software Defined Networking)
+
+Decoupling the **Control Plane** (logic) from the **Data Plane** (hardware). Allows network management via code.
+
+---
+## Architecture Comparison
+
+| Type    | Range   | Media             | Security Risk Level |
+| ------- | ------- | ----------------- | ------------------- |
+| **PAN** | < 10m   | Bluetooth/NFC     | Low                 |
+| **LAN** | < 1km   | Cat6/Fiber/WiFi   | Medium              |
+| **WAN** | Global  | Satellite/Sub-sea | Critical            |
+| **VPN** | Virtual | Encapsulated      | Managed             |
+
+---
+
+# Topologies
+
+Topologies are how the network is organised...
 
 ---
 ## The Bus Topology
@@ -52,13 +138,9 @@ Understand how we connect computers using **Bus**, **Star**, and **Mesh** topolo
 ## Summary Checklist
 
 - [ ] Bus: One line, many stops.
-    
 - [ ] Star: Center hub, easy to fix.
-    
 - [ ] Mesh: Many paths, high reliability.
-    
 - [ ] Internet: The ultimate hybrid mesh.
-    
 
 
 ---

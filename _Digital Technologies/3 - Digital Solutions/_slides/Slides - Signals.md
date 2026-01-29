@@ -8,11 +8,15 @@ isCurrent: true
 
 ### Decoupling your Game Architecture
 
-## The Signal Concept
+---
+
+# The Signal Concept
 
 Signals allow nodes to communicate without knowing who is receiving the message. 
 
 ---
+
+# What are signals?
 
 Signals allow nodes to communicate with multiple nodes in the project, without knowing who is receiving the message. 
 
@@ -21,7 +25,7 @@ It is a "one-to-many" broadcast system.
 <div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Points System</div> <div class="listener-item">🔊 Sound FX</div><div class="listener-item">🔊 Game Management</div></div> </div>
 
 ---
-## The Problem: Spaghetti Code
+# The Problem: Spaghetti Code
 
 In complex games, nodes often need to talk to each other.
 
@@ -39,7 +43,7 @@ Why this is a problem - is, let's say that the game includes a grenade model. Wh
 
 
 ---
-## The Solution: Signals 📡
+# The Solution: Signals 
 
 Signals are Godot's version of the **Observer Pattern**.
 
@@ -47,16 +51,16 @@ Signals are Godot's version of the **Observer Pattern**.
 - Other nodes **connect** to that signal (listening).
 - The emitter doesn't care who is listening, or if _anyone_ is listening.
 ---
-## "Signal Up, Call Down" 🏗️
+# "Signal Up, Call Down" 
 
 This is the golden rule of Godot architecture:
 
 1. **Call Down:** A parent can safely call functions on its children (it owns them).
 2. **Signal Up:** A child should emit a signal to notify the parent (it doesn't need to know its parent exists).
 ---
-## Coding a Signal 💻
+# Coding a Signal 
 
-### 1. Define and Emit
+## 1. Define and Emit
 
 ```gdscript
 extends CharacterBody2D
@@ -69,7 +73,7 @@ func take_damage(amt):
     health_changed.emit(health) 
 ```
 ---
-### 2. Connect (via Code)
+## 2. Connect (via Code)
 
 ```gdscript
 func _ready():
@@ -80,7 +84,7 @@ func _on_player_health_changed(val):
     progress_bar.value = val
 ```
 ---
-## Signals vs. Singletons (Autoloads) ⚖️
+# Signals vs. Singletons (Autoloads) ⚖️
 
 | **Feature**  | **Signals**      | **Singletons**         |
 | ------------ | ---------------- | ---------------------- |
@@ -91,14 +95,14 @@ func _on_player_health_changed(val):
 **Pro Tip:** Use a "Global Signal Bus" (a Singleton that only holds signals) to let distant nodes talk without direct references.
 
 ---
-## When to use Signals? 🎯
+# When to use Signals? 🎯
 
 - **UI Updates:** When the player's stats change.
 - **Audio:** Triggering SFX when an animation reaches a specific frame.
 - **Game Logic:** Notifying the `LevelManager` that a key was picked up.
 - **Decoupling:** Any time you find yourself typing `get_parent()`.
 ---
-## Summary 📝
+# Summary 📝
 
 - Signals prevent crashes when scenes change.
 - They make your nodes **reusable**.

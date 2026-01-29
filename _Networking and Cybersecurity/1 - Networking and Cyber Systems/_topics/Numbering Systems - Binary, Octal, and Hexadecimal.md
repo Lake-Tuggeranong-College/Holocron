@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 ## Objective
 
 Students will understand the structure of positional numbering systems (Base-2, Base-8, Base-10, and Base-16) and demonstrate the ability to convert values between these systems using mathematical procedures.

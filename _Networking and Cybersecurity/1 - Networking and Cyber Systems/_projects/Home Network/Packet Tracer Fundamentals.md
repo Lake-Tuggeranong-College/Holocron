@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 needsUpdating: true
 softwareVersion: Packet Tracer 8.2.2
 ---

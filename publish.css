@@ -620,6 +620,19 @@ settings:
         markdown: true
 */
 
+/* @settings
+
+name: Theme Info
+id: Info
+settings:
+    - 
+        id: Extras-info
+        description: "🎨 Appearance presets: [get presets here](https://github.com/Akifyss/obsidian-border/blob/main/presets.md), click on “Import” in the top right corner and restart obsidian. <br> <br> 📭 If you have problems, please submit [issues](https://github.com/Akifyss/obsidian-border/issues) or [discuss](https://github.com/Akifyss/obsidian-border/discussions) on Github<br> <br> 🔼 View recent updates: [Github Commit History](https://github.com/Akifyss/obsidian-border/commits/main)"
+        description.zh: "🎨 外观预设：[在此获取预设](https://github.com/Akifyss/obsidian-border/blob/main/presets.md)，点击右上角“Import”导入预设，重启obsidian来生效. <br> <br> 📭 如果遇到问题，可以在Github上 [提交issues](https://github.com/Akifyss/obsidian-border/issues) 或[讨论](https://github.com/Akifyss/obsidian-border/discussions)<br> <br> 🔼 查看最近更新：[Github Commit History](https://github.com/Akifyss/obsidian-border/commits/main)"
+        type: info-text
+        markdown: true
+*/
+
 
 /* @settings
 

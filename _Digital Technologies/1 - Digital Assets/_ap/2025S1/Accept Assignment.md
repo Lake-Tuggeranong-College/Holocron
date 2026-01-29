@@ -6,7 +6,7 @@ publish: false
 
 Click on the link to the GitHub Classroom assignment:
 
-> [!danger] https://classroom.github.com/a/RKTOAMpc
+> [!danger] [https://classroom.github.com/a/RKTOAMpc](https://classroom.github.com/a/ecGHid-p)
 
 ![[acceptGitHubAssignment.png]]
 

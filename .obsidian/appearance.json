@@ -9,5 +9,6 @@
   "showViewHeader": true,
   "nativeMenus": true,
   "translucency": false,
-  "showRibbon": true
+  "showRibbon": true,
+  "baseFontSize": 15
 }

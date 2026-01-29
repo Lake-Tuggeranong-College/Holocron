@@ -2,6 +2,36 @@
 isCurrent: false
 softwareVersion: Packet Tracer 8.2.2
 ---
+# Project Overview
+
+This semester-long course introduces students to the fundamentals of networking and programming with the end-goal to build a secure automated home network.
+
+The networking topics that will be relevant are:
+- [[OSI Model]]
+- [[TCP IP]]
+- [[Subnetting]]
+- Packet Tracer
+
+The programming topics you will learn are:
+- [[Internet of Things (IoT)]] devices
+- Python programming
+- Sensors (input)
+- Actuators (output)
+
+
+# Objectives
+
+Upon completion of this course, students will be able to:
+
+- Understand the OSI model and its role in network communication.
+- Configure basic network settings on their computers.
+- Subnet IP addresses and apply subnet masks.
+- Identify different network topologies.
+- Use Packet Tracer to simulate and troubleshoot network configurations.
+- Code IoT devices to integrate sensors and actuators.
+
+
+
 > [!info] This is sprint 1 of the project. The deadline for this sprint is Week 7.
 
 # Home network design

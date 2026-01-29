@@ -4,22 +4,24 @@ highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: true
 ---
-# Signals in Godot 🤖
+# Signals in Godot
 
 ### Decoupling your Game Architecture
 
-## The Signal Concept 📡
+## The Signal Concept
 
-Signals allow nodes to communicate without knowing who is receiving the message. It is a "one-to-many" broadcast system.
-
----
-
-Signals allow nodes to communicate without knowing who is receiving the message. It is a "one-to-many" broadcast system.
-
-<div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Sound FX</div> </div> </div>
+Signals allow nodes to communicate without knowing who is receiving the message. 
 
 ---
-## The Problem: Spaghetti Code 🍝
+
+Signals allow nodes to communicate with multiple nodes in the project, without knowing who is receiving the message. 
+
+It is a "one-to-many" broadcast system.
+
+<div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Points System</div> <div class="listener-item">🔊 Sound FX</div><div class="listener-item">🔊 Game Management</div></div> </div>
+
+---
+## The Problem: Spaghetti Code
 
 In complex games, nodes often need to talk to each other.
 
@@ -29,6 +31,13 @@ In complex games, nodes often need to talk to each other.
     - **BUT** it still creates a dependency. The Player must _know_ the HealthBar exists.
     - More work if more nodes need to be added later.
 - **The Problem:** Direct references (even unique ones) only talk to **one** thing. A signal can talk to **everyone** at once.
+
+![[signalsSpagettiCode.png]]
+
+note:
+Why this is a problem - is, let's say that the game includes a grenade model. When it explodes, you wish the each player node (in a single or multiplayer game) to take damage, and also any NPCs. With this approach, you'd have to manually add a check for each type. Then, later, if you want to add another type of node, you'd have to modify this code again. 
+
+
 ---
 ## The Solution: Signals 📡
 

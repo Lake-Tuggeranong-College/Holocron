@@ -2,15 +2,15 @@ Signals are Godot’s implementation of the **Observer Pattern**. They allow nod
 
 In Godot, **Signals** are how we get nodes to talk to each other without making a mess of our code. Think of it like a radio broadcast: the DJ (Emitter) sends out a song, and anyone with their radio turned on (Listener) hears it. The DJ doesn't need to know who's listening to do their job.
 
-## 1. Visualising the Concept: The "Broadcast"
+# 1. Visualising the Concept: The "Broadcast"
 
-<div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Sound FX</div> </div> </div>
+<div class="godot-anim-box signal-broadcast"> <div class="player-node"> <div class="icon">👤</div> <div class="label">Player</div> </div> <div class="sig-ring"></div> <div class="sig-packet">health_changed(80)</div> <div class="listeners"> <div class="listener-item">📊 HUD Bar</div> <div class="listener-item">🔊 Points System</div> <div class="listener-item">🔊 Sound FX</div><div class="listener-item">🔊 Game Management</div></div> </div>
 
-## 2. Advanced Example: Global Signal Bus
+# 2. Advanced Example: Global Signal Bus
 
 A Signal Bus (Autoload) allows two nodes that don't know each other to communicate across the entire game tree.
 
-### The Animation: Global Broadcast
+## Global Broadcast
 
 Notice how the **Enemy** and **Achievement Manager** never touch, yet the message arrives.
 
@@ -37,11 +37,11 @@ func _on_score_up(points):
     total_score += points
 ```
 
-## 3. The "Await" Pattern: Sequencing Events
+# 3. The "Await" Pattern: Sequencing Events
 
 In programming, we often need to wait for one thing to finish before starting the next. In Godot, you can tell your code to "wait" for a signal. This is much cleaner than using timers with complex logic.
 
-### The Animation: Sequencing
+## Sequencing
 
 The code "waits" at the yield point until the signal pulse returns.
 
@@ -57,7 +57,7 @@ func start_next_level():
     get_tree().change_scene_to_file("res://Level2.tscn")
 ```
 
-## 4. Quick Comparison
+# 4. Quick Comparison
 
 | **Method**          | **Communication Style** | **Best For**                                   |
 | ------------------- | ----------------------- | ---------------------------------------------- |
@@ -66,10 +66,8 @@ func start_next_level():
 | **Signals**         | Broadcast               | Letting multiple nodes know an event occurred. |
 | **Signal Bus**      | Global Broadcast        | Major events like "Game Over" or "Level Up".   |
 
-## Pro-Tips for Students
+# Pro-Tips for Students
 
 - **Signal Up, Call Down:** Children nodes should use signals to talk to parents. Parents should call functions directly on their children.
 - **Keep it Simple:** If two nodes are always together in the same scene, a direct reference is often better than a signal.
 - **Visual Connections:** You can connect signals using the "Node" tab in the Godot Editor if you prefer not to write the connection code manually.
-
-**Any questions? Feel free to ask in the chat!**

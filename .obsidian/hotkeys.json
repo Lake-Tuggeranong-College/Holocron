@@ -25,5 +25,23 @@
       ],
       "key": "P"
     }
+  ],
+  "local-gpt:context-menu": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "A"
+    }
+  ],
+  "local-gpt:local-gpt-action-palette": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "C"
+    }
   ]
 }

@@ -7,6 +7,9 @@ Want to Study and earn competencies towards the Certificate III in Information T
 See [[Course|Course]] for details on the course
 
 > [!important]- Meeting Schedule
+> Here is the meeting schedule for one-on-meetings with your instructor.
+> If you are unable to attend, please contact your instructor **prior** to the scheduled time - ryan.cather@ed.act.edu.au
+> 
 > https://docs.google.com/spreadsheets/d/1CRYXbGF72FOSdTZk5OMBUAiqRUMKscUmO3pwiwMV3-A/edit?usp=sharing
  
 # Semester 1 - Infrastructure

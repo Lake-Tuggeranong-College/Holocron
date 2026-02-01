@@ -1,9 +1,10 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 
 
-> [!info] Written by Google Gemini
+> [!info] AI was used to plan and create a draft of this item. The draft was then revised without any further AI assistance.
 
 
 ## **Subnetting: Dividing the Digital Neighborhood**
@@ -34,7 +35,5 @@ Subnetting takes the concept of network and host sections in IP addresses a step
 **Analogy:**
 
 Think of subnetting like creating virtual floors within a large building. Each floor has its own set of residents (devices) with controlled access, improving organisation, security, and overall network health.
-
-**I hope this explanation clarifies the concept of subnetting. Feel free to ask if you have any further questions or want to explore specific examples!**
 
 

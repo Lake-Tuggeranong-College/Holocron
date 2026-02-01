@@ -11,6 +11,8 @@ See [[Course|Course]] for details on the course
 > If you are unable to attend, please contact your instructor **prior** to the scheduled time - ryan.cather@ed.act.edu.au
 > 
 > https://docs.google.com/spreadsheets/d/1CRYXbGF72FOSdTZk5OMBUAiqRUMKscUmO3pwiwMV3-A/edit?usp=sharing
+> 
+> Note: This is subject to change based on availability and/or school events. It is your responsibility to know when your meetings are booked.
  
 # Semester 1 - Infrastructure
 

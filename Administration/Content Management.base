@@ -128,3 +128,20 @@ views:
         direction: ASC
     columnSize:
       file.name: 485
+  - type: table
+    name: No Properties
+    filters:
+      and:
+        - note.keys().length == 0
+        - file.ext == "md"
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 485

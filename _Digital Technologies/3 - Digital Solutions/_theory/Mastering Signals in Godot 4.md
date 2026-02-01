@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Signals are Godot’s implementation of the **Observer Pattern**. They allow nodes to communicate without being "coupled" (directly dependent on each other), making your code cleaner, more modular, and easier to debug.
 
 In Godot, **Signals** are how we get nodes to talk to each other without making a mess of our code. Think of it like a radio broadcast: the DJ (Emitter) sends out a song, and anyone with their radio turned on (Listener) hears it. The DJ doesn't need to know who's listening to do their job.

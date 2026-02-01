@@ -1,2 +1,5 @@
+---
+isCurrent: true
+---
 In GitHub terms, a **clone** is your own local copy of a project that lives on a remote server. When you clone a repository, you aren't just downloading the files; you are taking a "snapshot" of the entire project history, including every version and branch. This allows you to work on the code offline on your own computer using your favorite tools. It establishes a connection between your machine and the original server, making it easy to send your changes back or pull in new updates from others.
 

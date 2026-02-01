@@ -1,6 +1,6 @@
 ---
-isCurrent: false
-needsUpdating: true
+isCurrent: true
+needsUpdating: false
 ---
 # Video/s
 

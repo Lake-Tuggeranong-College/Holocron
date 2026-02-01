@@ -2,6 +2,7 @@
 isCurrent: false
 needsUpdating: true
 ---
+
 ![https://youtu.be/0y6FtKsg6J4?si=kLRTPD3CrMlT0ulG](https://youtu.be/0y6FtKsg6J4?si=kLRTPD3CrMlT0ulG)
 
 **OSI Model Tutorial**
@@ -94,5 +95,105 @@ To troubleshoot problems at specific OSI layers, you can use tools such as:
 
 - **Ping:** Tests connectivity at the Network Layer (ICMP).
 - **Traceroute:** Traces the path of data packets across the network (Network Layer).
-- **Wireshark:** Captures and analyzes network traffic at all layers.
+- **Wireshark:** Captures and analyses network traffic at all layers.
 - **Network monitoring tools:** Monitor network performance and identify potential issues.
+
+# Postal Service Analogy
+
+Okay, let's use the postal service as an analogy to illustrate the OSI model.  Imagine sending a letter from your house to your friend's house.
+
+**1. Physical Layer:** This is the physical delivery of the letter. It's the actual *movement* of the letter.
+   * **Analogy:** The truck, the postal worker, the road, and the physical mailbag are all part of the Physical Layer. It's the raw, tangible transport of the letter.
+
+**2. Data Link Layer:** This layer is about getting the letter to the correct local post office. It's about the immediate delivery within a local area.
+   * **Analogy:** The local post office sorting the letter by address, and the mail carrier delivering it to the specific street.  The address label is like a frame containing the data.
+
+**3. Network Layer:** This layer is about routing the letter across different postal regions. It’s about getting the letter to the correct central sorting facility.
+   * **Analogy:** The regional postal sorting center that directs the letter to the destination state based on the address.  The postal codes are like IP addresses, directing the letter to the correct area.
+
+**4. Transport Layer:** This layer ensures the letter arrives complete and in the right order. It handles error checking and reassembly if needed.
+   * **Analogy:** The tracking number on the envelope.  It allows the postal service to confirm the letter was delivered and to re-route if necessary.  It also ensures all the pages of a multi-page letter arrive in the correct order.
+
+**5. Session Layer:** This layer manages the communication between you and the recipient. It establishes and terminates the "conversation" of sending and receiving.
+   * **Analogy:**  The postal service’s system for handling returned mail or forwarding addresses.  It manages the ongoing process of sending and receiving.
+
+**6. Presentation Layer:** This layer ensures the letter is in a format the recipient can understand. It handles encoding and decoding of the letter.
+   * **Analogy:**  The letter itself – the language, the formatting, the content. It’s the actual data being conveyed.  If you wrote the letter in French, this layer would handle the translation to English for the recipient.
+
+**7. Application Layer:** This is the highest layer – it’s *you* writing the letter and *your friend* receiving it. It’s the application that initiated the communication.
+   * **Analogy:** You writing the letter and your friend reading it.  It's the purpose of the communication – to send a message.
+
+
+---
+
+# Wireshark: Unpacking Network Communication
+
+**What is Wireshark?**
+
+Wireshark is a powerful, free, and open-source network packet analyser. It lets you capture and examine network traffic in real-time, giving you a detailed look at how data is transmitted across a network. Think of it as a microscope for your network.
+
+**Why Use Wireshark?**
+
+* **Visualise the OSI Model:**  You can see how data is encapsulated at each layer of the OSI model as it travels across the network.
+* **Troubleshooting:** Identify network problems by examining packet loss, retransmissions, and other anomalies.
+* **Learning:** Understand how protocols work by observing their behavior.
+
+**Getting Started with Wireshark**
+
+1. **Download and Install:** Download Wireshark from [https://www.wireshark.org/](https://www.wireshark.org/) and install it on your computer.
+2. **Choose an Interface:** When Wireshark starts, it will list available network interfaces (e.g., Ethernet, Wi-Fi). Select the interface you want to monitor.  Typically, your primary network connection will be the one you want to analyse.
+3. **Start Capturing:** Click the "Start" button (the blue shark fin icon) to begin capturing network traffic.
+
+**Capturing a Simple HTTP Request**
+
+Let's capture a simple HTTP request to Google.
+
+1. **Open a Web Browser:** Open your web browser and navigate to [https://www.google.com](https://www.google.com).
+2. **Start Wireshark:** Make sure Wireshark is running and capturing traffic.
+3. **Observe the Capture:**  You'll see a lot of packets appearing in the Wireshark window.  Look for packets with the following characteristics:
+   * **Protocol:**  HTTP
+   * **Source:** Your computer's IP address
+   * **Destination:** Google's IP address (you can find this by searching "Google IP address" online)
+   * **Length:**  These packets will be relatively small, containing the HTTP request.
+
+> [!tip] To filter the results by destination (www.google.com), enter `ip.dst == 8.8.8.8` into the Display Filter field.
+
+**Analysing the Packets – The OSI Model in Action**
+
+Now, let's break down what you're seeing and relate it to the OSI model:
+
+* **Layer 7 (Application Layer):** This is the HTTP request itself – the text you typed into the browser.  Wireshark shows you the data being exchanged at this level.
+* **Layer 6 (Presentation Layer):**  This layer handles data formatting and encryption (if used). You might see data encoded in formats like Base64.
+* **Layer 5 (Session Layer):** This layer manages the connection between your browser and Google's server.
+* **Layer 4 (Transport Layer):**  You’ll see TCP or UDP packets. TCP provides reliable, connection-oriented communication, while UDP is faster but less reliable.  The Transport Layer adds port numbers to identify the application.
+* **Layer 3 (Network Layer):**  This is where IP addresses are used to route the packets across the internet. You'll see IP packets with source and destination addresses.
+* **Layer 2 (Data Link Layer):**  This layer uses MAC addresses to identify devices on the local network. You'll see Ethernet frames containing MAC addresses.
+* **Layer 1 (Physical Layer):**  This layer deals with the physical transmission of bits over the network cable or wireless connection.
+
+**Encapsulation – Adding Layers**
+
+Notice how each packet has a header.  This is *encapsulation*.  Each layer adds its own header to the data from the layer below it.  This process continues all the way down to the physical layer.
+
+* **Example:**  A TCP packet contains a UDP packet, which contains an IP packet, which contains a MAC packet.  Each layer adds its own information, creating a nested structure.
+
+**The Postal Service Analogy Revisited**
+
+Let's revisit the postal service analogy:
+
+* **Wireshark:** The postal worker sorting mail.
+* **Packets:** Individual letters.
+* **Headers:** The address label and tracking number.
+* **Encapsulation:**  Each postal worker adding information to the letter as it moves through the system.
+
+**Tips for Using Wireshark**
+
+* **Filters:** Use filters to narrow down the captured traffic.  For example:
+    * `http`:  Show only HTTP traffic.
+    * `ip.addr == 192.168.1.1`: Show traffic to or from a specific IP address.
+* **Display Filters:**  Wireshark has powerful display filters that let you filter packets based on various criteria.
+* **Follow TCP Stream:**  This option allows you to see the entire conversation between two hosts, from the beginning to the end.
+
+
+---
+
+> [!important] AI was used to plan and create a draft of this item. The draft was then revised without any further AI assistance.

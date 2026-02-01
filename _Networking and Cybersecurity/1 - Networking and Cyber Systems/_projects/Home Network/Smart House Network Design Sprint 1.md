@@ -7,8 +7,8 @@ softwareVersion: Packet Tracer 8.2.2
 This semester-long course introduces students to the fundamentals of networking and programming with the end-goal to build a secure automated home network.
 
 The networking topics that will be relevant are:
-- [[OSI Model]]
-- [[TCP IP]]
+- [[Networking Models]]
+- [[TCP & UDP]]
 - [[Subnetting]]
 - Packet Tracer
 

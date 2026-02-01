@@ -2,12 +2,14 @@
 isCurrent: true
 needsUpdating: false
 ---
+# Open Systems Interconnection (OSI) Model
+## Video
 
 ![https://youtu.be/0y6FtKsg6J4?si=kLRTPD3CrMlT0ulG](https://youtu.be/0y6FtKsg6J4?si=kLRTPD3CrMlT0ulG)
 
-**OSI Model Tutorial**
+## Layers
 
-The OSI (Open Systems Interconnection) model is a conceptual framework that describes how network communication occurs. It is a seven-layer model, with each layer providing a specific set of functions. The layers are:
+The OSI model is a conceptual framework that describes how network communication occurs. It is a seven-layer model, with each layer providing a specific set of functions. The layers are:
 
 1. **Physical Layer:** Transmits raw data bits over a physical medium (e.g., copper wire, fiber optic cable).
 2. **Data Link Layer:** Encapsulates data into frames and provides error control.
@@ -17,7 +19,7 @@ The OSI (Open Systems Interconnection) model is a conceptual framework that desc
 6. **Presentation Layer:** Translates data between different formats and encodings.
 7. **Application Layer:** Provides application-specific services (e.g., file transfer, email, web browsing).
 
-**Examples of Each Layer**
+### Examples of Each Layer
 
 - **Physical Layer:** Ethernet, Wi-Fi, Bluetooth
 - **Data Link Layer:** MAC addresses, Ethernet frames
@@ -27,25 +29,25 @@ The OSI (Open Systems Interconnection) model is a conceptual framework that desc
 - **Presentation Layer:** JSON (JavaScript Object Notation), XML (Extensible Markup Language)
 - **Application Layer:** Web browsers, email clients, file sharing applications
 
-**Further Information**
+### Further Information
 
 - [OSI Model Explained](https://www.cisco.com/c/en/us/support/docs/ip/network-address-translation-nat/13781-32.html#anc1)
 - [OSI Model Layers and Protocols](https://www.geeksforgeeks.org/osi-model-layers-and-protocols/)
 - [OSI Model Tutorial](https://www.tutorialspoint.com/data_communication/osi_model.htm)
 
-**How the OSI Model Works**
+## How the OSI Model Works
 
 Data is passed down the OSI stack from the application layer to the physical layer. At each layer, data is encapsulated with additional information (e.g., headers, trailers). When data reaches the physical layer, it is transmitted over the network.
 
 At the receiving end, data is passed up the OSI stack from the physical layer to the application layer. At each layer, the additional information is removed, and the data is processed by the appropriate application.
 
-**Benefits of the OSI Model**
+## Benefits of the OSI Model
 
 - Provides a common framework for understanding network communication.
 - Helps in troubleshooting network issues by isolating problems to specific layers.
 - Facilitates the development of interoperable networking devices and protocols.
 
-# Potential Problems at Each Layer of the OSI Model
+## Troubleshooting Each Layer of the OSI Model
 
 **Physical Layer:**
 
@@ -98,7 +100,7 @@ To troubleshoot problems at specific OSI layers, you can use tools such as:
 - **Wireshark:** Captures and analyses network traffic at all layers.
 - **Network monitoring tools:** Monitor network performance and identify potential issues.
 
-# Postal Service Analogy
+## Postal Service Analogy
 
 Okay, let's use the postal service as an analogy to illustrate the OSI model.  Imagine sending a letter from your house to your friend's house.
 
@@ -126,7 +128,7 @@ Okay, let's use the postal service as an analogy to illustrate the OSI model.  I
 
 ---
 
-# Wireshark: Unpacking Network Communication
+## Wireshark: Unpacking Network Communication
 
 **What is Wireshark?**
 
@@ -193,6 +195,60 @@ Let's revisit the postal service analogy:
 * **Display Filters:**  Wireshark has powerful display filters that let you filter packets based on various criteria.
 * **Follow TCP Stream:**  This option allows you to see the entire conversation between two hosts, from the beginning to the end.
 
+
+# TCP Model
+
+## Understanding Network Communication: The TCP Model
+
+## What is the TCP Model?
+
+The TCP model is a simplified version of the more complex OSI model. It focuses specifically on how applications communicate over a network, particularly the internet. Instead of seven layers, it has just four, making it easier to grasp the core concepts.
+
+## The Four Layers of TCP:
+
+1. **Application Layer:** This is the layer you interact with directly. It provides the interface for applications like web browsers, email clients, and file transfer programs. *Think of it as the user-facing part of the communication.*
+   * **Examples:** HTTP, FTP, SMTP, DNS
+2. **Transport Layer:** This layer is responsible for reliable data delivery between applications. It uses a protocol called TCP (Transmission Control Protocol) to ensure that data arrives in the correct order and without errors. It also manages the flow of data.
+   * **Key Protocol:** TCP – guarantees reliable, ordered delivery.  It also uses ports to identify specific applications.
+3. **Network Layer:** This layer handles the routing of data packets across networks. It uses IP addresses to identify devices and determine the best path for data to travel.
+   * **Key Protocol:** IP (Internet Protocol) – responsible for addressing and routing.
+4. **Link Layer:** This layer handles the physical transmission of data over the network medium (e.g., Ethernet cable, Wi-Fi). It deals with hardware addressing (MAC addresses) and error detection at the physical level.
+
+## The TCP Model in Action: The Web Browser Example
+
+Let’s say you’re browsing a website:
+
+1. **Application Layer:** Your web browser (using HTTP) sends a request to the web server.
+2. **Transport Layer:** TCP ensures that the request is broken down into packets, numbered, and sent reliably to the server.
+3. **Network Layer:** IP addresses are used to route the packets across the internet to the web server.
+4. **Link Layer:** The packets are transmitted over the physical network connection (e.g., Ethernet cable or Wi-Fi).
+
+The web server then repeats this process to send the website’s content back to your browser.
+
+**Why is the TCP Model Important?**
+
+* **Simplicity:** It’s easier to understand than the OSI model.
+* **Practicality:** It’s the model used in most modern network applications.
+* **Focus on Communication:** It emphasizes the core goal of network communication – getting data from one application to another reliably.
+
+**Resources for Further Learning:**
+
+* [https://www.geeksforgeeks.org/tcp-vs-osi-model/](https://www.geeksforgeeks.org/tcp-vs-osi-model/)
+* [https://www.tutorialspoint.com/tcp_ip/index.htm](https://www.tutorialspoint.com/tcp_ip/index.htm)
+
+
+# TCP vs OSI model
+
+![[OSIvsTCP.png]]
+
+
+**TCP vs. OSI: A Comparison**
+
+| Feature    | TCP Model                 | OSI Model                           |
+| ---------- | ------------------------- | ----------------------------------- |
+| Layers     | 4                         | 7                                   |
+| Focus      | Application Communication | Comprehensive Network Communication |
+| Complexity | Simpler                   | More Detailed                       |
 
 ---
 

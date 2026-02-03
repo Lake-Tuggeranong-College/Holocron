@@ -41,9 +41,8 @@ The "weight" of each position is a power of the base. For example, in the decima
 > 
 > In Hexadecimal, letters represent values beyond 9. This ensures each position is represented by a single character.
 > 
-> |   |   |
-> |---|---|
 > |**Hex Digit**|**Decimal Value**|
+> |---|---|
 > |A|10|
 > |B|11|
 > |C|12|
@@ -186,3 +185,8 @@ $1110 = 14 = E$
 - [ ] Can convert a decimal number under 255 to Binary.
 - [ ] Understands why Hexadecimal is used to represent colors or MAC addresses.
 - [ ] Can explain the difference between a bit and a byte.
+
+
+# 2026 In-class Notes
+
+![[numberSystems2026.pdf]]

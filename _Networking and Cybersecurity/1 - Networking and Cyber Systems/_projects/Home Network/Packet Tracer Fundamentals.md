@@ -1,7 +1,9 @@
 ---
 isCurrent: true
 needsUpdating: true
-softwareVersion: Packet Tracer 8.2.2
+softwareVersion:
+  - Packet Tracer 8.2.2
+  - Packet Tracer 9.0
 ---
 
 

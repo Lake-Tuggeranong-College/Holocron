@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 ---
 
 > [!note] The purpose of this course is to develop a Capture The Flag (CTF) game. In order to do so, you will need to understand what that involves. To do so, you'll analyse existing CTF games available and identify key elements.
@@ -24,13 +24,13 @@ CTF challenges typically fall into different categories, requiring distinct skil
 
 Several excellent platforms offer persistent, student-focused CTFs.
 
-|**Platform Name**|**Best For**|**Link to Site**|**Key Features**|
-|---|---|---|---|
-|**picoCTF**|Middle & High School Students|[picoCTF.org](https://picoctf.org/)|Free, game-based competition by Carnegie Mellon University; excellent beginner-friendly learning labs.|
-|**TryHackMe**|Guided Learning/Beginners|[TryHackMe](https://tryhackme.com/)|Interactive, browser-based labs ("Rooms") with clear, structured learning paths and guided tutorials.|
-|**OverTheWire**|Linux Command Line Skills|[OverTheWire Wargames](http://overthewire.org/wargames/)|Provides a series of "wargames" like the **Bandit** series, which is specifically designed to teach you the fundamentals of the Linux command line and security concepts.|
-|**CTFlearn**|Practice Challenges|[CTFlearn](https://ctflearn.com/)|A community-driven platform offering a variety of challenges in all major categories for practice.|
-|**316ctf**|Beginner/Persistent Practice|[316ctf](https://316ctf.com/)|A free, persistent, and growing CTF game intended for middle school and high school students.|
+| **Platform Name** | **Best For**                  | **Link to Site**                                         | **Key Features**                                                                                                                                                          |
+| ----------------- | ----------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **picoCTF**       | Middle & High School Students | [picoCTF.org](https://picoctf.org/)                      | Free, game-based competition by Carnegie Mellon University; excellent beginner-friendly learning labs.                                                                    |
+| **TryHackMe**     | Guided Learning/Beginners     | [TryHackMe](https://tryhackme.com/)                      | Interactive, browser-based labs ("Rooms") with clear, structured learning paths and guided tutorials.                                                                     |
+| **OverTheWire**   | Linux Command Line Skills     | [OverTheWire Wargames](http://overthewire.org/wargames/) | Provides a series of "wargames" like the **Bandit** series, which is specifically designed to teach you the fundamentals of the Linux command line and security concepts. |
+| **CTFlearn**      | Practice Challenges           | [CTFlearn](https://ctflearn.com/)                        | A community-driven platform offering a variety of challenges in all major categories for practice.                                                                        |
+| **316ctf**        | Beginner/Persistent Practice  | [316ctf](https://316ctf.com/)                            | A free, persistent, and growing CTF game intended for middle school and high school students.                                                                             |
 
 ---
 

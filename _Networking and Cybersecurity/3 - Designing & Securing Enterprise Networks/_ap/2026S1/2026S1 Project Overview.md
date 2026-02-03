@@ -22,7 +22,7 @@ Each small group (2-3 people) is required to develop **three unique challenges**
 ### 1. Embedded Systems / IoT Challenge (Arduino)
 
 
-### 2. Containerization Challenge (Docker)
+### 2. Containerisation Challenge (Docker)
 
 **Focus:** Infrastructure security, container misconfigurations, privilege escalation, and exploiting insecure services.
 

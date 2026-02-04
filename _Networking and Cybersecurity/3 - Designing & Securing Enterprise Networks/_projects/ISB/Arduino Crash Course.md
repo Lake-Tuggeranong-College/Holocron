@@ -1,5 +1,6 @@
 ---
-isCurrent: false
+isCurrent: true
+needsUpdating: true
 ---
 # Hardware
 

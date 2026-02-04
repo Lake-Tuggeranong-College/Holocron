@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > ![[2026S1 Project Overview#Project Goal]]

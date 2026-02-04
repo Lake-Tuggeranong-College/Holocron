@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 ---
 # Introduction to Docker
 

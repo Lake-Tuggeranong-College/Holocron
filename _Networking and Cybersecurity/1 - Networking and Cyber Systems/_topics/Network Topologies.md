@@ -207,3 +207,7 @@ If an IP address is outside your local network (e.g., `8.8.8.8`), your router se
 - Why is a Switch better than a Hub in a Star topology? (Hint: MAC addresses and collisions).
 - How does the Internet's Mesh structure prevent a global outage if one cable breaks?
 - What protocol does a Bus network use to handle two computers talking at once? (CSMA/CD).
+
+# 2026 In-class Notes
+
+![[networkTopologies2026.pdf]]

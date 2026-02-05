@@ -47,7 +47,7 @@ Focus on programming skills with a strong emphasis on backend development.
 ```mermaid
 sequenceDiagram
     participant Client
-    participant WebServer as PHP Webserver
+    participant WebServer
     participant Database
 
     Client->>WebServer: HTTP Request

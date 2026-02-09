@@ -2,9 +2,19 @@
 isCurrent: true
 ---
 
-Click on the link to the GitHub Classroom assignment:
+Click on the link to the main repository for the project.
 
-> [!danger] https://classroom.github.com/a/4HismI3L
+> [!danger] https://github.com/Lake-Tuggeranong-College/CTFServer
+
+Click the fork project by clicking the fork button.
+
+![[repoFork.png]]
+
+
+Create the fork in your account, by setting the owner to you, and give the repo a name (easy to keep it the same as the main repo). Press **Create Fork**.
+
+![[repoForkDetails.png]]
+
 
 Clone the repository to your computer using GitHub Desktop (or any method). Choose the newly created repository
 ![[repoClone.png]]

@@ -12,6 +12,7 @@ Click on the link to the GitHub Classroom assignment:
 
 This process creates a [[Repository|repository]] which you will use throughout this semester to maintain your project files.
 
+
 ---
 
 # Clone Repository

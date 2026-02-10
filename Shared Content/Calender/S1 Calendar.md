@@ -81,7 +81,6 @@ HOLIDAYS
 ### School Events - Week 17
 
 **Monday** Reconciliation Day Public Holiday
-**Friday** Last day of classes
 ### School Events - Week 18
 
 **Monday** Sovereign's Birthday Public Holiday

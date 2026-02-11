@@ -25,7 +25,7 @@ An IPv4 address is a string of **32 bits**, visually represented as four decimal
 
 In binary, each bit has a value based on its position, represented by powers of 2:
 
-| Power of 2 | 2$^7$ | 2$^6$ | 2$^5$ | 2$^4$ | 2$^3$ | 2$^2$ | 2$^1$ | 2$^1$ |
+| Power of 2 | 2$^7$ | 2$^6$ | 2$^5$ | 2$^4$ | 2$^3$ | 2$^2$ | 2$^1$ | 2$^0$ |
 | ---------- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
 | Value      | 128   | 64    | 32    | 16    | 8     | 4     | 2     | 1     |
 

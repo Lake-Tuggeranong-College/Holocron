@@ -61,41 +61,29 @@ The code design should follow the features discussed in [[_Robotics and Mechatro
 The first step is to define the code structure according to the code design. For instance, if implementing the above design, the code structure would be:
 
 ```arduino
+
+#define pinPIR 2
+
+
 void setup()
 {
- 
+	Serial.begin(9600);
+	pinMode(pinPIR, INPUT);
 }
 
 void loop()
 {
+	securitySystem();
   
-  motionDetectionLights();
-  autoAirconditioner();
-  autoAlarmSystem();
-  autoBlinds();
-  autoWateringSystem();
   
-  delay(100);
+	delay(100);
 }
 
 
-void motionDetectionLights() {
-  
-}
 
-void autoAirconditioner() {
-  
-}
-
-void autoAlarmSystem() {
-  
-}
-
-void autoBlinds() {
-  
-}
-
-void autoWateringSystem() {
+void securitySystem () {
+	int pirState = digitalRead(pinPIR);
+	Serial.println(pirState);
   
 }
 

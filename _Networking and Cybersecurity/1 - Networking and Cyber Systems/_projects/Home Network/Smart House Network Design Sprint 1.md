@@ -1,6 +1,7 @@
 ---
-isCurrent: false
+isCurrent: true
 softwareVersion: Packet Tracer 8.2.2
+needsUpdating: true
 ---
 # Project Overview
 
@@ -54,6 +55,10 @@ Add the following devices to the network:
 Check the network by running a ping command from one device to another, such as from a laptop to a PC.
 
 ![[step1Ping.png]]
+
+After building the network to specifications, and fully testing connectivity, then you can continue to the next stage.
+
+---
 
 # Automated Devices
 

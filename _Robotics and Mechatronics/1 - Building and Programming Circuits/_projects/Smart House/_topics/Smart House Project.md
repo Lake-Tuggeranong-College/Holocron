@@ -61,14 +61,22 @@ The code design should follow the features discussed in [[_Robotics and Mechatro
 The first step is to define the code structure according to the code design. For instance, if implementing the above design, the code structure would be:
 
 ```arduino
+#include <Adafruit_NeoPixel.h>
+
 
 #define pinPIR 2
+#define LED_PIN    4
+#define LED_COUNT 12
 
+Adafruit_NeoPixel ring(LED_COUNT, LED_PIN, NEO_RGBW + NEO_KHZ800);
 
 void setup()
 {
-	Serial.begin(9600);
-	pinMode(pinPIR, INPUT);
+  Serial.begin(9600);
+  pinMode(pinPIR, INPUT);
+  ring.begin();           
+  ring.show();            
+  ring.setBrightness(50); 
 }
 
 void loop()
@@ -82,11 +90,22 @@ void loop()
 
 
 void securitySystem () {
-	int pirState = digitalRead(pinPIR);
-	Serial.println(pirState);
+  int pirState = digitalRead(pinPIR);
+  Serial.println(pirState);
   
+  if (pirState == 1){
+   for(int i = 0; i < ring.numPixels(); i++){
+    ring.setPixelColor(i, random(255), random(255), random(255), 0);
+    ring.show();
+    delay(50);
+  }
+  for(int i = ring.numPixels()-1; i >= 0; i--){
+    ring.setPixelColor(i, 0, 0, 0, 0);
+    ring.show();
+    delay(50);
+  }
+  }
 }
-
 
 ```
 

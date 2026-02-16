@@ -116,7 +116,7 @@ You will build the invoice, including adding specific details and then submit as
 
 | Unit Code                                                                   | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT214](https://training.gov.au/Training/Details/ICTICT214/unitdetails) | Operate application software packages (Element 2) |      ✅       |                  |               |         ✅         |
+| [ICTICT214](https://training.gov.au/Training/Details/ICTICT214/unitdetails) | Operate application software packages (Element 3) |      ✅       |                  |               |         ✅         |
 
 ### Task 1.3 Assessment Task
 

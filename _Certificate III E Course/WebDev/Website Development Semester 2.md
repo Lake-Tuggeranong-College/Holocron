@@ -55,7 +55,6 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | Unit Code                                                                        | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | -------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
-| [CUADIG211](https://training.gov.au/Training/Details/CUADIG211/unitdetails)      | Maintain interactive content              |              |        ✅         |               |         ✅         |
 | [CUADIG303](https://training.gov.au/Training/Details/CUADIG303/unitdetails)      | Produce and prepare photo images          |              |        ✅         |               |         ✅         |
 | [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                   |              |        ✅         |               |                   |
 

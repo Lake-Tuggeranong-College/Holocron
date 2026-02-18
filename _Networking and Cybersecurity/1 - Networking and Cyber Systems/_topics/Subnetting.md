@@ -37,3 +37,7 @@ Subnetting takes the concept of network and host sections in IP addresses a step
 Think of subnetting like creating virtual floors within a large building. Each floor has its own set of residents (devices) with controlled access, improving organisation, security, and overall network health.
 
 
+# Subnet Simulator
+
+https://sites.google.com/ed.act.edu.au/ltcit/network-simulator
+

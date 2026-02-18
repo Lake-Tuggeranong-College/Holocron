@@ -2,8 +2,10 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
-isCurrent: false
-softwareVersion: "4.3"
+isCurrent: true
+softwareVersion:
+  - "4.3"
+  - "4.6"
 ---
 
 ## The Network "Blueprint"

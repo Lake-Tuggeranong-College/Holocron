@@ -115,33 +115,31 @@ Click Create.
 Double click `main.py` to open the file, which will be blank. Replace the contents with the following code.
 
 ```python
-from gpio import * # imports all modules in the GPIO library
-from time import * # imports all modules in the time library
+from gpio import *
+from time import *
 
-switchValue = 0 # initialize Switch sensor value global variable to 0
+switch_value = 0
 
-def readFromSensors():
-	global switchValue # declare switchValue as global
-	global speakerValue # declare potentiometerValue as global
-	switchValue = digitalRead(0) # read Switch sensor value
-
-def writeToActuators():
-	if (switchValue == HIGH): # evaluates to True if the Switch sensor value is digital HIGH, otherwise false
-		customWrite(1, "2") # turn on the Light
+def lamp_switch_control():
+	global switch_value
+	switch_value = digitalRead(0)
+	if (switch_value == HIGH):
+		customWrite(1, "2")
 	else:
-		customWrite(1, "0") # turn off the Light
+		customWrite(1, "0")
 
-def main(): # defines the main function
-	pinMode(0, IN) # sets digital slot 0 (Switch) to input
-	pinMode(1, OUT) # sets digital slot 1 (Light) to output
+def main():
+	pinMode(0, IN)
+	pinMode(1, OUT)
 
-	while True: # loop indefinitely
-		readFromSensors() # call the readFromSensors function
-		writeToActuators() # call the writeToActuators function
-		delay(1000) # delay script execution for 1000 ms
+	while True:
+		lamp_switch_control()
+		
 
-if __name__ == "__main__": # Evaluates to True if this module is the script being executed, otherwise False if this module is being imported into another module
-	main() # call the main function
+
+if __name__ == "__main__":
+	main()
+
 ```
 
 ![[smartLightsCodeIncluded.png]]

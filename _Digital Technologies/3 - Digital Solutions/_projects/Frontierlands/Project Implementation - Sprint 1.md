@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 softwareVersion:
 ---
 > [!bug] Use the Jobs Board to manage tasks for the project.

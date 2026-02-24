@@ -127,14 +127,25 @@ def lamp_switch_control():
 		customWrite(1, "2")
 	else:
 		customWrite(1, "0")
+		
+def automatic_fan():
+	temperature = (((analogRead(A0) - 0) * (100 - -100)) / (1023 - 0)) + -100
+	print(temperature)
+	if (temperature > 2):
+		customWrite(2, "2")
+	else:
+		customWrite(2, "0")
 
 def main():
 	pinMode(0, IN)
 	pinMode(1, OUT)
+	pinMode(A0, IN)
+	pinMode(2, OUT)
 
 	while True:
 		lamp_switch_control()
-		
+		automatic_fan()
+		delay(100)
 
 
 if __name__ == "__main__":

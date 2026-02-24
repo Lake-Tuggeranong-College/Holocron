@@ -160,3 +160,34 @@ Update the code to meet the LTC style guide for Arduino.
 ```
 
 Look here for more information : [[Style Guide - Arduino]]
+
+
+# Physical Smart House
+
+```arduino
+#include <Arduino.h>
+
+// Pin Definitions
+#define yellowLedPin 12
+#define rightButtonPin 27
+
+void automaticLightSystem() {
+int buttonState = digitalRead(rightButtonPin);
+  Serial.println(buttonState);
+}
+
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+Serial.begin(9600);
+  pinMode(yellowLedPin, OUTPUT);
+  pinMode(rightButtonPin, INPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  automaticLightSystem();
+
+  delay(100);
+}
+```

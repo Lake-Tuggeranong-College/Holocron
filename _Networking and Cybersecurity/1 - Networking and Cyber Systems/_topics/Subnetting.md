@@ -186,3 +186,4 @@ Switch to **Simulation Mode**.
 
 # Class Discussion Notes
 
+![[subnet2026.pdf]]

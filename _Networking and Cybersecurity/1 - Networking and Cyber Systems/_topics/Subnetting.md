@@ -183,3 +183,6 @@ Switch to **Simulation Mode**.
 1. **DHCP Boundaries:** Why doesn't the Home PC get an IP address from the Business DHCP server?
 2. **Static vs Dynamic:** Why did we give the Servers static IPs but the Laptops dynamic (DHCP) IPs?
 3. **Security:** In this setup, can a device in the Home network ping a device in the Business network? Is this "Secure" yet? What extra device or configuration is needed to block that traffic?
+
+# Class Discussion Notes
+

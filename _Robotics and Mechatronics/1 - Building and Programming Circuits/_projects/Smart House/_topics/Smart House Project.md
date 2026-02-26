@@ -171,9 +171,21 @@ Look here for more information : [[Style Guide - Arduino]]
 #define yellowLedPin 12
 #define rightButtonPin 27
 
+bool ledState = LOW;
+bool lastButtonState = LOW;
+
+
 void automaticLightSystem() {
-int buttonState = digitalRead(rightButtonPin);
-  Serial.println(buttonState);
+   int buttonState = digitalRead(rightButtonPin);
+  // Serial.println(buttonState);
+    if (buttonState == LOW && lastButtonState == LOW) {
+    ledState = !ledState;
+    digitalWrite(yellowLedPin, ledState);
+  } 
+
+  Serial.println(ledState);
+  lastButtonState = buttonState;
+
 }
 
 

@@ -3,7 +3,7 @@ theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 # Modularisation & Abstraction
 

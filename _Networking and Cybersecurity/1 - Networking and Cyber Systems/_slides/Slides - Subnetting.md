@@ -31,6 +31,26 @@ https://www.geeksforgeeks.org/computer-networks/subnetting-implementation-in-cis
 ![[IPProperties.png]]
 
 
+---
+![[IPNetworkHost.png]]
+
+
+![[subnetANDTruthTable.png]]
+
+
+![[subnetBinary.png]]
+
+
+![[subnetMask.png]]
+![[subnetMaskANDStep1.png]]
+
+![[subnetMaskShorthandExample.png]]
+
+
+![[subnetMasksShorthand.png]]
+
+
+
 
 
 ---

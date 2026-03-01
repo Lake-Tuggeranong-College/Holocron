@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > ![[Home Network#Project Overview]]

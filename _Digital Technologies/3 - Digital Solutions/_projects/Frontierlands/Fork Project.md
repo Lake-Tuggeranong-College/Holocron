@@ -1,7 +1,7 @@
 ---
-isCurrent: true
+isCurrent: false
 softwareVersion: "4.3"
-needsUpdating: true
+needsUpdating: false
 ---
 
 Click on the link to the main repository for the project.

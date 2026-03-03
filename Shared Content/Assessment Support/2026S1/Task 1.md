@@ -26,7 +26,7 @@ A co-worker has just gone on long service leave and you have taken over their pr
 # Checklist
 
 >[!caution] Phase 1: Troubleshooting (30 Minutes)
->- [ ] Successfully pulled the project from GitHub.
+>- [ ] Successfully pulled the project from the source.
 >- [ ] Identified the specific configuration or code error.
 >- [ ] Fixed the error so the project completes its intended task.
 >- [ ] Crucial: Captured screenshots/notes of the error before fixing it.

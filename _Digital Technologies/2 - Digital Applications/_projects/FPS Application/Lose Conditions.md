@@ -87,5 +87,5 @@ func _on_timer_timeout():
 
 # No Health
 
-This is covered in [[_Digital Technologies/2 - Digital Applications/_projects/FPS/Player Health]].
+This is covered in [[_Digital Technologies/2 - Digital Applications/_projects/FPS Application/Player Health]].
 

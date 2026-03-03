@@ -83,7 +83,7 @@ Run through the game, killing all the enemies.
 
 After the Win scene has been loaded, you should find `save.dat` in the user directory (see above). You'll notice that the structure of the file matches the `set_value` function with `"Player"` (the section) and `"score"` (the key).
 
-![[_Digital Technologies/2 - Digital Applications/_projects/FPS/_images/persistentDataFileContents.png]]
+![[_Digital Technologies/2 - Digital Applications/_projects/FPS Application/_images/persistentDataFileContents.png]]
 
 ![[commonBlocks#Commit & Push]]
 # Loading Data

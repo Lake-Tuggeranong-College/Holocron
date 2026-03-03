@@ -2,7 +2,7 @@
 isCurrent: false
 softwareVersion: "4.3"
 ---
-> [!important] Prerequisites: [[Enemy]]
+> [!important] Prerequisites: [[_Digital Technologies/1 - Digital Assets/_projects/FPS Assets/Enemy]]
 
 ## Overview: How Enemy Shooting Works
 
@@ -79,7 +79,7 @@ fire_timer.start()
 
 ```
 
-![[_Digital Technologies/2 - Digital Applications/_projects/FPS/_images/enemyShootingRandomTimer.png]]
+![[_Digital Technologies/2 - Digital Applications/_projects/FPS Application/_images/enemyShootingRandomTimer.png]]
 
 Add the function which will be called when the timer finishes (**timeout**) and the function which instantiates the bullet.
 

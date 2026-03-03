@@ -21,7 +21,7 @@ First, you can choose to create a new input trigger for raycasting. Go to Projec
 
 Open the Player object (`Player.tscn`) and create a **RayCast3D** child object of the Camera node.
 
-![[_Digital Technologies/2 - Digital Applications/_projects/FPS/_images/raycastAddChild.png]]
+![[_Digital Technologies/2 - Digital Applications/_projects/FPS Application/_images/raycastAddChild.png]]
 
 With RayCast3D selected, set the Enabled option to be true in the Inspector. Additionally, get the **Target Position** settings to  `0, 0, -10`. This will set the ray cast to be set to be in the direction of the camera.
 

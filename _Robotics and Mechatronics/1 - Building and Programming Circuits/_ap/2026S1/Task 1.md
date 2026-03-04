@@ -2,6 +2,7 @@
 isCurrent: true
 needsUpdating: false
 ---
+
 # Solution Focus
 
 The solution for the project will relate to the topic below. 

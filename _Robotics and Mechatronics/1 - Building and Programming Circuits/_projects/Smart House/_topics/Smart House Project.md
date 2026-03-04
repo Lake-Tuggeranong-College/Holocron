@@ -203,3 +203,30 @@ void loop() {
   delay(100);
 }
 ```
+
+
+## Smart House Pins
+
+| pin  | Device              |
+| ---- | ------------------- |
+| io18 | Fan/DC Motor IN-    |
+| io19 | Fan/DC Motor IN+    |
+| io23 | Gas Sensor          |
+| io5  | Window servo        |
+| io13 | Rotating door servo |
+| io12 | Yellow LED          |
+| io14 | PIR                 |
+| io27 | Right Button        |
+| io16 | Left Button         |
+| io17 | Temperature Sensor  |
+| io25 | Buzzer              |
+| io26 | Neopixel            |
+| i2c  | RFID                |
+| i2c  | LCD                 |
+| io34 | Steam Sensor        |
+
+![[esp32DevBoardPins1.jpeg]]
+
+![[esp32DevBoardPins2.jpeg]]
+
+![[esp32DevBoardPins3.jpeg]]

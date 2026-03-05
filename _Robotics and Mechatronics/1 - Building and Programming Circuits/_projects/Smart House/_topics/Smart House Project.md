@@ -66,59 +66,131 @@ All these steps require research. You will need to google each component and spe
 > [!important] Every component is different and requires different code.
 
 
-# Code Implementation
+# Tutorial: Building the Smart House
 
-The first step is to define the code structure according to the code design. For instance, if implementing the above design, the code structure would be:
+In this tutorial, we will learn how to build a dual-lighting system for a Smart House. We will progress through three stages: setting up basic digital outputs, handling user input with buttons, and finally controlling an addressable RGB NeoPixel square.
 
-```arduino
-#include <Adafruit_NeoPixel.h>
+> [!NOTE]
+> 
+> **Developing in the Arduino IDE?** > If you are using the Arduino IDE instead of PlatformIO, you need to manually install the library. Go to `Sketch` -> `Include Library` -> `Manage Libraries...` and search for **"Adafruit NeoPixel"**. In PlatformIO, this is handled automatically via the configuration file.
 
+## Stage 1: Basic Pin Definitions and Setup
 
-#define pinPIR 2
-#define LED_PIN    4
-#define LED_COUNT 12
+Every project starts by telling the Arduino which physical pins we are using. We use `#define` to give these pins friendly names.
 
-Adafruit_NeoPixel ring(LED_COUNT, LED_PIN, NEO_RGBW + NEO_KHZ800);
+### Key Concepts
 
-void setup()
-{
-  Serial.begin(9600);
-  pinMode(pinPIR, INPUT);
-  ring.begin();           
-  ring.show();            
-  ring.setBrightness(50); 
-}
+- **Pin Definitions:** Mapping software variables to physical hardware pins.
+- **Pin Mode:** Configuring a pin to either send power (OUTPUT) or listen for signals (INPUT).
 
-void loop()
-{
-	securitySystem();
-  
-  
-	delay(100);
-}
-
-
-
-void securitySystem () {
-  int pirState = digitalRead(pinPIR);
-  Serial.println(pirState);
-  
-  if (pirState == 1){
-   for(int i = 0; i < ring.numPixels(); i++){
-    ring.setPixelColor(i, random(255), random(255), random(255), 0);
-    ring.show();
-    delay(50);
-  }
-  for(int i = ring.numPixels()-1; i >= 0; i--){
-    ring.setPixelColor(i, 0, 0, 0, 0);
-    ring.show();
-    delay(50);
-  }
-  }
-}
+> [!TIP]
+> 
+> **The Arduino Header** > Notice the `#include <Arduino.h>` at the top. In PlatformIO, this is **required** to use standard functions like `digitalRead`. In the Arduino IDE, this line is optional as the IDE adds it for you automatically.
 
 ```
+#include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
 
+// Pin Definitions
+#define yellowLedPin 27
+#define rightButtonPin 5
+#define neopixelPin 26
+#define PIXEL_COUNT 4
+
+// Initialize the NeoPixel Object
+Adafruit_NeoPixel neoPixelSquare(PIXEL_COUNT, neopixelPin, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  Serial.begin(9600); // Start the serial monitor for debugging
+  
+  // Configure the LED as an output
+  pinMode(yellowLedPin, OUTPUT);
+  
+  // Configure the button as an input
+  pinMode(rightButtonPin, INPUT);
+
+  // Initialize NeoPixels
+  neoPixelSquare.begin();
+  neoPixelSquare.show(); // Initialize all pixels to 'off'
+}
+
+void loop() {
+  // We will fill this in next!
+}
+```
+
+## Stage 2: Creating a Toggle Switch (The Automatic Light)
+
+In this stage, we want the yellow LED to turn on and off when we press the button. We use "State Tracking" to ensure the LED only changes once per press.
+
+### The Logic
+
+We compare the `buttonState` with the `lastButtonState`. If the button is currently pressed (`LOW`) and it wasn't pressed before, we flip the `ledState`.
+
+```
+bool ledState = LOW;
+bool lastButtonState = LOW;
+
+void automaticLightSystem() {
+  // Read the current physical state of the button
+  int buttonState = digitalRead(rightButtonPin);
+
+  // Check if the button is pressed (LOW) 
+  // and check if it was released (LOW) in the previous loop
+  if (buttonState == LOW && lastButtonState == LOW) {
+    ledState = !ledState; // Invert the state (High becomes Low, Low becomes High)
+    digitalWrite(yellowLedPin, ledState);
+  } 
+
+  // Print state to Serial Monitor to "see" what's happening
+  Serial.println(ledState);
+  
+  // Save the current state for the next loop iteration
+  lastButtonState = buttonState;
+}
+```
+
+## Stage 3: Adding the Atmosphere (NeoPixel System)
+
+NeoPixels are different from standard LEDs. They require a data signal to tell them exactly which color and brightness to display.
+
+### The Logic
+
+We use `.setPixelColor(index, R, G, B, White)`. In this code, we are targeting the second pixel (index 1) and setting its "White" channel to 127 (half brightness).
+
+```
+void neopixelLightSystem() {
+  // Parameters: (Pixel Index, Red, Green, Blue, White)
+  // Here we set the 2nd pixel (index 1) to a neutral white light
+  neoPixelSquare.setPixelColor(1, 0, 0, 0, 127);
+  
+  // You MUST call .show() to push the data to the hardware
+  neoPixelSquare.show();
+}
+```
+
+## Stage 4: Putting it All Together
+
+Now we combine these functions into the main `loop`. We also add a small `delay(100)` to "debounce" the button, preventing it from registering multiple clicks from a single physical press.
+
+```
+void loop() {
+  // Run our light system logic
+  automaticLightSystem();
+  
+  // Run our NeoPixel logic
+  neopixelLightSystem();  
+  
+  // Wait 100 milliseconds before repeating
+  delay(100);
+}
+```
+
+## Exercises for Students
+
+1. **Change the Color:** Modify `neopixelLightSystem` to make the LED Red (e.g., `255, 0, 0, 0`).
+2. **All Pixels:** Use a `for` loop inside `neopixelLightSystem` to turn on all 4 pixels.
+3. **Brightness Control:** Try changing the `127` value in the NeoPixel command to `255` (Full) or `20` (Dim).
 
 
 
@@ -148,49 +220,6 @@ Naming variables, functions, constants etc are important when writing code. Foll
 ```
 
 Look here for more information : [[Style Guide - Arduino]]
-
-
-# Physical Smart House
-
-```arduino
-#include <Arduino.h>
-
-// Pin Definitions
-#define yellowLedPin 12
-#define rightButtonPin 27
-
-bool ledState = LOW;
-bool lastButtonState = LOW;
-
-
-void automaticLightSystem() {
-   int buttonState = digitalRead(rightButtonPin);
-  // Serial.println(buttonState);
-    if (buttonState == LOW && lastButtonState == LOW) {
-    ledState = !ledState;
-    digitalWrite(yellowLedPin, ledState);
-  } 
-
-  Serial.println(ledState);
-  lastButtonState = buttonState;
-
-}
-
-
-// the setup function runs once when you press reset or power the board
-void setup() {
-Serial.begin(9600);
-  pinMode(yellowLedPin, OUTPUT);
-  pinMode(rightButtonPin, INPUT);
-}
-
-// the loop function runs over and over again forever
-void loop() {
-  automaticLightSystem();
-
-  delay(100);
-}
-```
 
 
 ## Smart House Pins

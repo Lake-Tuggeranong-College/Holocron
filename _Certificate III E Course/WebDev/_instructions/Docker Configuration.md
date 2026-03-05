@@ -128,6 +128,79 @@ Define three services with the following specifications:
 	4. Map the ports from 8081 on the localhost to port 80 in the container.
 	5. Relies on the `db` container to be configured and working
 
+```yaml
+services:
+  certIII-web:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    image: php:8.2-apache
+    container_name: certIII-web
+    ports:
+      - "8880:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - certIII-db
+    networks:
+      - public-network
+      - private-network
+  
+  certIII-db:
+    image: mariadb:latest
+    container_name: certIII_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shopfront
+      MYSQL_USER: shopfront
+      MYSQL_PASSWORD: shopfront
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - private-network
+
+  certIII-phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: certIII-phpmyadmin
+    environment:
+      PMA_HOST: certIII_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    depends_on:
+      - certIII-db
+    networks:
+      - public-network
+      - private-network
+
+  # certIII-camera:
+  #   image: motionproject/motion:latest
+  #   container_name: certIII-camera
+  #   ports:
+  #     - "8082:8081"
+  #   devices:
+  #     - "/dev/video0:/dev/video0"
+  #   volumes:
+  #     - ./captures:/var/lib/motion
+  #   restart: unless-stopped
+
+
+volumes:
+  db_data:
+
+networks:
+  private-network:
+    driver: bridge
+    internal: true
+  public-network:
+    driver: bridge
+
+```
+
 Finally, define a persistent storage volume called `db_data`
 
 ### Test configuration

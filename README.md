@@ -4,7 +4,7 @@ isCurrent: true
 ---
 
 
-# LTC Holocron
+# LTC "The Holocron"
 
 It is suggested that you fork this repository and view it in Obsidian.
 

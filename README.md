@@ -6,7 +6,7 @@ isCurrent: true
 
 # LTC "The Holocron"
 
-It is suggested that you fork this repository and view it in Obsidian.
+It is possible for you fork this repository and view it in Obsidian.
 
 ## How to Use This Repository
 

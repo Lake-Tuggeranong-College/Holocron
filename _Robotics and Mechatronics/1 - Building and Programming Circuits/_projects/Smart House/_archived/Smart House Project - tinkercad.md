@@ -1,8 +1,8 @@
 ---
-isCurrent: true
+isCurrent: false
 softwareVersion:
   - TinkerCAD
-needsUpdating: true
+needsUpdating: false
 publish: false
 ---
 

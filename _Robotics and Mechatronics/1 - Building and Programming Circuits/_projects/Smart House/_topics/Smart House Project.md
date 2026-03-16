@@ -188,12 +188,83 @@ void loop() {
 
 ## Exercises for Students
 
-1. **Change the Color:** Modify `neopixelLightSystem` to make the LED Red (e.g., `255, 0, 0, 0`).
+1. **Change the Colour:** Modify `neopixelLightSystem` to make the LED Red (e.g., `255, 0, 0, 0`).
 2. **All Pixels:** Use a `for` loop inside `neopixelLightSystem` to turn on all 4 pixels.
 3. **Brightness Control:** Try changing the `127` value in the NeoPixel command to `255` (Full) or `20` (Dim).
 
 
+## Servo and Steam Sensor
 
+This stage is a continuation of our previous guide and explains other components your Smart Farm project: the **Steam Sensor** (moisture detection) and the **Servo Motor** (automated window).
+
+## Components
+
+### The Steam Sensor (Moisture Detection)
+
+The steam sensor is an **Analogue Sensor**. It works by measuring the resistance between a series of parallel exposed traces.
+
+- **How it works:** When water or moisture touches the traces, it completes a circuit more easily, lowering the resistance.
+- **In the code:** We use `analogRead(steamSensorPin)`. This returns a value between **0** (completely dry) and **4095** (saturated, for ESP32). We use a `moistureThreshold` of 500 to decide when the environment is "wet" enough to trigger an action.
+
+### The Servo Motor (The Gate)
+
+A servo motor is an **Actuator** that can be commanded to move to a specific position. Unlike a standard motor that just spins, a servo uses "feedback" to know its exact angle.
+
+#### Standard (180°) vs. Continuous (360°) Servos
+
+It is vital to understand which servo you are using, as they behave very differently in code:
+
+| **Feature**           | **Standard Servo (Used Here)**                                                      | **Continuous (360°) Servo**                                                                            |
+| --------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Range**             | Usually 0 to 180 degrees.                                                           | Infinite rotation (spins like a wheel).                                                                |
+| **`write()` command** | Commands the servo to a **specific angle** (e.g., `write(90)` moves to the middle). | Commands the **speed and direction** (e.g., `write(90)` stops it, `write(180)` is full speed forward). |
+| **Use Case**          | Steering, robotic arms, or **gates/latches**.                                       | Driving wheels on a robot.                                                                             |
+
+**In this project:** We use a standard servo because we want to open a gate to a specific angle (90°) and hold it there, then return it to exactly 0° when dry.
+
+## How the Code Works
+
+### 1. Setup and Attachment
+
+Before we can use the servo, we must "attach" it to a pin. This is done inside the `setup()` function because it only needs to happen once when the board first starts.
+
+```arduino
+gateServo.attach(servoPin); // Connects the software object to Pin 5
+gateServo.write(0);         // Initialises the gate to the closed position
+```
+
+### 2. The Logic Loop: Technical Breakdown
+
+The `moistureDetectionSystem()` function handles the core decision-making of the programme. Here is the technical breakdown of how that logic is processed:
+
+- **Analogue-to-Digital Conversion (ADC):** The ESP32 micro-controller uses an onboard ADC to convert the physical voltage from the steam sensor into a digital integer. Because the ESP32 has 12-bit resolution, the range is $0$ to $2^{12}-1$ (or 4095).
+- **Threshold Comparison:** The code uses a **Conditional Statement** (`if...else`) to compare the sampled value against our constant `moistureThreshold`.
+- **Pulse Width Modulation (PWM):** When you call `gateServo.write(90)`, the library calculates the specific **Duty Cycle** of a PWM signal required to hold that physical angle. The micro-controller sends this high-speed pulse train to the servo to maintain its position against mechanical resistance.
+
+```arduino
+void moistureDetectionSystem() {
+  // Step 1: Sample the analogue voltage and store as an integer
+  int steamValue = analogRead(steamSensorPin); 
+
+  // Step 2: Binary decision based on threshold
+  if (steamValue > moistureThreshold) {
+    // Step 3a: Update PWM signal for 90-degree position
+    gateServo.write(90); 
+  } else {
+    // Step 3b: Update PWM signal for 0-degree position
+    gateServo.write(0);  
+  }
+}
+```
+
+## Summary
+
+| **Category**          | t**Description**                                                                                                             |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Input (Sensor)**    | The Steam Sensor gathers analogue data from the environment.                                                                 |
+| **Processing (Code)** | The ESP32 compares that data to a pre-defined threshold.                                                                     |
+| **Output (Actuator)** | The Servo Motor performs a physical action based on the result.                                                              |
+| **Best Practice**     | By using a specific function for the moisture system, we keep the code **Modular**, making it much easier to test and debug. |
 
 # Style Guide
 

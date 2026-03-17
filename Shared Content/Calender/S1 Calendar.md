@@ -34,7 +34,7 @@ isCurrent: true
 
 ### School Events - Week 9
 
-**Tuesday** Harmony Day
+**Monday** Harmony Day
 
 ### School Events - Week 10
 

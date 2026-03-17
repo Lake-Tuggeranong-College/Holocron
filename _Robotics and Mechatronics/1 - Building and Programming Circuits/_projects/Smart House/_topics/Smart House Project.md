@@ -218,20 +218,20 @@ for (int p = 0; p < neoPixelSquare.numPixels(); p++) {
 
 This stage is a continuation of our previous guide and explains other components your Smart Farm project: the **Steam Sensor** (moisture detection) and the **Servo Motor** (automated window).
 
-## Components
+### Components
 
-### The Steam Sensor (Moisture Detection)
+#### The Steam Sensor (Moisture Detection)
 
 The steam sensor is an **Analogue Sensor**. It works by measuring the resistance between a series of parallel exposed traces.
 
 - **How it works:** When water or moisture touches the traces, it completes a circuit more easily, lowering the resistance.
 - **In the code:** We use `analogRead(steamSensorPin)`. This returns a value between **0** (completely dry) and **4095** (saturated, for ESP32). We use a `moistureThreshold` of 500 to decide when the environment is "wet" enough to trigger an action.
 
-### The Servo Motor (The Gate)
+#### The Servo Motor (The Gate)
 
 A servo motor is an **Actuator** that can be commanded to move to a specific position. Unlike a standard motor that just spins, a servo uses "feedback" to know its exact angle.
 
-#### Standard (180°) vs. Continuous (360°) Servos
+##### Standard (180°) vs. Continuous (360°) Servos
 
 It is vital to understand which servo you are using, as they behave very differently in code:
 
@@ -243,9 +243,9 @@ It is vital to understand which servo you are using, as they behave very differe
 
 **In this project:** We use a standard servo because we want to open a gate to a specific angle (90°) and hold it there, then return it to exactly 0° when dry.
 
-## How the Code Works
+### How the Code Works
 
-### 1. Setup and Attachment
+#### 1. Setup and Attachment
 
 Before we can use the servo, we must "attach" it to a pin. This is done inside the `setup()` function because it only needs to happen once when the board first starts.
 
@@ -254,7 +254,7 @@ gateServo.attach(servoPin); // Connects the software object to Pin 5
 gateServo.write(0);         // Initialises the gate to the closed position
 ```
 
-### 2. The Logic Loop: Technical Breakdown
+#### 2. The Logic Loop: Technical Breakdown
 
 The `moistureDetectionSystem()` function handles the core decision-making of the programme. Here is the technical breakdown of how that logic is processed:
 
@@ -278,7 +278,7 @@ void moistureDetectionSystem() {
 }
 ```
 
-## Summary
+### Summary
 
 | **Category**          | t**Description**                                                                                                             |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |

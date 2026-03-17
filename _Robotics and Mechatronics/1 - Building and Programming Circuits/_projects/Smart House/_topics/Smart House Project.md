@@ -192,6 +192,27 @@ void loop() {
 2. **All Pixels:** Use a `for` loop inside `neopixelLightSystem` to turn on all 4 pixels.
 3. **Brightness Control:** Try changing the `127` value in the NeoPixel command to `255` (Full) or `20` (Dim).
 
+### NeoPixel Randomised colours
+
+In `setup()` you will need to add the following line:
+
+```arduino
+randomSeed(analogRead(0)); // Seed the random generator using an empty analog pin
+```
+
+Then in the function that you are writing to randomly display colours on the Neopixels, you can add code such as:
+
+```arduino
+for (int p = 0; p < neoPixelSquare.numPixels(); p++) {
+    // Generate random values for Red, Green, and Blue (0-255)
+    uint8_t r = random(256);
+    uint8_t g = random(256);
+    uint8_t b = random(256);
+
+    neoPixelSquare.setPixelColor(p, neoPixelSquare.Color(r, g, b));
+  }
+  neoPixelSquare.show(); // Push the data to the actual strip
+```
 
 ## Servo and Steam Sensor
 
@@ -265,6 +286,7 @@ void moistureDetectionSystem() {
 | **Processing (Code)** | The ESP32 compares that data to a pre-defined threshold.                                                                     |
 | **Output (Actuator)** | The Servo Motor performs a physical action based on the result.                                                              |
 | **Best Practice**     | By using a specific function for the moisture system, we keep the code **Modular**, making it much easier to test and debug. |
+
 
 # Style Guide
 

@@ -101,7 +101,7 @@ You are required to write a technical report in a single Markdown file that docu
 https://classroom.google.com/c/NzkyMDMwMjMzMDEy/a/ODU2NDE5NjMwMjc3/details
 
 
-## Task 1.3 - Timesheet
+## Task 1.3 - Invoice
 ### Task Overview
 
 You are to submit a invoice, using a provided Google Sheet (on Google Classroom). The invoice should 

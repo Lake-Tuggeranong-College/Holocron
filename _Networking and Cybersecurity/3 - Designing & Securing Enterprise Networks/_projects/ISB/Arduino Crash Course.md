@@ -94,6 +94,18 @@ As you add more features to your ESP32 (like sensors, displays, and buttons), yo
 - **Easier to debug:** You know exactly where the "sending" logic lives.
 - **Reusable:** You can call that logic from different parts of your program if needed.
 
+## First Declare Global variables
+
+At the start of your code, with your code declarations, declare the following global variables:
+
+```arduino
+// Global variables for topic and timing
+String topicBuffer;
+unsigned long lastUpdate = 0;
+const unsigned long updateInterval = 5000; // Time between random number updates (5 seconds)
+
+```
+
 ## Step-by-Step: Adding the Transmission Logic
 
 Follow these steps to build the periodic update logic piece by piece. We will create a dedicated function above `void setup()` to handle this.
@@ -254,3 +266,7 @@ Generating random numbers is a great way to prove that your code works, but the 
 ### Resources:
 - [Adafruit FeatherWing Guide](https://learn.adafruit.com/adxl343-adt7410-sensor-featherwing "null") - Learn how to wire and code the temperature and motion sensor.
 - [Official Arduino String Reference](https://www.google.com/search?q=https://www.arduino.cc/reference/en/language/variables/data-types/stringobject/ "null") - Learn more about converting different data types to Strings.
+
+## Next Steps: Other Events
+
+Update `setup()`, using `sendDataToServer()` publish a message to the **EventLog** topic with the data "*Module* is online". For instance `Windmill is online`.

@@ -287,6 +287,35 @@ void moistureDetectionSystem() {
 | **Output (Actuator)** | The Servo Motor performs a physical action based on the result.                                                              |
 | **Best Practice**     | By using a specific function for the moisture system, we keep the code **Modular**, making it much easier to test and debug. |
 
+# DC Motor / The Fan
+
+To activate the DC Motor (or Fan), you need to define the pins first.
+
+```arduino
+// Motor Pins
+#define motorPin1 18
+#define motorPin2 19
+```
+
+Then set the pin mode to output:
+
+```arduino
+pinMode(motorPin1, OUTPUT);
+pinMode(motorPin2, OUTPUT);
+```
+
+Then use the following code to turn the fan **on**:
+```arduino
+digitalWrite(motorPin1, LOW);
+analogWrite(motorPin2, 180);
+```
+
+and this code to turn the fan **off**:
+
+```arduino
+ digitalWrite(motorPin1, LOW);
+analogWrite(motorPin2, 0);
+```
 
 # Style Guide
 

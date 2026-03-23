@@ -313,7 +313,7 @@ analogWrite(motorPin2, 180);
 and this code to turn the fan **off**:
 
 ```arduino
- digitalWrite(motorPin1, LOW);
+digitalWrite(motorPin1, LOW);
 analogWrite(motorPin2, 0);
 ```
 

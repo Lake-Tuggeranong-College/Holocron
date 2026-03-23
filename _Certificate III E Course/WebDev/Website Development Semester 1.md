@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 # Overview
 
@@ -15,28 +15,28 @@ You will also be producing a report on the configuration and implementation of t
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
 Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
 
-| Week                                     | Content                                                                                                                                                                                                                                              | Competencies | Assessments Due   |
-| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------- |
-| ![[S1 Calendar#School Events - Week 1]]  |                                                                                                                                                                                                                                                      |              |                   |
-| ![[S1 Calendar#School Events - Week 2]]  | [[Permission Notes\|Permission Notes!!!]]<br><br>[[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]]<br>[[Slides - Development Process]]<br>[Slides - Development Process Video](https://youtu.be/I6SBXjgeC24) |              |                   |
-| ![[S1 Calendar#School Events - Week 3]]  | N/A                                                                                                                                                                                                                                                  |              |                   |
-| ![[S1 Calendar#School Events - Week 4]]  | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]<br>[[Docker Compose Tutorial]]<br>                                                                                                                                                   |              |                   |
-| ![[S1 Calendar#School Events - Week 5]]  | [[Docker Configuration]]                                                                                                                                                                                                                             |              |                   |
-| ![[S1 Calendar#School Events - Week 6]]  | [[Docker Configuration]]                                                                                                                                                                                                                             |              |                   |
-| ![[S1 Calendar#School Events - Week 7]]  | Assessment Submission<br>[[Slides - Hardware Components]]<br>Hardware Quiz (Google Classroom)                                                                                                                                                        |              | Task 1.1 Due      |
-| ![[S1 Calendar#School Events - Week 8]]  | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]<br>[[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                                                                                                         |              | Task 1.1 Resubmit |
-| ![[S1 Calendar#School Events - Week 9]]  | [[Software Installation & Configuration Manual]]                                                                                                                                                                                                     |              |                   |
-| ![[S1 Calendar#School Events - Week 10]] | [[Software Installation & Configuration Manual]]                                                                                                                                                                                                     |              |                   |
-| ![[S1 Calendar#School Events - Week 11]] | [[Software Installation & Configuration Manual]]                                                                                                                                                                                                     |              | Task 1.2 Due      |
-| ![[S1 Calendar#School Events - Week 12]] | [[Spreadsheets]]                                                                                                                                                                                                                                     |              |                   |
-| ![[S1 Calendar#School Events - Week 13]] | Spreadsheet formula                                                                                                                                                                                                                                  |              |                   |
-| ![[S1 Calendar#School Events - Week 14]] | Timesheet                                                                                                                                                                                                                                            |              | Task 1.3 Due      |
-| ![[S1 Calendar#School Events - Week 15]] | Assessment Second Sitting                                                                                                                                                                                                                            |              |                   |
-| ![[S1 Calendar#School Events - Week 16]] | Assessment Second Sitting                                                                                                                                                                                                                            |              |                   |
-| ![[S1 Calendar#School Events - Week 17]] |                                                                                                                                                                                                                                                      |              |                   |
-| ![[S1 Calendar#School Events - Week 18]] |                                                                                                                                                                                                                                                      |              |                   |
-| ![[S1 Calendar#School Events - Week 19]] |                                                                                                                                                                                                                                                      |              |                   |
-| ![[S1 Calendar#School Events - Week 20]] |                                                                                                                                                                                                                                                      |              |                   |
+| Week                                     | Content                                                                                                                                                                            | Video/s                                                                                      | Assessments Due   |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------- |
+| ![[S1 Calendar#School Events - Week 1]]  |                                                                                                                                                                                    |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 2]]  | [[Permission Notes\|Permission Notes!!!]]<br><br>[[Account Creation & Software Installation]]<br>[[Software Installation & Configuration]]<br>[[Slides - Development Process]]<br> | ![Development Process](https://youtu.be/I6SBXjgeC24)                                         |                   |
+| ![[S1 Calendar#School Events - Week 3]]  | N/A                                                                                                                                                                                |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 4]]  | [[Slides - Virtualisation]]<br>[[`devcontainer.json` Tutorial]]<br>[[Docker Compose Tutorial]]<br>                                                                                 |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 5]]  | [[Docker Configuration]]                                                                                                                                                           |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 6]]  | [[Docker Configuration]]<br>[[Slides - Hardware Components]]<br>Hardware Quiz (Google Classroom)                                                                                   | ![Slides - Hardware Components](https://youtu.be/13eLcKw9DiY)                                |                   |
+| ![[S1 Calendar#School Events - Week 7]]  | Assessment Submission<br><br>                                                                                                                                                      |                                                                                              | Task 1.1 Due      |
+| ![[S1 Calendar#School Events - Week 8]]  | [[Slides - Markdown]]<br>[[Markdown Tutorial\|Markdown Tutorial]]<br>[[Slides - Mermaid Diagrams]]<br>[[Mermaid Tutorial\|Mermaid Tutorial]]                                       | ![Markdown & Demo](https://youtu.be/mVEOlJB1wmI)<br>![Mermaid](https://youtu.be/9p8JuvOhnAw) | Task 1.1 Resubmit |
+| ![[S1 Calendar#School Events - Week 9]]  | [[Software Installation & Configuration Manual]]                                                                                                                                   |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 10]] | [[Software Installation & Configuration Manual]]                                                                                                                                   |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 11]] | [[Software Installation & Configuration Manual]]                                                                                                                                   |                                                                                              | Task 1.2 Due      |
+| ![[S1 Calendar#School Events - Week 12]] | [[Spreadsheets]]                                                                                                                                                                   |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 13]] | Spreadsheet formula                                                                                                                                                                |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 14]] | Timesheet                                                                                                                                                                          |                                                                                              | Task 1.3 Due      |
+| ![[S1 Calendar#School Events - Week 15]] | Assessment Second Sitting                                                                                                                                                          |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 16]] | Assessment Second Sitting                                                                                                                                                          |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 17]] |                                                                                                                                                                                    |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 18]] |                                                                                                                                                                                    |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 19]] |                                                                                                                                                                                    |                                                                                              |                   |
+| ![[S1 Calendar#School Events - Week 20]] |                                                                                                                                                                                    |                                                                                              |                   |
 
 
 
@@ -71,7 +71,9 @@ Your `docker-compose.yml` file must:
 
 ### Assessment Task
 
-==TODO Link to Google Classroom==
+https://classroom.google.com/c/NzkyMDMwMjMzMDEy/a/ODQ1NDI4MDg0MDI0/details
+
+Hardware Quiz : https://docs.google.com/forms/d/e/1FAIpQLSdROuBbDqSfSs5Vv_TXLdyMnGG2UfAjavmXHxyZ9-DEB9ar1w/viewform?usp=dialog&authuser=0
 
 
 ---
@@ -96,10 +98,10 @@ You are required to write a technical report in a single Markdown file that docu
 
 ### Task 1.2 Assessment Task
 
-==TODO Link to Google Classroom==
+https://classroom.google.com/c/NzkyMDMwMjMzMDEy/a/ODU2NDE5NjMwMjc3/details
 
 
-## Task 1.3 - Timesheet
+## Task 1.3 - Invoice
 ### Task Overview
 
 You are to submit a invoice, using a provided Google Sheet (on Google Classroom). The invoice should 

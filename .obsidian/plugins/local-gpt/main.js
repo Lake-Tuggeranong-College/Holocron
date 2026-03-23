@@ -333,7 +333,9 @@ var de_default = {
       changeModel: "Modell wechseln",
       changeCreativity: "Kreativit\xE4t \xE4ndern",
       changeSystemPrompt: "System-Prompt wechseln",
-      unknownModel: "Unbekanntes Modell"
+      unknownModel: "Unbekanntes Modell",
+      hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien",
+      providerTooltip: "\xC4ndern \xFCber / Befehle"
     }
   },
   statusBar: {
@@ -448,7 +450,9 @@ var en_default = {
       changeModel: "Change the model",
       changeCreativity: "Change creativity",
       changeSystemPrompt: "Change system prompt",
-      unknownModel: "Unknown model"
+      unknownModel: "Unknown model",
+      hint: "Use / for commands, @ for files",
+      providerTooltip: "Change via / commands"
     }
   },
   statusBar: {
@@ -563,7 +567,9 @@ var es_default = {
       changeModel: "Cambiar el modelo",
       changeCreativity: "Cambiar creatividad",
       changeSystemPrompt: "Cambiar mensaje del sistema",
-      unknownModel: "Modelo desconocido"
+      unknownModel: "Modelo desconocido",
+      hint: "Use / para comandos, @ para archivos",
+      providerTooltip: "Cambiar mediante comandos /"
     }
   },
   statusBar: {
@@ -678,7 +684,9 @@ var fr_default = {
       changeModel: "Changer de mod\xE8le",
       changeCreativity: "Changer la cr\xE9ativit\xE9",
       changeSystemPrompt: "Changer l'invite syst\xE8me",
-      unknownModel: "Mod\xE8le inconnu"
+      unknownModel: "Mod\xE8le inconnu",
+      hint: "Utilisez / pour les commandes, @ pour les fichiers",
+      providerTooltip: "Changer via les commandes /"
     }
   },
   statusBar: {
@@ -793,7 +801,9 @@ var it_default = {
       changeModel: "Cambia modello",
       changeCreativity: "Cambia creativit\xE0",
       changeSystemPrompt: "Cambia prompt di sistema",
-      unknownModel: "Modello sconosciuto"
+      unknownModel: "Modello sconosciuto",
+      hint: "Usa / per i comandi, @ per i file",
+      providerTooltip: "Cambia tramite comandi /"
     }
   },
   statusBar: {
@@ -908,7 +918,9 @@ var ja_default = {
       changeModel: "\u30E2\u30C7\u30EB\u3092\u5909\u66F4",
       changeCreativity: "\u5275\u9020\u6027\u3092\u5909\u66F4",
       changeSystemPrompt: "\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\u3092\u5909\u66F4",
-      unknownModel: "\u4E0D\u660E\u306A\u30E2\u30C7\u30EB"
+      unknownModel: "\u4E0D\u660E\u306A\u30E2\u30C7\u30EB",
+      hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528",
+      providerTooltip: "/ \u30B3\u30DE\u30F3\u30C9\u3067\u5909\u66F4"
     }
   },
   statusBar: {
@@ -1023,7 +1035,9 @@ var ko_default = {
       changeModel: "\uBAA8\uB378 \uBCC0\uACBD",
       changeCreativity: "\uCC3D\uC758\uC131 \uBCC0\uACBD",
       changeSystemPrompt: "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uBCC0\uACBD",
-      unknownModel: "\uC54C \uC218 \uC5C6\uB294 \uBAA8\uB378"
+      unknownModel: "\uC54C \uC218 \uC5C6\uB294 \uBAA8\uB378",
+      hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9",
+      providerTooltip: "/ \uBA85\uB839\uC5B4\uB85C \uBCC0\uACBD"
     }
   },
   statusBar: {
@@ -1138,7 +1152,9 @@ var nl_default = {
       changeModel: "Wijzig model",
       changeCreativity: "Wijzig creativiteit",
       changeSystemPrompt: "Wijzig systeemprompt",
-      unknownModel: "Onbekend model"
+      unknownModel: "Onbekend model",
+      hint: "Gebruik / voor commando's, @ voor bestanden",
+      providerTooltip: "Wijzigen via / commando's"
     }
   },
   statusBar: {
@@ -1253,7 +1269,9 @@ var pt_default = {
       changeModel: "Mudar modelo",
       changeCreativity: "Mudar criatividade",
       changeSystemPrompt: "Mudar prompt do sistema",
-      unknownModel: "Modelo desconhecido"
+      unknownModel: "Modelo desconhecido",
+      hint: "Use / para comandos, @ para arquivos",
+      providerTooltip: "Alterar via comandos /"
     }
   },
   statusBar: {
@@ -1368,7 +1386,9 @@ var ru_default = {
       changeModel: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u044C",
       changeCreativity: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u0440\u0435\u0430\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C",
       changeSystemPrompt: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u0443\u044E \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044E",
-      unknownModel: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C"
+      unknownModel: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C",
+      hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432",
+      providerTooltip: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0447\u0435\u0440\u0435\u0437 / \u043A\u043E\u043C\u0430\u043D\u0434\u044B"
     }
   },
   statusBar: {
@@ -1483,7 +1503,9 @@ var zh_default = {
       changeModel: "\u5207\u6362\u6A21\u578B",
       changeCreativity: "\u66F4\u6539\u521B\u9020\u529B",
       changeSystemPrompt: "\u66F4\u6539\u7CFB\u7EDF\u63D0\u793A",
-      unknownModel: "\u672A\u77E5\u6A21\u578B"
+      unknownModel: "\u672A\u77E5\u6A21\u578B",
+      hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6",
+      providerTooltip: "\u901A\u8FC7 / \u547D\u4EE4\u66F4\u6539"
     }
   },
   statusBar: {
@@ -9030,45 +9052,55 @@ function create_each_block(ctx) {
   };
 }
 function create_if_block(ctx) {
-  let div1;
+  let div2;
   let div0;
-  let t;
-  let div0_class_value;
+  let t1;
+  let div1;
+  let t2;
+  let div1_class_value;
+  let div1_title_value;
   return {
     c() {
-      div1 = element("div");
+      div2 = element("div");
       div0 = element("div");
-      t = text(
+      div0.textContent = `${I18n.t("commands.actionPalette.hint")}`;
+      t1 = space();
+      div1 = element("div");
+      t2 = text(
         /*providerLabel*/
         ctx[0]
       );
-      attr(div0, "class", div0_class_value = /*badgeHighlight*/
+      attr(div0, "class", "local-gpt-provider-badge-hint");
+      attr(div1, "class", div1_class_value = /*badgeHighlight*/
       ctx[18] ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label");
-      attr(div1, "class", "local-gpt-provider-badge");
-      attr(div1, "aria-hidden", "true");
+      attr(div1, "title", div1_title_value = I18n.t("commands.actionPalette.providerTooltip"));
+      attr(div2, "class", "local-gpt-provider-badge");
+      attr(div2, "aria-hidden", "true");
     },
     m(target, anchor) {
-      insert(target, div1, anchor);
-      append(div1, div0);
-      append(div0, t);
+      insert(target, div2, anchor);
+      append(div2, div0);
+      append(div2, t1);
+      append(div2, div1);
+      append(div1, t2);
     },
     p(ctx2, dirty) {
       if (dirty[0] & /*providerLabel*/
       1)
         set_data(
-          t,
+          t2,
           /*providerLabel*/
           ctx2[0]
         );
       if (dirty[0] & /*badgeHighlight*/
-      262144 && div0_class_value !== (div0_class_value = /*badgeHighlight*/
+      262144 && div1_class_value !== (div1_class_value = /*badgeHighlight*/
       ctx2[18] ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label")) {
-        attr(div0, "class", div0_class_value);
+        attr(div1, "class", div1_class_value);
       }
     },
     d(detaching) {
       if (detaching) {
-        detach(div1);
+        detach(div2);
       }
     }
   };
@@ -31570,6 +31602,9 @@ var fileCache = new FileCache();
 
 // src/rag.ts
 var MAX_DEPTH = 10;
+var WIKI_LINK_REGEX = /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]/g;
+var MARKDOWN_LINK_REGEX = /\[[^\]]+\]\(([^)]+)\)/g;
+var SUPPORTED_RAG_EXTENSIONS = /* @__PURE__ */ new Set(["md", "pdf"]);
 async function startProcessing(linkedFiles, vault, metadataCache, activeFile, updateCompletedSteps) {
   logger.info("Starting RAG processing");
   const processedDocs = /* @__PURE__ */ new Map();
@@ -31599,10 +31634,16 @@ async function getFileContent(file, vault) {
   return vault.cachedRead(file);
 }
 async function processDocumentForRAG(file, context, processedDocs, depth, isBacklink) {
-  if (depth > MAX_DEPTH || processedDocs.has(file.path) || file.path === context.activeFile.path) {
+  if (depth > MAX_DEPTH || processedDocs.has(file.path)) {
     return processedDocs;
   }
   try {
+    if (file.path === context.activeFile.path) {
+      await traverseLinkedGraph(file, context, processedDocs, depth, {
+        includeBacklinks: false
+      });
+      return processedDocs;
+    }
     const content = await getFileContent(file, context.vault);
     processedDocs.set(file.path, {
       content,
@@ -31614,55 +31655,106 @@ async function processDocumentForRAG(file, context, processedDocs, depth, isBack
         isBacklink
       }
     });
-    if (file.extension === "md" && !isBacklink) {
-      const linkedFiles = getLinkedFiles(
+    if (file.extension === "md") {
+      await traverseLinkedGraph(file, context, processedDocs, depth, {
         content,
-        context.vault,
-        context.metadataCache,
-        file.path
-      );
-      const backlinkFiles = getBacklinkFiles(
-        file,
-        context,
-        processedDocs
-      );
-      await Promise.all([
-        ...linkedFiles.map(
-          (linkedFile) => processDocumentForRAG(
-            linkedFile,
-            context,
-            processedDocs,
-            depth + 1,
-            false
-          )
-        ),
-        ...backlinkFiles.map(
-          (backlinkFile) => processDocumentForRAG(
-            backlinkFile,
-            context,
-            processedDocs,
-            depth,
-            true
-          )
-        )
-      ]);
+        includeForwardLinks: !isBacklink
+      });
     }
   } catch (error) {
     console.error(`Error processing document ${file.path}:`, error);
   }
   return processedDocs;
 }
-function getLinkedFiles(content, vault, metadataCache, currentFilePath) {
-  const linkRegex = /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]/g;
-  return Array.from(content.matchAll(linkRegex), (match) => match[1]).map((linkText) => {
+async function traverseLinkedGraph(file, context, processedDocs, depth, options) {
+  var _a2, _b;
+  const includeForwardLinks = (_a2 = options == null ? void 0 : options.includeForwardLinks) != null ? _a2 : true;
+  const includeBacklinks = (_b = options == null ? void 0 : options.includeBacklinks) != null ? _b : true;
+  const linkedFiles = includeForwardLinks ? resolveForwardLinks(file, context, options == null ? void 0 : options.content) : [];
+  const backlinkFiles = includeBacklinks ? getBacklinkFiles(file, context, processedDocs) : [];
+  await Promise.all([
+    ...processFilesForRAG(
+      linkedFiles,
+      context,
+      processedDocs,
+      depth + 1,
+      false
+    ),
+    ...processFilesForRAG(
+      backlinkFiles,
+      context,
+      processedDocs,
+      depth,
+      true
+    )
+  ]);
+}
+function resolveForwardLinks(file, context, content) {
+  if (content !== void 0) {
+    return getLinkedFiles(
+      content,
+      context.vault,
+      context.metadataCache,
+      file.path,
+      true
+    );
+  }
+  return getResolvedLinkedFiles(
+    file.path,
+    context.vault,
+    context.metadataCache
+  );
+}
+function processFilesForRAG(files, context, processedDocs, depth, isBacklink) {
+  return files.map(
+    (candidate) => processDocumentForRAG(
+      candidate,
+      context,
+      processedDocs,
+      depth,
+      isBacklink
+    )
+  );
+}
+function getResolvedLinkedFiles(currentFilePath, vault, metadataCache) {
+  const resolvedLinks = metadataCache == null ? void 0 : metadataCache.resolvedLinks;
+  const links = resolvedLinks == null ? void 0 : resolvedLinks[currentFilePath];
+  if (!links)
+    return [];
+  return Object.keys(links).map((targetPath) => vault.getAbstractFileByPath(targetPath)).filter(isSupportedRagFile);
+}
+function getLinkedFiles(content, vault, metadataCache, currentFilePath, includeAllMarkdownLinks = false) {
+  const sanitizedContent = sanitizeMarkdownForLinks(content);
+  const wikiLinks = Array.from(
+    sanitizedContent.matchAll(WIKI_LINK_REGEX),
+    (match) => match[1]
+  );
+  const markdownCandidates = Array.from(
+    sanitizedContent.matchAll(MARKDOWN_LINK_REGEX),
+    (match) => normalizeMarkdownLink(match[1])
+  ).filter((link) => Boolean(link));
+  const markdownLinks = includeAllMarkdownLinks || wikiLinks.length === 0 && markdownCandidates.length === 1 ? markdownCandidates : [];
+  return [...wikiLinks, ...markdownLinks].map((linkText) => {
     const linkPath = metadataCache.getFirstLinkpathDest(
       linkText,
       currentFilePath
     );
     return linkPath ? vault.getAbstractFileByPath(linkPath.path) : null;
-  }).filter(
-    (file) => file instanceof import_obsidian4.TFile && (file.extension === "md" || file.extension === "pdf")
-  );
+  }).filter(isSupportedRagFile);
+}
+function isSupportedRagFile(file) {
+  return file instanceof import_obsidian4.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
+}
+function sanitizeMarkdownForLinks(content) {
+  return content.replace(/```[\s\S]*?```/g, "").replace(/<!--[\s\S]*?-->/g, "").replace(/`[^`]*`/g, "");
+}
+function normalizeMarkdownLink(rawLink) {
+  const withoutAnchor = rawLink.split("#")[0].trim();
+  const normalized = withoutAnchor.replace(/^<|>$/g, "");
+  if (!normalized || normalized.startsWith("/") || /^[a-z]+:/i.test(normalized)) {
+    return null;
+  }
+  return normalized;
 }
 function getBacklinkFiles(file, context, processedDocs) {
   const resolvedLinks = context.metadataCache.resolvedLinks || {};

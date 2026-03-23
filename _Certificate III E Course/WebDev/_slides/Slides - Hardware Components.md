@@ -4,7 +4,7 @@ highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: true
 ---
-# ICT Systems: Core Fundam
+# ICT Systems: Core Fundamentals
 
 
 

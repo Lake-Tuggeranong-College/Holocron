@@ -28,15 +28,13 @@ isCurrent: true
 ### School Events - Week 7
 
 **Monday** Canberra Day Public Holiday
-**Friday** Sydney Trip
-**Saturday** Sydney Trip
 
 ### School Events - Week 8
 
 
 ### School Events - Week 9
 
-**Tuesday** Harmony Day
+**Monday** Harmony Day
 
 ### School Events - Week 10
 

@@ -85,3 +85,188 @@ while (true) {
 |**Concatenation**|`echo "Value: " . $val;`|`Serial.print("Value: "); Serial.print(val);`|
 |**Arrays**|`$colors = ["red", "blue"];`|`String colors[] = {"red", "blue"};`|
 |**End of Line**|Semicolon `;`|Semicolon `;` (Same!)|
+# Transmitting Data from Module to MQTT Server
+
+## Why use separate functions?
+
+As you add more features to your ESP32 (like sensors, displays, and buttons), your `loop()` function can become very long and hard to read. By moving logic into a custom function like `sendPeriodicUpdate()`, you make your code:
+
+- **Easier to debug:** You know exactly where the "sending" logic lives.
+- **Reusable:** You can call that logic from different parts of your program if needed.
+
+## First Declare Global variables
+
+At the start of your code, with your code declarations, declare the following global variables:
+
+```arduino
+// Global variables for topic and timing
+String topicBuffer;
+unsigned long lastUpdate = 0;
+const unsigned long updateInterval = 5000; // Time between random number updates (5 seconds)
+
+```
+
+## Step-by-Step: Adding the Transmission Logic
+
+Follow these steps to build the periodic update logic piece by piece. We will create a dedicated function above `void setup()` to handle this.
+
+Two functions are to be created:
+
+| Function               | Purpose                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| `sendPeriodicUpdate()` | Prepares data                                              |
+| `sendDataToServer()`   | Accepts the data and transmits the data to the MQTT server |
+
+### `sendPeriodicUpdate()`
+
+#### Start with the Timer
+
+First, we create the function and add the timing logic. Using `millis()` allows the ESP32 to keep running other tasks (like checking for messages) without pausing the whole program.
+
+```arduino
+void sendPeriodicUpdate()
+{
+  // 1. Timer: Check if 5 seconds (updateInterval) have passed since the last update
+  unsigned long now = millis();
+  if (now - lastUpdate > updateInterval)
+  {
+    lastUpdate = now; // Reset the timer
+    
+    // --- Next steps will go here ---
+  }
+}
+```
+
+#### Generate the Data
+
+Now, inside that `if` statement, we generate the data we want to send. In this example, we are simulating a sensor by generating a random number.
+
+```arduino
+    // 2. Data: Generate a random "sensor" value between 0 and 100,000
+    long randomNumber = random(0, 100001);
+```
+
+#### Define the Topic and Send
+
+Finally, we tell the ESP32 where to send that number. This is where we use the specific "update" topic prefix.
+
+```arduino
+    // 3. Topic: Construct the special update topic
+    // We use "updateChallenges/" so the server knows this is incoming data
+    String updateTopic = "updateChallenges/" + String(mqttClient);
+    
+    // 4. Transmit: Use the helper function to send the data to the broker
+    sendDataToServer(updateTopic, String(randomNumber));
+```
+
+### `sendDataToServer()`
+
+In Step C, we called a function named `sendDataToServer()`. This is a helper function included in your template that handles the technical details of MQTT. Let's break down how this function is developed:
+
+#### The Safety Connection Check
+
+The first step is to ensure we are actually connected to the MQTT broker. If we try to send data while disconnected, the program might crash or behave unexpectedly.
+
+```arduino
+void sendDataToServer(String topic, String message)
+{
+  // 1. Connection Check: Only proceed if the MQTT client is connected
+  if (client.connected())
+  {
+    // --- Logic for sending goes here ---
+  }
+  else
+  {
+    Serial.println("Send failed: MQTT not connected.");
+  }
+}
+```
+
+#### Debugging and Serial Feedback
+
+Before sending the data over the air, we print the information to the Serial Monitor. This is crucial for debugging so you can see exactly what your ESP32 is attempting to send.
+
+```arduino
+    // 2. Debug: Print the topic and message to the Serial Monitor
+    Serial.print("Sending message to topic [");
+    Serial.print(topic);
+    Serial.print("]: ");
+    Serial.println(message);
+```
+
+#### Publishing the Data
+
+The final step uses the `client.publish()` command. However, the library we use (PubSubClient) requires data in a format called a `char array` (or C-string). Since we used `String` objects for convenience, we use `.c_str()` to convert them right before sending.
+
+```arduino
+    // 3. Publishing: Convert Strings to C-strings and send to the broker
+    client.publish(topic.c_str(), message.c_str());
+```
+
+### The Completed Functions
+
+Once you put it all together, `sendPeriodicUpdate()` and `sendDataToServer()` should look like this:
+
+![[mqttTransmitCode.png]]
+### Call the function in `loop()`
+
+Now, navigate to your `loop()`. We need to tell the Arduino to actually run the code we just wrote. Find the section for periodic updates and call your function there.
+
+```
+void loop()
+{ 
+  // 1. Handle Connection Persistence (Keep this part!)
+  if (!client.connected())
+  {
+    // ... reconnection logic ...
+  }
+
+  // 2. Handle periodic data transmission
+  // We call our function here so it checks the timer every single loop
+  sendPeriodicUpdate(); 
+
+  client.loop(); // Check for incoming messages and keep the connection alive
+}
+```
+
+### Understanding the Update Topic
+
+The most important part of this function is the **topic** we send the data to:
+
+`"updateChallenges/" + String(mqttClient)`
+
+### How the Server Works
+
+We use this specific naming convention because the backend server is programmed with a "wildcard" listener.
+
+- **The Rule:** The server accepts any topic that starts with `updateChallenges/`.
+- **The Action:** When the server receives data on this topic, it immediately updates its database for that specific module (using the `mqttClient` name).
+- **The Result:** The corresponding "output" topic (e.g., `challenges/Windmill`) will then automatically reflect this new value. Any device subscribed to the `challenges/` topic will see the update immediately.
+
+### Summary Checklist
+
+1. **Timer:** Does your function check `millis()` so it doesn't send data too fast?
+2. **Data:** Are you generating or reading the value you want to share?
+3. **Topic:** Does your topic start with `updateChallenges/`?
+4. **Loop:** Did you remember to call `sendPeriodicUpdate();` inside your `loop()`?
+
+## Next Steps: Real World Data
+
+Generating random numbers is a great way to prove that your code works, but the real power of the ESP32 is connecting to the physical world.
+
+**Your Challenge:** Replace the `randomNumber` logic with real temperature data using your **Adafruit Temperature & Motion FeatherWing**.
+
+### Hints to get started:
+
+1. **Include the Library:** You will need to add `#include "Adafruit_ADT7410.h"` at the top of your code.
+2. **Initialise the Sensor:** Create an object for the sensor (e.g., `Adafruit_ADT7410 adt = Adafruit_ADT7410();`) and initialise it in `setup()` using `adt.begin()`.
+3. **Read the Value:** Inside your `sendPeriodicUpdate()` function, replace the `random()` line with a call to read the temperature: `float temp = adt.readTempC();`.
+4. **Convert to String:** Since `sendDataToServer` expects a `String`, you can convert your float like this: `String(temp)`.
+
+### Resources:
+- [Adafruit FeatherWing Guide](https://learn.adafruit.com/adxl343-adt7410-sensor-featherwing "null") - Learn how to wire and code the temperature and motion sensor.
+- [Official Arduino String Reference](https://www.google.com/search?q=https://www.arduino.cc/reference/en/language/variables/data-types/stringobject/ "null") - Learn more about converting different data types to Strings.
+
+## Next Steps: Other Events
+
+Update `setup()`, using `sendDataToServer()` publish a message to the **EventLog** topic with the data "*Module* is online". For instance `Windmill is online`.

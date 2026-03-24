@@ -245,6 +245,16 @@ It is vital to understand which servo you are using, as they behave very differe
 
 ### How the Code Works
 
+#### 0. Import Library 
+
+To use the servo's on an ESP32, you need to use a different library than the standard `servo.h`.
+
+At the top of `main.cpp`, import the ESP32Servo library:
+
+```arduino
+#include <ESP32Servo.h>
+```
+
 #### 1. Setup and Attachment
 
 Before we can use the servo, we must "attach" it to a pin. This is done inside the `setup()` function because it only needs to happen once when the board first starts.

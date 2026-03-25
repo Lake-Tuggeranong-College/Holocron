@@ -245,7 +245,7 @@ It is vital to understand which servo you are using, as they behave very differe
 
 ### How the Code Works
 
-#### 0. Import Library 
+#### 0. Import Library & Define object
 
 To use the servo's on an ESP32, you need to use a different library than the standard `servo.h`.
 
@@ -253,13 +253,19 @@ At the top of `main.cpp`, import the ESP32Servo library:
 
 ```arduino
 #include <ESP32Servo.h>
+Servo gateServo;
 ```
 
+In this case, `gateServo` is the object that you will use later in the code. If you need to create another servo, you would have to create another object.
 #### 1. Setup and Attachment
 
 Before we can use the servo, we must "attach" it to a pin. This is done inside the `setup()` function because it only needs to happen once when the board first starts.
 
 ```arduino
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
 gateServo.attach(servoPin); // Connects the software object to Pin 5
 gateServo.write(0);         // Initialises the gate to the closed position
 ```
@@ -327,6 +333,38 @@ digitalWrite(motorPin1, LOW);
 analogWrite(motorPin2, 0);
 ```
 
+# Temperature & Humidity
+
+To use this device, you need to import the `dht11` library
+
+```arduino
+#include <dht11.h>
+```
+
+Then define the pin and object:
+
+```arduino
+// Temperatue & Moisture Sensor
+#define DHT11PIN 17
+dht11 DHT11;
+```
+
+Then when you write your custom function, you can use the following code:
+
+```arduino
+void temperature() {
+  //Define two temperature and humidity values
+   int Temperature;
+   int Humidity;
+   //Obtain data
+   int chk = DHT11.read(DHT11PIN);
+   Temperature = DHT11.temperature;
+   Humidity = DHT11.humidity;
+   // Display the temperature information at the corresponding position on the LCD
+   
+   delay(500);
+}
+```
 # Style Guide
 
 Naming variables, functions, constants etc are important when writing code. Follow the Style Guide below to assist you with naming.

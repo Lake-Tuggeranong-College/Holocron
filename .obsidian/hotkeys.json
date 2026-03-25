@@ -17,15 +17,6 @@
       "key": "H"
     }
   ],
-  "publish:publish-file": [
-    {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
-      "key": "P"
-    }
-  ],
   "local-gpt:context-menu": [
     {
       "modifiers": [
@@ -42,6 +33,15 @@
         "Shift"
       ],
       "key": "C"
+    }
+  ],
+  "publish:view-changes": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "P"
     }
   ]
 }

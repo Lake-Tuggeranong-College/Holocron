@@ -252,6 +252,9 @@ var DEFAULT_SETTINGS = {
     embedding: null,
     vision: null
   },
+  actionPalette: {
+    systemPromptActionId: null
+  },
   defaults: {
     creativity: "low",
     contextLimit: "local"
@@ -298,7 +301,7 @@ Include instructions on the appropriate style and tone (e.g., formal, casual, te
 ANSWER PROMPT AND NOTHING ELSE!`
     }
   ],
-  _version: 8
+  _version: 10
 };
 var CREATIVITY = {
   "": {
@@ -333,9 +336,9 @@ var de_default = {
       changeModel: "Modell wechseln",
       changeCreativity: "Kreativit\xE4t \xE4ndern",
       changeSystemPrompt: "System-Prompt wechseln",
+      clearSystemPrompt: "System-Prompt l\xF6schen",
       unknownModel: "Unbekanntes Modell",
-      hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien",
-      providerTooltip: "\xC4ndern \xFCber / Befehle"
+      hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien"
     }
   },
   statusBar: {
@@ -450,9 +453,9 @@ var en_default = {
       changeModel: "Change the model",
       changeCreativity: "Change creativity",
       changeSystemPrompt: "Change system prompt",
+      clearSystemPrompt: "Clear system prompt",
       unknownModel: "Unknown model",
-      hint: "Use / for commands, @ for files",
-      providerTooltip: "Change via / commands"
+      hint: "Use / for commands, @ for files"
     }
   },
   statusBar: {
@@ -567,9 +570,9 @@ var es_default = {
       changeModel: "Cambiar el modelo",
       changeCreativity: "Cambiar creatividad",
       changeSystemPrompt: "Cambiar mensaje del sistema",
+      clearSystemPrompt: "Borrar mensaje del sistema",
       unknownModel: "Modelo desconocido",
-      hint: "Use / para comandos, @ para archivos",
-      providerTooltip: "Cambiar mediante comandos /"
+      hint: "Use / para comandos, @ para archivos"
     }
   },
   statusBar: {
@@ -684,9 +687,9 @@ var fr_default = {
       changeModel: "Changer de mod\xE8le",
       changeCreativity: "Changer la cr\xE9ativit\xE9",
       changeSystemPrompt: "Changer l'invite syst\xE8me",
+      clearSystemPrompt: "Effacer l'invite syst\xE8me",
       unknownModel: "Mod\xE8le inconnu",
-      hint: "Utilisez / pour les commandes, @ pour les fichiers",
-      providerTooltip: "Changer via les commandes /"
+      hint: "Utilisez / pour les commandes, @ pour les fichiers"
     }
   },
   statusBar: {
@@ -801,9 +804,9 @@ var it_default = {
       changeModel: "Cambia modello",
       changeCreativity: "Cambia creativit\xE0",
       changeSystemPrompt: "Cambia prompt di sistema",
+      clearSystemPrompt: "Cancella prompt di sistema",
       unknownModel: "Modello sconosciuto",
-      hint: "Usa / per i comandi, @ per i file",
-      providerTooltip: "Cambia tramite comandi /"
+      hint: "Usa / per i comandi, @ per i file"
     }
   },
   statusBar: {
@@ -918,9 +921,9 @@ var ja_default = {
       changeModel: "\u30E2\u30C7\u30EB\u3092\u5909\u66F4",
       changeCreativity: "\u5275\u9020\u6027\u3092\u5909\u66F4",
       changeSystemPrompt: "\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\u3092\u5909\u66F4",
+      clearSystemPrompt: "\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\u3092\u30AF\u30EA\u30A2",
       unknownModel: "\u4E0D\u660E\u306A\u30E2\u30C7\u30EB",
-      hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528",
-      providerTooltip: "/ \u30B3\u30DE\u30F3\u30C9\u3067\u5909\u66F4"
+      hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528"
     }
   },
   statusBar: {
@@ -1035,9 +1038,9 @@ var ko_default = {
       changeModel: "\uBAA8\uB378 \uBCC0\uACBD",
       changeCreativity: "\uCC3D\uC758\uC131 \uBCC0\uACBD",
       changeSystemPrompt: "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uBCC0\uACBD",
+      clearSystemPrompt: "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uC9C0\uC6B0\uAE30",
       unknownModel: "\uC54C \uC218 \uC5C6\uB294 \uBAA8\uB378",
-      hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9",
-      providerTooltip: "/ \uBA85\uB839\uC5B4\uB85C \uBCC0\uACBD"
+      hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9"
     }
   },
   statusBar: {
@@ -1152,9 +1155,9 @@ var nl_default = {
       changeModel: "Wijzig model",
       changeCreativity: "Wijzig creativiteit",
       changeSystemPrompt: "Wijzig systeemprompt",
+      clearSystemPrompt: "Systeemprompt wissen",
       unknownModel: "Onbekend model",
-      hint: "Gebruik / voor commando's, @ voor bestanden",
-      providerTooltip: "Wijzigen via / commando's"
+      hint: "Gebruik / voor commando's, @ voor bestanden"
     }
   },
   statusBar: {
@@ -1269,9 +1272,9 @@ var pt_default = {
       changeModel: "Mudar modelo",
       changeCreativity: "Mudar criatividade",
       changeSystemPrompt: "Mudar prompt do sistema",
+      clearSystemPrompt: "Limpar prompt do sistema",
       unknownModel: "Modelo desconhecido",
-      hint: "Use / para comandos, @ para arquivos",
-      providerTooltip: "Alterar via comandos /"
+      hint: "Use / para comandos, @ para arquivos"
     }
   },
   statusBar: {
@@ -1386,9 +1389,9 @@ var ru_default = {
       changeModel: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u044C",
       changeCreativity: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043A\u0440\u0435\u0430\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C",
       changeSystemPrompt: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u0443\u044E \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044E",
+      clearSystemPrompt: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u0443\u044E \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044E",
       unknownModel: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C",
-      hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432",
-      providerTooltip: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0447\u0435\u0440\u0435\u0437 / \u043A\u043E\u043C\u0430\u043D\u0434\u044B"
+      hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432"
     }
   },
   statusBar: {
@@ -1503,9 +1506,9 @@ var zh_default = {
       changeModel: "\u5207\u6362\u6A21\u578B",
       changeCreativity: "\u66F4\u6539\u521B\u9020\u529B",
       changeSystemPrompt: "\u66F4\u6539\u7CFB\u7EDF\u63D0\u793A",
+      clearSystemPrompt: "\u6E05\u9664\u7CFB\u7EDF\u63D0\u793A",
       unknownModel: "\u672A\u77E5\u6A21\u578B",
-      hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6",
-      providerTooltip: "\u901A\u8FC7 / \u547D\u4EE4\u66F4\u6539"
+      hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6"
     }
   },
   statusBar: {
@@ -4050,6 +4053,31 @@ var sortable_esm_default = Sortable;
 // src/actionUtils.ts
 var isSeparatorAction = (action) => Boolean(action.separator);
 var getRunnableActions = (actions) => actions.filter((action) => !isSeparatorAction(action));
+var createActionId = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `action-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};
+var ensureActionId = (action) => action.id ? action : {
+  ...action,
+  id: createActionId()
+};
+var ensureActionIds = (actions) => {
+  let changed = false;
+  const actionsWithIds = actions.map((action) => {
+    if (action.id) {
+      return action;
+    }
+    changed = true;
+    return ensureActionId(action);
+  });
+  return { actions: actionsWithIds, changed };
+};
+var getActionIdentifier = (action) => {
+  var _a2;
+  return action.id || (((_a2 = action.community) == null ? void 0 : _a2.id) ? `community:${action.community.id}` : `name:${action.name}`);
+};
 var moveAction = (actions, fromIndex, toIndex) => {
   if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= actions.length || toIndex >= actions.length) {
     return actions;
@@ -4979,39 +5007,40 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
             );
             return;
           }
+          const actionToSave = ensureActionId(actionToEdit);
           if (!isExistingAction) {
             if (this.plugin.settings.actions.find(
-              (action) => action.name === actionToEdit.name
+              (action) => action.name === actionToSave.name
             )) {
               new import_obsidian2.Notice(
                 I18n.t("notices.actionNameExists", {
-                  name: actionToEdit.name
+                  name: actionToSave.name
                 })
               );
               return;
             }
-            await this.addNewAction(actionToEdit);
+            await this.addNewAction(actionToSave);
           } else {
             if (this.plugin.settings.actions.filter(
-              (action) => action.name === actionToEdit.name
+              (action) => action.name === actionToSave.name
             ).length > 1) {
               new import_obsidian2.Notice(
                 I18n.t("notices.actionNameExists", {
-                  name: actionToEdit.name
+                  name: actionToSave.name
                 })
               );
               return;
             }
-            dropCommunityLinkIfModified(actionToEdit);
+            dropCommunityLinkIfModified(actionToSave);
             const index2 = this.plugin.settings.actions.findIndex(
               (innerAction) => innerAction === actionToEdit
             );
             if (index2 >= 0) {
-              this.plugin.settings.actions[index2] = actionToEdit;
+              this.plugin.settings.actions[index2] = actionToSave;
             }
           }
           await this.plugin.saveSettings();
-          closeActionEditor(actionToEdit);
+          closeActionEditor(actionToSave);
         })
       );
     };
@@ -6158,9 +6187,11 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
           button.setDisabled(true);
           button.buttonEl.setAttribute("disabled", "true");
           button.buttonEl.classList.remove("mod-warning");
-          this.plugin.settings.actions = DEFAULT_SETTINGS.actions.map((action) => ({
-            ...action
-          }));
+          this.plugin.settings.actions = ensureActionIds(
+            DEFAULT_SETTINGS.actions.map((action) => ({
+              ...action
+            }))
+          ).actions;
           await this.plugin.saveSettings();
           this.isConfirmingReset = false;
           this.display();
@@ -6169,31 +6200,32 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
     }
   }
   async addNewAction(editingAction) {
+    const actionWithId = ensureActionId(editingAction);
     const alreadyExistingActionIndex = this.plugin.settings.actions.findIndex(
-      (action) => action.name === editingAction.name
+      (action) => action.name === actionWithId.name
     );
     if (alreadyExistingActionIndex >= 0) {
-      this.plugin.settings.actions[alreadyExistingActionIndex] = editingAction;
+      this.plugin.settings.actions[alreadyExistingActionIndex] = actionWithId;
       new import_obsidian2.Notice(
-        I18n.t("notices.actionRewritten", { name: editingAction.name })
+        I18n.t("notices.actionRewritten", { name: actionWithId.name })
       );
     } else {
       this.plugin.settings.actions = [
-        editingAction,
+        actionWithId,
         ...this.plugin.settings.actions
       ];
       new import_obsidian2.Notice(
-        I18n.t("notices.actionAdded", { name: editingAction.name })
+        I18n.t("notices.actionAdded", { name: actionWithId.name })
       );
     }
     await this.plugin.saveSettings();
   }
   async addSeparator() {
-    const separatorAction = {
+    const separatorAction = ensureActionId({
       name: "separator",
       prompt: "",
       separator: true
-    };
+    });
     this.plugin.settings.actions = [
       separatorAction,
       ...this.plugin.settings.actions
@@ -7672,41 +7704,41 @@ function getPromptHistoryLength() {
 // src/ui/ActionPalette.svelte
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
 function get_each_context_1(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
 function get_each_context_2(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
 function get_each_context_3(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
 function get_each_context_4(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
 function get_each_context_5(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[119] = list[i];
-  child_ctx[121] = i;
+  child_ctx[123] = list[i];
+  child_ctx[125] = i;
   return child_ctx;
 }
-function create_if_block_1(ctx) {
+function create_if_block_2(ctx) {
   let div0;
   let t0;
   let div1;
@@ -7847,7 +7879,7 @@ function create_if_block_1(ctx) {
           each_blocks_5[i].m(div0, null);
         }
       }
-      ctx[36](div0);
+      ctx[39](div0);
       insert(target, t0, anchor);
       insert(target, div1, anchor);
       for (let i = 0; i < each_blocks_4.length; i += 1) {
@@ -7855,7 +7887,7 @@ function create_if_block_1(ctx) {
           each_blocks_4[i].m(div1, null);
         }
       }
-      ctx[39](div1);
+      ctx[42](div1);
       insert(target, t1, anchor);
       insert(target, div2, anchor);
       for (let i = 0; i < each_blocks_3.length; i += 1) {
@@ -7863,7 +7895,7 @@ function create_if_block_1(ctx) {
           each_blocks_3[i].m(div2, null);
         }
       }
-      ctx[42](div2);
+      ctx[45](div2);
       insert(target, t2, anchor);
       insert(target, div3, anchor);
       for (let i = 0; i < each_blocks_2.length; i += 1) {
@@ -7871,7 +7903,7 @@ function create_if_block_1(ctx) {
           each_blocks_2[i].m(div3, null);
         }
       }
-      ctx[45](div3);
+      ctx[48](div3);
       insert(target, t3, anchor);
       insert(target, div4, anchor);
       for (let i = 0; i < each_blocks_1.length; i += 1) {
@@ -7879,7 +7911,7 @@ function create_if_block_1(ctx) {
           each_blocks_1[i].m(div4, null);
         }
       }
-      ctx[48](div4);
+      ctx[51](div4);
       insert(target, t4, anchor);
       insert(target, div5, anchor);
       for (let i = 0; i < each_blocks.length; i += 1) {
@@ -7887,11 +7919,11 @@ function create_if_block_1(ctx) {
           each_blocks[i].m(div5, null);
         }
       }
-      ctx[51](div5);
+      ctx[54](div5);
     },
     p(ctx2, dirty) {
       if (dirty[0] & /*selectedIndex, handleSelection, fileItems, activeDropdown*/
-      2230276) {
+      4327428) {
         each_value_5 = ensure_array_like(
           /*fileItems*/
           ctx2[11]
@@ -7922,7 +7954,7 @@ function create_if_block_1(ctx) {
         );
       }
       if (dirty[0] & /*selectedIndex, handleSelection, commandItems, activeDropdown*/
-      2232324) {
+      4329476) {
         each_value_4 = ensure_array_like(
           /*commandItems*/
           ctx2[12]
@@ -7953,7 +7985,7 @@ function create_if_block_1(ctx) {
         );
       }
       if (dirty[0] & /*selectedIndex, handleSelection, providerItems, activeDropdown*/
-      2236420) {
+      4333572) {
         each_value_3 = ensure_array_like(
           /*providerItems*/
           ctx2[13]
@@ -7984,7 +8016,7 @@ function create_if_block_1(ctx) {
         );
       }
       if (dirty[0] & /*selectedIndex, handleSelection, modelItems, activeDropdown*/
-      2244612) {
+      4341764) {
         each_value_2 = ensure_array_like(
           /*modelItems*/
           ctx2[14]
@@ -8015,7 +8047,7 @@ function create_if_block_1(ctx) {
         );
       }
       if (dirty[0] & /*selectedIndex, handleSelection, creativityItems, activeDropdown*/
-      2260996) {
+      4358148) {
         each_value_1 = ensure_array_like(
           /*creativityItems*/
           ctx2[15]
@@ -8046,7 +8078,7 @@ function create_if_block_1(ctx) {
         );
       }
       if (dirty[0] & /*selectedIndex, handleSelection, systemItems, activeDropdown*/
-      2293764) {
+      4390916) {
         each_value = ensure_array_like(
           /*systemItems*/
           ctx2[16]
@@ -8092,39 +8124,39 @@ function create_if_block_1(ctx) {
         detach(div5);
       }
       destroy_each(each_blocks_5, detaching);
-      ctx[36](null);
-      destroy_each(each_blocks_4, detaching);
       ctx[39](null);
-      destroy_each(each_blocks_3, detaching);
+      destroy_each(each_blocks_4, detaching);
       ctx[42](null);
-      destroy_each(each_blocks_2, detaching);
+      destroy_each(each_blocks_3, detaching);
       ctx[45](null);
-      destroy_each(each_blocks_1, detaching);
+      destroy_each(each_blocks_2, detaching);
       ctx[48](null);
-      destroy_each(each_blocks, detaching);
+      destroy_each(each_blocks_1, detaching);
       ctx[51](null);
+      destroy_each(each_blocks, detaching);
+      ctx[54](null);
     }
   };
 }
-function create_if_block_8(ctx) {
+function create_if_block_10(ctx) {
   let div;
   let span0;
   let t0_value = (
     /*item*/
-    ctx[119].basename + ""
+    ctx[123].basename + ""
   );
   let t0;
   let t1;
   let t2_value = (
     /*item*/
-    ctx[119].extension + ""
+    ctx[123].extension + ""
   );
   let t2;
   let t3;
   let span1;
   let t4_value = (
     /*item*/
-    ctx[119].path + ""
+    ctx[123].path + ""
   );
   let t4;
   let t5;
@@ -8135,18 +8167,18 @@ function create_if_block_8(ctx) {
   function click_handler() {
     return (
       /*click_handler*/
-      ctx[34](
+      ctx[37](
         /*item*/
-        ctx[119]
+        ctx[123]
       )
     );
   }
   function keydown_handler(...args) {
     return (
       /*keydown_handler*/
-      ctx[35](
+      ctx[38](
         /*item*/
-        ctx[119],
+        ctx[123],
         ...args
       )
     );
@@ -8165,12 +8197,12 @@ function create_if_block_8(ctx) {
       attr(span0, "class", "local-gpt-file-name");
       attr(span1, "class", "local-gpt-file-path");
       attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""));
       attr(div, "role", "option");
       attr(div, "tabindex", "0");
       attr(div, "aria-selected", div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17]);
     },
     m(target, anchor) {
@@ -8195,25 +8227,25 @@ function create_if_block_8(ctx) {
       ctx = new_ctx;
       if (dirty[0] & /*fileItems*/
       2048 && t0_value !== (t0_value = /*item*/
-      ctx[119].basename + ""))
+      ctx[123].basename + ""))
         set_data(t0, t0_value);
       if (dirty[0] & /*fileItems*/
       2048 && t2_value !== (t2_value = /*item*/
-      ctx[119].extension + ""))
+      ctx[123].extension + ""))
         set_data(t2, t2_value);
       if (dirty[0] & /*fileItems*/
       2048 && t4_value !== (t4_value = /*item*/
-      ctx[119].path + ""))
+      ctx[123].path + ""))
         set_data(t4, t4_value);
       if (dirty[0] & /*selectedIndex*/
       131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""))) {
         attr(div, "class", div_class_value);
       }
       if (dirty[0] & /*selectedIndex*/
       131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17])) {
         attr(div, "aria-selected", div_aria_selected_value);
       }
@@ -8231,7 +8263,7 @@ function create_each_block_5(ctx) {
   let if_block_anchor;
   let if_block = (
     /*activeDropdown*/
-    ctx[2] === "file" && create_if_block_8(ctx)
+    ctx[2] === "file" && create_if_block_10(ctx)
   );
   return {
     c() {
@@ -8252,7 +8284,7 @@ function create_each_block_5(ctx) {
         if (if_block) {
           if_block.p(ctx2, dirty);
         } else {
-          if_block = create_if_block_8(ctx2);
+          if_block = create_if_block_10(ctx2);
           if_block.c();
           if_block.m(if_block_anchor.parentNode, if_block_anchor);
         }
@@ -8270,20 +8302,20 @@ function create_each_block_5(ctx) {
     }
   };
 }
-function create_if_block_7(ctx) {
+function create_if_block_9(ctx) {
   let div;
   let span0;
   let t0;
   let t1_value = (
     /*item*/
-    ctx[119].name + ""
+    ctx[123].name + ""
   );
   let t1;
   let t2;
   let span1;
   let t3_value = (
     /*item*/
-    ctx[119].description + ""
+    ctx[123].description + ""
   );
   let t3;
   let t4;
@@ -8294,18 +8326,18 @@ function create_if_block_7(ctx) {
   function click_handler_1() {
     return (
       /*click_handler_1*/
-      ctx[37](
+      ctx[40](
         /*item*/
-        ctx[119]
+        ctx[123]
       )
     );
   }
   function keydown_handler_1(...args) {
     return (
       /*keydown_handler_1*/
-      ctx[38](
+      ctx[41](
         /*item*/
-        ctx[119],
+        ctx[123],
         ...args
       )
     );
@@ -8323,12 +8355,12 @@ function create_if_block_7(ctx) {
       attr(span0, "class", "local-gpt-command-name");
       attr(span1, "class", "local-gpt-command-description");
       attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""));
       attr(div, "role", "option");
       attr(div, "tabindex", "0");
       attr(div, "aria-selected", div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17]);
     },
     m(target, anchor) {
@@ -8352,21 +8384,21 @@ function create_if_block_7(ctx) {
       ctx = new_ctx;
       if (dirty[0] & /*commandItems*/
       4096 && t1_value !== (t1_value = /*item*/
-      ctx[119].name + ""))
+      ctx[123].name + ""))
         set_data(t1, t1_value);
       if (dirty[0] & /*commandItems*/
       4096 && t3_value !== (t3_value = /*item*/
-      ctx[119].description + ""))
+      ctx[123].description + ""))
         set_data(t3, t3_value);
       if (dirty[0] & /*selectedIndex*/
       131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""))) {
         attr(div, "class", div_class_value);
       }
       if (dirty[0] & /*selectedIndex*/
       131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17])) {
         attr(div, "aria-selected", div_aria_selected_value);
       }
@@ -8384,7 +8416,7 @@ function create_each_block_4(ctx) {
   let if_block_anchor;
   let if_block = (
     /*activeDropdown*/
-    ctx[2] === "command" && create_if_block_7(ctx)
+    ctx[2] === "command" && create_if_block_9(ctx)
   );
   return {
     c() {
@@ -8405,7 +8437,7 @@ function create_each_block_4(ctx) {
         if (if_block) {
           if_block.p(ctx2, dirty);
         } else {
-          if_block = create_if_block_7(ctx2);
+          if_block = create_if_block_9(ctx2);
           if_block.c();
           if_block.m(if_block_anchor.parentNode, if_block_anchor);
         }
@@ -8423,13 +8455,13 @@ function create_each_block_4(ctx) {
     }
   };
 }
-function create_if_block_5(ctx) {
+function create_if_block_7(ctx) {
   let div1;
   let div0;
   let span0;
   let t0_value = (
     /*item*/
-    ctx[119].providerName + ""
+    ctx[123].providerName + ""
   );
   let t0;
   let t1;
@@ -8437,7 +8469,7 @@ function create_if_block_5(ctx) {
   let span1;
   let t3_value = (
     /*item*/
-    ctx[119].name + ""
+    ctx[123].name + ""
   );
   let t3;
   let t4;
@@ -8447,23 +8479,23 @@ function create_if_block_5(ctx) {
   let dispose;
   let if_block = (
     /*item*/
-    ctx[119].providerUrl && create_if_block_6(ctx)
+    ctx[123].providerUrl && create_if_block_8(ctx)
   );
   function click_handler_2() {
     return (
       /*click_handler_2*/
-      ctx[40](
+      ctx[43](
         /*item*/
-        ctx[119]
+        ctx[123]
       )
     );
   }
   function keydown_handler_2(...args) {
     return (
       /*keydown_handler_2*/
-      ctx[41](
+      ctx[44](
         /*item*/
-        ctx[119],
+        ctx[123],
         ...args
       )
     );
@@ -8485,12 +8517,12 @@ function create_if_block_5(ctx) {
       attr(div0, "class", "local-gpt-provider-header");
       attr(span1, "class", "local-gpt-provider-model");
       attr(div1, "class", div1_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""));
       attr(div1, "role", "option");
       attr(div1, "tabindex", "0");
       attr(div1, "aria-selected", div1_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17]);
     },
     m(target, anchor) {
@@ -8517,16 +8549,16 @@ function create_if_block_5(ctx) {
       ctx = new_ctx;
       if (dirty[0] & /*providerItems*/
       8192 && t0_value !== (t0_value = /*item*/
-      ctx[119].providerName + ""))
+      ctx[123].providerName + ""))
         set_data(t0, t0_value);
       if (
         /*item*/
-        ctx[119].providerUrl
+        ctx[123].providerUrl
       ) {
         if (if_block) {
           if_block.p(ctx, dirty);
         } else {
-          if_block = create_if_block_6(ctx);
+          if_block = create_if_block_8(ctx);
           if_block.c();
           if_block.m(div0, null);
         }
@@ -8536,17 +8568,17 @@ function create_if_block_5(ctx) {
       }
       if (dirty[0] & /*providerItems*/
       8192 && t3_value !== (t3_value = /*item*/
-      ctx[119].name + ""))
+      ctx[123].name + ""))
         set_data(t3, t3_value);
       if (dirty[0] & /*selectedIndex*/
       131072 && div1_class_value !== (div1_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""))) {
         attr(div1, "class", div1_class_value);
       }
       if (dirty[0] & /*selectedIndex*/
       131072 && div1_aria_selected_value !== (div1_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17])) {
         attr(div1, "aria-selected", div1_aria_selected_value);
       }
@@ -8562,11 +8594,11 @@ function create_if_block_5(ctx) {
     }
   };
 }
-function create_if_block_6(ctx) {
+function create_if_block_8(ctx) {
   let span;
   let t_value = (
     /*item*/
-    ctx[119].providerUrl + ""
+    ctx[123].providerUrl + ""
   );
   let t;
   return {
@@ -8582,7 +8614,7 @@ function create_if_block_6(ctx) {
     p(ctx2, dirty) {
       if (dirty[0] & /*providerItems*/
       8192 && t_value !== (t_value = /*item*/
-      ctx2[119].providerUrl + ""))
+      ctx2[123].providerUrl + ""))
         set_data(t, t_value);
     },
     d(detaching) {
@@ -8596,7 +8628,7 @@ function create_each_block_3(ctx) {
   let if_block_anchor;
   let if_block = (
     /*activeDropdown*/
-    ctx[2] === "provider" && create_if_block_5(ctx)
+    ctx[2] === "provider" && create_if_block_7(ctx)
   );
   return {
     c() {
@@ -8613,6 +8645,270 @@ function create_each_block_3(ctx) {
       if (
         /*activeDropdown*/
         ctx2[2] === "provider"
+      ) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+        } else {
+          if_block = create_if_block_7(ctx2);
+          if_block.c();
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if (if_block)
+        if_block.d(detaching);
+    }
+  };
+}
+function create_if_block_6(ctx) {
+  let div;
+  let span;
+  let t0_value = (
+    /*item*/
+    ctx[123].name + ""
+  );
+  let t0;
+  let t1;
+  let div_class_value;
+  let div_aria_selected_value;
+  let mounted;
+  let dispose;
+  function click_handler_3() {
+    return (
+      /*click_handler_3*/
+      ctx[46](
+        /*item*/
+        ctx[123]
+      )
+    );
+  }
+  function keydown_handler_3(...args) {
+    return (
+      /*keydown_handler_3*/
+      ctx[47](
+        /*item*/
+        ctx[123],
+        ...args
+      )
+    );
+  }
+  return {
+    c() {
+      div = element("div");
+      span = element("span");
+      t0 = text(t0_value);
+      t1 = space();
+      attr(span, "class", "local-gpt-model-name");
+      attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
+      (ctx[125] === /*selectedIndex*/
+      ctx[17] ? "local-gpt-selected" : ""));
+      attr(div, "role", "option");
+      attr(div, "tabindex", "0");
+      attr(div, "aria-selected", div_aria_selected_value = /*index*/
+      ctx[125] === /*selectedIndex*/
+      ctx[17]);
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+      append(div, span);
+      append(span, t0);
+      append(div, t1);
+      if (!mounted) {
+        dispose = [
+          listen(div, "click", click_handler_3),
+          listen(div, "keydown", keydown_handler_3)
+        ];
+        mounted = true;
+      }
+    },
+    p(new_ctx, dirty) {
+      ctx = new_ctx;
+      if (dirty[0] & /*modelItems*/
+      16384 && t0_value !== (t0_value = /*item*/
+      ctx[123].name + ""))
+        set_data(t0, t0_value);
+      if (dirty[0] & /*selectedIndex*/
+      131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
+      (ctx[125] === /*selectedIndex*/
+      ctx[17] ? "local-gpt-selected" : ""))) {
+        attr(div, "class", div_class_value);
+      }
+      if (dirty[0] & /*selectedIndex*/
+      131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
+      ctx[125] === /*selectedIndex*/
+      ctx[17])) {
+        attr(div, "aria-selected", div_aria_selected_value);
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(div);
+      }
+      mounted = false;
+      run_all(dispose);
+    }
+  };
+}
+function create_each_block_2(ctx) {
+  let if_block_anchor;
+  let if_block = (
+    /*activeDropdown*/
+    ctx[2] === "model" && create_if_block_6(ctx)
+  );
+  return {
+    c() {
+      if (if_block)
+        if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if (if_block)
+        if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+    },
+    p(ctx2, dirty) {
+      if (
+        /*activeDropdown*/
+        ctx2[2] === "model"
+      ) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+        } else {
+          if_block = create_if_block_6(ctx2);
+          if_block.c();
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if (if_block)
+        if_block.d(detaching);
+    }
+  };
+}
+function create_if_block_5(ctx) {
+  let div;
+  let span;
+  let t0_value = (
+    /*item*/
+    ctx[123].name + ""
+  );
+  let t0;
+  let t1;
+  let div_class_value;
+  let div_aria_selected_value;
+  let mounted;
+  let dispose;
+  function click_handler_4() {
+    return (
+      /*click_handler_4*/
+      ctx[49](
+        /*item*/
+        ctx[123]
+      )
+    );
+  }
+  function keydown_handler_4(...args) {
+    return (
+      /*keydown_handler_4*/
+      ctx[50](
+        /*item*/
+        ctx[123],
+        ...args
+      )
+    );
+  }
+  return {
+    c() {
+      div = element("div");
+      span = element("span");
+      t0 = text(t0_value);
+      t1 = space();
+      attr(span, "class", "local-gpt-creativity-name");
+      attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
+      (ctx[125] === /*selectedIndex*/
+      ctx[17] ? "local-gpt-selected" : ""));
+      attr(div, "role", "option");
+      attr(div, "tabindex", "0");
+      attr(div, "aria-selected", div_aria_selected_value = /*index*/
+      ctx[125] === /*selectedIndex*/
+      ctx[17]);
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+      append(div, span);
+      append(span, t0);
+      append(div, t1);
+      if (!mounted) {
+        dispose = [
+          listen(div, "click", click_handler_4),
+          listen(div, "keydown", keydown_handler_4)
+        ];
+        mounted = true;
+      }
+    },
+    p(new_ctx, dirty) {
+      ctx = new_ctx;
+      if (dirty[0] & /*creativityItems*/
+      32768 && t0_value !== (t0_value = /*item*/
+      ctx[123].name + ""))
+        set_data(t0, t0_value);
+      if (dirty[0] & /*selectedIndex*/
+      131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
+      (ctx[125] === /*selectedIndex*/
+      ctx[17] ? "local-gpt-selected" : ""))) {
+        attr(div, "class", div_class_value);
+      }
+      if (dirty[0] & /*selectedIndex*/
+      131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
+      ctx[125] === /*selectedIndex*/
+      ctx[17])) {
+        attr(div, "aria-selected", div_aria_selected_value);
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(div);
+      }
+      mounted = false;
+      run_all(dispose);
+    }
+  };
+}
+function create_each_block_1(ctx) {
+  let if_block_anchor;
+  let if_block = (
+    /*activeDropdown*/
+    ctx[2] === "creativity" && create_if_block_5(ctx)
+  );
+  return {
+    c() {
+      if (if_block)
+        if_block.c();
+      if_block_anchor = empty();
+    },
+    m(target, anchor) {
+      if (if_block)
+        if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+    },
+    p(ctx2, dirty) {
+      if (
+        /*activeDropdown*/
+        ctx2[2] === "creativity"
       ) {
         if (if_block) {
           if_block.p(ctx2, dirty);
@@ -8635,166 +8931,39 @@ function create_each_block_3(ctx) {
     }
   };
 }
-function create_if_block_4(ctx) {
-  let div;
-  let span;
-  let t0_value = (
-    /*item*/
-    ctx[119].name + ""
-  );
-  let t0;
-  let t1;
-  let div_class_value;
-  let div_aria_selected_value;
-  let mounted;
-  let dispose;
-  function click_handler_3() {
-    return (
-      /*click_handler_3*/
-      ctx[43](
-        /*item*/
-        ctx[119]
-      )
-    );
-  }
-  function keydown_handler_3(...args) {
-    return (
-      /*keydown_handler_3*/
-      ctx[44](
-        /*item*/
-        ctx[119],
-        ...args
-      )
-    );
-  }
-  return {
-    c() {
-      div = element("div");
-      span = element("span");
-      t0 = text(t0_value);
-      t1 = space();
-      attr(span, "class", "local-gpt-model-name");
-      attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
-      ctx[17] ? "local-gpt-selected" : ""));
-      attr(div, "role", "option");
-      attr(div, "tabindex", "0");
-      attr(div, "aria-selected", div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
-      ctx[17]);
-    },
-    m(target, anchor) {
-      insert(target, div, anchor);
-      append(div, span);
-      append(span, t0);
-      append(div, t1);
-      if (!mounted) {
-        dispose = [
-          listen(div, "click", click_handler_3),
-          listen(div, "keydown", keydown_handler_3)
-        ];
-        mounted = true;
-      }
-    },
-    p(new_ctx, dirty) {
-      ctx = new_ctx;
-      if (dirty[0] & /*modelItems*/
-      16384 && t0_value !== (t0_value = /*item*/
-      ctx[119].name + ""))
-        set_data(t0, t0_value);
-      if (dirty[0] & /*selectedIndex*/
-      131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
-      ctx[17] ? "local-gpt-selected" : ""))) {
-        attr(div, "class", div_class_value);
-      }
-      if (dirty[0] & /*selectedIndex*/
-      131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
-      ctx[17])) {
-        attr(div, "aria-selected", div_aria_selected_value);
-      }
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(div);
-      }
-      mounted = false;
-      run_all(dispose);
-    }
-  };
-}
-function create_each_block_2(ctx) {
-  let if_block_anchor;
-  let if_block = (
-    /*activeDropdown*/
-    ctx[2] === "model" && create_if_block_4(ctx)
-  );
-  return {
-    c() {
-      if (if_block)
-        if_block.c();
-      if_block_anchor = empty();
-    },
-    m(target, anchor) {
-      if (if_block)
-        if_block.m(target, anchor);
-      insert(target, if_block_anchor, anchor);
-    },
-    p(ctx2, dirty) {
-      if (
-        /*activeDropdown*/
-        ctx2[2] === "model"
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-        } else {
-          if_block = create_if_block_4(ctx2);
-          if_block.c();
-          if_block.m(if_block_anchor.parentNode, if_block_anchor);
-        }
-      } else if (if_block) {
-        if_block.d(1);
-        if_block = null;
-      }
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(if_block_anchor);
-      }
-      if (if_block)
-        if_block.d(detaching);
-    }
-  };
-}
 function create_if_block_3(ctx) {
   let div;
   let span;
   let t0_value = (
     /*item*/
-    ctx[119].name + ""
+    ctx[123].name + ""
   );
   let t0;
   let t1;
+  let t2;
   let div_class_value;
   let div_aria_selected_value;
   let mounted;
   let dispose;
-  function click_handler_4() {
+  let if_block = (
+    /*item*/
+    ctx[123].id !== CLEAR_SYSTEM_PROMPT_ID && create_if_block_4(ctx)
+  );
+  function click_handler_5() {
     return (
-      /*click_handler_4*/
-      ctx[46](
+      /*click_handler_5*/
+      ctx[52](
         /*item*/
-        ctx[119]
+        ctx[123]
       )
     );
   }
-  function keydown_handler_4(...args) {
+  function keydown_handler_5(...args) {
     return (
-      /*keydown_handler_4*/
-      ctx[47](
+      /*keydown_handler_5*/
+      ctx[53](
         /*item*/
-        ctx[119],
+        ctx[123],
         ...args
       )
     );
@@ -8805,14 +8974,17 @@ function create_if_block_3(ctx) {
       span = element("span");
       t0 = text(t0_value);
       t1 = space();
-      attr(span, "class", "local-gpt-creativity-name");
+      if (if_block)
+        if_block.c();
+      t2 = space();
+      attr(span, "class", "local-gpt-system-name");
       attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""));
       attr(div, "role", "option");
       attr(div, "tabindex", "0");
       attr(div, "aria-selected", div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17]);
     },
     m(target, anchor) {
@@ -8820,29 +8992,47 @@ function create_if_block_3(ctx) {
       append(div, span);
       append(span, t0);
       append(div, t1);
+      if (if_block)
+        if_block.m(div, null);
+      append(div, t2);
       if (!mounted) {
         dispose = [
-          listen(div, "click", click_handler_4),
-          listen(div, "keydown", keydown_handler_4)
+          listen(div, "click", click_handler_5),
+          listen(div, "keydown", keydown_handler_5)
         ];
         mounted = true;
       }
     },
     p(new_ctx, dirty) {
       ctx = new_ctx;
-      if (dirty[0] & /*creativityItems*/
-      32768 && t0_value !== (t0_value = /*item*/
-      ctx[119].name + ""))
+      if (dirty[0] & /*systemItems*/
+      65536 && t0_value !== (t0_value = /*item*/
+      ctx[123].name + ""))
         set_data(t0, t0_value);
+      if (
+        /*item*/
+        ctx[123].id !== CLEAR_SYSTEM_PROMPT_ID
+      ) {
+        if (if_block) {
+          if_block.p(ctx, dirty);
+        } else {
+          if_block = create_if_block_4(ctx);
+          if_block.c();
+          if_block.m(div, t2);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
       if (dirty[0] & /*selectedIndex*/
       131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
+      (ctx[125] === /*selectedIndex*/
       ctx[17] ? "local-gpt-selected" : ""))) {
         attr(div, "class", div_class_value);
       }
       if (dirty[0] & /*selectedIndex*/
       131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
+      ctx[125] === /*selectedIndex*/
       ctx[17])) {
         attr(div, "aria-selected", div_aria_selected_value);
       }
@@ -8851,16 +9041,50 @@ function create_if_block_3(ctx) {
       if (detaching) {
         detach(div);
       }
+      if (if_block)
+        if_block.d();
       mounted = false;
       run_all(dispose);
     }
   };
 }
-function create_each_block_1(ctx) {
+function create_if_block_4(ctx) {
+  let span;
+  let t_value = formatSystemPreview(
+    /*item*/
+    ctx[123].system
+  ) + "";
+  let t;
+  return {
+    c() {
+      span = element("span");
+      t = text(t_value);
+      attr(span, "class", "local-gpt-system-detail");
+    },
+    m(target, anchor) {
+      insert(target, span, anchor);
+      append(span, t);
+    },
+    p(ctx2, dirty) {
+      if (dirty[0] & /*systemItems*/
+      65536 && t_value !== (t_value = formatSystemPreview(
+        /*item*/
+        ctx2[123].system
+      ) + ""))
+        set_data(t, t_value);
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(span);
+      }
+    }
+  };
+}
+function create_each_block(ctx) {
   let if_block_anchor;
   let if_block = (
     /*activeDropdown*/
-    ctx[2] === "creativity" && create_if_block_3(ctx)
+    ctx[2] === "system" && create_if_block_3(ctx)
   );
   return {
     c() {
@@ -8876,7 +9100,7 @@ function create_each_block_1(ctx) {
     p(ctx2, dirty) {
       if (
         /*activeDropdown*/
-        ctx2[2] === "creativity"
+        ctx2[2] === "system"
       ) {
         if (if_block) {
           if_block.p(ctx2, dirty);
@@ -8899,238 +9123,148 @@ function create_each_block_1(ctx) {
     }
   };
 }
-function create_if_block_2(ctx) {
+function create_else_block(ctx) {
   let div;
-  let span0;
-  let t0_value = (
-    /*item*/
-    ctx[119].name + ""
-  );
-  let t0;
-  let t1;
-  let span1;
-  let t2_value = formatSystemPreview(
-    /*item*/
-    ctx[119].system
-  ) + "";
-  let t2;
-  let t3;
-  let div_class_value;
-  let div_aria_selected_value;
-  let mounted;
-  let dispose;
-  function click_handler_5() {
-    return (
-      /*click_handler_5*/
-      ctx[49](
-        /*item*/
-        ctx[119]
-      )
-    );
-  }
-  function keydown_handler_5(...args) {
-    return (
-      /*keydown_handler_5*/
-      ctx[50](
-        /*item*/
-        ctx[119],
-        ...args
-      )
-    );
-  }
   return {
     c() {
       div = element("div");
-      span0 = element("span");
-      t0 = text(t0_value);
-      t1 = space();
-      span1 = element("span");
-      t2 = text(t2_value);
-      t3 = space();
-      attr(span0, "class", "local-gpt-system-name");
-      attr(span1, "class", "local-gpt-system-detail");
-      attr(div, "class", div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
-      ctx[17] ? "local-gpt-selected" : ""));
-      attr(div, "role", "option");
-      attr(div, "tabindex", "0");
-      attr(div, "aria-selected", div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
-      ctx[17]);
+      div.textContent = `${I18n.t("commands.actionPalette.hint")}`;
+      attr(div, "class", "local-gpt-provider-badge-hint");
     },
     m(target, anchor) {
       insert(target, div, anchor);
-      append(div, span0);
-      append(span0, t0);
-      append(div, t1);
-      append(div, span1);
-      append(span1, t2);
-      append(div, t3);
-      if (!mounted) {
-        dispose = [
-          listen(div, "click", click_handler_5),
-          listen(div, "keydown", keydown_handler_5)
-        ];
-        mounted = true;
-      }
     },
-    p(new_ctx, dirty) {
-      ctx = new_ctx;
-      if (dirty[0] & /*systemItems*/
-      65536 && t0_value !== (t0_value = /*item*/
-      ctx[119].name + ""))
-        set_data(t0, t0_value);
-      if (dirty[0] & /*systemItems*/
-      65536 && t2_value !== (t2_value = formatSystemPreview(
-        /*item*/
-        ctx[119].system
-      ) + ""))
-        set_data(t2, t2_value);
-      if (dirty[0] & /*selectedIndex*/
-      131072 && div_class_value !== (div_class_value = "local-gpt-dropdown-item " + /*index*/
-      (ctx[121] === /*selectedIndex*/
-      ctx[17] ? "local-gpt-selected" : ""))) {
-        attr(div, "class", div_class_value);
+    p: noop,
+    d(detaching) {
+      if (detaching) {
+        detach(div);
       }
-      if (dirty[0] & /*selectedIndex*/
-      131072 && div_aria_selected_value !== (div_aria_selected_value = /*index*/
-      ctx[121] === /*selectedIndex*/
-      ctx[17])) {
-        attr(div, "aria-selected", div_aria_selected_value);
+    }
+  };
+}
+function create_if_block_1(ctx) {
+  let div;
+  let span;
+  let t;
+  let div_class_value;
+  return {
+    c() {
+      div = element("div");
+      span = element("span");
+      t = text(
+        /*selectedSystemPromptName*/
+        ctx[19]
+      );
+      attr(span, "class", "local-gpt-system-indicator-label");
+      attr(div, "class", div_class_value = /*badgeHighlight*/
+      ctx[18] ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator");
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+      append(div, span);
+      append(span, t);
+    },
+    p(ctx2, dirty) {
+      if (dirty[0] & /*selectedSystemPromptName*/
+      524288)
+        set_data(
+          t,
+          /*selectedSystemPromptName*/
+          ctx2[19]
+        );
+      if (dirty[0] & /*badgeHighlight*/
+      262144 && div_class_value !== (div_class_value = /*badgeHighlight*/
+      ctx2[18] ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator")) {
+        attr(div, "class", div_class_value);
       }
     },
     d(detaching) {
       if (detaching) {
         detach(div);
       }
-      mounted = false;
-      run_all(dispose);
-    }
-  };
-}
-function create_each_block(ctx) {
-  let if_block_anchor;
-  let if_block = (
-    /*activeDropdown*/
-    ctx[2] === "system" && create_if_block_2(ctx)
-  );
-  return {
-    c() {
-      if (if_block)
-        if_block.c();
-      if_block_anchor = empty();
-    },
-    m(target, anchor) {
-      if (if_block)
-        if_block.m(target, anchor);
-      insert(target, if_block_anchor, anchor);
-    },
-    p(ctx2, dirty) {
-      if (
-        /*activeDropdown*/
-        ctx2[2] === "system"
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-        } else {
-          if_block = create_if_block_2(ctx2);
-          if_block.c();
-          if_block.m(if_block_anchor.parentNode, if_block_anchor);
-        }
-      } else if (if_block) {
-        if_block.d(1);
-        if_block = null;
-      }
-    },
-    d(detaching) {
-      if (detaching) {
-        detach(if_block_anchor);
-      }
-      if (if_block)
-        if_block.d(detaching);
     }
   };
 }
 function create_if_block(ctx) {
-  let div2;
-  let div0;
-  let t1;
-  let div1;
-  let t2;
-  let div1_class_value;
-  let div1_title_value;
+  let div;
+  let t;
+  let div_class_value;
   return {
     c() {
-      div2 = element("div");
-      div0 = element("div");
-      div0.textContent = `${I18n.t("commands.actionPalette.hint")}`;
-      t1 = space();
-      div1 = element("div");
-      t2 = text(
+      div = element("div");
+      t = text(
         /*providerLabel*/
         ctx[0]
       );
-      attr(div0, "class", "local-gpt-provider-badge-hint");
-      attr(div1, "class", div1_class_value = /*badgeHighlight*/
+      attr(div, "class", div_class_value = /*badgeHighlight*/
       ctx[18] ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label");
-      attr(div1, "title", div1_title_value = I18n.t("commands.actionPalette.providerTooltip"));
-      attr(div2, "class", "local-gpt-provider-badge");
-      attr(div2, "aria-hidden", "true");
     },
     m(target, anchor) {
-      insert(target, div2, anchor);
-      append(div2, div0);
-      append(div2, t1);
-      append(div2, div1);
-      append(div1, t2);
+      insert(target, div, anchor);
+      append(div, t);
     },
     p(ctx2, dirty) {
       if (dirty[0] & /*providerLabel*/
       1)
         set_data(
-          t2,
+          t,
           /*providerLabel*/
           ctx2[0]
         );
       if (dirty[0] & /*badgeHighlight*/
-      262144 && div1_class_value !== (div1_class_value = /*badgeHighlight*/
+      262144 && div_class_value !== (div_class_value = /*badgeHighlight*/
       ctx2[18] ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label")) {
-        attr(div1, "class", div1_class_value);
+        attr(div, "class", div_class_value);
       }
     },
     d(detaching) {
       if (detaching) {
-        detach(div2);
+        detach(div);
       }
     }
   };
 }
 function create_fragment(ctx) {
-  let div1;
+  let div2;
   let div0;
   let t0;
   let t1;
+  let div1;
+  let t2;
   let mounted;
   let dispose;
   let if_block0 = (
     /*activeDropdown*/
     ctx[2] !== "none" && /*filteredItems*/
-    ctx[3].length > 0 && create_if_block_1(ctx)
+    ctx[3].length > 0 && create_if_block_2(ctx)
   );
-  let if_block1 = (
+  function select_block_type(ctx2, dirty) {
+    if (
+      /*selectedSystemPromptName*/
+      ctx2[19]
+    )
+      return create_if_block_1;
+    return create_else_block;
+  }
+  let current_block_type = select_block_type(ctx, [-1, -1, -1, -1, -1]);
+  let if_block1 = current_block_type(ctx);
+  let if_block2 = (
     /*providerLabel*/
     ctx[0] && create_if_block(ctx)
   );
   return {
     c() {
-      div1 = element("div");
+      div2 = element("div");
       div0 = element("div");
       t0 = space();
       if (if_block0)
         if_block0.c();
       t1 = space();
-      if (if_block1)
-        if_block1.c();
+      div1 = element("div");
+      if_block1.c();
+      t2 = space();
+      if (if_block2)
+        if_block2.c();
       attr(div0, "class", "local-gpt-action-palette");
       attr(div0, "contenteditable", "true");
       attr(div0, "role", "textbox");
@@ -9148,43 +9282,47 @@ function create_fragment(ctx) {
         ctx[1]
       );
       attr(div0, "spellcheck", "false");
-      attr(div1, "class", "local-gpt-action-palette-shell");
+      attr(div1, "class", "local-gpt-provider-badge");
+      attr(div2, "class", "local-gpt-action-palette-shell");
     },
     m(target, anchor) {
-      insert(target, div1, anchor);
-      append(div1, div0);
-      ctx[33](div0);
-      append(div1, t0);
+      insert(target, div2, anchor);
+      append(div2, div0);
+      ctx[36](div0);
+      append(div2, t0);
       if (if_block0)
-        if_block0.m(div1, null);
-      append(div1, t1);
-      if (if_block1)
-        if_block1.m(div1, null);
+        if_block0.m(div2, null);
+      append(div2, t1);
+      append(div2, div1);
+      if_block1.m(div1, null);
+      append(div1, t2);
+      if (if_block2)
+        if_block2.m(div1, null);
       if (!mounted) {
         dispose = [
           listen(
             div0,
             "keydown",
             /*handleKeydown*/
-            ctx[19]
+            ctx[20]
           ),
           listen(
             div0,
             "input",
             /*handleInput*/
-            ctx[20]
+            ctx[21]
           ),
           listen(
             div0,
             "keyup",
             /*handleKeyup*/
-            ctx[23]
+            ctx[24]
           ),
           listen(
             div0,
             "click",
             /*handleContentClick*/
-            ctx[22]
+            ctx[23]
           )
         ];
         mounted = true;
@@ -9217,41 +9355,52 @@ function create_fragment(ctx) {
         if (if_block0) {
           if_block0.p(ctx2, dirty);
         } else {
-          if_block0 = create_if_block_1(ctx2);
+          if_block0 = create_if_block_2(ctx2);
           if_block0.c();
-          if_block0.m(div1, t1);
+          if_block0.m(div2, t1);
         }
       } else if (if_block0) {
         if_block0.d(1);
         if_block0 = null;
       }
+      if (current_block_type === (current_block_type = select_block_type(ctx2, dirty)) && if_block1) {
+        if_block1.p(ctx2, dirty);
+      } else {
+        if_block1.d(1);
+        if_block1 = current_block_type(ctx2);
+        if (if_block1) {
+          if_block1.c();
+          if_block1.m(div1, t2);
+        }
+      }
       if (
         /*providerLabel*/
         ctx2[0]
       ) {
-        if (if_block1) {
-          if_block1.p(ctx2, dirty);
+        if (if_block2) {
+          if_block2.p(ctx2, dirty);
         } else {
-          if_block1 = create_if_block(ctx2);
-          if_block1.c();
-          if_block1.m(div1, null);
+          if_block2 = create_if_block(ctx2);
+          if_block2.c();
+          if_block2.m(div1, null);
         }
-      } else if (if_block1) {
-        if_block1.d(1);
-        if_block1 = null;
+      } else if (if_block2) {
+        if_block2.d(1);
+        if_block2 = null;
       }
     },
     i: noop,
     o: noop,
     d(detaching) {
       if (detaching) {
-        detach(div1);
+        detach(div2);
       }
-      ctx[33](null);
+      ctx[36](null);
       if (if_block0)
         if_block0.d();
-      if (if_block1)
-        if_block1.d();
+      if_block1.d();
+      if (if_block2)
+        if_block2.d();
       mounted = false;
       run_all(dispose);
     }
@@ -9264,6 +9413,7 @@ var SPACE_AFTER_MENTION = " ";
 var COMMAND_REGEX = /\/([^\/\s]+)(?=\s|$|\/)/g;
 var COMMAND_PREFIX = "/";
 var SPACE_AFTER_COMMAND = " ";
+var CLEAR_SYSTEM_PROMPT_ID = "__clear_system_prompt__";
 var SYSTEM_PREVIEW_LENGTH = 80;
 function findMatchingFile(fileName, availableFiles) {
   const normalizedFileName = fileName.toLowerCase();
@@ -9329,6 +9479,8 @@ function instance($$self, $$props, $$invalidate) {
   let { onModelChange = void 0 } = $$props;
   let { onCreativityChange = void 0 } = $$props;
   let { getSystemPrompts = void 0 } = $$props;
+  let { selectedSystemPromptId = null } = $$props;
+  let { onSystemPromptChange = void 0 } = $$props;
   const dispatch = createEventDispatcher();
   let contentElement = null;
   let dropdownElement = null;
@@ -9395,7 +9547,7 @@ function instance($$self, $$props, $$invalidate) {
   let providerName = providerLabel.split(" \xB7 ")[0] || "";
   let modelName = (providerLabel.split(" \xB7 ")[1] || "").trim();
   let creativityBadge = (providerLabel.split(" \xB7 ")[2] || "").trim();
-  let systemPromptBadge = "";
+  let selectedSystemPromptName = "";
   function getCreativityOptions() {
     return [
       {
@@ -9627,7 +9779,7 @@ function instance($$self, $$props, $$invalidate) {
     providerName = pName;
     modelName = mName;
     const base = [providerName, modelName].filter(Boolean).join(" \xB7 ");
-    const extras = [creativityBadge, systemPromptBadge].filter(Boolean).join(" \xB7 ");
+    const extras = [creativityBadge].filter(Boolean).join(" \xB7 ");
     $$invalidate(0, providerLabel = extras ? `${base} \xB7 ${extras}` : base);
   }
   function highlightBadgeTemporarily() {
@@ -9650,6 +9802,7 @@ function instance($$self, $$props, $$invalidate) {
       setCursorPosition(textContent.length);
     });
   }
+  restoreSelectedSystemPrompt();
   onMount(() => {
     queueMicrotask(() => {
       contentElement === null || contentElement === void 0 ? void 0 : contentElement.focus();
@@ -9660,6 +9813,23 @@ function instance($$self, $$props, $$invalidate) {
       }
     });
   });
+  function restoreSelectedSystemPrompt() {
+    if (!selectedSystemPromptId || !getSystemPrompts) {
+      $$invalidate(19, selectedSystemPromptName = "");
+      selectedSystemPromptValue = void 0;
+      return;
+    }
+    const availablePrompts = getSystemPrompts();
+    const matchedPrompt = availablePrompts.find((prompt) => prompt.id === selectedSystemPromptId);
+    if (!matchedPrompt) {
+      void (onSystemPromptChange === null || onSystemPromptChange === void 0 ? void 0 : onSystemPromptChange(null));
+      $$invalidate(19, selectedSystemPromptName = "");
+      selectedSystemPromptValue = void 0;
+      return;
+    }
+    $$invalidate(19, selectedSystemPromptName = matchedPrompt.name);
+    selectedSystemPromptValue = matchedPrompt.system;
+  }
   function handleDropdownNavigation(event) {
     if (activeDropdown === "none" || filteredItems.length === 0)
       return false;
@@ -9997,7 +10167,7 @@ function instance($$self, $$props, $$invalidate) {
           yield onProviderChange(provider.id);
         }
         setProviderBadgeLabel(provider.providerName, provider.name);
-        $$invalidate(24, providerId = provider.id);
+        $$invalidate(25, providerId = provider.id);
         providerName = provider.providerName;
         highlightBadgeTemporarily();
         removeCommandAndQuery("provider");
@@ -10074,11 +10244,14 @@ function instance($$self, $$props, $$invalidate) {
       return;
     const q = getCommandQuery("system");
     const normalizedQuery = q.toLowerCase();
-    const matches2 = allSystemPrompts.filter((s) => normalizedQuery ? s.name.toLowerCase().includes(normalizedQuery) : true).sort((a, b) => a.name.localeCompare(b.name)).slice(0, MAX_DROPDOWN_RESULTS);
-    updateFilteredDropdownItems(matches2);
+    const resetOption = allSystemPrompts.find((s) => s.id === CLEAR_SYSTEM_PROMPT_ID);
+    const promptOptions = allSystemPrompts.filter((s) => s.id !== CLEAR_SYSTEM_PROMPT_ID);
+    const matches2 = promptOptions.filter((s) => normalizedQuery ? s.name.toLowerCase().includes(normalizedQuery) : true).sort((a, b) => a.name.localeCompare(b.name)).slice(0, resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? MAX_DROPDOWN_RESULTS - 1 : MAX_DROPDOWN_RESULTS);
+    const visibleMatches = resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? [resetOption, ...matches2] : matches2;
+    updateFilteredDropdownItems(visibleMatches);
     if (q) {
       const norm = (s) => s.toLowerCase();
-      const exact = matches2.find((s) => norm(s.name) === norm(q));
+      const exact = promptOptions.find((s) => norm(s.name) === norm(q));
       if (exact) {
         void selectSystemPrompt(exact);
       }
@@ -10089,7 +10262,15 @@ function instance($$self, $$props, $$invalidate) {
       if (!getSystemPrompts)
         return;
       try {
-        allSystemPrompts = getSystemPrompts();
+        const prompts = getSystemPrompts();
+        allSystemPrompts = selectedSystemPromptName ? [
+          {
+            id: CLEAR_SYSTEM_PROMPT_ID,
+            name: I18n.t("commands.actionPalette.clearSystemPrompt"),
+            system: ""
+          },
+          ...prompts
+        ] : prompts;
         applySystemFilter();
         if (filteredItems.length > 0) {
           $$invalidate(2, activeDropdown = "system");
@@ -10103,9 +10284,15 @@ function instance($$self, $$props, $$invalidate) {
   function selectSystemPrompt(option2) {
     return __awaiter(this, void 0, void 0, function* () {
       try {
+        if (option2.id === CLEAR_SYSTEM_PROMPT_ID) {
+          yield clearSystemPromptSelection();
+          removeCommandAndQuery("system");
+          hideDropdown();
+          return;
+        }
         selectedSystemPromptValue = option2.system;
-        systemPromptBadge = option2.name;
-        setProviderBadgeLabel(providerName, modelName);
+        $$invalidate(19, selectedSystemPromptName = option2.name);
+        yield onSystemPromptChange === null || onSystemPromptChange === void 0 ? void 0 : onSystemPromptChange(option2.id);
         highlightBadgeTemporarily();
         removeCommandAndQuery("system");
         hideDropdown();
@@ -10113,6 +10300,14 @@ function instance($$self, $$props, $$invalidate) {
         console.error("Error selecting system prompt:", error);
         hideDropdown();
       }
+    });
+  }
+  function clearSystemPromptSelection() {
+    return __awaiter(this, void 0, void 0, function* () {
+      selectedSystemPromptValue = void 0;
+      $$invalidate(19, selectedSystemPromptName = "");
+      yield onSystemPromptChange === null || onSystemPromptChange === void 0 ? void 0 : onSystemPromptChange(null);
+      highlightBadgeTemporarily();
     });
   }
   function applyProviderFilter() {
@@ -10315,25 +10510,29 @@ function instance($$self, $$props, $$invalidate) {
     if ("placeholder" in $$props2)
       $$invalidate(1, placeholder = $$props2.placeholder);
     if ("value" in $$props2)
-      $$invalidate(25, value = $$props2.value);
+      $$invalidate(26, value = $$props2.value);
     if ("providerLabel" in $$props2)
       $$invalidate(0, providerLabel = $$props2.providerLabel);
     if ("providerId" in $$props2)
-      $$invalidate(24, providerId = $$props2.providerId);
+      $$invalidate(25, providerId = $$props2.providerId);
     if ("getFiles" in $$props2)
-      $$invalidate(26, getFiles = $$props2.getFiles);
+      $$invalidate(27, getFiles = $$props2.getFiles);
     if ("getProviders" in $$props2)
-      $$invalidate(27, getProviders = $$props2.getProviders);
+      $$invalidate(28, getProviders = $$props2.getProviders);
     if ("onProviderChange" in $$props2)
-      $$invalidate(28, onProviderChange = $$props2.onProviderChange);
+      $$invalidate(29, onProviderChange = $$props2.onProviderChange);
     if ("getModels" in $$props2)
-      $$invalidate(29, getModels = $$props2.getModels);
+      $$invalidate(30, getModels = $$props2.getModels);
     if ("onModelChange" in $$props2)
-      $$invalidate(30, onModelChange = $$props2.onModelChange);
+      $$invalidate(31, onModelChange = $$props2.onModelChange);
     if ("onCreativityChange" in $$props2)
-      $$invalidate(31, onCreativityChange = $$props2.onCreativityChange);
+      $$invalidate(32, onCreativityChange = $$props2.onCreativityChange);
     if ("getSystemPrompts" in $$props2)
-      $$invalidate(32, getSystemPrompts = $$props2.getSystemPrompts);
+      $$invalidate(33, getSystemPrompts = $$props2.getSystemPrompts);
+    if ("selectedSystemPromptId" in $$props2)
+      $$invalidate(34, selectedSystemPromptId = $$props2.selectedSystemPromptId);
+    if ("onSystemPromptChange" in $$props2)
+      $$invalidate(35, onSystemPromptChange = $$props2.onSystemPromptChange);
   };
   $$self.$$.update = () => {
     if ($$self.$$.dirty[0] & /*activeDropdown, filteredItems*/
@@ -10387,6 +10586,7 @@ function instance($$self, $$props, $$invalidate) {
     systemItems,
     selectedIndex,
     badgeHighlight,
+    selectedSystemPromptName,
     handleKeydown,
     handleInput,
     handleSelection,
@@ -10401,6 +10601,8 @@ function instance($$self, $$props, $$invalidate) {
     onModelChange,
     onCreativityChange,
     getSystemPrompts,
+    selectedSystemPromptId,
+    onSystemPromptChange,
     div0_binding,
     click_handler,
     keydown_handler,
@@ -10433,16 +10635,18 @@ var ActionPalette = class extends SvelteComponent {
       safe_not_equal,
       {
         placeholder: 1,
-        value: 25,
+        value: 26,
         providerLabel: 0,
-        providerId: 24,
-        getFiles: 26,
-        getProviders: 27,
-        onProviderChange: 28,
-        getModels: 29,
-        onModelChange: 30,
-        onCreativityChange: 31,
-        getSystemPrompts: 32
+        providerId: 25,
+        getFiles: 27,
+        getProviders: 28,
+        onProviderChange: 29,
+        getModels: 30,
+        onModelChange: 31,
+        onCreativityChange: 32,
+        getSystemPrompts: 33,
+        selectedSystemPromptId: 34,
+        onSystemPromptChange: 35
       },
       null,
       [-1, -1, -1, -1, -1]
@@ -10476,7 +10680,9 @@ var SvelteActionPaletteWidget = class extends import_view2.WidgetType {
         getModels: this.options.getModels,
         onModelChange: this.options.onModelChange,
         onCreativityChange: this.options.onCreativityChange,
-        getSystemPrompts: this.options.getSystemPrompts
+        getSystemPrompts: this.options.getSystemPrompts,
+        selectedSystemPromptId: this.options.selectedSystemPromptId,
+        onSystemPromptChange: this.options.onSystemPromptChange
       }
     });
     this.app.$on(
@@ -32037,6 +32243,11 @@ var LocalGPT = class extends import_obsidian5.Plugin {
     this.statusBarItem.addClass("local-gpt-status");
     this.statusBarItem.hide();
   }
+  getLegacyActionPaletteSystemPromptStorageKey() {
+    var _a2, _b, _c;
+    const vaultName = (_c = (_b = (_a2 = this.app) == null ? void 0 : _a2.vault) == null ? void 0 : _b.getName) == null ? void 0 : _c.call(_b);
+    return vaultName ? `${this.manifest.id}:action-palette-system-prompt:${vaultName}` : `${this.manifest.id}:action-palette-system-prompt`;
+  }
   processText(text2, selectedText) {
     if (!text2.trim()) {
       return "";
@@ -32085,7 +32296,7 @@ var LocalGPT = class extends import_obsidian5.Plugin {
       id: "local-gpt-action-palette",
       name: I18n.t("commands.actionPalette.name"),
       editorCallback: async (editor) => {
-        var _a2, _b;
+        var _a2, _b, _c, _d;
         const editorView = editor.cm;
         const cursorPositionFrom = editor.getCursor("from");
         const insertPos = editor.posToOffset({
@@ -32122,10 +32333,10 @@ var LocalGPT = class extends import_obsidian5.Plugin {
         }
         showActionPalette(editorView, insertPos, {
           onSubmit: (text2, selectedFiles = [], systemPrompt) => {
-            var _a3, _b2, _c;
+            var _a3, _b2, _c2;
             const overrideProviderId = this.actionPaletteProviderId || this.settings.aiProviders.main;
             const creativityKey = (_b2 = (_a3 = this.actionPaletteCreativityKey) != null ? _a3 : this.settings.defaults.creativity) != null ? _b2 : "";
-            const temperatureOverride = (_c = CREATIVITY[creativityKey]) == null ? void 0 : _c.temperature;
+            const temperatureOverride = (_c2 = CREATIVITY[creativityKey]) == null ? void 0 : _c2.temperature;
             this.runFreeform(
               editor,
               text2,
@@ -32202,9 +32413,18 @@ var LocalGPT = class extends import_obsidian5.Plugin {
           },
           getSystemPrompts: () => {
             return getRunnableActions(this.settings.actions).filter((action) => action.system).map((action) => ({
+              id: getActionIdentifier(action),
               name: action.name,
               system: action.system
             }));
+          },
+          selectedSystemPromptId: (_d = (_c = this.settings.actionPalette) == null ? void 0 : _c.systemPromptActionId) != null ? _d : null,
+          onSystemPromptChange: async (systemPromptId) => {
+            this.settings.actionPalette = {
+              ...this.settings.actionPalette || {},
+              systemPromptActionId: systemPromptId
+            };
+            await this.saveData(this.settings);
           }
         });
         this.app.workspace.updateOptions();
@@ -32568,7 +32788,9 @@ var LocalGPT = class extends import_obsidian5.Plugin {
     const loadedData = await this.loadData();
     const { settings, changed } = await this.migrateSettings(loadedData);
     this.settings = Object.assign({}, DEFAULT_SETTINGS, settings);
-    if (changed) {
+    const { actions: actionsWithIds, changed: actionIdsChanged } = ensureActionIds(this.settings.actions || []);
+    this.settings.actions = actionsWithIds;
+    if (changed || actionIdsChanged) {
       await this.saveData(this.settings);
     }
   }
@@ -32576,15 +32798,31 @@ var LocalGPT = class extends import_obsidian5.Plugin {
     if (!loadedData) {
       return { settings: loadedData, changed: false };
     }
-    let changed = false;
-    changed = this.migrateToVersion2(loadedData) || changed;
-    changed = this.migrateToVersion3(loadedData) || changed;
-    changed = this.migrateToVersion4(loadedData) || changed;
-    changed = this.migrateToVersion5(loadedData) || changed;
-    changed = this.migrateToVersion6(loadedData) || changed;
-    changed = await this.migrateToVersion7(loadedData) || changed;
-    changed = this.migrateToVersion8(loadedData) || changed;
-    return { settings: loadedData, changed };
+    const preAsyncMigrations = [
+      this.migrateToVersion2,
+      this.migrateToVersion3,
+      this.migrateToVersion4,
+      this.migrateToVersion5,
+      this.migrateToVersion6
+    ];
+    const postAsyncMigrations = [
+      this.migrateToVersion8,
+      this.migrateToVersion9,
+      this.migrateToVersion10
+    ];
+    const changed = preAsyncMigrations.reduce(
+      (hasChanged, migrate) => migrate.call(this, loadedData) || hasChanged,
+      false
+    );
+    const changedAsync = await this.migrateToVersion7(loadedData);
+    const changedPostAsync = postAsyncMigrations.reduce(
+      (hasChanged, migrate) => migrate.call(this, loadedData) || hasChanged,
+      false
+    );
+    return {
+      settings: loadedData,
+      changed: changed || changedAsync || changedPostAsync
+    };
   }
   migrateToVersion2(settings) {
     if (settings._version && settings._version >= 1) {
@@ -32760,6 +32998,57 @@ Check the Settings!`,
     settings.defaults.contextLimit = settings.defaults.contextLimit || "local";
     settings._version = 8;
     return true;
+  }
+  migrateToVersion9(settings) {
+    if (settings._version && settings._version >= 9) {
+      return false;
+    }
+    const { actions } = ensureActionIds(settings.actions || []);
+    settings.actions = actions;
+    settings._version = 9;
+    return true;
+  }
+  migrateToVersion10(settings) {
+    if (settings._version && settings._version >= 10) {
+      return false;
+    }
+    settings.actionPalette = settings.actionPalette || {};
+    if (settings.actionPalette.systemPromptActionId == null) {
+      settings.actionPalette.systemPromptActionId = this.readLegacyActionPaletteSystemPromptId();
+    }
+    this.clearLegacyActionPaletteSystemPromptId();
+    settings._version = 10;
+    return true;
+  }
+  readLegacyActionPaletteSystemPromptId() {
+    try {
+      const raw = window.localStorage.getItem(
+        this.getLegacyActionPaletteSystemPromptStorageKey()
+      );
+      if (!raw) {
+        return null;
+      }
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed.id === "string" ? parsed.id : null;
+    } catch (error) {
+      console.error(
+        "Failed to migrate Action Palette system prompt selection:",
+        error
+      );
+      return null;
+    }
+  }
+  clearLegacyActionPaletteSystemPromptId() {
+    try {
+      window.localStorage.removeItem(
+        this.getLegacyActionPaletteSystemPromptStorageKey()
+      );
+    } catch (error) {
+      console.error(
+        "Failed to clean up legacy Action Palette system prompt selection:",
+        error
+      );
+    }
   }
   async checkUpdates() {
     try {

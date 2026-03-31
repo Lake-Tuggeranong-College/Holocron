@@ -139,25 +139,46 @@ _Task-oriented: Recipes for specific house features._
 
 ### Ambient Mood Behaviour (NeoPixels)
 
-This behaviour allows the house to change its internal atmosphere using addressable LEDs.
+This behaviour allows the house to change its internal atmosphere using addressable LEDs on the NeoPixel board.  The LEDs will turn on and green if the left button is being pressed, and will turn off if the button **isn't** being pressed.
+
+The logic can be shown as 
+
+```mermaid
+graph TD
+    A([Start: automaticLightSystem]) --> B[/Read leftButtonPin/]
+    B --> C{buttonState == LOW?}
+    
+    C -- Yes --> D[Set Pixels to Green]
+    C -- No --> E[Set Pixels to Black/Off]
+    
+    D --> F([End])
+    E --> F([End])
+```
 
 **Requirements:** `#include <Adafruit_NeoPixel.h>`
 
 Add the following code to the start of `main.cpp` to define the pins and NeoPixel object:
 ```arduino
-#define NEOPIXEL_PIN 26
-#define NUM_PIXELS 4
+#define neopixelPin 26
+#define numPixels 4
+#define leftButtonPin 16
 
-Adafruit_NeoPixel strip(NUM_PIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel neoPixelBoard(numPixels, neopixelPin, NEO_GRB + NEO_KHZ800);
 ```
 
 ![[smartHouseBehaviourAmbientMood1.png]]
 
-Update `setup()` to configure the NeoPixel strip to initialise:
+Update `setup()` to configure the NeoPixel board to initialise the button and the NeoPixel board.
 
 ```arduino
-strip.begin();
-strip.show(); 
+pinMode(leftButtonPin, INPUT_PULLUP);
+```
+
+and
+
+```arduino
+neoPixelBoard.begin();
+neoPixelBoard.show();
 ```
 
 ![[smartHouseBehaviourAmbientMood2.png]]
@@ -166,7 +187,7 @@ Include the behaviour to set the colours of the individual pixels.
 
 ```arduino
 void setMoodBehaviour(int r, int g, int b) {
-  for(int i=0; i<NUM_PIXELS; i++) {
+  for(int i=0; i<numPixels; i++) {
     strip.setPixelColor(i, strip.Color(r, g, b));
   }
   strip.show();
@@ -177,21 +198,44 @@ void setMoodBehaviour(int r, int g, int b) {
 
 ![[smartHouseBehaviourAmbientMood3.png]]
 
-Update `loop()` to call the new function.
+The logic for displaying colours has been defined, now the focus is on reading in the value of the button and then calling the setMoodBehaviour() function appropriately.
 
 ```arduino
-setMoodBehaviour(0, 255, 0); // Set the NeoPixels to Green
+void automaticLightSystem() {
+  int buttonState = digitalRead(leftButtonPin);
+  if (buttonState == LOW) {
+	   setMoodBehaviour(0, 255, 0); // Set the NeoPixels to Green
+  } else {
+	  setMoodBehaviour(0, 0, 0); // Set the NeoPixels to Black (off)
+  }
+}
 ```
 
 ![[smartHouseBehaviourAmbientMood4.png]]
 
-#### Understanding RGB Values
+Update `loop()` to call the new function.
 
-See this page for more details: [[RGB Values]]
+```arduino
+automaticLightSystem()
+```
 
-### Environmental Ventilation Behaviour (Servo Motor)
+![[smartHouseBehaviourAmbientMood5.png]]
 
-This behaviour automates the window to respond to internal conditions.
+
+> [!tip] Understanding RGB Values
+> See this page for more details: [[RGB Values]]
+
+Currently, this code simply sets all four pixels on the board to be green and nothing else which doesn't provide much in terms of functionality. The next step is to expand the code so that the pixels turn green *if* certain conditions are met and turns the pixels off if those conditions aren't met.
+
+### Environmental Ventilation Behaviour
+
+This behaviour automates the window to respond to internal conditions. 
+
+**The Goal:** Program a ventilation behaviour which will open a window if the house gets too humid.
+- **Sensor:** Steam Sensor.
+- **Actuator:** Servo.
+- **The Logic:** Use an `if` statement to check if the steam sensor pin reads a value over a set threshold. If it does, trigger the servo to move the window to the open position.
+
 
 First, include the library required for servo motors on an ESP32 microcontroller.
 
@@ -201,31 +245,90 @@ First, include the library required for servo motors on an ESP32 microcontroller
 
 ![[smartHouseBehaviourVentilation1.png]]
 
+Define the pins, moisture threshold and servo object at the top of your code. 
+`moistureThreshold` is the value read from the steam sensor which will determine whether the window will need to be open or closed.
+
+```arduino
+#define windowServoPin 5
+#define steamSensorPin 34
+#define moistureThreshold 500
+```
+and
+```arduino
+Servo windowServo;
+```
+
+![[smartHouseBehaviourVentilation2.png]]
+
 Update `setup()` to initialise the servo.
 
 ```arduino
-void setup() {
-  ESP32PWM::allocateTimer(0); 
-  windowServo.attach(WINDOW_SERVO_PIN);
-  windowServo.write(0); 
-}
+ESP32PWM::allocateTimer(0);
+ESP32PWM::allocateTimer(1);
+ESP32PWM::allocateTimer(2);
+ESP32PWM::allocateTimer(3);
+windowServo.setPeriodHertz(50); // standard 50 hz servo
+windowServo.attach(windowServoPin, 500, 2400);
+windowServo.write(0);
 ```
 
+Now set the steam sensor pin to be input:
+
+```arduino
+pinMode(steamSensorPin, INPUT);
+```
+
+![[smartHouseBehaviourVentilation3.png]]
+
+Add the `windowBehaviour()` custom function. This function will open the window if `true` is passed as a parameter, and will close the window if `false` is passed.
 
 ```
-#define WINDOW_SERVO_PIN 5
-Servo windowServo;
-
 void windowBehaviour(bool open) {
   if (open) windowServo.write(90); 
   else windowServo.write(0);
 }
-
-
-
-
 ```
 
+![[smartHouseBehaviourVentilation4.png]]
+
+The main behaviour logic is next. The logic is as follows:
+
+```mermaid
+graph TD
+    A([Start: moistureDetectionSystem]) --> B[/Read steamSensorPin/]
+    B --> C{steamValue > moistureThreshold?}
+    
+    C -- Yes --> D[windowBehaviour: true]
+    C -- No --> E[windowBehaviour: false]
+    
+    D --> F([End])
+    E --> F([End])
+```
+
+To implement this logic, the code is:
+
+```arduino
+void moistureDetectionSystem() {
+  int steamValue = analogRead(steamSensorPin);
+  if (steamValue > moistureThreshold) {
+    // Moisture detected
+    windowBehaviour(true);
+  } else {
+    // Dry
+    windowBehaviour(false);
+  }
+}
+```
+
+![[smartHouseBehaviourVentilation5.png]]
+
+Finally, call `moistureDetectionSystem()` from the `loop()`:
+
+![[smartHouseBehaviourVentilation6.png]]
+
+Compile and upload the code to test the functionality!
+
+![[smartHouseBehaviourVentilationDemo.gif]]
 #### Explanation: windowBehaviour()
 
 This provides a breakdown of how the function operates, specifically focusing on the logic within the conditional block and the role of its input parameter.
@@ -273,7 +376,6 @@ As your house gets smarter, your `loop()` function will become messy.
 _Information-oriented: Keeping your code professional._
 
 - **Variables/Functions:** `lowerCamelCase` (e.g., `isWindowOpen`)
-- **Constants/Pins:** `UPPERCASE` (e.g., `FAN_PIN`)
 - **Comments:** Every function must have a one-line comment explaining its purpose.
 ### Required Theory Links
 
@@ -304,12 +406,13 @@ Use the additional sensors and actuators in your kit to programmed the following
 - **Actuator:** DC Motor (with a fan blade).
 - **The Logic:** Define a variable for your "Max Temperature" (e.g., 27°C). Use the `if` statement to compare the current sensor reading to that variable.
 
-## The Phototactic Behaviour (Photoresistor + LED)
+## The Security Door Behaviour (RFID + Door Servo)
 
-**The Goal:** Program a light-sensitive behaviour so the house "senses" the transition from day to night, activating porch lights only when it detects a lack of ambient light.
-- **Sensor:** Photoresistor (LDR).
-- **Actuator:** LED.
-- **The Logic:** Read the analog value of the light sensor. If the value drops below a certain number (indicating darkness), enable the LED.
+**The Goal:** Program a RFID reader to accept only certain RFID tags. If the correct tag is read the rotating door opens, otherwise it closes.
+- **Sensor:** RFID reader.
+- **Actuator:** Servo
+- **The Logic:** Read the value of a detected RFID tag. If the value is correct, move the door servo to the open position. If the value is incorrect, then move the door to the closed position.
+
 
 ##  Programming Reflection
 

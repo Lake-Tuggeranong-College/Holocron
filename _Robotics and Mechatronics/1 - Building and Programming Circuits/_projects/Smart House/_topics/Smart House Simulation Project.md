@@ -116,6 +116,11 @@ Add the function call to `loop()`:
 ```
 
 ![[smartHouseCodingBehaviour.png]]
+
+Upload the code to your smart house! This is the behaviour in action.
+
+![[smartHouseBehaviourAutomaticLight.gif]]
+
 ### Explanation
 
 This code demonstrates a **State Toggle** logic combined with **Edge Detection**. Instead of the light being on only while the button is held down, this code allows a single press to flip the light from OFF to ON (and vice versa).
@@ -234,6 +239,9 @@ automaticLightSystem()
 
 Currently, this code simply sets all four pixels on the board to be green and nothing else which doesn't provide much in terms of functionality. The next step is to expand the code so that the pixels turn green *if* certain conditions are met and turns the pixels off if those conditions aren't met.
 
+Upload the code to your smart house and the new behaviour will be accessible:
+
+![[smartHouseBehaviourAmbientMood.gif]]
 ### Environmental Ventilation Behaviour
 
 This behaviour automates the window to respond to internal conditions. 

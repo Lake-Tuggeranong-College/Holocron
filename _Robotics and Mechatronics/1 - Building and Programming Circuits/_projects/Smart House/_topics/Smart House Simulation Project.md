@@ -180,7 +180,7 @@ Adafruit_NeoPixel neoPixelBoard(numPixels, neopixelPin, NEO_GRB + NEO_KHZ800);
 
 ![[smartHouseBehaviourAmbientMood1.png]]
 
-Update `setup()` to configure the NeoPixel board to initialise the button and the NeoPixel board.
+Update `setup()` to configure the NeoPixel board to initialise the button and the NeoPixel board.![[smartHouseBehaviourAmbientMood2.png]]
 
 ```arduino
 pinMode(leftButtonPin, INPUT_PULLUP);
@@ -413,6 +413,14 @@ Use the additional sensors and actuators in your kit to programmed the following
 - **Sensor:** PIR Motion Sensor.
 - **Actuator:** Active Buzzer.
 - **The Logic:** Use an `if` statement to check if the motion sensor pin reads `HIGH`. If it does, trigger the buzzer to beep in a pattern.
+### Required Code
+
+This section indicates any specialised code that is required for this behaviour.
+
+| Module            | Libraries Required | Definitions at top of code                                                                | `setup()`                                             | Usage                                                                                                                       |
+| ----------------- | ------------------ | ----------------------------------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| PIR Motion Sensor | N/A                | Standard Pin definition.                                                                  | Set pin to input                                      | `digitalRead()`                                                                                                             |
+| Buzzer            | `BuzzerESP32.h`    | `#define buzzerPin 25`<br>`BuzzerESP32 buzzer(buzzerPin); // Initialize buzzer on GPIO25` | `buzzer.setTimbre(30); // Set timbre (sound quality)` | `buzzer.playTone(532, 500);  // C5 (slightly sharp) - longer duration`<br> `buzzer.playTone(0, 0);      // Turn off buzzer` |
 
 ## The Homeostatic Behaviour (Temperature Sensor + DC Motor)
 
@@ -421,6 +429,16 @@ Use the additional sensors and actuators in your kit to programmed the following
 - **Actuator:** DC Motor (with a fan blade).
 - **The Logic:** Define a variable for your "Max Temperature" (e.g., 27°C). Use the `if` statement to compare the current sensor reading to that variable.
 
+### Required Code
+
+This section indicates any specialised code that is required for this behaviour.
+
+| Module   | Libraries Required | Definitions at top of code                                     | `setup()`               | Usage                                                                                                                                                                                                                                                                    |
+| -------- | ------------------ | -------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| DHT11    | `dht11.h`          | Normal pin defintion<br>`dht11 DHT11; // Initialize dht11`<br> | N/A                     | `int chk = DHT11.read(DHT11PIN);`<br>`int Temperature = DHT11.temperature;`<br>`int Humidity = DHT11.humidity;`                                                                                                                                                          |
+| DC Motor | N/A                | Standard Pin definition.                                       | Set both pins to output | ` digitalWrite(fanPin1, LOW); //INA`<br>  `analogWrite(fanPin2, 180);  //INB`<br>  `delay(1000)`<br><br>  Note: If INA-INB <-45 the fan will rotate clockwise<br>  if INA - INB > 45 the fan will rotate anticlockwise<br>  if INA == 0 and INB == 0, the fan will stop. |
+
+
 ## The Security Door Behaviour (RFID + Door Servo)
 
 **The Goal:** Program a RFID reader to accept only certain RFID tags. If the correct tag is read the rotating door opens, otherwise it closes.
@@ -428,6 +446,54 @@ Use the additional sensors and actuators in your kit to programmed the following
 - **Actuator:** Servo
 - **The Logic:** Read the value of a detected RFID tag. If the value is correct, move the door servo to the open position. If the value is incorrect, then move the door to the closed position.
 
+### Required Code
+
+This section indicates any specialised code that is required for this behaviour.
+
+| Module     | Libraries Required                | Definitions at top of code                     | `setup()`                                                                              | Usage                |
+| ---------- | --------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------- |
+| RFID       | `<Wire.h>`<br>`"MFRC522_I2C.h"`   | `MFRC522 mfrc522(0x28);`                       | `Wire.begin();       // initialize I2C`<br>`mfrc522.PCD_Init(); // initialize MFRC522` | See Below<br>        |
+| Door Servo | Already imported for Window Servo | `Servo doorServo`<br>`#define doorServoPin 13` | `myservo.attach(doorServoPin, 1000, 2000);`                                            | Same as Window Servo |
+#### Reading RFID Values
+
+```
+String rfidUidString = "";
+if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
+	delay(50);
+	rfidUidString = "";
+	return;
+}
+
+// Build the UID string from the raw bytes provided by the reader
+rfidUidString = "";
+for (byte i = 0; i < mfrc522.uid.size; i++) {
+	rfidUidString += String(mfrc522.uid.uidByte[i]);
+}
+
+if (rfidUidString == "1391624650") {
+	Serial.println("Access Granted: Revolving door opening.");
+} else {
+	Serial.println("Access Denied: Invalid UID " + rfidUidString);
+}
+rfidUidString = "";
+```
+
+## Harmful Gas Behaviour (Gas Sensor + LCD)
+
+**The Goal:** Detect if there are any harmful gases in the house and alert the occupant. 
+- **Sensor:** Gas Sensor
+- **Actuator:** LCD Screen
+- **The Logic:** Read the gas level and display "Safe" or "Harmful" on the screen depending on value. If the reading is Harmful, then a buzzer plays a different buzz from other behaviour.
+
+### Required Code
+
+This section indicates any specialised code that is required for this behaviour.
+
+
+| Module     | Libraries Required    | Definitions at top of code                  | `setup()`                                                      | Usage                                                                     |
+| ---------- | --------------------- | ------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| LCD Screen | `LiquidCrystal_I2C.h` | `LiquidCrystal_I2C lcdScreen(0x27, 16, 2);` | <code>lcdScreen.init();  <br>lcdScreen.backlight();<br></code> | <code>lcdScreen.setCursor(0, 0);<br>lcdScreen.print("safety");<br></code> |
+| Gas Sensor | N/A                   | Standard Pin definition.                    | Set pin to input                                               | `digitalRead()`                                                           |
 
 ##  Programming Reflection
 

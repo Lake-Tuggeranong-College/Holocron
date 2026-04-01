@@ -508,3 +508,7 @@ When you add these robotic behaviours, ask yourself:
 3. **Efficiency:** Can I use one `if` statement to check two conditions at once (like "if it is dark AND I am home")?
 
 **Share your creation:** Once you've added a new behaviour, demonstrate it to a classmate and explain exactly how your `if` statement handles the new sensor data!
+
+# Behaviour Demonstration
+
+![Smart House Behaviour Demonstration](https://youtu.be/pk0qQcrm1lE)

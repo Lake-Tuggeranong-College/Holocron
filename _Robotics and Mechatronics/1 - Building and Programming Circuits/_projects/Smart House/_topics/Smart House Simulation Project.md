@@ -18,19 +18,20 @@ In robotics, a **Behaviour** is a specific way an entity (like your house) react
 
 _The house is already pre-wired for you. Use this table to understand which pins are connected to which devices before you begin programming._
 
-|Pin|Device|Type|Logic / Signal|
-|---|---|---|---|
-|**IO12**|Yellow LED|Output|Digital (High/Low)|
-|**IO18/19**|Fan (DC Motor)|Output|PWM (Speed)|
-|**IO26**|NeoPixel Square|Output|Serial Data|
-|**IO5**|Window Servo|Output|PWM (Angle)|
-|**IO13**|Door Servo|Output|PWM (Angle)|
-|**IO25**|Buzzer|Output|Frequency|
-|**IO27**|Right Button|Input|Digital (PULLUP)|
-|**IO16**|Left Button|Input|Digital (PULLUP)|
-|**IO14**|PIR (Motion)|Input|Digital|
-|**IO34**|Steam (Rain)|Input|Analogue (0-4095)|
-|**IO17**|DHT11 (Temp)|Input|OneWire Data|
+| Pin         | Device              | Type   | Logic / Signal     |
+| ----------- | ------------------- | ------ | ------------------ |
+| **IO12**    | Yellow LED          | Output | Digital (High/Low) |
+| **IO18/19** | Fan (DC Motor)      | Output | PWM (Speed)        |
+| **IO26**    | NeoPixel Square     | Output | Serial Data        |
+| **IO5**     | Window Servo        | Output | PWM (Angle)        |
+| **IO13**    | Door Servo          | Output | PWM (Angle)        |
+| **IO25**    | Buzzer              | Output | Frequency          |
+| **IO27**    | Right Button        | Input  | Digital (PULLUP)   |
+| **IO16**    | Left Button         | Input  | Digital (PULLUP)   |
+| **IO14**    | PIR (Motion)        | Input  | Digital            |
+| **IO34**    | Steam (Rain)        | Input  | Analogue (0-4095)  |
+| **IO17**    | DHT11 (Temperature) | Input  | OneWire Data       |
+| **IO23**    | Gas Sensor          | Input  | Digital            |
 
 > [!TIP] **Pre-Programming Checklist:**
 > 
@@ -348,14 +349,14 @@ Compile and upload the code to test the functionality!
 
 This provides a breakdown of how the function operates, specifically focusing on the logic within the conditional block and the role of its input parameter.
 
-##### 1. The Parameter
+##### The Parameter
 
 The **parameter** acts as a placeholder for the data that the function needs to perform its task.
 
 - **Input:** When the function is "called," you pass an actual value (an argument) into this parameter.
 - **Scope:** This variable exists only inside the function. It allows the function to be dynamic—instead of doing the same thing every time, it can process different data depending on what is passed in.
 
-##### 2. The `if` Statement
+##### The `if` Statement
 
 The `if` statement is the "decision-maker" of the function. It evaluates a specific condition to determine which path the code should take.
 
@@ -366,7 +367,7 @@ The `if` statement is the "decision-maker" of the function. It evaluates a speci
     - **If True:** The block of code immediately following (inside the curly braces `{}`) is executed.
     - **If False:** The computer skips that block entirely. If there is an `else` block, it runs that instead; otherwise, it simply moves to the next line of code after the function.
 
-### Purpose in this Context:
+##### Purpose in this Context
 
 In this specific function, the `if` statement likely guards against invalid data (like checking if the parameter is empty) or checks if a certain threshold has been met before proceeding with the main logic.
 
@@ -433,10 +434,10 @@ This section indicates any specialised code that is required for this behaviour.
 
 This section indicates any specialised code that is required for this behaviour.
 
-| Module   | Libraries Required | Definitions at top of code                                     | `setup()`               | Usage                                                                                                                                                                                                                                                                    |
-| -------- | ------------------ | -------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| DHT11    | `dht11.h`          | Normal pin defintion<br>`dht11 DHT11; // Initialize dht11`<br> | N/A                     | `int chk = DHT11.read(DHT11PIN);`<br>`int Temperature = DHT11.temperature;`<br>`int Humidity = DHT11.humidity;`                                                                                                                                                          |
-| DC Motor | N/A                | Standard Pin definition.                                       | Set both pins to output | ` digitalWrite(fanPin1, LOW); //INA`<br>  `analogWrite(fanPin2, 180);  //INB`<br>  `delay(1000)`<br><br>  Note: If INA-INB <-45 the fan will rotate clockwise<br>  if INA - INB > 45 the fan will rotate anticlockwise<br>  if INA == 0 and INB == 0, the fan will stop. |
+| Module   | Libraries Required | Definitions at top of code                                     | `setup()`               | Usage                                                                                                                                                                                                                                                                     |
+| -------- | ------------------ | -------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DHT11    | `dht11.h`          | Normal pin defintion<br>`dht11 DHT11; // Initialize dht11`<br> | N/A                     | `int chk = DHT11.read(dhtPin);`<br>`int temperature = DHT11.temperature;`<br>`int humidity = DHT11.humidity;`                                                                                                                                                             |
+| DC Motor | N/A                | Standard Pin definition.                                       | Set both pins to output | ` digitalWrite(fanPin1, LOW); //INA`<br>  `analogWrite(fanPin2, 180);  //INB`<br>  `delay(1000);`<br><br>  Note: If INA-INB <-45 the fan will rotate clockwise<br>  if INA - INB > 45 the fan will rotate anticlockwise<br>  if INA == 0 and INB == 0, the fan will stop. |
 
 
 ## The Security Door Behaviour (RFID + Door Servo)
@@ -456,7 +457,9 @@ This section indicates any specialised code that is required for this behaviour.
 | Door Servo | Already imported for Window Servo | `Servo doorServo`<br>`#define doorServoPin 13` | `myservo.attach(doorServoPin, 1000, 2000);`                                            | Same as Window Servo |
 #### Reading RFID Values
 
-```
+This code can be used to determine which is the *correct* RFID card. Use the Serial Monitor to view the `rfidUidString` when you scan cards, then update `if (rfidUidString == "1391624650")` to check for the correct ID.
+
+```arduino
 String rfidUidString = "";
 if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) {
 	delay(50);
@@ -470,8 +473,8 @@ for (byte i = 0; i < mfrc522.uid.size; i++) {
 	rfidUidString += String(mfrc522.uid.uidByte[i]);
 }
 
-if (rfidUidString == "1391624650") {
-	Serial.println("Access Granted: Revolving door opening.");
+if (rfidUidString == "1391624650") { //Example "correct" RFID ID
+	Serial.println("Access Granted: Revolving door opening. " + rfidUidString);
 } else {
 	Serial.println("Access Denied: Invalid UID " + rfidUidString);
 }
@@ -490,11 +493,12 @@ rfidUidString = "";
 This section indicates any specialised code that is required for this behaviour.
 
 
-| Module     | Libraries Required    | Definitions at top of code                  | `setup()`                                                      | Usage                                                                     |
-| ---------- | --------------------- | ------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| LCD Screen | `LiquidCrystal_I2C.h` | `LiquidCrystal_I2C lcdScreen(0x27, 16, 2);` | <code>lcdScreen.init();  <br>lcdScreen.backlight();<br></code> | <code>lcdScreen.setCursor(0, 0);<br>lcdScreen.print("safety");<br></code> |
-| Gas Sensor | N/A                   | Standard Pin definition.                    | Set pin to input                                               | `digitalRead()`                                                           |
-
+| Module     | Libraries Required    | Definitions at top of code                  | `setup()`                                                      | Usage                                                                                                         |
+| ---------- | --------------------- | ------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| LCD Screen | `LiquidCrystal_I2C.h` | `LiquidCrystal_I2C lcdScreen(0x27, 16, 2);` | <code>lcdScreen.init();  <br>lcdScreen.backlight();<br></code> | <code>lcdScreen.setCursor(0, 0);<br>lcdScreen.print("safety");<br></code>                                     |
+| Gas Sensor | N/A                   | Standard Pin definition.                    | Set pin to input                                               | `digitalRead()` reads a boolean. <br>0 (False) = Harmful Gas detected.<br>1 (True) = No harmful gas detected. |
+> [!tip] You can test the gas sensor without exposing yourself to harmful gasses! Using a screwdriver, you can change the sensitivity of the sensor by changing the potentiometer on board.
+> 
 ##  Programming Reflection
 
 When you add these robotic behaviours, ask yourself:

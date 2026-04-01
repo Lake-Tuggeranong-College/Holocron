@@ -497,8 +497,9 @@ This section indicates any specialised code that is required for this behaviour.
 | ---------- | --------------------- | ------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | LCD Screen | `LiquidCrystal_I2C.h` | `LiquidCrystal_I2C lcdScreen(0x27, 16, 2);` | <code>lcdScreen.init();  <br>lcdScreen.backlight();<br></code> | <code>lcdScreen.setCursor(0, 0);<br>lcdScreen.print("safety");<br></code>                                     |
 | Gas Sensor | N/A                   | Standard Pin definition.                    | Set pin to input                                               | `digitalRead()` reads a boolean. <br>0 (False) = Harmful Gas detected.<br>1 (True) = No harmful gas detected. |
-> [!tip] You can test the gas sensor without exposing yourself to harmful gasses! Using a screwdriver, you can change the sensitivity of the sensor by changing the potentiometer on board.
-> 
+> [!tip]- Gas Sensor Sensitivity.
+> You can test the gas sensor without exposing yourself to harmful gasses! Using a screwdriver, you can change the sensitivity of the sensor by changing the potentiometer on board.
+> ![[gasSensorSensitivity.gif]]
 ##  Programming Reflection
 
 When you add these robotic behaviours, ask yourself:

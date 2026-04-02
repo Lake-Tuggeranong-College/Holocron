@@ -7,7 +7,7 @@ needsUpdating: false
 
 > [!important] Prerequisite - Before starting this process, you must [[_Robotics and Mechatronics/1 - Building and Programming Circuits/_ap/2026S1/Accept Assignment|clone the repository]] to your computer.
 
-This project explores the design and programming of an intelligent living space. You will use an ESP32 microcontroller, sensors (inputs), and actuators (outputs) to automate a physical model house.
+This project explores the design and programming of an intelligent living space. In this phase, you will use an ESP32 microcontroller, sensors (inputs), and actuators (outputs) to automate a physical model house.
 
 ![[smartHousePromo.jpg]]
 ## 🤖 Understanding Robotic Behaviours

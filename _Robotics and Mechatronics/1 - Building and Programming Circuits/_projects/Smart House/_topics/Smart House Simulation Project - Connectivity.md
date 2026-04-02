@@ -1,8 +1,8 @@
 ---
 isCurrent: true
+needsUpdating: true
 softwareVersion:
   - PlatformIO
-needsUpdating: true
 ---
 > [!important] Prerequisite - [[Smart House Simulation Project - Behaviours]]
 

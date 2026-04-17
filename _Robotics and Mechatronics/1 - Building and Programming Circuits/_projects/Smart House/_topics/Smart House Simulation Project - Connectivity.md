@@ -20,29 +20,31 @@ In this exercise, you will modify your project to establish a connection to a Wi
 
 ## Organising Your Code
 
-To keep your project tidy, we will move the connectivity logic into a separate file. In your PlatformIO project, create a new file in the `include` folder named `connectivity.h`.
+To keep your project tidy, we will move the connectivity logic into a separate file. In your PlatformIO project, create a new file in the `arc` folder named `connectivity.h`.
+
+![[connectivityNewFile.png]]\
 
 1. **In `connectivity.h`**, add the following code:
-    
 
 ```arduino
 #include <WiFi.h>
 #include <WebServer.h>
 
-const char* ssid = "CyberRange_SSID"; 
-const char* password = "YourPasswordHere";
+const char* ssid = "CyberRange"; 
+const char* password = "CyberRange";
 WebServer server(80); 
 
-void setupWiFi(LiquidCrystal_I2C &lcd) {
+void setupWiFi() {
   WiFi.begin(ssid, password);
-  lcd.clear();
-  lcd.print("Connecting...");
   
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  
+}
+
+void displayIPLCD(LiquidCrystal_I2C &lcd) {
+
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Connected!");
@@ -55,25 +57,39 @@ void setupWiFi(LiquidCrystal_I2C &lcd) {
 }
 ```
 
+![[connectivityInitCode.png]]
+
 2. **In `main.cpp`**, include your new file at the top:
-    
 
 ```arduino
 #include "connectivity.h"
 ```
 
-3. **Initialise in `void setup()`**: Call the function you just created:
-    
+![[connectivityInclude.png]]
+
+3. Initialise in `void setup()`: Call the function you just created:
 
 ```arduino
 void setup() {
-  Serial.begin(115200);
-  lcdScreen.init();
-  lcdScreen.backlight();
+
+	// .... Keep exisiting code. Add the following to the end of the function.
   
-  setupWiFi(lcdScreen); // Call the function from connectivity.h
+  setupWiFi();
+  displayIPLCD(lcdScreen);
 }
 ```
+
+![[connectivityUpdateSetup.png]]
+
+Finally, to convert the project to allow for the new connectivity phase, comment out the function calls in `loop()` to disable the previous functionality.
+
+![[connectivityUpdateLoop.png]]
+
+Upload the code to the smart house and the IP address should appear on the LCD screen.
+
+![[connectivityLCDOutput.png]]
+
+The next step is to add access to the functionality from a web browser.
 
 # 2. How-to Guide: Hosting a Local Website
 
@@ -91,6 +107,35 @@ void handleRoot() {
   server.send(200, "text/html", html);
 }
 ```
+
+![[connectivityHandleRoot.png]]
+
+Save the file. Go back to `setup()` in `main.cpp` and update the function to run the function when a user attempts to access the device's IP address through a web browser.
+
+```arduino
+ // Web Access
+  server.on("/", handleRoot);
+  
+  server.begin();
+```
+
+![[connectivityConfigureServer.png]]
+
+Update `loop()` to accept and process any incomming web requests (if a user has attempted to access any webpages). Add the folllowing command before the delay.
+
+```arduino
+  server.handleClient(); // Essential: processes web requests
+```
+
+![[connectivityHandleClient.png]]
+
+Upload the code to the smart house, then **using a device connected to the same network** try and access the IP address through a web browser.
+
+![[connectivityWebsiteResponding.png]]
+
+
+
+---
 
 # 3. Advanced: Separate Webpages for Behaviours
 

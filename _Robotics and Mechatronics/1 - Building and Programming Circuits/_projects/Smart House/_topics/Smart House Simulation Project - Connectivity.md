@@ -22,7 +22,7 @@ In this exercise, you will modify your project to establish a connection to a Wi
 
 To keep your project tidy, we will move the connectivity logic into a separate file. In your PlatformIO project, create a new file in the `arc` folder named `connectivity.h`.
 
-![[connectivityNewFile.png]]\
+![[connectivityNewFile.png]]
 
 1. **In `connectivity.h`**, add the following code:
 

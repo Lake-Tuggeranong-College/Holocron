@@ -53,6 +53,14 @@ views:
     columnSize:
       file.name: 485
   - type: table
+    name: Orphaned MD files
+    filters:
+      and:
+        - "!file.backlinks"
+    groupBy:
+      property: file.folder
+      direction: ASC
+  - type: table
     name: Not Current
     filters:
       and:
@@ -158,11 +166,3 @@ views:
     sort:
       - property: file.name
         direction: ASC
-  - type: table
-    name: Orphaned
-    filters:
-      and:
-        - "!file.backlinks"
-    groupBy:
-      property: file.folder
-      direction: ASC

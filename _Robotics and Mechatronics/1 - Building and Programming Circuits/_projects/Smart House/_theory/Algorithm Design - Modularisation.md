@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: false
+needsUpdating: true
 ---
 # Theory
 ![[Theory#Algorithm Design - Modularisation]]

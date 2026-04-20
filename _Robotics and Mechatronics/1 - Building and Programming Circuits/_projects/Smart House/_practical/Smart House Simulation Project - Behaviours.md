@@ -181,7 +181,7 @@ Adafruit_NeoPixel neoPixelBoard(numPixels, neopixelPin, NEO_GRB + NEO_KHZ800);
 
 ![[smartHouseBehaviourAmbientMood1.png]]
 
-Update `setup()` to configure the NeoPixel board to initialise the button and the NeoPixel board.![[smartHouseBehaviourAmbientMood2.png]]
+Update `setup()` to configure the NeoPixel board to initialise the button and the NeoPixel board.
 
 ```arduino
 pinMode(leftButtonPin, INPUT_PULLUP);

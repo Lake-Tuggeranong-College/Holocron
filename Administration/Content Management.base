@@ -57,9 +57,14 @@ views:
     filters:
       and:
         - "!file.backlinks"
+        - file.folder != "Administration"
     groupBy:
       property: file.folder
       direction: ASC
+    order:
+      - file.name
+      - isCurrent
+      - needsUpdating
   - type: table
     name: Not Current
     filters:

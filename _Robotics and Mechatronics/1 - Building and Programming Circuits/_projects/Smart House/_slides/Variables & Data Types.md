@@ -2,7 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
-isCurrent: false
+isCurrent: true
 needsUpdating: false
 ---
 # Variables & Data Types

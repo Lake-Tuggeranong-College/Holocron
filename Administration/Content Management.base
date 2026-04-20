@@ -158,3 +158,11 @@ views:
     sort:
       - property: file.name
         direction: ASC
+  - type: table
+    name: Orphaned
+    filters:
+      and:
+        - "!file.backlinks"
+    groupBy:
+      property: file.folder
+      direction: ASC

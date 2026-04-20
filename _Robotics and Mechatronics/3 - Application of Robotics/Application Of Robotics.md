@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > ![[_Robotics and Mechatronics/3 - Application of Robotics/_projects/SITH/Project Overview|Project Overview]]

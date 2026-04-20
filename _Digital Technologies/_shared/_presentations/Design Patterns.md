@@ -3,6 +3,7 @@ theme: white
 highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: false
+needsUpdating: false
 ---
 
 

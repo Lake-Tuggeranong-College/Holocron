@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 > [!important] Prerequisite: [[_Digital Technologies/1 - Digital Assets/_projects/Space Invaders/Enemy Shooting]]
 

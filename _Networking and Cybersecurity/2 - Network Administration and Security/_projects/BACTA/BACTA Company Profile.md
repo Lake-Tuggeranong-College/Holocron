@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 **BACTA Hospital: Bringing Advanced Care and Compassion to Your Community**
 

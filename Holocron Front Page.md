@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 Welcome to the Holocron - the central repository for IT subjects at LTC. 

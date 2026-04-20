@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 > [!info] Google Gemini, 7 Oct 2024
 

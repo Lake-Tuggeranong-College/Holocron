@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 This code was removed from the original project. Include it again in the indicated files to reenable the functionality.
 

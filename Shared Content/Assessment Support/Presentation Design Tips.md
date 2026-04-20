@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 > [!tip] This page focuses on the development of Presentation files (Google Slides, Powerpoint etc).

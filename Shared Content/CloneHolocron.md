@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 Holocron Repository: [GitHub repository](https://github.com/Lake-Tuggeranong-College/Holocron)
 

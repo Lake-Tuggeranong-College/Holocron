@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > ![[_Digital Technologies/3 - Digital Solutions/_projects/Frontierlands/Project Overview|Project Overview]]

@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 
 Using the projects board:

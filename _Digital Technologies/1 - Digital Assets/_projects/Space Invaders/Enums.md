@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 An enumeration, or enum for short, is a data type that defines a set of named constants. In Godot, enums are used to represent a limited set of options or choices. They provide a way to organize and restrict the values that can be assigned to a variable.
 

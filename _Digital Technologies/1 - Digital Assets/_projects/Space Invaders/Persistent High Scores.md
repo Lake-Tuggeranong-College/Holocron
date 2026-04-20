@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 > [!important] This tutorial gives you the evidence to complete VET competency `ICTPRG302 Apply Introductory Programming Techniques`, performance criteria 4.1 & 4.3
 

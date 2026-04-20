@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 This shows how to use Advanced Slides within the holocron.
 

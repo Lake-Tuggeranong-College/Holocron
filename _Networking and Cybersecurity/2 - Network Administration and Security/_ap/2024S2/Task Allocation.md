@@ -1,6 +1,7 @@
 ---
 isCurrent: false
 publish: false
+needsUpdating: false
 ---
 As a group, determine who is responsible for which parts of the project.
 

@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 A `devcontainer.json` file defines the environment for a **Dev Container**, allowing developers to work in a consistent, isolated development environment. This is especially useful for teams, open-source projects, or when working across multiple machines.
 

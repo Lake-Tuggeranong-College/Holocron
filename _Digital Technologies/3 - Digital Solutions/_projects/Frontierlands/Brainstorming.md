@@ -1,6 +1,7 @@
 ---
 isCurrent: false
 softwareVersion:
+needsUpdating: false
 ---
 There are decisions to make
 

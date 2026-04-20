@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 If your game is experiencing a bug where objects from the Main Game are appearing after a scene changes, such as when the player dies or countdown finishes, this is one method of fixing the bug.
 

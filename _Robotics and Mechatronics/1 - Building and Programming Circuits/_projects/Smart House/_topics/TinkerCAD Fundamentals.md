@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 Open TinkerCAD and create the following circuit.
 

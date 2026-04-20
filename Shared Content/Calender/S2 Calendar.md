@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 ### School Events - Week 1
 **Monday** - Student Free Day

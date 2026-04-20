@@ -3,6 +3,7 @@ theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: true
+needsUpdating: false
 ---
 # Slide 1: Unit Overview - BSBXCS303
 

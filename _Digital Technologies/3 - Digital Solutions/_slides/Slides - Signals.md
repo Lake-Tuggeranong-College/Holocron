@@ -5,6 +5,7 @@ css: css/holocronSlides.css
 isCurrent: true
 softwareVersion:
   - Godot 4.6
+needsUpdating: false
 ---
 # Signals in Godot
 

@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 > [!info] PHP sessions are a way for a website to remember information about a user as they interact with the website.

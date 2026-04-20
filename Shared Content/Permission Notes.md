@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 A number of external websites & services are required by the subject/s you've enrolled in.
 

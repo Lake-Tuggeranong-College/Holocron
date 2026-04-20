@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Definition
 In software development, a variable is a named location in memory that can store a value. Variables are used to store data that can change during the execution of a program.

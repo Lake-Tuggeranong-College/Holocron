@@ -6,6 +6,7 @@ isCurrent: true
 softwareVersion:
   - Godot 4.3
   - Godot 4.6
+needsUpdating: false
 ---
 
 ## The Network "Blueprint"

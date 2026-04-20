@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 
 There are many approaches to take to implement the enemy shooting game mechanic. The approach taken in this tutorial is:

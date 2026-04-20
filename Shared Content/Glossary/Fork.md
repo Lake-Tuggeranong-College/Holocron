@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Definition
 A fork is a copy of a repository that you manage.

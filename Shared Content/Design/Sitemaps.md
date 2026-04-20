@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 Sitemaps are a visual diagram for the structure of your entire website. They impact navigation and the organisation of content.
 

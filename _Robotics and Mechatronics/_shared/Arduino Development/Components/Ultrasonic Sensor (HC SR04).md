@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 # Ultrasonic Sensor (HC SR04)
 

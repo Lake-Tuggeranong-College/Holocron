@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Course Details
 The goal of this course is to deliver a Certificate III in Information Technology focusing on Website Development.

@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 [https://wpamelia.com/user-persona-template/](https://wpamelia.com/user-persona-template/)
 

@@ -1,6 +1,7 @@
 ---
 isCurrent: false
 publish: true
+needsUpdating: false
 ---
 
 

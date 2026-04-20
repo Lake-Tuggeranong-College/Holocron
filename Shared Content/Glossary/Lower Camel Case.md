@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Definition
 Starts with a lowercase, every subsequent word has a capital letter. There are no spaces, or other characters separating the words.

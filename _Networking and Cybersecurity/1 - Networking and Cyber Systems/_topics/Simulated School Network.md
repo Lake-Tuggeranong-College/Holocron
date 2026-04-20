@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 
 This network is a simulated network for a school, with two subnets depicted - one for students, and one for the staff. The networks will have shared infrastructure, however shouldn’t be able to communicate with each other.

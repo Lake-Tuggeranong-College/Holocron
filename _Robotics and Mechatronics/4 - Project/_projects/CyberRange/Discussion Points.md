@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 These topics (at least) need to be discussed and have some form out outcome or answer.
 

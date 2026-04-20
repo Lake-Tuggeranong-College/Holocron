@@ -100,8 +100,6 @@ views:
       and:
         - '!file.hasProperty("isCurrent")'
         - file.ext == "md"
-        - isCurrent == false
-        - needsUpdating == false
     groupBy:
       property: file.folder
       direction: ASC
@@ -111,8 +109,6 @@ views:
     sort:
       - property: file.name
         direction: ASC
-  - type: table
-    name: View
   - type: table
     name: Needs Updating Jacob
     filters:
@@ -147,3 +143,18 @@ views:
         direction: ASC
     columnSize:
       file.name: 485
+  - type: table
+    name: Needs Updating - Not set
+    filters:
+      and:
+        - '!file.hasProperty("needsUpdating")'
+        - file.ext == "md"
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.name
+        direction: ASC

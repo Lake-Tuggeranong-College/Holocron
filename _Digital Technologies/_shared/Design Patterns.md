@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 In game development, **design patterns** are reusable solutions to common problems that arise during software design. They help developers write more maintainable, scalable, and efficient code. Two widely used design patterns in game development are the **Singleton** and the **Finite State Machine (FSM)**.
 

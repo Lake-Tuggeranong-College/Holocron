@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 > [!important] Prerequisites: [[_Digital Technologies/2 - Digital Applications/_projects/FPS Application/Enemy]]
 

@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 # Installing PlantUML in Jetbrains Tools

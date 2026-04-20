@@ -1,5 +1,6 @@
 ---
 isCurrent: false
+needsUpdating: false
 ---
 For the beginning of the course, the lessons are structured in the following way.
 

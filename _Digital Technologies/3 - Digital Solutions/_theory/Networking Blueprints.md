@@ -1,6 +1,7 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 In this tutorial, we will break down how computers talk to each other in games using two main "blueprints": **Client-Server** and **Peer-to-Peer (P2P)**.
 

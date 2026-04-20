@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
 needsUpdating: false
 ---
 

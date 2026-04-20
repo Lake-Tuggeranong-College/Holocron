@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 Virtualisation is when you can run multiple computers on one machine. Just like how you have different files and folders on your computer, virtualisation lets you create separate "virtual" computers that can run their own operating systems.
 

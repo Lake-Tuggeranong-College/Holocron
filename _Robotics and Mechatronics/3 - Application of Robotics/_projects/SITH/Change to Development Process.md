@@ -2,6 +2,7 @@
 isCurrent: true
 softwareVersion:
   - PlatformIO
+needsUpdating: false
 ---
 # Objective/s
 

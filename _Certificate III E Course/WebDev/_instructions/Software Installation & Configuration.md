@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Goal
 Using your PC or laptop, or a school supplied one, install and configure

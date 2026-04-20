@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 Network and Host IDs
 ![[ipAddress.png]]

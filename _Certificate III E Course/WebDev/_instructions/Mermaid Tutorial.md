@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # A Comprehensive Guide to Mermaid Diagrams
 

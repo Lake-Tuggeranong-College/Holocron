@@ -1,6 +1,7 @@
 ---
 isCurrent: false
 publish: false
+needsUpdating: false
 ---
 > [!info] Week 14 - Wednesday 6th November, 2-3pm.
 

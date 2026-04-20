@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 # Definition
 An **array** in software development is a data structure that stores a collection of elements of the same type. Each element in the array is accessed using an index, which is a numerical value that represents the position of the element within the array.

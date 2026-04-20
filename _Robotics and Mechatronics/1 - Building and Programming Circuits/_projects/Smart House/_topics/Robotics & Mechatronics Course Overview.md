@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-needsUpdating: true
+needsUpdating: false
 ---
 # Theory
 ![[Theory#Course Overview]]

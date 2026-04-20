@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 # 🔐 Security Scanning Guide for PHP Websites

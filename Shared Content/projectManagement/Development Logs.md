@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 
 [Why Create a development log?](https://gunmetalarcadia.com/wordpress/10-things-i-learned-in-one-year-of-keeping-a-devlog/)

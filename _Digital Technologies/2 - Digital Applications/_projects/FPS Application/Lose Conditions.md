@@ -1,7 +1,8 @@
 ---
 date: 2024-06-09
 isCurrent: false
-softwareVersion: "Godot 4.3"
+softwareVersion: Godot 4.3
+needsUpdating: false
 ---
 > [!info] **Lose conditions** in game development define the specific criteria that, when met, result in the player losing the game. They provide a sense of challenge and stakes to the gameplay and encourage players to avoid making mistakes.
 > 

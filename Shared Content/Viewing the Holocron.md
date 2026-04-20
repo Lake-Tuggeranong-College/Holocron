@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 There are two ways to view/interact with the Holocron.
 

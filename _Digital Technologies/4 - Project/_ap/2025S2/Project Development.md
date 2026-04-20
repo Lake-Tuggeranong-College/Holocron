@@ -1,6 +1,7 @@
 ---
 isCurrent: false
 publish: false
+needsUpdating: false
 ---
 Continue working on the project!
 

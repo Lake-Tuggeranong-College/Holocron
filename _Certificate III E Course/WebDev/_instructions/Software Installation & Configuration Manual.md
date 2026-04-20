@@ -1,5 +1,6 @@
 ---
 isCurrent: true
+needsUpdating: false
 ---
 Write report detailing the installation of the server, specifically for the project requirements and goals. 
 

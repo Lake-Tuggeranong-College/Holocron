@@ -1,7 +1,7 @@
 ---
 date: 2024-06-09
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 This stage of the tutorial will demonstrate how to implement a simple health system, where there is a player health and when the enemy collides with the player, the health reduces. As with many other aspects of game development, the exact implementation will depend on the requirements for the project, so apply as necessary.

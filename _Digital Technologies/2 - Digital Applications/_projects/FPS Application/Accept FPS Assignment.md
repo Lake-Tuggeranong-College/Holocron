@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 > [!tip] Sign into GitHub in the browser, before proceeding.

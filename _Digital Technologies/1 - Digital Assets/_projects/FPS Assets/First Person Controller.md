@@ -1,7 +1,7 @@
 ---
 date: 2024-06-09
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 As this game is a First-Person Shooter, there is no need to create a mesh for the player object, as in game, the player will never see it.

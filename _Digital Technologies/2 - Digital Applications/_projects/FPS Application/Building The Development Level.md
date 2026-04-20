@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 > [!info] In this tutorial, you will learn how to develop a simple 3D environment. This will be the basis of your FPS.

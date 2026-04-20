@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 Exporting a game out of Godot is highly beneficial for game developers as it enables them to distribute their games to a wider audience across multiple platforms. This increases the game's accessibility and potential player base.

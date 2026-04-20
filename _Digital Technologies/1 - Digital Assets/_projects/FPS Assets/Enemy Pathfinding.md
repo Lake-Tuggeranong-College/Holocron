@@ -1,7 +1,7 @@
 ---
 date: 2024-06-09
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 
 # Navmesh

@@ -100,6 +100,8 @@ views:
       and:
         - '!file.hasProperty("isCurrent")'
         - file.ext == "md"
+        - isCurrent == false
+        - needsUpdating == false
     groupBy:
       property: file.folder
       direction: ASC

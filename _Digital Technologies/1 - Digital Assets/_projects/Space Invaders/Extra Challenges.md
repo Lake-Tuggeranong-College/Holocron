@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 These challenges are intended to be solved individually, without additional support.
 Using google, find out how to complete the task. 

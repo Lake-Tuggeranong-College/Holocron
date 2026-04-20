@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 The main menu has a number of buttons, but currently are not functional. This tutorial shows how to add simple functionality.
 

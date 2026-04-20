@@ -1,7 +1,7 @@
 ---
 date: 2024-06-09
 isCurrent: false
-softwareVersion: "4.3"
+softwareVersion: "Godot 4.3"
 ---
 > [!info]- Goal - How does the player win the game?
 > Certain conditions need to be met before the player can win. These may be 

@@ -4,8 +4,8 @@ highlightTheme: zenburn
 css: css/holocronSlides.css
 isCurrent: true
 softwareVersion:
-  - "4.3"
-  - "4.6"
+  - Godot 4.3
+  - Godot 4.6
 ---
 
 ## The Network "Blueprint"

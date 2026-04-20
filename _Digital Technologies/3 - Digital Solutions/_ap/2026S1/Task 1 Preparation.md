@@ -1,3 +1,5 @@
 ---
-needsUpdating: true
+isCurrent: true
+needsUpdating: false
 ---
+

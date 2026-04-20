@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 The ISB system can create challenges where docker instances can be spawned for users to use to find the flag. An example of a use-case would be the user needs to SSH into a secure 'server', and instead of having a dedicated server waiting, a docker instance is spawned and the details are given to the specific user. The added benefit to this is that multiple users can attempt the same challenge at the same time (they will be given different docker instances to connect to).
 
 # Creating a Docker Challenge

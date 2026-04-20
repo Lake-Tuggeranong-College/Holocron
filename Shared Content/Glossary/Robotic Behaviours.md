@@ -1,3 +1,6 @@
+---
+isCurrent: true
+---
 Robotic Behaviours refers to the specific actions and responses a robot exhibits in response to its environment and programmed instructions. 
 
 Essentially, it’s how a robot *acts* – it’s more than just moving; it’s about the intelligent execution of tasks. These behaviours are built from a combination of sensor data (like seeing with cameras or feeling with touch sensors), programmed algorithms (the ‘rules’ the robot follows), and sometimes even machine learning, allowing the robot to adapt and improve over time.  

@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: false
+---
 # Understanding NeoPixel RGB Values
 
 NeoPixels (WS2812B LEDs) use **Additive Colour Theory** to create millions of different shades. By mixing three primary colours of light—**Red, Green, and Blue**—at varying intensities, you can achieve almost any colour in the visible spectrum.

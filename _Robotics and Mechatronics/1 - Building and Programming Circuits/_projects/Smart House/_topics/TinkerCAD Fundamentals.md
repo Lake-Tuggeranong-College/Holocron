@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 Open TinkerCAD and create the following circuit.
 
 ![[tinkerCADStarterCircuit.png]]

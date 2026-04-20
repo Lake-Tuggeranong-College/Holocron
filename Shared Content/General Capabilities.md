@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: false
+---
 # Navigating Your Future: General Capabilities in the ACT Senior Secondary System
 
 As you enter Years 11 and 12 in the ACT, your education is about more than just passing exams and memorising facts. The **ACT Board of Senior Secondary Studies (BSSS)** curriculum is designed to equip you with a set of "General Capabilities."

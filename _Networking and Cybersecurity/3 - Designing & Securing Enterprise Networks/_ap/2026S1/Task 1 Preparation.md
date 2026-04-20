@@ -1,6 +1,6 @@
 ---
 needsUpdating: true
-isCurrent: true
+isCurrent: false
 ---
 # Accept "Assignment"
 

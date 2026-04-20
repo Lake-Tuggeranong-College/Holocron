@@ -75,6 +75,7 @@ See [[Course|Course]] for details on the course
 ![[Website Development Semester 4#Overview]]
 ![[Website Development Semester 4#Task 4.1 Competencies]]
 
+
 ![[Website Development Semester 4#Task 4.2 Competencies]]
 
 

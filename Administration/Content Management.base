@@ -1,23 +1,6 @@
 views:
   - type: table
-    name: Needs Updating - Ryan
-    filters:
-      and:
-        - needsUpdating == true
-        - note["For Jacob"] != true
-    groupBy:
-      property: file.folder
-      direction: ASC
-    order:
-      - file.name
-      - file.folder
-    sort:
-      - property: file.name
-        direction: ASC
-    columnSize:
-      file.name: 485
-  - type: table
-    name: Current & Needs Updating - Ryan
+    name: Needs Updating & Current - Ryan
     filters:
       and:
         - needsUpdating == true
@@ -35,12 +18,29 @@ views:
     columnSize:
       file.name: 485
   - type: table
-    name: Not Current & Needs Updating - Ryan
+    name: Needs Updating & !Current- Ryan
     filters:
       and:
         - needsUpdating == true
         - note["For Jacob"] != true
         - isCurrent == false
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+      - file.folder
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 485
+  - type: table
+    name: Needs Updating - Ryan
+    filters:
+      and:
+        - needsUpdating == true
+        - note["For Jacob"] != true
     groupBy:
       property: file.folder
       direction: ASC

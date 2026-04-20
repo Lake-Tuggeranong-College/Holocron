@@ -19,7 +19,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | Weeks | Content                                                                                                                                                 | Competencies | Assessments Due               |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------- |
 | 1     | - [[Slides - Personal Identifiable Information (PII)]]<br>- [[BSBXCS303 Securely manage personally identifiable information and workplace information]] |              |                               |
-| 2     |                                                                                                                                                         |              | 4.1 Interviews                |
+| 2     | [[Tutorial - BSBXCS303 Securely manage personally identifiable information and workplace information]]                                                  |              | 4.1 Interviews                |
 | 3     |                                                                                                                                                         |              | 4.1 Interviews Second Sitting |
 | 4     | PII Workshop                                                                                                                                            |              | 4.1 Written                   |
 | 5     | - [[Slides - Intellectual Property]]<br>- [[ICTICT313 Identify IP, ethics and privacy policies in ICT environments]]                                    |              |                               |

@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 # Tutorial: Understanding Diffie-Hellman Key Exchange
 
 The **Diffie-Hellman (DH)** key exchange is a fundamental cryptographic protocol that allows two parties to establish a shared secret over an insecure channel. This secret can then be used to encrypt subsequent communications using symmetric-key cryptography.

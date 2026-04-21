@@ -2,6 +2,11 @@
 isCurrent: true
 needsUpdating: false
 ---
+# Presentation Design Tips
+
+[[Presentation Design Tips]]
+
+---
 # Assessment Context
 
 > [!note] You are employed by Riker's Beard - a small, established software development company of 5 people, which a larger organisation has recently acquired. 

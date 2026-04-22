@@ -1,38 +1,35 @@
 ---
 isCurrent: false
-needsUpdating: false
+needsUpdating: true
 ---
 > [!note]- Project Overview
-> You are being tasked to develop secure servers and clients to support the Northside Hospital Project.
-> The project name is: **Biomedical ACT Administration (BACTA)**
-> You will be building and configuring a server, a workstation client and the publishing and secure storage of patient health data.
-> Details can be found here. [[_Networking and Cybersecurity/2 - Network Administration and Security/_projects/BACTA/Project Overview|Project Overview]]
+> ![[_Networking and Cybersecurity/2 - Network Administration and Security/_projects/DARTH/Project Overview|Project Overview]]
 
 # Semester Plan
 
 
-| Week                                            | Content                                                                                                                                                                                                                                                                                                                                                                               | Submissions                    |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| ![[S2 Calendar#School Events - Week 1]]  | [[_Networking and Cybersecurity/2 - Network Administration and Security/_projects/BACTA/Accept Assignment\|Accept Assignment]]<br>[[_Networking and Cybersecurity/2 - Network Administration and Security/_projects/BACTA/Project Overview\|Project Overview]]<br>[[Network Plan]]<br>[[Docker Installation (linux)]]<br>[[Devcontainer files]]                                                                                       |                                |
-| ![[S2 Calendar#School Events - Week 2]]  | [[Server Documentation]]<br>[[Databases]]<br>[[PHP, SQL Crash Course]]                                                                                                                                                                                                                                                                                                                |                                |
-| ![[S2 Calendar#School Events - Week 3]]  | [[PHP, SQL Crash Course]]<br>[[2025S2 Task 1 Example Report]]                                                                                                                                                                                                                                                                                                                         |                                |
-| ![[S2 Calendar#School Events - Week 4]]  | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 1\|Assessment 1]]<br>[[2025S2 Task 1 Example Report]]                                                                                                                                                                                                                                                           |                                |
-| ![[S2 Calendar#School Events - Week 5]]  | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 1\|Assessment 1]]<br>[[2025S2 Task 1 Example Report]]                                                                                                                                                                                                                                                           | **Wednesday** Assessment 1 Due |
-| ![[S2 Calendar#School Events - Week 6]]  | [[Site Development\|Project Development]]<br>[[Role Based Access Control (RBAC)]]                                                                                                                                                                                                                                                                                                     |                                |
-| ![[S2 Calendar#School Events - Week 7]]  | [[Role Based Access Control (RBAC)]]<br>                                                                                                                                                                                                                                                                                                                                              |                                |
-| ![[S2 Calendar#School Events - Week 8]]  | [[Backend Migration]]<br>[[Patient Data]]                                                                                                                                                                                                                                                                                                                                             |                                |
-| ![[S2 Calendar#School Events - Week 9]]  | [[Patient Data]]                                                                                                                                                                                                                                                                                                                                                                      |                                |
-| ![[S2 Calendar#School Events - Week 10]] | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 2\|Assessment 2]]                                                                                                                                                                                                                                                                                               |                                |
-| ![[S2 Calendar#School Events - Week 11]] | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 2\|Assessment 2]]                                                                                                                                                                                                                                                                                               |                                |
-| ![[S2 Calendar#School Events - Week 12]] | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 2\|Assessment 2]]                                                                                                                                                                                                                                                                                               | **Friday** Assessment 2 Due    |
-| ![[S2 Calendar#School Events - Week 13]] | [[Site Development\|Project Development]]                                                                                                                                                                                                                                                                                                                                             |                                |
-| ![[S2 Calendar#School Events - Week 14]] | **Thursday** IT Project Expo                                                                                                                                                                                                                                                                                                                                                          |                                |
-| ![[S2 Calendar#School Events - Week 15]] | [[_Networking and Cybersecurity/2 - Network Administration and Security/_ap/2025S2/Assessment 3\|Assessment 3 - Interviews]]. Check the interview schedule for the time of your interview.<br>**If you miss your time for any reason, it is your responsibility to contact your teacher for an alternate time.**<br>Check Google Classroom for assigned work during class outside of your interview timeslot. | **All Week** Interviews        |
-| ![[S2 Calendar#School Events - Week 16]] |                                                                                                                                                                                                                                                                                                                                                                                       |                                |
-| ![[S2 Calendar#School Events - Week 17]] |                                                                                                                                                                                                                                                                                                                                                                                       |                                |
-| ![[S2 Calendar#School Events - Week 18]] |                                                                                                                                                                                                                                                                                                                                                                                       |                                |
-| ![[S2 Calendar#School Events - Week 19]] |                                                                                                                                                                                                                                                                                                                                                                                       |                                |
-| ![[S2 Calendar#School Events - Week 20]] |                                                                                                                                                                                                                                                                                                                                                                                       |                                |
+| Week                                     | Content | Submissions |
+| ---------------------------------------- | ------- | ----------- |
+| ![[S2 Calendar#School Events - Week 1]]  |         |             |
+| ![[S2 Calendar#School Events - Week 2]]  |         |             |
+| ![[S2 Calendar#School Events - Week 3]]  |         |             |
+| ![[S2 Calendar#School Events - Week 4]]  |         |             |
+| ![[S2 Calendar#School Events - Week 5]]  |         |             |
+| ![[S2 Calendar#School Events - Week 6]]  |         |             |
+| ![[S2 Calendar#School Events - Week 7]]  |         |             |
+| ![[S2 Calendar#School Events - Week 8]]  |         |             |
+| ![[S2 Calendar#School Events - Week 9]]  |         |             |
+| ![[S2 Calendar#School Events - Week 10]] |         |             |
+| ![[S2 Calendar#School Events - Week 11]] |         |             |
+| ![[S2 Calendar#School Events - Week 12]] |         |             |
+| ![[S2 Calendar#School Events - Week 13]] |         |             |
+| ![[S2 Calendar#School Events - Week 14]] |         |             |
+| ![[S2 Calendar#School Events - Week 15]] |         |             |
+| ![[S2 Calendar#School Events - Week 16]] |         |             |
+| ![[S2 Calendar#School Events - Week 17]] |         |             |
+| ![[S2 Calendar#School Events - Week 18]] |         |             |
+| ![[S2 Calendar#School Events - Week 19]] |         |             |
+| ![[S2 Calendar#School Events - Week 20]] |         |             |
 
 # Subject Information
 

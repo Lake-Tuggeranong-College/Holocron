@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-needsUpdating: false
+needsUpdating: true
 ---
 > [!important] Prior to beginning, ensure that 
 > 1. Docker is running, and

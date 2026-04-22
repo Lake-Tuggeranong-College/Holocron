@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: false
+needsUpdating: true
 ---
 
 # 🧑‍💻 Getting Started with PHP in Visual Studio Code

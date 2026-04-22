@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: false
+needsUpdating: true
 ---
 
 # Remove Products

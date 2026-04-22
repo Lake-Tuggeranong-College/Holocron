@@ -45,10 +45,13 @@ See [[Course|Course]] for details on the course
 > If you wish to complete the Certificate II (and not continue to gain the Certificate III), **it is** possible to finish the course at this point. 
 > There are 3 additional Certificate II competencies to complete, as self-paced units. Please talk to your instructor about these.
 > The remaining competencies are:
+> **Core**
 > - [BSBSUS211	Participate in sustainable work practices](https://training.gov.au/training/details/BSBSUS211/unitdetails)
 > - [BSBTEC202 Use digital technologies to communicate in a work environment](https://training.gov.au/training/details/bsbtec202/unitdetails)
 > - [BSBWHS211 Contribute to the health and safety of self and others](https://training.gov.au/training/details/BSBWHS211/unitdetails)
->
+>**Elective**
+> BSBTEC203 Research using the internet
+> 
 >**If you are continuing with the Certificate III, these units are not required.**
 
 

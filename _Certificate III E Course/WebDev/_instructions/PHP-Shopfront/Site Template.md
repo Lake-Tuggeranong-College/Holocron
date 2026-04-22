@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: false
+needsUpdating: true
 ---
 To simplify and standardise the look and feel to the website, you will create a php page which contains all the common code for all pages. Notably, this page will:
 - Load the Bootstrap libraries

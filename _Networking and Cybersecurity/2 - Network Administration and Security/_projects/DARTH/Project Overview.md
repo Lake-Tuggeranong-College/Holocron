@@ -8,41 +8,9 @@ Project **D.A.R.T.H.** is a comprehensive full-stack engineering initiative desi
 
 The following diagram illustrates the interaction between the physical hardware and the dockerised infrastructure:
 
-```mermaid
-graph LR
-    subgraph "Physical Layer (The Apprentice)"
-        A[Arduino + Sensors]
-    end
+![[system_architecture.png]]
 
-    subgraph "Broker & Docker Network (The Empire)"
-        M[MQTT Broker]
-        
-        subgraph "Backend Services"
-            P[Python Integration Engine]
-        end
 
-        subgraph "Public Facing"
-            B[PHP Web Server]
-        end
-        
-        subgraph "Internal Private Network"
-            C[(MariaDB Archive)]
-        end
-    end
-
-    subgraph "External Access"
-        D[Web Browser Dashboard]
-    end
-
-    A -- "1 Publish Telemetry (MQTT)" --> M
-    M -- "2 Subscribe & Log" --> P
-    P -- "3 Store Data" --> C
-    C -- "4 Binlog Stream" --> P
-    P -- "5 Sync Updates" --> M
-    D -- "6 Visualise Data" --> B
-    M -- "7 Execute Command" --> A
-    B -. "Query" .- C
-```
 
 ### Project Objective
 

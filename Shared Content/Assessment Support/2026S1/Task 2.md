@@ -6,6 +6,16 @@ needsUpdating: false
 
 [[Presentation Design Tips]]
 
+
+# Flowcharts
+
+Flowcharts visually describe the *logic* of a piece of code or process, either from a high-level overview, or low-level detailed version.
+
+[[Theory#Flowcharts|More Detail here]]
+
+Here is an example shown in class, which demonstrates the high-level overview and then one example of a lower level function.
+![[Flowchart example - high_low level.png]]
+
 ---
 # Assessment Context
 

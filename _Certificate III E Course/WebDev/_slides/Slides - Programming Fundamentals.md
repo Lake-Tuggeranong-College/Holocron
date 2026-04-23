@@ -58,7 +58,7 @@ Comparison operators are used in conditionals to compare values.
 ```Php
 $age = 18;
 
-if ($age &gt;= 18) {
+if ($age >= 18) {
     echo "You are an adult.";
 } else {
     echo "You are a minor.";
@@ -76,7 +76,7 @@ Loops repeat code until a condition is met.
 ### For Loop:
 
 ```Php
-for ($i = 0; $i &lt; 5; $i++) {
+for ($i = 0; $i < 5; $i++) {
     echo $i . "\n";
 }
 ```
@@ -86,7 +86,7 @@ for ($i = 0; $i &lt; 5; $i++) {
 ```Php
 $count = 0;
 
-while ($count &lt; 5) {
+while ($count < 5) {
     echo $count . "\n";
     $count++;
 }

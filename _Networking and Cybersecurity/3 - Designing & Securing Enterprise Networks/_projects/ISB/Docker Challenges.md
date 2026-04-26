@@ -30,7 +30,7 @@ The docker compose file needs to be formatted as in this example. Leave the port
 
 You will *at least* need to change the container name from `sshtest-server` to something that fits the challenge.
 
-```yml
+```docker
 services:
   sshtest-server:
     build: .
@@ -44,3 +44,23 @@ services:
 ## Dockerfile
 
 The contents of the Dockerfile will depend on the challenge being created.
+
+
+---
+
+# Next steps
+
+Now that the docker container has been defined (through `docker-compose.yml` and `Dockerfile`), you will then need to save them into a folder in the project in following location:
+
+```
+Project Root
+├── container_manager_app/
+|	└── containers/
+```
+
+
+Create a directory with the **same name** as the `Docker Challenge ID` used when creating the challenge (see above).
+
+Place the `docker-compose.yml` and `Dockerfile` into that directory and any other files that is required by the challenge.
+
+![[dockerChallengeDirectory.png]]

@@ -100,6 +100,8 @@ function sanitise_data($data)
 
 - This function helps clean user input to prevent XSS and other injection attacks.
 
+==TODO== Explain this in more detail
+
 ---
 
 ## ✅ Implementation Tips
@@ -195,6 +197,8 @@ To test the configuration, create a new file called `index.php` and copy the fol
 ```php
 <?php include 'template.php'; ?>
 ```
+
+==TODO== change to instructions to load page through Docker
 
 When you launch the site at http://127.0.0.1:8080/ the page should render similar to this:
 

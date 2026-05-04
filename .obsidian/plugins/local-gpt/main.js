@@ -77,10 +77,10 @@ var require_dist = __commonJS({
     __export2(index_exports, {
       __testing__: () => __testing__,
       initAI: () => initAI2,
-      waitForAI: () => waitForAI3
+      waitForAI: () => waitForAI5
     });
     module2.exports = __toCommonJS2(index_exports);
-    var import_obsidian6 = require("obsidian");
+    var import_obsidian15 = require("obsidian");
     var FALLBACK_TIMEOUT = 100;
     var REQUIRED_AI_PROVIDERS_VERSION = 4;
     var AI_PROVIDERS_READY_EVENT = "ai-providers-ready";
@@ -191,12 +191,12 @@ var require_dist = __commonJS({
       }
     }
     __name(initAI2, "initAI");
-    async function waitForAI3() {
+    async function waitForAI5() {
       const manager = AIProvidersManager.getInstance();
       return waitForAIProviders(manager.getApp(), manager.getPlugin());
     }
-    __name(waitForAI3, "waitForAI");
-    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian6.PluginSettingTab {
+    __name(waitForAI5, "waitForAI");
+    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian15.PluginSettingTab {
       constructor(app, plugin) {
         super(app, plugin);
         this.plugin = plugin;
@@ -207,7 +207,7 @@ var require_dist = __commonJS({
         const aiProvidersNotice = containerEl.createEl("div");
         aiProvidersNotice.addClass("ai-providers-notice");
         aiProvidersNotice.appendChild(
-          (0, import_obsidian6.sanitizeHTMLToDom)(`
+          (0, import_obsidian15.sanitizeHTMLToDom)(`
             <p>\u26A0\uFE0F This plugin requires <a href="obsidian://show-plugin?id=ai-providers">AI Providers</a> plugin to be installed.</p>
             <p>Please install and configure AI Providers plugin first.</p>
         `)
@@ -230,10 +230,10 @@ __export(main_exports, {
   default: () => LocalGPT2
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian5 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // src/LocalGPTSettingTab.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // src/defaultSettings.ts
 var DEFAULT_SETTINGS = {
@@ -1797,6 +1797,1617 @@ var I18n = class {
     return result;
   }
 };
+
+// src/actionUtils.ts
+var isSeparatorAction = (action2) => Boolean(action2.separator);
+var getRunnableActions = (actions) => actions.filter((action2) => !isSeparatorAction(action2));
+var createActionId = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `action-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};
+var ensureActionId = (action2) => action2.id ? action2 : {
+  ...action2,
+  id: createActionId()
+};
+var ensureActionIds = (actions) => {
+  let changed = false;
+  const actionsWithIds = actions.map((action2) => {
+    if (action2.id) {
+      return action2;
+    }
+    changed = true;
+    return ensureActionId(action2);
+  });
+  return { actions: actionsWithIds, changed };
+};
+var getActionIdentifier = (action2) => {
+  var _a7;
+  return action2.id || (((_a7 = action2.community) == null ? void 0 : _a7.id) ? `community:${action2.community.id}` : `name:${action2.name}`);
+};
+var moveAction = (actions, fromIndex, toIndex) => {
+  if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= actions.length || toIndex >= actions.length) {
+    return actions;
+  }
+  const updated = actions.slice();
+  const [moved2] = updated.splice(fromIndex, 1);
+  if (!moved2) {
+    return actions;
+  }
+  updated.splice(toIndex, 0, moved2);
+  return updated;
+};
+
+// src/CommunityActionsService.ts
+var import_obsidian = require("obsidian");
+var DISCUSSION_COMMENTS_URL = "https://api.github.com/repos/pfrankov/obsidian-local-gpt/discussions/89/comments";
+var PER_PAGE = 100;
+var SEPARATOR = "\u2702\uFE0F";
+var POSITIVE_REACTIONS = [
+  "+1",
+  "heart",
+  "hooray",
+  "rocket",
+  "eyes",
+  "laugh"
+];
+var NEGATIVE_REACTIONS = ["-1", "confused"];
+var FIELD_KEYS = ["name", "system", "prompt", "language", "replace"];
+var FIELD_REGEX = new RegExp(
+  `(?:^|\\n)\\s*(${FIELD_KEYS.join("|")}):\\s*([\\s\\S]*?)(?=\\n\\s*(?:${FIELD_KEYS.join(
+    "|"
+  )}):|$)`,
+  "gi"
+);
+var buildCommunityActionSignature = (action2) => {
+  var _a7, _b3;
+  return [(_a7 = action2.system) != null ? _a7 : "", (_b3 = action2.prompt) != null ? _b3 : "", action2.replace ? "1" : "0"].join(
+    "\n---\n"
+  );
+};
+var buildCommunityActionKey = (language, name) => `${language.trim().toLowerCase()}::${name.trim().toLowerCase()}`;
+var CommunityActionsService = class {
+  static async getCommunityActions(options) {
+    var _a7;
+    const forceRefresh = (_a7 = options == null ? void 0 : options.forceRefresh) != null ? _a7 : false;
+    if (this.cache && !forceRefresh) {
+      return this.cache;
+    }
+    if (this.pendingRequest) {
+      return this.pendingRequest;
+    }
+    const fallback2 = this.cache;
+    this.pendingRequest = (async () => {
+      const { actions, failed } = await this.fetchCommunityActions();
+      if (failed) {
+        if (fallback2) {
+          this.cache = fallback2;
+          return fallback2;
+        }
+        throw new Error("Failed to fetch community actions");
+      }
+      this.cache = actions;
+      return actions;
+    })().finally(() => {
+      this.pendingRequest = void 0;
+    });
+    return this.pendingRequest;
+  }
+  static clearCache() {
+    this.cache = null;
+    this.pendingRequest = void 0;
+  }
+  static async fetchCommunityActions() {
+    const actions = await this.collectActions(
+      1,
+      [],
+      /* @__PURE__ */ new Set(),
+      /* @__PURE__ */ new Map()
+    );
+    if (!actions) {
+      return { actions: [], failed: true };
+    }
+    const sorted = actions.sort((a, b) => {
+      if (a.score === b.score) {
+        return a.order - b.order;
+      }
+      return b.score - a.score;
+    }).map(({ order: _order2, ...action2 }) => action2);
+    return { actions: sorted, failed: false };
+  }
+  static async collectActions(page, actions, uniqueKeys, uniqueContentKeys) {
+    var _a7;
+    const response = await this.requestPage(page);
+    if (!response) {
+      return page === 1 ? null : actions;
+    }
+    const comments = (_a7 = response.json) != null ? _a7 : [];
+    if (!comments.length) {
+      return actions;
+    }
+    this.appendActionsFromComments(
+      comments,
+      actions,
+      uniqueKeys,
+      uniqueContentKeys
+    );
+    if (comments.length < PER_PAGE) {
+      return actions;
+    }
+    return this.collectActions(
+      page + 1,
+      actions,
+      uniqueKeys,
+      uniqueContentKeys
+    );
+  }
+  static async requestPage(page) {
+    try {
+      const response = await (0, import_obsidian.requestUrl)({
+        url: `${DISCUSSION_COMMENTS_URL}?per_page=${PER_PAGE}&page=${page}&sort=created&direction=asc`,
+        headers: {
+          Accept: "application/vnd.github+json"
+        },
+        throw: false
+      });
+      if (response.status !== 200) {
+        console.error(
+          `GitHub API responded with ${response.status} on page ${page}`
+        );
+        return null;
+      }
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch community actions", error);
+      return null;
+    }
+  }
+  static appendActionsFromComments(comments, actions, uniqueKeys, uniqueContentKeys) {
+    var _a7, _b3, _c2;
+    for (const comment2 of comments) {
+      const parsedAction = this.extractActionFromBody(comment2.body || "");
+      if (!parsedAction) {
+        continue;
+      }
+      const languageKey = parsedAction.language.trim().toLowerCase();
+      const normalizedKey = buildCommunityActionKey(
+        languageKey,
+        parsedAction.name
+      );
+      if (uniqueKeys.has(normalizedKey)) {
+        continue;
+      }
+      const signatureKey = this.buildSimilaritySignature(parsedAction);
+      const languageSignatures = (_a7 = uniqueContentKeys.get(languageKey)) != null ? _a7 : /* @__PURE__ */ new Set();
+      if (languageSignatures.has(signatureKey)) {
+        continue;
+      }
+      uniqueKeys.add(normalizedKey);
+      languageSignatures.add(signatureKey);
+      uniqueContentKeys.set(languageKey, languageSignatures);
+      const score = this.getReactionScore(comment2.reactions);
+      actions.push({
+        id: `${comment2.id}`,
+        name: parsedAction.name,
+        language: parsedAction.language,
+        description: parsedAction.description,
+        prompt: parsedAction.prompt,
+        system: parsedAction.system,
+        replace: parsedAction.replace,
+        author: ((_b3 = comment2.user) == null ? void 0 : _b3.login) || "unknown",
+        authorUrl: (_c2 = comment2.user) == null ? void 0 : _c2.html_url,
+        commentUrl: comment2.html_url,
+        score,
+        createdAt: comment2.created_at,
+        updatedAt: comment2.updated_at,
+        order: actions.length
+      });
+    }
+  }
+  static normalizeFieldValue(value) {
+    if (!value) {
+      return void 0;
+    }
+    const cleaned = value.trim();
+    if (!cleaned) {
+      return void 0;
+    }
+    return cleaned;
+  }
+  static normalizeSingleLine(value) {
+    if (!value) {
+      return void 0;
+    }
+    const firstLine = value.split("\n")[0].trim();
+    if (!firstLine) {
+      return void 0;
+    }
+    return firstLine;
+  }
+  static extractActionFromBody(body) {
+    if (!body) {
+      return null;
+    }
+    const normalizedBody = this.normalizeBody(body);
+    if (!normalizedBody.trim()) {
+      return null;
+    }
+    const splitBody = this.splitBodyByDescriptionSeparator(normalizedBody);
+    if (!splitBody) {
+      return null;
+    }
+    const fields = this.extractFields(splitBody.fieldsBody);
+    return this.buildActionFromFields(fields, splitBody.description);
+  }
+  static normalizeBody(body) {
+    return this.sanitizePlainText(body).split(SEPARATOR).join("\n").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  }
+  static splitBodyByDescriptionSeparator(normalizedBody) {
+    const separatorRegex = /^\s*---\s*$/m;
+    const match = separatorRegex.exec(normalizedBody);
+    if (!match || typeof match.index !== "number") {
+      return null;
+    }
+    const descriptionBody = normalizedBody.slice(0, match.index).trim();
+    const fieldsBody = normalizedBody.slice(match.index + match[0].length).trim();
+    return {
+      description: this.normalizeFieldValue(descriptionBody),
+      fieldsBody
+    };
+  }
+  static extractFields(fieldsBody) {
+    const fields = {};
+    let fieldMatch;
+    FIELD_REGEX.lastIndex = 0;
+    while ((fieldMatch = FIELD_REGEX.exec(fieldsBody)) !== null) {
+      const key2 = fieldMatch[1].toLowerCase();
+      if (!FIELD_KEYS.includes(key2) || fields[key2]) {
+        continue;
+      }
+      const value = this.normalizeFieldValue(fieldMatch[2]);
+      if (!value) {
+        continue;
+      }
+      fields[key2] = value;
+    }
+    return fields;
+  }
+  static buildActionFromFields(fields, description) {
+    var _a7;
+    const name = this.normalizeSingleLine(fields.name);
+    const language = (_a7 = this.normalizeSingleLine(
+      fields.language
+    )) == null ? void 0 : _a7.toLowerCase();
+    const system = fields.system;
+    const prompt = fields.prompt;
+    const replace = fields.replace ? fields.replace.toLowerCase() === "true" : void 0;
+    if (!name || !language) {
+      return null;
+    }
+    if (!system && !prompt) {
+      return null;
+    }
+    return {
+      name,
+      language,
+      description: description || void 0,
+      system: system || void 0,
+      prompt: prompt || void 0,
+      replace
+    };
+  }
+  static getReactionScore(reactions) {
+    if (!reactions) {
+      return 0;
+    }
+    const positive = POSITIVE_REACTIONS.reduce((total, key2) => {
+      var _a7;
+      return total + ((_a7 = reactions[key2]) != null ? _a7 : 0);
+    }, 0);
+    const negative = NEGATIVE_REACTIONS.reduce((total, key2) => {
+      var _a7;
+      return total + ((_a7 = reactions[key2]) != null ? _a7 : 0);
+    }, 0);
+    return positive - negative;
+  }
+  static sanitizePlainText(value) {
+    const withoutTags = value.replace(this.HTML_TAG_REGEX, "").replace(/[<>]/g, "");
+    const output = [];
+    for (let index3 = 0; index3 < withoutTags.length; index3 += 1) {
+      const code = withoutTags.charCodeAt(index3);
+      if (code === 9 || code === 10 || code === 13) {
+        output.push(withoutTags[index3]);
+        continue;
+      }
+      if (code < 32 || code === 127) {
+        continue;
+      }
+      output.push(withoutTags[index3]);
+    }
+    return output.join("");
+  }
+  static buildSimilaritySignature(action2) {
+    const system = this.normalizeForSimilarity(action2.system);
+    const prompt = this.normalizeForSimilarity(action2.prompt);
+    const replace = action2.replace ? "1" : "0";
+    return `${system}
+---
+${prompt}
+---
+${replace}`;
+  }
+  static normalizeForSimilarity(value) {
+    if (!value) {
+      return "";
+    }
+    const cleaned = this.sanitizePlainText(value);
+    return cleaned.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").replace(/\s+/g, " ").trim();
+  }
+};
+CommunityActionsService.cache = null;
+CommunityActionsService.HTML_TAG_REGEX = /<[^>]*>/g;
+
+// src/settingsActionEditor.ts
+var import_obsidian2 = require("obsidian");
+function renderActionEditor({
+  container,
+  plugin,
+  actionToEdit,
+  isExistingAction,
+  closeActionEditor,
+  addNewAction,
+  dropCommunityLinkIfModified
+}) {
+  new import_obsidian2.Setting(container).setName(I18n.t("settings.actionName")).addText((text2) => {
+    text2.inputEl.classList.add("local-gpt-action-input");
+    (actionToEdit == null ? void 0 : actionToEdit.name) && text2.setValue(actionToEdit.name);
+    text2.setPlaceholder(I18n.t("settings.actionNamePlaceholder"));
+    text2.onChange(async (value) => {
+      actionToEdit.name = value;
+    });
+  });
+  new import_obsidian2.Setting(container).setName(I18n.t("settings.systemPrompt")).setDesc(I18n.t("settings.systemPromptDesc")).addTextArea((text2) => {
+    text2.inputEl.classList.add("local-gpt-action-textarea");
+    (actionToEdit == null ? void 0 : actionToEdit.system) && text2.setValue(actionToEdit.system);
+    text2.setPlaceholder(I18n.t("settings.systemPromptPlaceholder"));
+    text2.onChange(async (value) => {
+      actionToEdit.system = value;
+    });
+  });
+  const promptSetting = new import_obsidian2.Setting(container).setName(I18n.t("settings.prompt")).setDesc("").addTextArea((text2) => {
+    text2.inputEl.classList.add("local-gpt-action-textarea");
+    (actionToEdit == null ? void 0 : actionToEdit.prompt) && text2.setValue(actionToEdit.prompt);
+    text2.setPlaceholder("");
+    text2.onChange(async (value) => {
+      actionToEdit.prompt = value;
+    });
+  });
+  promptSetting.descEl.innerHTML = I18n.t("settings.promptDesc");
+  new import_obsidian2.Setting(container).setName(I18n.t("settings.replaceSelected")).setDesc(I18n.t("settings.replaceSelectedDesc")).addToggle((component2) => {
+    (actionToEdit == null ? void 0 : actionToEdit.replace) && component2.setValue(actionToEdit.replace);
+    component2.onChange(async (value) => {
+      actionToEdit.replace = value;
+    });
+  });
+  const actionButtonsRow = new import_obsidian2.Setting(container).setName("");
+  if (isExistingAction) {
+    actionButtonsRow.addButton((button) => {
+      button.setClass("local-gpt-action-remove");
+      button.setButtonText(I18n.t("settings.remove")).onClick(async () => {
+        if (!button.buttonEl.hasClass("mod-warning")) {
+          button.setClass("mod-warning");
+          return;
+        }
+        plugin.settings.actions = plugin.settings.actions.filter(
+          (innerAction) => innerAction !== actionToEdit
+        );
+        await plugin.saveSettings();
+        closeActionEditor();
+      });
+    });
+  }
+  actionButtonsRow.addButton((button) => {
+    button.setButtonText(I18n.t("settings.close")).onClick(async () => {
+      closeActionEditor(isExistingAction ? actionToEdit : void 0);
+    });
+  }).addButton(
+    (button) => button.setCta().setButtonText(I18n.t("settings.save")).onClick(async () => {
+      if (!actionToEdit.name) {
+        new import_obsidian2.Notice(I18n.t("notices.actionNameRequired"));
+        return;
+      }
+      const actionToSave = ensureActionId(actionToEdit);
+      if (!isExistingAction) {
+        if (plugin.settings.actions.find(
+          (action2) => action2.name === actionToSave.name
+        )) {
+          new import_obsidian2.Notice(
+            I18n.t("notices.actionNameExists", {
+              name: actionToSave.name
+            })
+          );
+          return;
+        }
+        await addNewAction(actionToSave);
+      } else {
+        if (plugin.settings.actions.filter(
+          (action2) => action2.name === actionToSave.name
+        ).length > 1) {
+          new import_obsidian2.Notice(
+            I18n.t("notices.actionNameExists", {
+              name: actionToSave.name
+            })
+          );
+          return;
+        }
+        dropCommunityLinkIfModified(actionToSave);
+        const index3 = plugin.settings.actions.findIndex(
+          (innerAction) => innerAction === actionToEdit
+        );
+        if (index3 >= 0) {
+          plugin.settings.actions[index3] = actionToSave;
+        }
+      }
+      await plugin.saveSettings();
+      closeActionEditor(actionToSave);
+    })
+  );
+}
+
+// src/languageDetection.ts
+var MAX_ANALYSIS_LENGTH = 1e3;
+var MIN_LATIN_LETTERS_THRESHOLD = 10;
+var SCRIPT_RANGES = {
+  ja: [
+    [12352, 12447],
+    // Hiragana
+    [12448, 12543],
+    // Katakana
+    [12784, 12799],
+    // Katakana Phonetic Extensions
+    [65381, 65439]
+    // Halfwidth Katakana
+  ],
+  zh: [
+    [13312, 19903],
+    // CJK Unified Ideographs Extension A
+    [19968, 40959]
+    // CJK Unified Ideographs
+  ],
+  ko: [
+    [4352, 4607],
+    // Hangul Jamo
+    [12592, 12687],
+    // Hangul Compatibility Jamo
+    [44032, 55215]
+    // Hangul Syllables
+  ],
+  ru: [
+    [1024, 1279],
+    // Cyrillic
+    [1280, 1327],
+    // Cyrillic Supplement
+    [11744, 11775],
+    // Cyrillic Extended-A
+    [42560, 42655]
+    // Cyrillic Extended-B
+  ],
+  ar: [
+    [1536, 1791],
+    // Arabic
+    [1872, 1919],
+    // Arabic Supplement
+    [2208, 2303]
+    // Arabic Extended-A
+  ],
+  he: [[1424, 1535]],
+  // Hebrew
+  el: [
+    [880, 1023],
+    // Greek and Coptic
+    [7936, 8191]
+    // Greek Extended
+  ],
+  hi: [[2304, 2431]]
+  // Devanagari
+};
+var LATIN_RANGES = [
+  [65, 90],
+  // Basic Latin uppercase
+  [97, 122],
+  // Basic Latin lowercase
+  [192, 591],
+  // Latin-1 Supplement + Extended-A/B
+  [7680, 7935]
+  // Latin Extended Additional
+];
+var SCRIPT_KEYS = [
+  "ja",
+  "zh",
+  "ko",
+  "ru",
+  "ar",
+  "he",
+  "el",
+  "hi"
+];
+var LATIN_KEYS = ["en", "de", "fr", "es", "pt", "id"];
+var WORD_WEIGHT = 2;
+var CHAR_WEIGHT = 3;
+var LATIN_LANGUAGE_PROFILES = {
+  en: {
+    words: [
+      "the",
+      "and",
+      "you",
+      "that",
+      "with",
+      "this",
+      "from",
+      "your",
+      "have",
+      "will",
+      "can",
+      "hello",
+      "world"
+    ],
+    chars: []
+  },
+  de: {
+    words: [
+      "der",
+      "die",
+      "das",
+      "und",
+      "ist",
+      "nicht",
+      "mit",
+      "auf",
+      "f\xFCr",
+      "eine",
+      "ein",
+      "ich",
+      "sie"
+    ],
+    chars: ["\xDF", "\xE4", "\xF6", "\xFC"]
+  },
+  fr: {
+    words: [
+      "le",
+      "la",
+      "les",
+      "des",
+      "est",
+      "une",
+      "un",
+      "pour",
+      "que",
+      "dans",
+      "avec",
+      "pas",
+      "vous",
+      "sur",
+      "ce"
+    ],
+    chars: [
+      "\u0153",
+      "\xE6",
+      "\xE7",
+      "\xE9",
+      "\xE8",
+      "\xEA",
+      "\xEB",
+      "\xE0",
+      "\xE2",
+      "\xEE",
+      "\xEF",
+      "\xF4",
+      "\xF9",
+      "\xFB",
+      "\xFC",
+      "\xFF"
+    ]
+  },
+  es: {
+    words: [
+      "el",
+      "la",
+      "los",
+      "las",
+      "que",
+      "para",
+      "con",
+      "una",
+      "un",
+      "por",
+      "pero",
+      "como",
+      "muy",
+      "estas",
+      "est\xE1s"
+    ],
+    chars: [
+      "\xF1",
+      "\xE1",
+      "\xE9",
+      "\xED",
+      "\xF3",
+      "\xFA",
+      "\xFC",
+      "\xBF",
+      "\xA1"
+    ]
+  },
+  pt: {
+    words: [
+      "o",
+      "a",
+      "os",
+      "as",
+      "que",
+      "para",
+      "com",
+      "uma",
+      "um",
+      "n\xE3o",
+      "por",
+      "mais",
+      "como",
+      "estou",
+      "est\xE1",
+      "de",
+      "e"
+    ],
+    chars: [
+      "\xE3",
+      "\xF5",
+      "\xE7",
+      "\xE1",
+      "\xE0",
+      "\xE2",
+      "\xEA",
+      "\xED",
+      "\xF3",
+      "\xF4",
+      "\xFA",
+      "\xFC"
+    ]
+  },
+  id: {
+    words: [
+      "yang",
+      "dan",
+      "tidak",
+      "saya",
+      "kamu",
+      "ini",
+      "itu",
+      "untuk",
+      "dengan",
+      "ada",
+      "dari",
+      "di",
+      "ke",
+      "apa",
+      "bagaimana",
+      "bisa",
+      "terjadi",
+      "tahu"
+    ],
+    chars: []
+  }
+};
+var LATIN_WORD_SETS = {
+  en: new Set(LATIN_LANGUAGE_PROFILES.en.words),
+  de: new Set(LATIN_LANGUAGE_PROFILES.de.words),
+  fr: new Set(LATIN_LANGUAGE_PROFILES.fr.words),
+  es: new Set(LATIN_LANGUAGE_PROFILES.es.words),
+  pt: new Set(LATIN_LANGUAGE_PROFILES.pt.words),
+  id: new Set(LATIN_LANGUAGE_PROFILES.id.words)
+};
+var LATIN_CHAR_SETS = {
+  en: new Set(LATIN_LANGUAGE_PROFILES.en.chars),
+  de: new Set(LATIN_LANGUAGE_PROFILES.de.chars),
+  fr: new Set(LATIN_LANGUAGE_PROFILES.fr.chars),
+  es: new Set(LATIN_LANGUAGE_PROFILES.es.chars),
+  pt: new Set(LATIN_LANGUAGE_PROFILES.pt.chars),
+  id: new Set(LATIN_LANGUAGE_PROFILES.id.chars)
+};
+var isCodeInRanges = (code, ranges) => {
+  for (const [start, end] of ranges) {
+    if (code >= start && code <= end) {
+      return true;
+    }
+  }
+  return false;
+};
+var detectScriptForCodePoint = (code) => {
+  for (const key2 of SCRIPT_KEYS) {
+    if (isCodeInRanges(code, SCRIPT_RANGES[key2])) {
+      return key2;
+    }
+  }
+  return null;
+};
+var isLatinCodePoint = (code) => isCodeInRanges(code, LATIN_RANGES);
+var mergeJapaneseHan = (counts) => {
+  if (counts.ja > 0 && counts.zh > 0) {
+    counts.ja += counts.zh;
+    counts.zh = 0;
+  }
+};
+var pickDominantLanguage = (counts, keys) => {
+  let topLanguage = "unknown";
+  let topCount = 0;
+  let isTie = false;
+  for (const key2 of keys) {
+    const count = counts[key2];
+    if (count > topCount) {
+      topLanguage = key2;
+      topCount = count;
+      isTie = false;
+    } else if (count === topCount && count > 0) {
+      isTie = true;
+    }
+  }
+  if (topCount === 0 || isTie) {
+    return "unknown";
+  }
+  return topLanguage;
+};
+var sumCounts = (counts) => Object.values(counts).reduce((total, value) => total + value, 0);
+var extractWords = (text2) => {
+  var _a7;
+  return (_a7 = text2.match(/\p{L}+/gu)) != null ? _a7 : [];
+};
+var countOccurrences = (values) => {
+  var _a7;
+  const counts = /* @__PURE__ */ new Map();
+  for (const value of values) {
+    counts.set(value, ((_a7 = counts.get(value)) != null ? _a7 : 0) + 1);
+  }
+  return counts;
+};
+var scoreLatinLanguages = (charCounts, wordCounts) => {
+  var _a7, _b3;
+  const scores = {
+    en: 0,
+    de: 0,
+    fr: 0,
+    es: 0,
+    pt: 0,
+    id: 0
+  };
+  for (const language of LATIN_KEYS) {
+    const charSet = LATIN_CHAR_SETS[language];
+    for (const char of charSet) {
+      scores[language] += ((_a7 = charCounts.get(char)) != null ? _a7 : 0) * CHAR_WEIGHT;
+    }
+    const wordSet = LATIN_WORD_SETS[language];
+    for (const word of wordSet) {
+      scores[language] += ((_b3 = wordCounts.get(word)) != null ? _b3 : 0) * WORD_WEIGHT;
+    }
+  }
+  return scores;
+};
+var countScriptAndLatinLetters = (text2) => {
+  const scriptCounts = {
+    ja: 0,
+    zh: 0,
+    ko: 0,
+    ru: 0,
+    ar: 0,
+    he: 0,
+    el: 0,
+    hi: 0
+  };
+  let latinLetterCount = 0;
+  for (const char of text2) {
+    const code = char.codePointAt(0);
+    if (!code) {
+      continue;
+    }
+    const scriptLanguage = detectScriptForCodePoint(code);
+    if (scriptLanguage) {
+      scriptCounts[scriptLanguage] += 1;
+      continue;
+    }
+    if (isLatinCodePoint(code)) {
+      latinLetterCount += 1;
+    }
+  }
+  return { scriptCounts, latinLetterCount };
+};
+var detectDominantLanguage = (text2) => {
+  const truncated = text2.length > MAX_ANALYSIS_LENGTH ? text2.slice(0, MAX_ANALYSIS_LENGTH) : text2;
+  const normalized = truncated.normalize("NFC");
+  const { scriptCounts, latinLetterCount } = countScriptAndLatinLetters(normalized);
+  mergeJapaneseHan(scriptCounts);
+  const dominantScript = pickDominantLanguage(scriptCounts, SCRIPT_KEYS);
+  const scriptLetterCount = sumCounts(scriptCounts);
+  if (dominantScript !== "unknown" && scriptLetterCount >= latinLetterCount) {
+    return dominantScript;
+  }
+  const lowerText = normalized.toLowerCase();
+  const words = extractWords(lowerText);
+  const charCounts = countOccurrences(lowerText);
+  const wordCounts = countOccurrences(words);
+  const latinScores = scoreLatinLanguages(charCounts, wordCounts);
+  const dominantLatin = pickDominantLanguage(latinScores, LATIN_KEYS);
+  if (dominantLatin !== "unknown") {
+    return dominantLatin;
+  }
+  if (latinLetterCount >= MIN_LATIN_LETTERS_THRESHOLD) {
+    return "en";
+  }
+  return "unknown";
+};
+
+// src/settingsTabUtils.ts
+var SEPARATOR2 = "\u2702\uFE0F";
+var sharingFieldLabels = {
+  name: "Name: ",
+  system: "System: ",
+  prompt: "Prompt: ",
+  replace: "Replace: ",
+  language: "Language: "
+};
+var sharingFieldOrder = [
+  "name",
+  "system",
+  "prompt",
+  "replace",
+  "language"
+];
+var sharingEntries = sharingFieldOrder.map(
+  (key2) => [key2, sharingFieldLabels[key2]]
+);
+var quickAddHandlers = {
+  name: (value, action2) => {
+    action2.name = value;
+  },
+  system: (value, action2) => {
+    action2.system = value;
+  },
+  prompt: (value, action2) => {
+    action2.prompt = value;
+  },
+  replace: (value, action2) => {
+    action2.replace = value.trim().toLowerCase() === "true";
+  }
+};
+var normalizeLanguageCode = (value) => {
+  if (!value) {
+    return "en";
+  }
+  const trimmed = value.trim().toLowerCase();
+  if (!trimmed) {
+    return "en";
+  }
+  return trimmed.split(/[-_]/)[0] || "en";
+};
+function escapeTitle(title) {
+  if (!title) {
+    return "";
+  }
+  return title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+var normalizeActionName = (name) => name.trim().toLowerCase();
+var normalizeSearchValue = (value) => value.toLowerCase().replace(/\s+/g, " ").trim();
+var fuzzyMatch = (target, query) => {
+  if (!query) {
+    return true;
+  }
+  let ti = 0;
+  for (const qc of query) {
+    ti = target.indexOf(qc, ti);
+    if (ti === -1) {
+      return false;
+    }
+    ti++;
+  }
+  return true;
+};
+function buildSharingString(action2, defaultCommunityActionsLanguage) {
+  const detectedLanguage = detectDominantLanguage(
+    [action2.name, action2.system, action2.prompt].filter((value) => Boolean(value)).join("\n")
+  );
+  const resolvedLanguage = normalizeLanguageCode(
+    detectedLanguage === "unknown" ? defaultCommunityActionsLanguage : detectedLanguage
+  );
+  const replaceValue = action2.replace ? `${sharingFieldLabels.replace}${action2.replace}` : "";
+  return [
+    action2.name && `${sharingFieldLabels.name}${action2.name}`,
+    action2.system && `${sharingFieldLabels.system}${action2.system}`,
+    action2.prompt && `${sharingFieldLabels.prompt}${action2.prompt}`,
+    replaceValue,
+    `${sharingFieldLabels.language}${resolvedLanguage}`
+  ].filter(Boolean).join(` ${SEPARATOR2}
+`);
+}
+function buildActionDescription(action2) {
+  var _a7, _b3;
+  const systemTitle = escapeTitle(action2.system);
+  const promptTitle = escapeTitle(action2.prompt);
+  const communityDescription = (_b3 = (_a7 = action2.community) == null ? void 0 : _a7.description) == null ? void 0 : _b3.trim();
+  if (communityDescription) {
+    const escaped = escapeTitle(communityDescription);
+    return `<div class="local-gpt-action-community-description" title="${escaped}">${escaped}</div>`;
+  }
+  return [
+    action2.system ? `<div title="${systemTitle}" style="text-overflow: ellipsis; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+						<b>${sharingFieldLabels.system}</b>${action2.system}</div>` : "",
+    action2.prompt ? `<div title="${promptTitle}" style="text-overflow: ellipsis; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+						<b>${sharingFieldLabels.prompt}</b>${action2.prompt}
+					</div>` : ""
+  ].filter(Boolean).join("<br/>\n");
+}
+function buildCommunityActionsLookup(actions) {
+  const byId = /* @__PURE__ */ new Map();
+  const byKey = /* @__PURE__ */ new Map();
+  const byName = /* @__PURE__ */ new Map();
+  actions.forEach((action2) => {
+    var _a7, _b3, _c2;
+    byName.set(normalizeActionName(action2.name), action2);
+    if ((_a7 = action2.community) == null ? void 0 : _a7.id) {
+      byId.set(action2.community.id, action2);
+    }
+    if (((_b3 = action2.community) == null ? void 0 : _b3.language) && ((_c2 = action2.community) == null ? void 0 : _c2.name)) {
+      byKey.set(
+        buildCommunityActionKey(
+          action2.community.language,
+          action2.community.name
+        ),
+        action2
+      );
+    }
+  });
+  return { byId, byKey, byName };
+}
+function findCommunityActionLink(action2, lookup) {
+  return lookup.byId.get(action2.id) || lookup.byKey.get(buildCommunityActionKey(action2.language, action2.name));
+}
+function getCommunityActionSearchRank(action2, query) {
+  const fields = [
+    action2.name,
+    action2.description,
+    action2.prompt,
+    action2.system
+  ];
+  for (let i = 0; i < fields.length; i++) {
+    const value = fields[i];
+    if (!value) {
+      continue;
+    }
+    const normalized = normalizeSearchValue(value);
+    if (normalized && fuzzyMatch(normalized, query)) {
+      return i;
+    }
+  }
+  return null;
+}
+function resolveCommunityActionState(action2, lookup) {
+  var _a7;
+  const linkedAction = findCommunityActionLink(action2, lookup);
+  if (linkedAction) {
+    const localSignature = buildCommunityActionSignature(linkedAction);
+    const storedHash = (_a7 = linkedAction.community) == null ? void 0 : _a7.hash;
+    if (storedHash && localSignature !== storedHash) {
+      return { type: "modified", localAction: linkedAction };
+    }
+    return { type: "installed", localAction: linkedAction };
+  }
+  const nameMatch = lookup.byName.get(normalizeActionName(action2.name));
+  if (nameMatch) {
+    return { type: "conflict", localAction: nameMatch };
+  }
+  return { type: "available" };
+}
+function buildCommunityActionRef(action2) {
+  var _a7, _b3;
+  return {
+    id: action2.id,
+    language: action2.language,
+    name: action2.name,
+    hash: buildCommunityActionSignature(action2),
+    updatedAt: (_a7 = action2.updatedAt) != null ? _a7 : action2.createdAt,
+    description: ((_b3 = action2.description) == null ? void 0 : _b3.trim()) || void 0
+  };
+}
+
+// src/settingsScroll.ts
+function getScrollableParent(el) {
+  let node = el.parentElement;
+  while (node) {
+    const style = getComputedStyle(node);
+    const overflowY = style.overflowY;
+    if (node.scrollHeight > node.clientHeight && (overflowY === "auto" || overflowY === "scroll")) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return document.scrollingElement || document.documentElement;
+}
+function captureScrollPosition(anchor) {
+  const scrollEl2 = getScrollableParent(anchor);
+  return {
+    top: scrollEl2.scrollTop,
+    height: scrollEl2.scrollHeight
+  };
+}
+function restoreScrollPosition(anchor, pendingRestore) {
+  if (!pendingRestore) return void 0;
+  const scrollEl2 = getScrollableParent(anchor);
+  const heightDelta = scrollEl2.scrollHeight - pendingRestore.height;
+  let desiredTop = pendingRestore.top;
+  if (pendingRestore.top > 0) {
+    desiredTop += heightDelta;
+  }
+  const maxScroll = scrollEl2.scrollHeight - scrollEl2.clientHeight;
+  scrollEl2.scrollTop = Math.min(
+    Math.max(desiredTop, 0),
+    Math.max(0, maxScroll)
+  );
+  return void 0;
+}
+function smoothScrollToTarget(target, align, offset = 0, onComplete) {
+  const scrollEl2 = getScrollableParent(target);
+  const parentRect = scrollEl2.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const currentTop = scrollEl2.scrollTop;
+  const targetTop = targetRect.top - parentRect.top + currentTop;
+  let desiredTop = targetTop;
+  if (align === "start") {
+    desiredTop = targetTop - offset;
+  } else {
+    const available = parentRect.height - targetRect.height;
+    desiredTop = targetTop - Math.max(0, available / 2);
+  }
+  const maxScroll = scrollEl2.scrollHeight - scrollEl2.clientHeight;
+  const clampedTop = Math.min(
+    Math.max(desiredTop, 0),
+    Math.max(0, maxScroll)
+  );
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  const distance = clampedTop - currentTop;
+  const minDistance = 1;
+  if (prefersReducedMotion || Math.abs(distance) < minDistance) {
+    scrollEl2.scrollTop = clampedTop;
+    onComplete == null ? void 0 : onComplete();
+    return;
+  }
+  const duration = Math.min(600, Math.max(240, Math.abs(distance) * 0.5));
+  const startTime = performance.now();
+  const easeInOut = (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  const step = (now) => {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = easeInOut(progress);
+    scrollEl2.scrollTop = currentTop + distance * eased;
+    if (progress < 1) {
+      requestAnimationFrame(step);
+      return;
+    }
+    onComplete == null ? void 0 : onComplete();
+  };
+  requestAnimationFrame(step);
+}
+function triggerHighlight(element2) {
+  element2.classList.remove("local-gpt-action-highlight");
+  void element2.offsetWidth;
+  element2.classList.add("local-gpt-action-highlight");
+  element2.addEventListener(
+    "animationend",
+    () => element2.classList.remove("local-gpt-action-highlight"),
+    { once: true }
+  );
+}
+
+// src/settingsCommunityActionsModal.ts
+var import_obsidian4 = require("obsidian");
+
+// src/settingsCommunityActionRows.ts
+var import_obsidian3 = require("obsidian");
+function renderCommunityActionRow({
+  listEl,
+  action: action2,
+  state: state2,
+  installCommunityAction
+}) {
+  var _a7;
+  const actionRow = listEl.createDiv("local-gpt-community-actions-row");
+  if (state2.type === "installed") {
+    actionRow.addClass("local-gpt-is-installed");
+  }
+  const infoEl = actionRow.createDiv("local-gpt-community-actions-info");
+  const content = infoEl.createDiv("local-gpt-community-actions-content");
+  const header = content.createDiv("local-gpt-community-actions-header");
+  header.createSpan({
+    text: action2.name,
+    cls: "local-gpt-community-actions-title"
+  });
+  const statusPill = getCommunityActionStatusPill(state2);
+  if (statusPill) {
+    const pill = header.createSpan("local-gpt-community-actions-status");
+    pill.setText(statusPill.label);
+    pill.addClass(`local-gpt-is-${statusPill.variant}`);
+  }
+  const score = header.createSpan("local-gpt-community-actions-score");
+  score.setText(String(action2.score));
+  score.setAttr(
+    "aria-label",
+    `${I18n.t("settings.communityActionsScoreLabel")} ${action2.score}`
+  );
+  const metaRow = content.createDiv("local-gpt-community-actions-meta");
+  if (action2.author) {
+    const author = metaRow.createSpan(
+      "local-gpt-community-actions-meta-item"
+    );
+    author.setText(
+      I18n.t("settings.communityActionsByAuthor", {
+        author: `@${action2.author}`
+      })
+    );
+    author.addClass("local-gpt-community-actions-author");
+  }
+  if (action2.replace) {
+    const replaceTag = metaRow.createSpan(
+      "local-gpt-community-actions-meta-pill"
+    );
+    replaceTag.setText(I18n.t("settings.communityActionsReplaceTag"));
+  }
+  const footer = content.createDiv("local-gpt-community-actions-footer");
+  const preview = footer.createDiv("local-gpt-community-actions-preview");
+  const description = (_a7 = action2.description) == null ? void 0 : _a7.trim();
+  if (description) {
+    const descriptionLine = preview.createDiv(
+      "local-gpt-community-actions-description"
+    );
+    descriptionLine.setText(description);
+    descriptionLine.setAttr("title", description);
+  } else {
+    addPreviewLine(preview, I18n.t("settings.systemPrompt"), action2.system);
+    addPreviewLine(preview, I18n.t("settings.prompt"), action2.prompt);
+  }
+  const noteText = getCommunityActionNote(state2);
+  if (noteText) {
+    const note = content.createDiv("local-gpt-community-actions-note");
+    note.setText(noteText);
+  }
+  const actions = footer.createDiv("local-gpt-community-actions-actions");
+  const controlEl = actions.createDiv("local-gpt-community-actions-control");
+  const button = new import_obsidian3.ButtonComponent(controlEl);
+  configureCommunityActionButton(
+    button,
+    action2,
+    state2,
+    installCommunityAction
+  );
+}
+function getCommunityActionStatusPill(state2) {
+  if (state2.type === "installed") {
+    return {
+      label: I18n.t("settings.communityActionsInstalled"),
+      variant: "installed"
+    };
+  }
+  if (state2.type === "modified") {
+    return {
+      label: I18n.t("settings.communityActionsModified"),
+      variant: "modified"
+    };
+  }
+  if (state2.type === "conflict") {
+    return {
+      label: I18n.t("settings.communityActionsInList"),
+      variant: "conflict"
+    };
+  }
+  return null;
+}
+function getCommunityActionNote(state2) {
+  if (state2.type === "modified") {
+    return I18n.t("settings.communityActionsModifiedNote");
+  }
+  if (state2.type === "conflict") {
+    return I18n.t("settings.communityActionsConflictNote");
+  }
+  return null;
+}
+function configureCommunityActionButton(button, action2, state2, installCommunityAction) {
+  if (state2.type === "installed") {
+    button.setButtonText(I18n.t("settings.communityActionsInstalled")).setDisabled(true);
+    button.buttonEl.addClass(
+      "local-gpt-community-actions-installed-button"
+    );
+    return;
+  }
+  if (state2.type === "modified") {
+    button.setButtonText(I18n.t("settings.communityActionsUpdate")).setClass("mod-warning").onClick(
+      async () => installCommunityAction(action2, state2.localAction)
+    );
+    return;
+  }
+  if (state2.type === "conflict") {
+    button.setButtonText(I18n.t("settings.communityActionsReplace")).setClass("mod-warning").onClick(
+      async () => installCommunityAction(action2, state2.localAction)
+    );
+    return;
+  }
+  button.setCta().setButtonText(I18n.t("settings.communityActionsInstall")).onClick(async () => installCommunityAction(action2));
+  button.buttonEl.addClass("local-gpt-community-actions-install-button");
+  const icon = button.buttonEl.createSpan(
+    "local-gpt-community-actions-install-icon"
+  );
+  (0, import_obsidian3.setIcon)(icon, "plus");
+  button.buttonEl.prepend(icon);
+}
+function addPreviewLine(preview, label, value) {
+  if (!value) {
+    return;
+  }
+  const line = preview.createDiv("local-gpt-community-actions-preview-line");
+  line.createSpan({
+    text: `${label}: `,
+    cls: "local-gpt-community-actions-preview-label"
+  });
+  line.createSpan({ text: value });
+}
+
+// src/settingsCommunityActionsSync.ts
+async function syncCommunityActions(plugin, actions) {
+  const lookup = buildCommunityActionsLookup(plugin.settings.actions);
+  let updated = 0;
+  let skipped = 0;
+  actions.forEach((action2) => {
+    const result = syncCommunityAction(action2, lookup);
+    updated += result.updated;
+    skipped += result.skipped;
+  });
+  if (updated > 0) {
+    await plugin.saveSettings();
+  }
+  return { updated, skipped };
+}
+function buildCommunityActionsSyncMessage(result) {
+  if (result.updated > 0 && result.skipped > 0) {
+    return I18n.t("settings.communityActionsSyncSummary", {
+      updated: String(result.updated),
+      skipped: String(result.skipped)
+    });
+  }
+  if (result.updated > 0) {
+    return I18n.t("settings.communityActionsUpdated", {
+      count: String(result.updated)
+    });
+  }
+  if (result.skipped > 0) {
+    return I18n.t("settings.communityActionsSkipped", {
+      count: String(result.skipped)
+    });
+  }
+  return "";
+}
+function syncCommunityAction(action2, lookup) {
+  const localAction = findCommunityActionLink(action2, lookup);
+  if (!localAction) {
+    return tryAdoptCommunityAction(action2, lookup);
+  }
+  const localSignature = buildCommunityActionSignature(localAction);
+  const remoteSignature = buildCommunityActionSignature(action2);
+  if (isCommunityActionModified(localAction, localSignature)) {
+    return { updated: 0, skipped: 1 };
+  }
+  if (!shouldUpdateCommunityAction(
+    localAction,
+    localSignature,
+    remoteSignature,
+    action2
+  )) {
+    return { updated: 0, skipped: 0 };
+  }
+  applyCommunityActionUpdate(localAction, action2);
+  return { updated: 1, skipped: 0 };
+}
+function applyCommunityActionUpdate(localAction, action2) {
+  var _a7, _b3;
+  localAction.prompt = (_a7 = action2.prompt) != null ? _a7 : "";
+  localAction.replace = (_b3 = action2.replace) != null ? _b3 : false;
+  if (action2.system) {
+    localAction.system = action2.system;
+  } else {
+    delete localAction.system;
+  }
+  localAction.community = buildCommunityActionRef(action2);
+}
+function isCommunityActionModified(localAction, localSignature) {
+  var _a7;
+  const storedHash = (_a7 = localAction.community) == null ? void 0 : _a7.hash;
+  return Boolean(storedHash && localSignature !== storedHash);
+}
+function shouldUpdateCommunityAction(localAction, localSignature, remoteSignature, action2) {
+  var _a7, _b3, _c2, _d, _e;
+  return localSignature !== remoteSignature || ((_a7 = localAction.community) == null ? void 0 : _a7.hash) !== remoteSignature || ((_b3 = localAction.community) == null ? void 0 : _b3.id) !== action2.id || ((_d = (_c2 = localAction.community) == null ? void 0 : _c2.description) == null ? void 0 : _d.trim()) !== (((_e = action2.description) == null ? void 0 : _e.trim()) || void 0);
+}
+function tryAdoptCommunityAction(action2, lookup) {
+  const nameMatch = lookup.byName.get(normalizeActionName(action2.name));
+  if (!nameMatch) {
+    return { updated: 0, skipped: 0 };
+  }
+  const localSignature = buildCommunityActionSignature(nameMatch);
+  const remoteSignature = buildCommunityActionSignature(action2);
+  if (localSignature !== remoteSignature) {
+    return { updated: 0, skipped: 0 };
+  }
+  nameMatch.community = buildCommunityActionRef(action2);
+  return { updated: 1, skipped: 0 };
+}
+
+// src/settingsCommunityActionsModal.ts
+function openCommunityActionsModal(options) {
+  const modal = new import_obsidian4.Modal(options.app);
+  modal.modalEl.addClass("local-gpt-community-actions-modal");
+  modal.titleEl.setText(I18n.t("settings.communityActions"));
+  const modalContent = modal.contentEl;
+  const communityActionsRenderId = Date.now();
+  options.setRenderId(communityActionsRenderId);
+  const communityActionsSection = modalContent.createDiv(
+    "local-gpt-community-actions"
+  );
+  const communityActionsDescription = communityActionsSection.createDiv(
+    "setting-item-description"
+  );
+  communityActionsDescription.innerHTML = I18n.t(
+    "settings.communityActionsDesc"
+  );
+  const communityActionsHint = communityActionsSection.createDiv(
+    "local-gpt-community-actions-hint"
+  );
+  communityActionsHint.setText(I18n.t("settings.communityActionsAutoUpdate"));
+  const communityActionsStatus = communityActionsSection.createDiv(
+    "local-gpt-community-actions-status-line"
+  );
+  communityActionsStatus.setText(options.getStatusMessage() || "");
+  communityActionsStatus.toggleClass(
+    "local-gpt-is-hidden",
+    !options.getStatusMessage()
+  );
+  options.setLanguage(
+    normalizeLanguageCode(
+      options.getLanguage() || options.defaultCommunityActionsLanguage
+    )
+  );
+  let communityActions = [];
+  let communityActionsLoaded = false;
+  let languageDropdown = null;
+  let refreshButton = null;
+  let communityActionsSearchQuery = "";
+  const communityActionsList = communityActionsSection.createDiv(
+    "local-gpt-community-actions-list"
+  );
+  const getSelectedLanguage = () => normalizeLanguageCode(
+    options.getLanguage() || options.defaultCommunityActionsLanguage
+  );
+  const renderCommunityActionsMessage = (message, className) => {
+    communityActionsList.empty();
+    const messageEl = communityActionsList.createDiv(className);
+    messageEl.setText(message);
+  };
+  const setCommunityActionsStatusMessage = (message) => {
+    options.setStatusMessage(message);
+    if (!message) {
+      communityActionsStatus.setText("");
+      communityActionsStatus.addClass("local-gpt-is-hidden");
+      return;
+    }
+    communityActionsStatus.setText(message);
+    communityActionsStatus.removeClass("local-gpt-is-hidden");
+  };
+  let refreshCommunityActionsList = () => {
+    renderCommunityActionsMessage(
+      I18n.t("settings.communityActionsLoading"),
+      "local-gpt-community-actions-loading"
+    );
+  };
+  const installCommunityAction = async (action2, existingAction) => {
+    var _a7, _b3;
+    const localAction = existingAction ? { ...existingAction } : {
+      name: action2.name,
+      prompt: ""
+    };
+    localAction.name = action2.name;
+    localAction.prompt = (_a7 = action2.prompt) != null ? _a7 : "";
+    localAction.replace = (_b3 = action2.replace) != null ? _b3 : false;
+    if (action2.system) {
+      localAction.system = action2.system;
+    } else {
+      delete localAction.system;
+    }
+    localAction.community = buildCommunityActionRef(action2);
+    options.captureScrollPosition(options.containerEl);
+    await options.addNewAction(localAction);
+    refreshCommunityActionsList();
+    options.setPendingScroll({
+      action: localAction,
+      align: "center",
+      target: "row"
+    });
+    options.display();
+  };
+  const renderCommunityActionsList = (actions) => {
+    if (!communityActionsLoaded) {
+      renderCommunityActionsMessage(
+        I18n.t("settings.communityActionsLoading"),
+        "local-gpt-community-actions-loading"
+      );
+      return;
+    }
+    const selectedLanguage = getSelectedLanguage();
+    const languageFiltered = actions.filter(
+      (action2) => normalizeLanguageCode(action2.language) === selectedLanguage
+    );
+    if (!languageFiltered.length) {
+      renderCommunityActionsMessage(
+        I18n.t("settings.communityActionsEmpty"),
+        "local-gpt-community-actions-empty"
+      );
+      return;
+    }
+    const query = normalizeSearchValue(communityActionsSearchQuery);
+    let filtered = languageFiltered;
+    if (query) {
+      const matches2 = languageFiltered.map((action2, index3) => {
+        const rank = getCommunityActionSearchRank(action2, query);
+        if (rank === null) {
+          return null;
+        }
+        return { action: action2, rank, index: index3 };
+      }).filter(
+        (match) => Boolean(match)
+      ).sort((a, b) => {
+        if (a.rank !== b.rank) {
+          return a.rank - b.rank;
+        }
+        return a.index - b.index;
+      });
+      if (!matches2.length) {
+        renderCommunityActionsMessage(
+          I18n.t("settings.communityActionsSearchEmpty"),
+          "local-gpt-community-actions-empty"
+        );
+        return;
+      }
+      filtered = matches2.map((match) => match.action);
+    }
+    communityActionsList.empty();
+    const lookup = buildCommunityActionsLookup(
+      options.plugin.settings.actions
+    );
+    filtered.forEach(
+      (action2) => renderCommunityActionRow({
+        listEl: communityActionsList,
+        action: action2,
+        state: resolveCommunityActionState(action2, lookup),
+        installCommunityAction
+      })
+    );
+  };
+  refreshCommunityActionsList = () => renderCommunityActionsList(communityActions);
+  const updateCommunityActionsLanguageOptions = (actions) => {
+    if (!languageDropdown) {
+      return;
+    }
+    const languages = new Set(
+      actions.map((action2) => normalizeLanguageCode(action2.language))
+    );
+    if (options.getLanguage()) {
+      languages.add(normalizeLanguageCode(options.getLanguage()));
+    }
+    languages.add(options.defaultCommunityActionsLanguage);
+    const languageOptions = Array.from(languages).sort(
+      (a, b) => a.localeCompare(b)
+    );
+    languageDropdown.selectEl.options.length = 0;
+    languageOptions.forEach((language) => {
+      languageDropdown == null ? void 0 : languageDropdown.addOption(language, language);
+    });
+    languageDropdown.setValue(getSelectedLanguage());
+  };
+  const finishCommunityActionsLoad = (actions) => {
+    communityActionsLoaded = true;
+    updateCommunityActionsLanguageOptions(actions);
+    renderCommunityActionsList(actions);
+  };
+  const handleCommunityActions = async (actions) => {
+    if (options.getRenderId() !== communityActionsRenderId) {
+      return true;
+    }
+    communityActions = actions;
+    const syncResult = await syncCommunityActions(options.plugin, actions);
+    const syncMessage = buildCommunityActionsSyncMessage(syncResult);
+    setCommunityActionsStatusMessage(syncMessage);
+    if (syncResult.updated > 0) {
+      options.display();
+      return true;
+    }
+    finishCommunityActionsLoad(actions);
+    return false;
+  };
+  const handleCommunityActionsError = (error) => {
+    if (options.getRenderId() !== communityActionsRenderId) {
+      return;
+    }
+    console.error("Failed to load community actions", error);
+    communityActionsLoaded = true;
+    setCommunityActionsStatusMessage("");
+    renderCommunityActionsMessage(
+      I18n.t("settings.communityActionsError"),
+      "local-gpt-community-actions-error"
+    );
+  };
+  const loadCommunityActions = async (forceRefresh = false) => {
+    communityActionsLoaded = false;
+    renderCommunityActionsMessage(
+      I18n.t("settings.communityActionsLoading"),
+      "local-gpt-community-actions-loading"
+    );
+    refreshButton == null ? void 0 : refreshButton.setDisabled(true);
+    try {
+      const actions = await CommunityActionsService.getCommunityActions({
+        forceRefresh
+      });
+      await handleCommunityActions(actions);
+    } catch (error) {
+      handleCommunityActionsError(error);
+    } finally {
+      refreshButton == null ? void 0 : refreshButton.setDisabled(false);
+    }
+  };
+  const languageSetting = new import_obsidian4.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsLanguage")).setDesc(I18n.t("settings.communityActionsLanguageDesc")).addDropdown((dropdown) => {
+    languageDropdown = dropdown;
+    const initialLanguage = getSelectedLanguage();
+    dropdown.addOption(initialLanguage, initialLanguage);
+    dropdown.setValue(initialLanguage);
+    dropdown.onChange((value) => {
+      options.setLanguage(normalizeLanguageCode(value));
+      renderCommunityActionsList(communityActions);
+    });
+  }).addButton((button) => {
+    refreshButton = button;
+    button.setButtonText(I18n.t("settings.communityActionsRefresh")).onClick(async () => {
+      CommunityActionsService.clearCache();
+      await loadCommunityActions(true);
+    });
+  });
+  communityActionsSection.insertBefore(
+    languageSetting.settingEl,
+    communityActionsList
+  );
+  const searchSetting = new import_obsidian4.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsSearch")).setDesc("").setClass("local-gpt-community-actions-search").addText((text2) => {
+    text2.setPlaceholder(
+      I18n.t("settings.communityActionsSearchPlaceholder")
+    );
+    text2.onChange((value) => {
+      communityActionsSearchQuery = value;
+      renderCommunityActionsList(communityActions);
+    });
+  });
+  communityActionsSection.insertBefore(
+    searchSetting.settingEl,
+    communityActionsList
+  );
+  modal.onClose = () => {
+    options.setRenderId(0);
+    modal.contentEl.empty();
+  };
+  modal.open();
+  loadCommunityActions();
+}
+
+// src/settingsActionsList.ts
+var import_obsidian5 = require("obsidian");
 
 // node_modules/sortablejs/modular/sortable.esm.js
 function _defineProperty(e, r2, t) {
@@ -3693,9 +5304,9 @@ function _generateId(el) {
   }
   return sum.toString(36);
 }
-function _saveInputCheckedState(root2) {
+function _saveInputCheckedState(root3) {
   savedInputChecked.length = 0;
-  var inputs = root2.getElementsByTagName("input");
+  var inputs = root3.getElementsByTagName("input");
   var idx = inputs.length;
   while (idx--) {
     var el = inputs[idx];
@@ -3987,764 +5598,273 @@ Sortable.mount(new AutoScrollPlugin());
 Sortable.mount(Remove, Revert);
 var sortable_esm_default = Sortable;
 
-// src/actionUtils.ts
-var isSeparatorAction = (action2) => Boolean(action2.separator);
-var getRunnableActions = (actions) => actions.filter((action2) => !isSeparatorAction(action2));
-var createActionId = () => {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return `action-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-};
-var ensureActionId = (action2) => action2.id ? action2 : {
-  ...action2,
-  id: createActionId()
-};
-var ensureActionIds = (actions) => {
-  let changed = false;
-  const actionsWithIds = actions.map((action2) => {
-    if (action2.id) {
-      return action2;
-    }
-    changed = true;
-    return ensureActionId(action2);
+// src/settingsActionsList.ts
+function renderActionsList(options) {
+  options.containerEl.createEl("h4", {
+    text: I18n.t("settings.actionsList")
   });
-  return { actions: actionsWithIds, changed };
-};
-var getActionIdentifier = (action2) => {
-  var _a7;
-  return action2.id || (((_a7 = action2.community) == null ? void 0 : _a7.id) ? `community:${action2.community.id}` : `name:${action2.name}`);
-};
-var moveAction = (actions, fromIndex, toIndex) => {
-  if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= actions.length || toIndex >= actions.length) {
-    return actions;
-  }
-  const updated = actions.slice();
-  const [moved2] = updated.splice(fromIndex, 1);
-  if (!moved2) {
-    return actions;
-  }
-  updated.splice(toIndex, 0, moved2);
-  return updated;
-};
-
-// src/languageDetection.ts
-var MAX_ANALYSIS_LENGTH = 1e3;
-var MIN_LATIN_LETTERS_THRESHOLD = 10;
-var SCRIPT_RANGES = {
-  ja: [
-    [12352, 12447],
-    // Hiragana
-    [12448, 12543],
-    // Katakana
-    [12784, 12799],
-    // Katakana Phonetic Extensions
-    [65381, 65439]
-    // Halfwidth Katakana
-  ],
-  zh: [
-    [13312, 19903],
-    // CJK Unified Ideographs Extension A
-    [19968, 40959]
-    // CJK Unified Ideographs
-  ],
-  ko: [
-    [4352, 4607],
-    // Hangul Jamo
-    [12592, 12687],
-    // Hangul Compatibility Jamo
-    [44032, 55215]
-    // Hangul Syllables
-  ],
-  ru: [
-    [1024, 1279],
-    // Cyrillic
-    [1280, 1327],
-    // Cyrillic Supplement
-    [11744, 11775],
-    // Cyrillic Extended-A
-    [42560, 42655]
-    // Cyrillic Extended-B
-  ],
-  ar: [
-    [1536, 1791],
-    // Arabic
-    [1872, 1919],
-    // Arabic Supplement
-    [2208, 2303]
-    // Arabic Extended-A
-  ],
-  he: [[1424, 1535]],
-  // Hebrew
-  el: [
-    [880, 1023],
-    // Greek and Coptic
-    [7936, 8191]
-    // Greek Extended
-  ],
-  hi: [[2304, 2431]]
-  // Devanagari
-};
-var LATIN_RANGES = [
-  [65, 90],
-  // Basic Latin uppercase
-  [97, 122],
-  // Basic Latin lowercase
-  [192, 591],
-  // Latin-1 Supplement + Extended-A/B
-  [7680, 7935]
-  // Latin Extended Additional
-];
-var SCRIPT_KEYS = [
-  "ja",
-  "zh",
-  "ko",
-  "ru",
-  "ar",
-  "he",
-  "el",
-  "hi"
-];
-var LATIN_KEYS = ["en", "de", "fr", "es", "pt", "id"];
-var WORD_WEIGHT = 2;
-var CHAR_WEIGHT = 3;
-var LATIN_LANGUAGE_PROFILES = {
-  en: {
-    words: [
-      "the",
-      "and",
-      "you",
-      "that",
-      "with",
-      "this",
-      "from",
-      "your",
-      "have",
-      "will",
-      "can",
-      "hello",
-      "world"
-    ],
-    chars: []
-  },
-  de: {
-    words: [
-      "der",
-      "die",
-      "das",
-      "und",
-      "ist",
-      "nicht",
-      "mit",
-      "auf",
-      "f\xFCr",
-      "eine",
-      "ein",
-      "ich",
-      "sie"
-    ],
-    chars: ["\xDF", "\xE4", "\xF6", "\xFC"]
-  },
-  fr: {
-    words: [
-      "le",
-      "la",
-      "les",
-      "des",
-      "est",
-      "une",
-      "un",
-      "pour",
-      "que",
-      "dans",
-      "avec",
-      "pas",
-      "vous",
-      "sur",
-      "ce"
-    ],
-    chars: [
-      "\u0153",
-      "\xE6",
-      "\xE7",
-      "\xE9",
-      "\xE8",
-      "\xEA",
-      "\xEB",
-      "\xE0",
-      "\xE2",
-      "\xEE",
-      "\xEF",
-      "\xF4",
-      "\xF9",
-      "\xFB",
-      "\xFC",
-      "\xFF"
-    ]
-  },
-  es: {
-    words: [
-      "el",
-      "la",
-      "los",
-      "las",
-      "que",
-      "para",
-      "con",
-      "una",
-      "un",
-      "por",
-      "pero",
-      "como",
-      "muy",
-      "estas",
-      "est\xE1s"
-    ],
-    chars: [
-      "\xF1",
-      "\xE1",
-      "\xE9",
-      "\xED",
-      "\xF3",
-      "\xFA",
-      "\xFC",
-      "\xBF",
-      "\xA1"
-    ]
-  },
-  pt: {
-    words: [
-      "o",
-      "a",
-      "os",
-      "as",
-      "que",
-      "para",
-      "com",
-      "uma",
-      "um",
-      "n\xE3o",
-      "por",
-      "mais",
-      "como",
-      "estou",
-      "est\xE1",
-      "de",
-      "e"
-    ],
-    chars: [
-      "\xE3",
-      "\xF5",
-      "\xE7",
-      "\xE1",
-      "\xE0",
-      "\xE2",
-      "\xEA",
-      "\xED",
-      "\xF3",
-      "\xF4",
-      "\xFA",
-      "\xFC"
-    ]
-  },
-  id: {
-    words: [
-      "yang",
-      "dan",
-      "tidak",
-      "saya",
-      "kamu",
-      "ini",
-      "itu",
-      "untuk",
-      "dengan",
-      "ada",
-      "dari",
-      "di",
-      "ke",
-      "apa",
-      "bagaimana",
-      "bisa",
-      "terjadi",
-      "tahu"
-    ],
-    chars: []
-  }
-};
-var LATIN_WORD_SETS = {
-  en: new Set(LATIN_LANGUAGE_PROFILES.en.words),
-  de: new Set(LATIN_LANGUAGE_PROFILES.de.words),
-  fr: new Set(LATIN_LANGUAGE_PROFILES.fr.words),
-  es: new Set(LATIN_LANGUAGE_PROFILES.es.words),
-  pt: new Set(LATIN_LANGUAGE_PROFILES.pt.words),
-  id: new Set(LATIN_LANGUAGE_PROFILES.id.words)
-};
-var LATIN_CHAR_SETS = {
-  en: new Set(LATIN_LANGUAGE_PROFILES.en.chars),
-  de: new Set(LATIN_LANGUAGE_PROFILES.de.chars),
-  fr: new Set(LATIN_LANGUAGE_PROFILES.fr.chars),
-  es: new Set(LATIN_LANGUAGE_PROFILES.es.chars),
-  pt: new Set(LATIN_LANGUAGE_PROFILES.pt.chars),
-  id: new Set(LATIN_LANGUAGE_PROFILES.id.chars)
-};
-var isCodeInRanges = (code, ranges) => {
-  for (const [start, end] of ranges) {
-    if (code >= start && code <= end) {
-      return true;
-    }
-  }
-  return false;
-};
-var detectScriptForCodePoint = (code) => {
-  for (const key2 of SCRIPT_KEYS) {
-    if (isCodeInRanges(code, SCRIPT_RANGES[key2])) {
-      return key2;
-    }
-  }
-  return null;
-};
-var isLatinCodePoint = (code) => isCodeInRanges(code, LATIN_RANGES);
-var mergeJapaneseHan = (counts) => {
-  if (counts.ja > 0 && counts.zh > 0) {
-    counts.ja += counts.zh;
-    counts.zh = 0;
-  }
-};
-var pickDominantLanguage = (counts, keys) => {
-  let topLanguage = "unknown";
-  let topCount = 0;
-  let isTie = false;
-  for (const key2 of keys) {
-    const count = counts[key2];
-    if (count > topCount) {
-      topLanguage = key2;
-      topCount = count;
-      isTie = false;
-    } else if (count === topCount && count > 0) {
-      isTie = true;
-    }
-  }
-  if (topCount === 0 || isTie) {
-    return "unknown";
-  }
-  return topLanguage;
-};
-var sumCounts = (counts) => Object.values(counts).reduce((total, value) => total + value, 0);
-var extractWords = (text2) => {
-  var _a7;
-  return (_a7 = text2.match(/\p{L}+/gu)) != null ? _a7 : [];
-};
-var countOccurrences = (values) => {
-  var _a7;
-  const counts = /* @__PURE__ */ new Map();
-  for (const value of values) {
-    counts.set(value, ((_a7 = counts.get(value)) != null ? _a7 : 0) + 1);
-  }
-  return counts;
-};
-var scoreLatinLanguages = (charCounts, wordCounts) => {
-  var _a7, _b3;
-  const scores = {
-    en: 0,
-    de: 0,
-    fr: 0,
-    es: 0,
-    pt: 0,
-    id: 0
-  };
-  for (const language of LATIN_KEYS) {
-    const charSet = LATIN_CHAR_SETS[language];
-    for (const char of charSet) {
-      scores[language] += ((_a7 = charCounts.get(char)) != null ? _a7 : 0) * CHAR_WEIGHT;
-    }
-    const wordSet = LATIN_WORD_SETS[language];
-    for (const word of wordSet) {
-      scores[language] += ((_b3 = wordCounts.get(word)) != null ? _b3 : 0) * WORD_WEIGHT;
-    }
-  }
-  return scores;
-};
-var countScriptAndLatinLetters = (text2) => {
-  const scriptCounts = {
-    ja: 0,
-    zh: 0,
-    ko: 0,
-    ru: 0,
-    ar: 0,
-    he: 0,
-    el: 0,
-    hi: 0
-  };
-  let latinLetterCount = 0;
-  for (const char of text2) {
-    const code = char.codePointAt(0);
-    if (!code) {
-      continue;
-    }
-    const scriptLanguage = detectScriptForCodePoint(code);
-    if (scriptLanguage) {
-      scriptCounts[scriptLanguage] += 1;
-      continue;
-    }
-    if (isLatinCodePoint(code)) {
-      latinLetterCount += 1;
-    }
-  }
-  return { scriptCounts, latinLetterCount };
-};
-var detectDominantLanguage = (text2) => {
-  const truncated = text2.length > MAX_ANALYSIS_LENGTH ? text2.slice(0, MAX_ANALYSIS_LENGTH) : text2;
-  const normalized = truncated.normalize("NFC");
-  const { scriptCounts, latinLetterCount } = countScriptAndLatinLetters(normalized);
-  mergeJapaneseHan(scriptCounts);
-  const dominantScript = pickDominantLanguage(scriptCounts, SCRIPT_KEYS);
-  const scriptLetterCount = sumCounts(scriptCounts);
-  if (dominantScript !== "unknown" && scriptLetterCount >= latinLetterCount) {
-    return dominantScript;
-  }
-  const lowerText = normalized.toLowerCase();
-  const words = extractWords(lowerText);
-  const charCounts = countOccurrences(lowerText);
-  const wordCounts = countOccurrences(words);
-  const latinScores = scoreLatinLanguages(charCounts, wordCounts);
-  const dominantLatin = pickDominantLanguage(latinScores, LATIN_KEYS);
-  if (dominantLatin !== "unknown") {
-    return dominantLatin;
-  }
-  if (latinLetterCount >= MIN_LATIN_LETTERS_THRESHOLD) {
-    return "en";
-  }
-  return "unknown";
-};
-
-// src/CommunityActionsService.ts
-var import_obsidian = require("obsidian");
-var DISCUSSION_COMMENTS_URL = "https://api.github.com/repos/pfrankov/obsidian-local-gpt/discussions/89/comments";
-var PER_PAGE = 100;
-var SEPARATOR = "\u2702\uFE0F";
-var POSITIVE_REACTIONS = [
-  "+1",
-  "heart",
-  "hooray",
-  "rocket",
-  "eyes",
-  "laugh"
-];
-var NEGATIVE_REACTIONS = ["-1", "confused"];
-var FIELD_KEYS = ["name", "system", "prompt", "language", "replace"];
-var FIELD_REGEX = new RegExp(
-  `(?:^|\\n)\\s*(${FIELD_KEYS.join("|")}):\\s*([\\s\\S]*?)(?=\\n\\s*(?:${FIELD_KEYS.join(
-    "|"
-  )}):|$)`,
-  "gi"
-);
-var buildCommunityActionSignature = (action2) => {
-  var _a7, _b3;
-  return [(_a7 = action2.system) != null ? _a7 : "", (_b3 = action2.prompt) != null ? _b3 : "", action2.replace ? "1" : "0"].join(
-    "\n---\n"
+  const actionsContainer = options.containerEl.createDiv(
+    "local-gpt-actions-container"
   );
-};
-var buildCommunityActionKey = (language, name) => `${language.trim().toLowerCase()}::${name.trim().toLowerCase()}`;
-var CommunityActionsService = class {
-  static async getCommunityActions(options) {
-    var _a7;
-    const forceRefresh = (_a7 = options == null ? void 0 : options.forceRefresh) != null ? _a7 : false;
-    if (this.cache && !forceRefresh) {
-      return this.cache;
-    }
-    if (this.pendingRequest) {
-      return this.pendingRequest;
-    }
-    const fallback2 = this.cache;
-    this.pendingRequest = (async () => {
-      const { actions, failed } = await this.fetchCommunityActions();
-      if (failed) {
-        if (fallback2) {
-          this.cache = fallback2;
-          return fallback2;
-        }
-        throw new Error("Failed to fetch community actions");
-      }
-      this.cache = actions;
-      return actions;
-    })().finally(() => {
-      this.pendingRequest = void 0;
-    });
-    return this.pendingRequest;
-  }
-  static clearCache() {
-    this.cache = null;
-    this.pendingRequest = void 0;
-  }
-  static async fetchCommunityActions() {
-    const actions = await this.collectActions(
-      1,
-      [],
-      /* @__PURE__ */ new Set(),
-      /* @__PURE__ */ new Map()
+  const isMobile = import_obsidian5.Platform.isMobile || import_obsidian5.Platform.isMobileApp;
+  const updateOrder = async (fromIndex, toIndex) => {
+    const updatedActions = moveAction(
+      options.plugin.settings.actions,
+      fromIndex,
+      toIndex
     );
-    if (!actions) {
-      return { actions: [], failed: true };
+    if (updatedActions === options.plugin.settings.actions) {
+      return;
     }
-    const sorted = actions.sort((a, b) => {
-      if (a.score === b.score) {
-        return a.order - b.order;
-      }
-      return b.score - a.score;
-    }).map(({ order: _order2, ...action2 }) => action2);
-    return { actions: sorted, failed: false };
-  }
-  static async collectActions(page, actions, uniqueKeys, uniqueContentKeys) {
-    var _a7;
-    const response = await this.requestPage(page);
-    if (!response) {
-      return page === 1 ? null : actions;
+    options.plugin.settings.actions = updatedActions;
+    await options.plugin.saveSettings();
+  };
+  const editFormScrollOffset = 30;
+  const applyPendingScroll = (action2, target, targetType, offset = 0, highlightTarget) => {
+    const pendingScroll = options.getPendingScroll();
+    if (!pendingScroll || pendingScroll.action !== action2 || pendingScroll.target !== targetType) {
+      return;
     }
-    const comments = (_a7 = response.json) != null ? _a7 : [];
-    if (!comments.length) {
-      return actions;
-    }
-    this.appendActionsFromComments(
-      comments,
-      actions,
-      uniqueKeys,
-      uniqueContentKeys
-    );
-    if (comments.length < PER_PAGE) {
-      return actions;
-    }
-    return this.collectActions(
-      page + 1,
-      actions,
-      uniqueKeys,
-      uniqueContentKeys
-    );
-  }
-  static async requestPage(page) {
-    try {
-      const response = await (0, import_obsidian.requestUrl)({
-        url: `${DISCUSSION_COMMENTS_URL}?per_page=${PER_PAGE}&page=${page}&sort=created&direction=asc`,
-        headers: {
-          Accept: "application/vnd.github+json"
-        },
-        throw: false
-      });
-      if (response.status !== 200) {
-        console.error(
-          `GitHub API responded with ${response.status} on page ${page}`
-        );
-        return null;
-      }
-      return response;
-    } catch (error) {
-      console.error("Failed to fetch community actions", error);
-      return null;
-    }
-  }
-  static appendActionsFromComments(comments, actions, uniqueKeys, uniqueContentKeys) {
-    var _a7, _b3, _c2;
-    for (const comment2 of comments) {
-      const parsedAction = this.extractActionFromBody(comment2.body || "");
-      if (!parsedAction) {
-        continue;
-      }
-      const languageKey = parsedAction.language.trim().toLowerCase();
-      const normalizedKey = buildCommunityActionKey(
-        languageKey,
-        parsedAction.name
+    const scrollOffset = pendingScroll.align === "start" ? offset : 0;
+    requestAnimationFrame(() => {
+      smoothScrollToTarget(
+        target,
+        pendingScroll.align,
+        scrollOffset,
+        () => triggerHighlight(highlightTarget != null ? highlightTarget : target)
       );
-      if (uniqueKeys.has(normalizedKey)) {
-        continue;
+    });
+    options.setPendingScroll(void 0);
+  };
+  const addMobileMoveButtons = (row, actionIndex) => {
+    if (!isMobile) return;
+    row.addExtraButton((button) => {
+      button.setIcon("chevron-up").setTooltip(I18n.t("settings.moveUp")).onClick(async () => {
+        await updateOrder(actionIndex, actionIndex - 1);
+        options.display();
+      });
+      if (actionIndex === 0) {
+        button.setDisabled(true);
       }
-      const signatureKey = this.buildSimilaritySignature(parsedAction);
-      const languageSignatures = (_a7 = uniqueContentKeys.get(languageKey)) != null ? _a7 : /* @__PURE__ */ new Set();
-      if (languageSignatures.has(signatureKey)) {
-        continue;
+    });
+    row.addExtraButton((button) => {
+      button.setIcon("chevron-down").setTooltip(I18n.t("settings.moveDown")).onClick(async () => {
+        await updateOrder(actionIndex, actionIndex + 1);
+        options.display();
+      });
+      if (actionIndex === options.plugin.settings.actions.length - 1) {
+        button.setDisabled(true);
       }
-      uniqueKeys.add(normalizedKey);
-      languageSignatures.add(signatureKey);
-      uniqueContentKeys.set(languageKey, languageSignatures);
-      const score = this.getReactionScore(comment2.reactions);
-      actions.push({
-        id: `${comment2.id}`,
-        name: parsedAction.name,
-        language: parsedAction.language,
-        description: parsedAction.description,
-        prompt: parsedAction.prompt,
-        system: parsedAction.system,
-        replace: parsedAction.replace,
-        author: ((_b3 = comment2.user) == null ? void 0 : _b3.login) || "unknown",
-        authorUrl: (_c2 = comment2.user) == null ? void 0 : _c2.html_url,
-        commentUrl: comment2.html_url,
-        score,
-        createdAt: comment2.created_at,
-        updatedAt: comment2.updated_at,
-        order: actions.length
+    });
+  };
+  const renderSeparatorActionRow = (action2, actionIndex) => {
+    const actionRow = new import_obsidian5.Setting(actionsContainer).setName("").setDesc("");
+    actionRow.settingEl.addClass("local-gpt-action-row");
+    actionRow.settingEl.addClass("local-gpt-action-separator");
+    actionRow.settingEl.setAttribute(
+      "aria-label",
+      I18n.t("settings.separator")
+    );
+    const handle = actionRow.settingEl.createDiv("local-gpt-drag-handle");
+    (0, import_obsidian5.setIcon)(handle, "grip-vertical");
+    actionRow.settingEl.prepend(handle);
+    addMobileMoveButtons(actionRow, actionIndex);
+    actionRow.infoEl.empty();
+    actionRow.infoEl.createDiv("local-gpt-action-separator-line");
+    actionRow.addButton(
+      (button) => button.setIcon("trash").setTooltip(I18n.t("settings.remove")).onClick(async () => {
+        if (!button.buttonEl.hasClass("mod-warning")) {
+          button.setClass("mod-warning");
+          return;
+        }
+        options.plugin.settings.actions = options.plugin.settings.actions.filter(
+          (innerAction) => innerAction !== action2
+        );
+        await options.plugin.saveSettings();
+        options.display();
+      })
+    );
+  };
+  const renderActionRow = (action2, actionIndex) => {
+    var _a7, _b3;
+    const isEditingRow = options.editExistingAction === action2;
+    const actionRow = new import_obsidian5.Setting(actionsContainer);
+    actionRow.settingEl.addClass("local-gpt-action-row");
+    if (isEditingRow) {
+      actionRow.controlEl.remove();
+      actionRow.infoEl.empty();
+      renderActionEditor({
+        container: actionRow.infoEl,
+        plugin: options.plugin,
+        actionToEdit: action2,
+        isExistingAction: true,
+        closeActionEditor: options.closeActionEditor,
+        addNewAction: options.addNewAction,
+        dropCommunityLinkIfModified: options.dropCommunityLinkIfModified
+      });
+      const target = (_a7 = actionRow.infoEl.querySelector(".setting-item")) != null ? _a7 : actionRow.infoEl;
+      applyPendingScroll(
+        action2,
+        target,
+        "form",
+        editFormScrollOffset,
+        actionRow.settingEl
+      );
+      return;
+    }
+    actionRow.setName(action2.name).setDesc("");
+    if (action2.community && actionRow.nameEl) {
+      const nameEl = actionRow.nameEl;
+      const nameText = (_b3 = nameEl.textContent) != null ? _b3 : "";
+      nameEl.empty();
+      nameEl.createSpan({
+        cls: "local-gpt-action-name-label",
+        text: nameText
+      });
+      nameEl.createSpan({
+        cls: "local-gpt-community-actions-status local-gpt-action-community-status local-gpt-is-installed",
+        text: I18n.t("settings.communityActionsBadge")
       });
     }
+    const handle = actionRow.settingEl.createDiv("local-gpt-drag-handle");
+    (0, import_obsidian5.setIcon)(handle, "grip-vertical");
+    actionRow.settingEl.prepend(handle);
+    addMobileMoveButtons(actionRow, actionIndex);
+    const sharingString = buildSharingString(
+      action2,
+      options.defaultCommunityActionsLanguage
+    );
+    actionRow.addButton(
+      (button) => button.setIcon("copy").onClick(async () => {
+        navigator.clipboard.writeText(sharingString);
+        new import_obsidian5.Notice(I18n.t("notices.copied"));
+      })
+    ).addButton(
+      (button) => button.setButtonText("Edit").onClick(async () => {
+        options.startEditingAction(action2);
+      })
+    );
+    actionRow.descEl.innerHTML = buildActionDescription(action2);
+    applyPendingScroll(action2, actionRow.settingEl, "row");
+  };
+  options.plugin.settings.actions.forEach((action2, actionIndex) => {
+    if (isSeparatorAction(action2)) {
+      renderSeparatorActionRow(action2, actionIndex);
+      return;
+    }
+    renderActionRow(action2, actionIndex);
+  });
+  options.restoreScrollPosition(actionsContainer);
+  options.setPendingScroll(void 0);
+  setupActionsSortable(actionsContainer, updateOrder, options.plugin);
+}
+function setupActionsSortable(actionsContainer, updateOrder, plugin) {
+  if (plugin.settings.actions.length <= 1) {
+    return;
   }
-  static normalizeFieldValue(value) {
-    if (!value) {
-      return void 0;
+  let autoScrollFrame = null;
+  let autoScrollDelta = 0;
+  let scrollEl2 = null;
+  const stepScroll = () => {
+    if (!scrollEl2) return;
+    if (autoScrollDelta !== 0) {
+      scrollEl2.scrollTop += autoScrollDelta;
+      autoScrollFrame = requestAnimationFrame(stepScroll);
+    } else {
+      autoScrollFrame = null;
     }
-    const cleaned = value.trim();
-    if (!cleaned) {
-      return void 0;
+  };
+  const handleEdgeScroll = (evt) => {
+    var _a7, _b3, _c2, _d;
+    if (!scrollEl2) return;
+    const clientY = (_d = (_c2 = evt == null ? void 0 : evt.clientY) != null ? _c2 : (_b3 = (_a7 = evt == null ? void 0 : evt.touches) == null ? void 0 : _a7[0]) == null ? void 0 : _b3.clientY) != null ? _d : 0;
+    const rect = scrollEl2.getBoundingClientRect();
+    const threshold = 48;
+    const maxStep = 18;
+    if (clientY < rect.top + threshold) {
+      const dist = rect.top + threshold - clientY;
+      autoScrollDelta = -Math.min(maxStep, Math.ceil(dist / 4));
+    } else if (clientY > rect.bottom - threshold) {
+      const dist = clientY - (rect.bottom - threshold);
+      autoScrollDelta = Math.min(maxStep, Math.ceil(dist / 4));
+    } else {
+      autoScrollDelta = 0;
     }
-    return cleaned;
-  }
-  static normalizeSingleLine(value) {
-    if (!value) {
-      return void 0;
+    if (autoScrollDelta !== 0 && autoScrollFrame === null) {
+      autoScrollFrame = requestAnimationFrame(stepScroll);
     }
-    const firstLine = value.split("\n")[0].trim();
-    if (!firstLine) {
-      return void 0;
-    }
-    return firstLine;
-  }
-  static extractActionFromBody(body) {
-    if (!body) {
-      return null;
-    }
-    const normalizedBody = this.normalizeBody(body);
-    if (!normalizedBody.trim()) {
-      return null;
-    }
-    const splitBody = this.splitBodyByDescriptionSeparator(normalizedBody);
-    if (!splitBody) {
-      return null;
-    }
-    const fields = this.extractFields(splitBody.fieldsBody);
-    return this.buildActionFromFields(fields, splitBody.description);
-  }
-  static normalizeBody(body) {
-    return this.sanitizePlainText(body).split(SEPARATOR).join("\n").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-  }
-  static splitBodyByDescriptionSeparator(normalizedBody) {
-    const separatorRegex = /^\s*---\s*$/m;
-    const match = separatorRegex.exec(normalizedBody);
-    if (!match || typeof match.index !== "number") {
-      return null;
-    }
-    const descriptionBody = normalizedBody.slice(0, match.index).trim();
-    const fieldsBody = normalizedBody.slice(match.index + match[0].length).trim();
-    return {
-      description: this.normalizeFieldValue(descriptionBody),
-      fieldsBody
-    };
-  }
-  static extractFields(fieldsBody) {
-    const fields = {};
-    let fieldMatch;
-    FIELD_REGEX.lastIndex = 0;
-    while ((fieldMatch = FIELD_REGEX.exec(fieldsBody)) !== null) {
-      const key2 = fieldMatch[1].toLowerCase();
-      if (!FIELD_KEYS.includes(key2) || fields[key2]) {
-        continue;
+  };
+  const addEdgeScrollListeners = () => {
+    if (!scrollEl2) return;
+    scrollEl2.addEventListener("dragover", handleEdgeScroll);
+    scrollEl2.addEventListener("pointermove", handleEdgeScroll, {
+      passive: true
+    });
+    scrollEl2.addEventListener("touchmove", handleEdgeScroll, {
+      passive: true
+    });
+  };
+  const removeEdgeScrollListeners = () => {
+    if (!scrollEl2) return;
+    scrollEl2.removeEventListener("dragover", handleEdgeScroll);
+    scrollEl2.removeEventListener("pointermove", handleEdgeScroll);
+    scrollEl2.removeEventListener("touchmove", handleEdgeScroll);
+  };
+  sortable_esm_default.create(actionsContainer, {
+    animation: 150,
+    draggable: ".setting-item",
+    handle: ".local-gpt-drag-handle",
+    ghostClass: "local-gpt-sortable-ghost",
+    chosenClass: "local-gpt-sortable-chosen",
+    dragClass: "local-gpt-sortable-drag",
+    onStart: () => {
+      scrollEl2 = getScrollableParent(actionsContainer);
+      addEdgeScrollListeners();
+    },
+    onEnd: async (evt) => {
+      removeEdgeScrollListeners();
+      if (autoScrollFrame !== null) {
+        cancelAnimationFrame(autoScrollFrame);
+        autoScrollFrame = null;
       }
-      const value = this.normalizeFieldValue(fieldMatch[2]);
-      if (!value) {
-        continue;
+      autoScrollDelta = 0;
+      scrollEl2 = null;
+      animateDroppedRow(evt == null ? void 0 : evt.item);
+      if (evt.oldIndex !== void 0 && evt.newIndex !== void 0 && evt.oldIndex !== evt.newIndex) {
+        await updateOrder(evt.oldIndex, evt.newIndex);
       }
-      fields[key2] = value;
     }
-    return fields;
+  });
+}
+function animateDroppedRow(droppedEl) {
+  if (!droppedEl) {
+    return;
   }
-  static buildActionFromFields(fields, description) {
-    var _a7;
-    const name = this.normalizeSingleLine(fields.name);
-    const language = (_a7 = this.normalizeSingleLine(
-      fields.language
-    )) == null ? void 0 : _a7.toLowerCase();
-    const system = fields.system;
-    const prompt = fields.prompt;
-    const replace = fields.replace ? fields.replace.toLowerCase() === "true" : void 0;
-    if (!name || !language) {
-      return null;
-    }
-    if (!system && !prompt) {
-      return null;
-    }
-    return {
-      name,
-      language,
-      description: description || void 0,
-      system: system || void 0,
-      prompt: prompt || void 0,
-      replace
-    };
+  droppedEl.classList.add("local-gpt-drop-animate");
+  droppedEl.addEventListener(
+    "animationend",
+    () => droppedEl.classList.remove("local-gpt-drop-animate"),
+    { once: true }
+  );
+  const prevEl = droppedEl.previousElementSibling;
+  const nextEl2 = droppedEl.nextElementSibling;
+  animateDropNeighbor(prevEl, "local-gpt-drop-neighbor-prev");
+  animateDropNeighbor(nextEl2, "local-gpt-drop-neighbor-next");
+}
+function animateDropNeighbor(element2, className) {
+  if (!element2 || !element2.classList.contains("setting-item")) {
+    return;
   }
-  static getReactionScore(reactions) {
-    if (!reactions) {
-      return 0;
-    }
-    const positive = POSITIVE_REACTIONS.reduce((total, key2) => {
-      var _a7;
-      return total + ((_a7 = reactions[key2]) != null ? _a7 : 0);
-    }, 0);
-    const negative = NEGATIVE_REACTIONS.reduce((total, key2) => {
-      var _a7;
-      return total + ((_a7 = reactions[key2]) != null ? _a7 : 0);
-    }, 0);
-    return positive - negative;
-  }
-  static sanitizePlainText(value) {
-    const withoutTags = value.replace(this.HTML_TAG_REGEX, "").replace(/[<>]/g, "");
-    const output = [];
-    for (let index3 = 0; index3 < withoutTags.length; index3 += 1) {
-      const code = withoutTags.charCodeAt(index3);
-      if (code === 9 || code === 10 || code === 13) {
-        output.push(withoutTags[index3]);
-        continue;
-      }
-      if (code < 32 || code === 127) {
-        continue;
-      }
-      output.push(withoutTags[index3]);
-    }
-    return output.join("");
-  }
-  static buildSimilaritySignature(action2) {
-    const system = this.normalizeForSimilarity(action2.system);
-    const prompt = this.normalizeForSimilarity(action2.prompt);
-    const replace = action2.replace ? "1" : "0";
-    return `${system}
----
-${prompt}
----
-${replace}`;
-  }
-  static normalizeForSimilarity(value) {
-    if (!value) {
-      return "";
-    }
-    const cleaned = this.sanitizePlainText(value);
-    return cleaned.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").replace(/\s+/g, " ").trim();
-  }
-};
-CommunityActionsService.cache = null;
-CommunityActionsService.HTML_TAG_REGEX = /<[^>]*>/g;
+  element2.classList.add(className);
+  element2.addEventListener(
+    "animationend",
+    () => element2.classList.remove(className),
+    { once: true }
+  );
+}
 
 // src/LocalGPTSettingTab.ts
-var SEPARATOR2 = "\u2702\uFE0F";
-var normalizeLanguageCode = (value) => {
-  if (!value) {
-    return "en";
-  }
-  const trimmed = value.trim().toLowerCase();
-  if (!trimmed) {
-    return "en";
-  }
-  return trimmed.split(/[-_]/)[0] || "en";
-};
-function escapeTitle(title) {
-  if (!title) {
-    return "";
-  }
-  return title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-}
-var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
+var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.editEnabled = false;
@@ -4772,7 +5892,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
           "": ""
         }
       );
-      new import_obsidian2.Setting(containerEl).setHeading().setName(I18n.t("settings.mainProvider")).setClass("local-gpt-ai-providers-select").addDropdown(
+      new import_obsidian6.Setting(containerEl).setHeading().setName(I18n.t("settings.mainProvider")).setClass("local-gpt-ai-providers-select").addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(String(this.plugin.settings.aiProviders.main)).onChange(async (value) => {
           this.plugin.settings.aiProviders.main = value;
           this.plugin.actionPaletteProviderId = value;
@@ -4780,7 +5900,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.embeddingProvider")).setDesc(I18n.t("settings.embeddingProviderDesc")).setClass("local-gpt-ai-providers-select").addDropdown(
+      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.embeddingProvider")).setDesc(I18n.t("settings.embeddingProviderDesc")).setClass("local-gpt-ai-providers-select").addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(
           String(this.plugin.settings.aiProviders.embedding)
         ).onChange(async (value) => {
@@ -4789,7 +5909,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.visionProvider")).setClass("local-gpt-ai-providers-select").setDesc(I18n.t("settings.visionProviderDesc")).addDropdown(
+      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.visionProvider")).setClass("local-gpt-ai-providers-select").setDesc(I18n.t("settings.visionProviderDesc")).addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(
           String(this.plugin.settings.aiProviders.vision)
         ).onChange(async (value) => {
@@ -4798,7 +5918,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.creativity")).setDesc("").addDropdown((dropdown) => {
+      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.creativity")).setDesc("").addDropdown((dropdown) => {
         dropdown.addOption("", I18n.t("settings.creativityNone")).addOptions({
           low: I18n.t("settings.creativityLow"),
           medium: I18n.t("settings.creativityMedium"),
@@ -4820,37 +5940,6 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
       temperature: void 0,
       system: "",
       replace: false
-    };
-    const sharingFieldLabels = {
-      name: "Name: ",
-      system: "System: ",
-      prompt: "Prompt: ",
-      replace: "Replace: ",
-      language: "Language: "
-    };
-    const sharingFieldOrder = [
-      "name",
-      "system",
-      "prompt",
-      "replace",
-      "language"
-    ];
-    const sharingEntries = sharingFieldOrder.map(
-      (key2) => [key2, sharingFieldLabels[key2]]
-    );
-    const quickAddHandlers = {
-      name: (value, action2) => {
-        action2.name = value;
-      },
-      system: (value, action2) => {
-        action2.system = value;
-      },
-      prompt: (value, action2) => {
-        action2.prompt = value;
-      },
-      replace: (value, action2) => {
-        action2.replace = value.trim().toLowerCase() === "true";
-      }
     };
     const defaultCommunityActionsLanguage = normalizeLanguageCode(
       window.localStorage.getItem("language")
@@ -4877,114 +5966,19 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
       } : void 0;
       this.display();
     };
-    const renderActionEditor = (container, actionToEdit, isExistingAction) => {
-      new import_obsidian2.Setting(container).setName(I18n.t("settings.actionName")).addText((text2) => {
-        text2.inputEl.classList.add("local-gpt-action-input");
-        (actionToEdit == null ? void 0 : actionToEdit.name) && text2.setValue(actionToEdit.name);
-        text2.setPlaceholder(
-          I18n.t("settings.actionNamePlaceholder")
-        );
-        text2.onChange(async (value) => {
-          actionToEdit.name = value;
-        });
-      });
-      new import_obsidian2.Setting(container).setName(I18n.t("settings.systemPrompt")).setDesc(I18n.t("settings.systemPromptDesc")).addTextArea((text2) => {
-        text2.inputEl.classList.add("local-gpt-action-textarea");
-        (actionToEdit == null ? void 0 : actionToEdit.system) && text2.setValue(actionToEdit.system);
-        text2.setPlaceholder(
-          I18n.t("settings.systemPromptPlaceholder")
-        );
-        text2.onChange(async (value) => {
-          actionToEdit.system = value;
-        });
-      });
-      const promptSetting = new import_obsidian2.Setting(container).setName(I18n.t("settings.prompt")).setDesc("").addTextArea((text2) => {
-        text2.inputEl.classList.add("local-gpt-action-textarea");
-        (actionToEdit == null ? void 0 : actionToEdit.prompt) && text2.setValue(actionToEdit.prompt);
-        text2.setPlaceholder("");
-        text2.onChange(async (value) => {
-          actionToEdit.prompt = value;
-        });
-      });
-      promptSetting.descEl.innerHTML = I18n.t("settings.promptDesc");
-      new import_obsidian2.Setting(container).setName(I18n.t("settings.replaceSelected")).setDesc(I18n.t("settings.replaceSelectedDesc")).addToggle((component2) => {
-        (actionToEdit == null ? void 0 : actionToEdit.replace) && component2.setValue(actionToEdit.replace);
-        component2.onChange(async (value) => {
-          actionToEdit.replace = value;
-        });
-      });
-      const actionButtonsRow = new import_obsidian2.Setting(container).setName("");
-      if (isExistingAction) {
-        actionButtonsRow.addButton((button) => {
-          button.setClass("local-gpt-action-remove");
-          button.setButtonText(I18n.t("settings.remove")).onClick(async () => {
-            if (!button.buttonEl.hasClass("mod-warning")) {
-              button.setClass("mod-warning");
-              return;
-            }
-            this.plugin.settings.actions = this.plugin.settings.actions.filter(
-              (innerAction) => innerAction !== actionToEdit
-            );
-            await this.plugin.saveSettings();
-            closeActionEditor();
-          });
-        });
-      }
-      actionButtonsRow.addButton((button) => {
-        button.setButtonText(I18n.t("settings.close")).onClick(async () => {
-          closeActionEditor(
-            isExistingAction ? actionToEdit : void 0
-          );
-        });
-      }).addButton(
-        (button) => button.setCta().setButtonText(I18n.t("settings.save")).onClick(async () => {
-          if (!actionToEdit.name) {
-            new import_obsidian2.Notice(
-              I18n.t("notices.actionNameRequired")
-            );
-            return;
-          }
-          const actionToSave = ensureActionId(actionToEdit);
-          if (!isExistingAction) {
-            if (this.plugin.settings.actions.find(
-              (action2) => action2.name === actionToSave.name
-            )) {
-              new import_obsidian2.Notice(
-                I18n.t("notices.actionNameExists", {
-                  name: actionToSave.name
-                })
-              );
-              return;
-            }
-            await this.addNewAction(actionToSave);
-          } else {
-            if (this.plugin.settings.actions.filter(
-              (action2) => action2.name === actionToSave.name
-            ).length > 1) {
-              new import_obsidian2.Notice(
-                I18n.t("notices.actionNameExists", {
-                  name: actionToSave.name
-                })
-              );
-              return;
-            }
-            dropCommunityLinkIfModified(actionToSave);
-            const index3 = this.plugin.settings.actions.findIndex(
-              (innerAction) => innerAction === actionToEdit
-            );
-            if (index3 >= 0) {
-              this.plugin.settings.actions[index3] = actionToSave;
-            }
-          }
-          await this.plugin.saveSettings();
-          closeActionEditor(actionToSave);
-        })
+    const captureScrollPosition2 = (anchor) => {
+      this.pendingScrollRestore = captureScrollPosition(anchor);
+    };
+    const restoreScrollPosition2 = (anchor) => {
+      this.pendingScrollRestore = restoreScrollPosition(
+        anchor,
+        this.pendingScrollRestore
       );
     };
     containerEl.createEl("div", { cls: "local-gpt-settings-separator" });
     containerEl.createEl("h3", { text: I18n.t("settings.actions") });
     if (!isEditingNew) {
-      const quickAdd = new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.quickAdd")).setDesc("").addText((text2) => {
+      const quickAdd = new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.quickAdd")).setDesc("").addText((text2) => {
         text2.inputEl.classList.add("local-gpt-action-input");
         text2.setPlaceholder(I18n.t("settings.quickAddPlaceholder"));
         text2.onChange(async (value) => {
@@ -5019,10 +6013,35 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
         });
       });
       quickAdd.descEl.innerHTML = I18n.t("settings.quickAddDesc");
-      new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.communityActions")).setDesc(I18n.t("settings.communityActionsOpenDesc")).addButton((button) => {
-        button.setButtonText(I18n.t("settings.communityActionsOpen")).setCta().onClick(() => openCommunityActionsModal());
+      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.communityActions")).setDesc(I18n.t("settings.communityActionsOpenDesc")).addButton((button) => {
+        button.setButtonText(I18n.t("settings.communityActionsOpen")).setCta().onClick(
+          () => openCommunityActionsModal({
+            app: this.app,
+            plugin: this.plugin,
+            containerEl,
+            defaultCommunityActionsLanguage,
+            getLanguage: () => this.communityActionsLanguage,
+            setLanguage: (language) => {
+              this.communityActionsLanguage = language;
+            },
+            getStatusMessage: () => this.communityActionsStatusMessage,
+            setStatusMessage: (message) => {
+              this.communityActionsStatusMessage = message;
+            },
+            getRenderId: () => this.communityActionsRenderId,
+            setRenderId: (renderId) => {
+              this.communityActionsRenderId = renderId;
+            },
+            captureScrollPosition: captureScrollPosition2,
+            setPendingScroll: (pendingScroll) => {
+              this.pendingScroll = pendingScroll;
+            },
+            addNewAction: (action2) => this.addNewAction(action2),
+            display: () => this.display()
+          })
+        );
       });
-      const addActionsRow = new import_obsidian2.Setting(containerEl).setName(I18n.t("settings.addNewManually")).setClass("local-gpt-add-actions");
+      const addActionsRow = new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.addNewManually")).setClass("local-gpt-add-actions");
       addActionsRow.addButton(
         (button) => button.setCta().setButtonText(I18n.t("settings.addAction")).onClick(async () => {
           this.editEnabled = true;
@@ -5031,1048 +6050,48 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
         })
       ).addButton(
         (button) => button.setButtonText(I18n.t("settings.addSeparator")).onClick(async () => {
-          captureScrollPosition(containerEl);
+          captureScrollPosition2(containerEl);
           await this.addSeparator();
           this.display();
         })
       );
     } else {
-      renderActionEditor(containerEl, editingAction, false);
+      renderActionEditor({
+        container: containerEl,
+        plugin: this.plugin,
+        actionToEdit: editingAction,
+        isExistingAction: false,
+        closeActionEditor,
+        addNewAction: (action2) => this.addNewAction(action2),
+        dropCommunityLinkIfModified
+      });
     }
-    containerEl.createEl("h4", { text: I18n.t("settings.actionsList") });
-    const actionsContainer = containerEl.createDiv(
-      "local-gpt-actions-container"
-    );
-    const isMobile = import_obsidian2.Platform.isMobile || import_obsidian2.Platform.isMobileApp;
-    const updateOrder = async (fromIndex, toIndex) => {
-      const updatedActions = moveAction(
-        this.plugin.settings.actions,
-        fromIndex,
-        toIndex
-      );
-      if (updatedActions === this.plugin.settings.actions) {
-        return;
-      }
-      this.plugin.settings.actions = updatedActions;
-      await this.plugin.saveSettings();
-    };
-    const editFormScrollOffset = 30;
-    const getScrollableParent = (el) => {
-      let node = el.parentElement;
-      while (node) {
-        const style = getComputedStyle(node);
-        const overflowY = style.overflowY;
-        if (node.scrollHeight > node.clientHeight && (overflowY === "auto" || overflowY === "scroll")) {
-          return node;
-        }
-        node = node.parentElement;
-      }
-      return document.scrollingElement || document.documentElement;
-    };
-    const captureScrollPosition = (anchor) => {
-      const scrollEl2 = getScrollableParent(anchor);
-      this.pendingScrollRestore = {
-        top: scrollEl2.scrollTop,
-        height: scrollEl2.scrollHeight
-      };
-    };
-    const restoreScrollPosition = (anchor) => {
-      const pendingRestore = this.pendingScrollRestore;
-      if (!pendingRestore) return;
-      const scrollEl2 = getScrollableParent(anchor);
-      const heightDelta = scrollEl2.scrollHeight - pendingRestore.height;
-      let desiredTop = pendingRestore.top;
-      if (pendingRestore.top > 0) {
-        desiredTop += heightDelta;
-      }
-      const maxScroll = scrollEl2.scrollHeight - scrollEl2.clientHeight;
-      scrollEl2.scrollTop = Math.min(
-        Math.max(desiredTop, 0),
-        Math.max(0, maxScroll)
-      );
-      this.pendingScrollRestore = void 0;
-    };
-    const smoothScrollToTarget = (target, align, offset = 0, onComplete) => {
-      const scrollEl2 = getScrollableParent(target);
-      const parentRect = scrollEl2.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const currentTop = scrollEl2.scrollTop;
-      const targetTop = targetRect.top - parentRect.top + currentTop;
-      let desiredTop = targetTop;
-      if (align === "start") {
-        desiredTop = targetTop - offset;
-      } else {
-        const available = parentRect.height - targetRect.height;
-        desiredTop = targetTop - Math.max(0, available / 2);
-      }
-      const maxScroll = scrollEl2.scrollHeight - scrollEl2.clientHeight;
-      const clampedTop = Math.min(
-        Math.max(desiredTop, 0),
-        Math.max(0, maxScroll)
-      );
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-      const distance = clampedTop - currentTop;
-      const minDistance = 1;
-      if (prefersReducedMotion || Math.abs(distance) < minDistance) {
-        scrollEl2.scrollTop = clampedTop;
-        onComplete == null ? void 0 : onComplete();
-        return;
-      }
-      const duration = Math.min(
-        600,
-        Math.max(240, Math.abs(distance) * 0.5)
-      );
-      const startTime = performance.now();
-      const easeInOut = (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-      const step = (now) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const eased = easeInOut(progress);
-        scrollEl2.scrollTop = currentTop + distance * eased;
-        if (progress < 1) {
-          requestAnimationFrame(step);
-          return;
-        }
-        onComplete == null ? void 0 : onComplete();
-      };
-      requestAnimationFrame(step);
-    };
-    const triggerHighlight = (element2) => {
-      element2.classList.remove("local-gpt-action-highlight");
-      void element2.offsetWidth;
-      element2.classList.add("local-gpt-action-highlight");
-      element2.addEventListener(
-        "animationend",
-        () => element2.classList.remove("local-gpt-action-highlight"),
-        { once: true }
-      );
-    };
-    const applyPendingScroll = (action2, target, targetType, offset = 0, highlightTarget) => {
-      const pendingScroll = this.pendingScroll;
-      if (!pendingScroll || pendingScroll.action !== action2 || pendingScroll.target !== targetType) {
-        return;
-      }
-      const scrollOffset = pendingScroll.align === "start" ? offset : 0;
-      requestAnimationFrame(() => {
-        smoothScrollToTarget(
-          target,
-          pendingScroll.align,
-          scrollOffset,
-          () => triggerHighlight(highlightTarget != null ? highlightTarget : target)
-        );
-      });
-      this.pendingScroll = void 0;
-    };
-    const buildSharingString = (action2) => {
-      const detectedLanguage = detectDominantLanguage(
-        [action2.name, action2.system, action2.prompt].filter((value) => Boolean(value)).join("\n")
-      );
-      const resolvedLanguage = normalizeLanguageCode(
-        detectedLanguage === "unknown" ? defaultCommunityActionsLanguage : detectedLanguage
-      );
-      const replaceValue = action2.replace ? `${sharingFieldLabels.replace}${action2.replace}` : "";
-      return [
-        action2.name && `${sharingFieldLabels.name}${action2.name}`,
-        action2.system && `${sharingFieldLabels.system}${action2.system}`,
-        action2.prompt && `${sharingFieldLabels.prompt}${action2.prompt}`,
-        replaceValue,
-        `${sharingFieldLabels.language}${resolvedLanguage}`
-      ].filter(Boolean).join(` ${SEPARATOR2}
-`);
-    };
-    const buildActionDescription = (action2) => {
-      var _a7, _b3;
-      const systemTitle = escapeTitle(action2.system);
-      const promptTitle = escapeTitle(action2.prompt);
-      const communityDescription = (_b3 = (_a7 = action2.community) == null ? void 0 : _a7.description) == null ? void 0 : _b3.trim();
-      if (communityDescription) {
-        const escaped = escapeTitle(communityDescription);
-        return `<div class="local-gpt-action-community-description" title="${escaped}">${escaped}</div>`;
-      }
-      return [
-        action2.system ? `<div title="${systemTitle}" style="text-overflow: ellipsis; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-						<b>${sharingFieldLabels.system}</b>${action2.system}</div>` : "",
-        action2.prompt ? `<div title="${promptTitle}" style="text-overflow: ellipsis; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-						<b>${sharingFieldLabels.prompt}</b>${action2.prompt}
-					</div>` : ""
-      ].filter(Boolean).join("<br/>\n");
-    };
-    const addMobileMoveButtons = (row, actionIndex) => {
-      if (!isMobile) return;
-      row.addExtraButton((button) => {
-        button.setIcon("chevron-up").setTooltip(I18n.t("settings.moveUp")).onClick(async () => {
-          await updateOrder(actionIndex, actionIndex - 1);
-          this.display();
-        });
-        if (actionIndex === 0) {
-          button.setDisabled(true);
-        }
-      });
-      row.addExtraButton((button) => {
-        button.setIcon("chevron-down").setTooltip(I18n.t("settings.moveDown")).onClick(async () => {
-          await updateOrder(actionIndex, actionIndex + 1);
-          this.display();
-        });
-        if (actionIndex === this.plugin.settings.actions.length - 1) {
-          button.setDisabled(true);
-        }
-      });
-    };
-    const renderSeparatorActionRow = (action2, actionIndex) => {
-      const actionRow = new import_obsidian2.Setting(actionsContainer).setName("").setDesc("");
-      actionRow.settingEl.addClass("local-gpt-action-row");
-      actionRow.settingEl.addClass("local-gpt-action-separator");
-      actionRow.settingEl.setAttribute(
-        "aria-label",
-        I18n.t("settings.separator")
-      );
-      const handle = actionRow.settingEl.createDiv(
-        "local-gpt-drag-handle"
-      );
-      (0, import_obsidian2.setIcon)(handle, "grip-vertical");
-      actionRow.settingEl.prepend(handle);
-      addMobileMoveButtons(actionRow, actionIndex);
-      actionRow.infoEl.empty();
-      actionRow.infoEl.createDiv("local-gpt-action-separator-line");
-      actionRow.addButton(
-        (button) => button.setIcon("trash").setTooltip(I18n.t("settings.remove")).onClick(async () => {
-          if (!button.buttonEl.hasClass("mod-warning")) {
-            button.setClass("mod-warning");
-            return;
-          }
-          this.plugin.settings.actions = this.plugin.settings.actions.filter(
-            (innerAction) => innerAction !== action2
-          );
-          await this.plugin.saveSettings();
-          this.display();
-        })
-      );
-    };
-    const renderActionRow = (action2, actionIndex) => {
-      var _a7, _b3;
-      const isEditingRow = this.editExistingAction === action2;
-      const actionRow = new import_obsidian2.Setting(actionsContainer);
-      actionRow.settingEl.addClass("local-gpt-action-row");
-      if (isEditingRow) {
-        actionRow.controlEl.remove();
-        actionRow.infoEl.empty();
-        renderActionEditor(actionRow.infoEl, action2, true);
-        const target = (_a7 = actionRow.infoEl.querySelector(".setting-item")) != null ? _a7 : actionRow.infoEl;
-        applyPendingScroll(
-          action2,
-          target,
-          "form",
-          editFormScrollOffset,
-          actionRow.settingEl
-        );
-        return;
-      }
-      actionRow.setName(action2.name).setDesc("");
-      if (action2.community && actionRow.nameEl) {
-        const nameEl = actionRow.nameEl;
-        const nameText = (_b3 = nameEl.textContent) != null ? _b3 : "";
-        nameEl.empty();
-        nameEl.createSpan({
-          cls: "local-gpt-action-name-label",
-          text: nameText
-        });
-        nameEl.createSpan({
-          cls: "local-gpt-community-actions-status local-gpt-action-community-status local-gpt-is-installed",
-          text: I18n.t("settings.communityActionsBadge")
-        });
-      }
-      const handle = actionRow.settingEl.createDiv(
-        "local-gpt-drag-handle"
-      );
-      (0, import_obsidian2.setIcon)(handle, "grip-vertical");
-      actionRow.settingEl.prepend(handle);
-      addMobileMoveButtons(actionRow, actionIndex);
-      const sharingString = buildSharingString(action2);
-      actionRow.addButton(
-        (button) => button.setIcon("copy").onClick(async () => {
-          navigator.clipboard.writeText(sharingString);
-          new import_obsidian2.Notice(I18n.t("notices.copied"));
-        })
-      ).addButton(
-        (button) => button.setButtonText("Edit").onClick(async () => {
-          this.editEnabled = false;
-          this.pendingScroll = {
-            action: action2,
-            align: "start",
-            target: "form"
-          };
-          this.editExistingAction = action2;
-          this.display();
-        })
-      );
-      actionRow.descEl.innerHTML = buildActionDescription(action2);
-      applyPendingScroll(action2, actionRow.settingEl, "row");
-    };
-    this.plugin.settings.actions.forEach((action2, actionIndex) => {
-      if (isSeparatorAction(action2)) {
-        renderSeparatorActionRow(action2, actionIndex);
-        return;
-      }
-      renderActionRow(action2, actionIndex);
-    });
-    restoreScrollPosition(actionsContainer);
-    this.pendingScroll = void 0;
-    const setupActionsSortable = () => {
-      if (this.plugin.settings.actions.length <= 1) {
-        return;
-      }
-      let autoScrollFrame = null;
-      let autoScrollDelta = 0;
-      let scrollEl2 = null;
-      const stepScroll = () => {
-        if (!scrollEl2) return;
-        if (autoScrollDelta !== 0) {
-          scrollEl2.scrollTop += autoScrollDelta;
-          autoScrollFrame = requestAnimationFrame(stepScroll);
-        } else {
-          autoScrollFrame = null;
-        }
-      };
-      const handleEdgeScroll = (evt) => {
-        var _a7, _b3, _c2, _d;
-        if (!scrollEl2) return;
-        const clientY = (_d = (_c2 = evt == null ? void 0 : evt.clientY) != null ? _c2 : (_b3 = (_a7 = evt == null ? void 0 : evt.touches) == null ? void 0 : _a7[0]) == null ? void 0 : _b3.clientY) != null ? _d : 0;
-        const rect = scrollEl2.getBoundingClientRect();
-        const threshold = 48;
-        const maxStep = 18;
-        if (clientY < rect.top + threshold) {
-          const dist = rect.top + threshold - clientY;
-          autoScrollDelta = -Math.min(maxStep, Math.ceil(dist / 4));
-        } else if (clientY > rect.bottom - threshold) {
-          const dist = clientY - (rect.bottom - threshold);
-          autoScrollDelta = Math.min(maxStep, Math.ceil(dist / 4));
-        } else {
-          autoScrollDelta = 0;
-        }
-        if (autoScrollDelta !== 0 && autoScrollFrame === null) {
-          autoScrollFrame = requestAnimationFrame(stepScroll);
-        }
-      };
-      const addEdgeScrollListeners = () => {
-        if (!scrollEl2) return;
-        scrollEl2.addEventListener("dragover", handleEdgeScroll);
-        scrollEl2.addEventListener("pointermove", handleEdgeScroll, {
-          passive: true
-        });
-        scrollEl2.addEventListener("touchmove", handleEdgeScroll, {
-          passive: true
-        });
-      };
-      const removeEdgeScrollListeners = () => {
-        if (!scrollEl2) return;
-        scrollEl2.removeEventListener("dragover", handleEdgeScroll);
-        scrollEl2.removeEventListener(
-          "pointermove",
-          handleEdgeScroll
-        );
-        scrollEl2.removeEventListener(
-          "touchmove",
-          handleEdgeScroll
-        );
-      };
-      sortable_esm_default.create(actionsContainer, {
-        animation: 150,
-        // Allow dragging by the handle only
-        draggable: ".setting-item",
-        handle: ".local-gpt-drag-handle",
-        // We provide manual edge autoscroll for reliability in Obsidian's settings modal
-        ghostClass: "local-gpt-sortable-ghost",
-        chosenClass: "local-gpt-sortable-chosen",
-        dragClass: "local-gpt-sortable-drag",
-        onStart: (evt) => {
-          scrollEl2 = getScrollableParent(actionsContainer);
-          addEdgeScrollListeners();
-        },
-        onEnd: async (evt) => {
-          removeEdgeScrollListeners();
-          if (autoScrollFrame !== null) {
-            cancelAnimationFrame(autoScrollFrame);
-            autoScrollFrame = null;
-          }
-          autoScrollDelta = 0;
-          scrollEl2 = null;
-          const droppedEl = evt == null ? void 0 : evt.item;
-          if (droppedEl) {
-            droppedEl.classList.add("local-gpt-drop-animate");
-            droppedEl.addEventListener(
-              "animationend",
-              () => droppedEl.classList.remove(
-                "local-gpt-drop-animate"
-              ),
-              { once: true }
-            );
-            const prevEl = droppedEl.previousElementSibling;
-            const nextEl2 = droppedEl.nextElementSibling;
-            if (prevEl && prevEl.classList.contains("setting-item")) {
-              prevEl.classList.add(
-                "local-gpt-drop-neighbor-prev"
-              );
-              prevEl.addEventListener(
-                "animationend",
-                () => prevEl.classList.remove(
-                  "local-gpt-drop-neighbor-prev"
-                ),
-                { once: true }
-              );
-            }
-            if (nextEl2 && nextEl2.classList.contains("setting-item")) {
-              nextEl2.classList.add(
-                "local-gpt-drop-neighbor-next"
-              );
-              nextEl2.addEventListener(
-                "animationend",
-                () => nextEl2.classList.remove(
-                  "local-gpt-drop-neighbor-next"
-                ),
-                { once: true }
-              );
-            }
-          }
-          if (evt.oldIndex !== void 0 && evt.newIndex !== void 0 && evt.oldIndex !== evt.newIndex) {
-            await updateOrder(evt.oldIndex, evt.newIndex);
-          }
-        }
-      });
-    };
-    setupActionsSortable();
-    const openCommunityActionsModal = () => {
-      const modal = new import_obsidian2.Modal(this.app);
-      modal.modalEl.addClass("local-gpt-community-actions-modal");
-      modal.titleEl.setText(I18n.t("settings.communityActions"));
-      const modalContent = modal.contentEl;
-      const communityActionsRenderId = Date.now();
-      this.communityActionsRenderId = communityActionsRenderId;
-      const communityActionsSection = modalContent.createDiv(
-        "local-gpt-community-actions"
-      );
-      const communityActionsDescription = communityActionsSection.createDiv("setting-item-description");
-      communityActionsDescription.innerHTML = I18n.t(
-        "settings.communityActionsDesc"
-      );
-      const communityActionsHint = communityActionsSection.createDiv(
-        "local-gpt-community-actions-hint"
-      );
-      communityActionsHint.setText(
-        I18n.t("settings.communityActionsAutoUpdate")
-      );
-      const communityActionsStatus = communityActionsSection.createDiv(
-        "local-gpt-community-actions-status-line"
-      );
-      communityActionsStatus.setText(
-        this.communityActionsStatusMessage || ""
-      );
-      communityActionsStatus.toggleClass(
-        "local-gpt-is-hidden",
-        !this.communityActionsStatusMessage
-      );
-      this.communityActionsLanguage = normalizeLanguageCode(
-        this.communityActionsLanguage || defaultCommunityActionsLanguage
-      );
-      let communityActions = [];
-      let communityActionsLoaded = false;
-      let languageDropdown = null;
-      let refreshButton = null;
-      let communityActionsSearchQuery = "";
-      const communityActionsList = communityActionsSection.createDiv(
-        "local-gpt-community-actions-list"
-      );
-      const renderCommunityActionsMessage = (message, className) => {
-        communityActionsList.empty();
-        const messageEl = communityActionsList.createDiv(className);
-        messageEl.setText(message);
-      };
-      const normalizeActionName = (name) => name.trim().toLowerCase();
-      const normalizeSearchValue = (value) => value.toLowerCase().replace(/\s+/g, " ").trim();
-      const fuzzyMatch = (target, query) => {
-        if (!query) {
-          return true;
-        }
-        let ti = 0;
-        for (const qc of query) {
-          ti = target.indexOf(qc, ti);
-          if (ti === -1) {
-            return false;
-          }
-          ti++;
-        }
-        return true;
-      };
-      const buildCommunityActionsLookup = (actions) => {
-        const byId = /* @__PURE__ */ new Map();
-        const byKey = /* @__PURE__ */ new Map();
-        const byName = /* @__PURE__ */ new Map();
-        actions.forEach((action2) => {
-          var _a7, _b3, _c2;
-          byName.set(normalizeActionName(action2.name), action2);
-          if ((_a7 = action2.community) == null ? void 0 : _a7.id) {
-            byId.set(action2.community.id, action2);
-          }
-          if (((_b3 = action2.community) == null ? void 0 : _b3.language) && ((_c2 = action2.community) == null ? void 0 : _c2.name)) {
-            byKey.set(
-              buildCommunityActionKey(
-                action2.community.language,
-                action2.community.name
-              ),
-              action2
-            );
-          }
-        });
-        return { byId, byKey, byName };
-      };
-      const findCommunityActionLink = (action2, lookup) => lookup.byId.get(action2.id) || lookup.byKey.get(
-        buildCommunityActionKey(action2.language, action2.name)
-      );
-      const getCommunityActionSearchRank = (action2, query) => {
-        const fields = [
-          action2.name,
-          action2.description,
-          action2.prompt,
-          action2.system
-        ];
-        for (let i = 0; i < fields.length; i++) {
-          const value = fields[i];
-          if (!value) {
-            continue;
-          }
-          const normalized = normalizeSearchValue(value);
-          if (normalized && fuzzyMatch(normalized, query)) {
-            return i;
-          }
-        }
-        return null;
-      };
-      const resolveCommunityActionState = (action2, lookup) => {
-        var _a7;
-        const linkedAction = findCommunityActionLink(action2, lookup);
-        if (linkedAction) {
-          const localSignature = buildCommunityActionSignature(linkedAction);
-          const storedHash = (_a7 = linkedAction.community) == null ? void 0 : _a7.hash;
-          if (storedHash && localSignature !== storedHash) {
-            return { type: "modified", localAction: linkedAction };
-          }
-          return { type: "installed", localAction: linkedAction };
-        }
-        const nameMatch = lookup.byName.get(
-          normalizeActionName(action2.name)
-        );
-        if (nameMatch) {
-          return { type: "conflict", localAction: nameMatch };
-        }
-        return { type: "available" };
-      };
-      const buildCommunityActionRef = (action2) => {
-        var _a7, _b3;
-        return {
-          id: action2.id,
-          language: action2.language,
-          name: action2.name,
-          hash: buildCommunityActionSignature(action2),
-          updatedAt: (_a7 = action2.updatedAt) != null ? _a7 : action2.createdAt,
-          description: ((_b3 = action2.description) == null ? void 0 : _b3.trim()) || void 0
-        };
-      };
-      const setCommunityActionsStatusMessage = (message) => {
-        this.communityActionsStatusMessage = message;
-        if (!message) {
-          communityActionsStatus.setText("");
-          communityActionsStatus.addClass("local-gpt-is-hidden");
-          return;
-        }
-        communityActionsStatus.setText(message);
-        communityActionsStatus.removeClass("local-gpt-is-hidden");
-      };
-      const addPreviewLine = (preview, label, value) => {
-        if (!value) {
-          return;
-        }
-        const line = preview.createDiv(
-          "local-gpt-community-actions-preview-line"
-        );
-        line.createSpan({
-          text: `${label}: `,
-          cls: "local-gpt-community-actions-preview-label"
-        });
-        line.createSpan({ text: value });
-      };
-      let refreshCommunityActionsList = () => {
-        renderCommunityActionsMessage(
-          I18n.t("settings.communityActionsLoading"),
-          "local-gpt-community-actions-loading"
-        );
-      };
-      const installCommunityAction = async (action2, existingAction) => {
-        var _a7, _b3;
-        const localAction = existingAction ? { ...existingAction } : {
-          name: action2.name,
-          prompt: ""
-        };
-        localAction.name = action2.name;
-        localAction.prompt = (_a7 = action2.prompt) != null ? _a7 : "";
-        localAction.replace = (_b3 = action2.replace) != null ? _b3 : false;
-        if (action2.system) {
-          localAction.system = action2.system;
-        } else {
-          delete localAction.system;
-        }
-        localAction.community = buildCommunityActionRef(action2);
-        captureScrollPosition(containerEl);
-        await this.addNewAction(localAction);
-        refreshCommunityActionsList();
+    renderActionsList({
+      containerEl,
+      plugin: this.plugin,
+      editExistingAction: this.editExistingAction,
+      defaultCommunityActionsLanguage,
+      getPendingScroll: () => this.pendingScroll,
+      setPendingScroll: (pendingScroll) => {
+        this.pendingScroll = pendingScroll;
+      },
+      restoreScrollPosition: restoreScrollPosition2,
+      closeActionEditor,
+      addNewAction: (action2) => this.addNewAction(action2),
+      dropCommunityLinkIfModified,
+      startEditingAction: (action2) => {
+        this.editEnabled = false;
         this.pendingScroll = {
-          action: localAction,
-          align: "center",
-          target: "row"
+          action: action2,
+          align: "start",
+          target: "form"
         };
+        this.editExistingAction = action2;
         this.display();
-      };
-      const getCommunityActionStatusPill = (state2) => {
-        if (state2.type === "installed") {
-          return {
-            label: I18n.t("settings.communityActionsInstalled"),
-            variant: "installed"
-          };
-        }
-        if (state2.type === "modified") {
-          return {
-            label: I18n.t("settings.communityActionsModified"),
-            variant: "modified"
-          };
-        }
-        if (state2.type === "conflict") {
-          return {
-            label: I18n.t("settings.communityActionsInList"),
-            variant: "conflict"
-          };
-        }
-        return null;
-      };
-      const getCommunityActionNote = (state2) => {
-        if (state2.type === "modified") {
-          return I18n.t("settings.communityActionsModifiedNote");
-        }
-        if (state2.type === "conflict") {
-          return I18n.t("settings.communityActionsConflictNote");
-        }
-        return null;
-      };
-      const configureCommunityActionButton = (button, action2, state2) => {
-        if (state2.type === "installed") {
-          button.setButtonText(
-            I18n.t("settings.communityActionsInstalled")
-          ).setDisabled(true);
-          button.buttonEl.addClass(
-            "local-gpt-community-actions-installed-button"
-          );
-          return;
-        }
-        if (state2.type === "modified") {
-          button.setButtonText(
-            I18n.t("settings.communityActionsUpdate")
-          ).setClass("mod-warning").onClick(
-            async () => installCommunityAction(action2, state2.localAction)
-          );
-          return;
-        }
-        if (state2.type === "conflict") {
-          button.setButtonText(
-            I18n.t("settings.communityActionsReplace")
-          ).setClass("mod-warning").onClick(
-            async () => installCommunityAction(action2, state2.localAction)
-          );
-          return;
-        }
-        button.setCta().setButtonText(I18n.t("settings.communityActionsInstall")).onClick(async () => installCommunityAction(action2));
-        button.buttonEl.addClass(
-          "local-gpt-community-actions-install-button"
-        );
-        const icon = button.buttonEl.createSpan(
-          "local-gpt-community-actions-install-icon"
-        );
-        (0, import_obsidian2.setIcon)(icon, "plus");
-        button.buttonEl.prepend(icon);
-      };
-      const renderCommunityActionRow = (action2, state2) => {
-        var _a7;
-        const actionRow = communityActionsList.createDiv(
-          "local-gpt-community-actions-row"
-        );
-        if (state2.type === "installed") {
-          actionRow.addClass("local-gpt-is-installed");
-        }
-        const infoEl = actionRow.createDiv(
-          "local-gpt-community-actions-info"
-        );
-        const content = infoEl.createDiv(
-          "local-gpt-community-actions-content"
-        );
-        const header = content.createDiv(
-          "local-gpt-community-actions-header"
-        );
-        header.createSpan({
-          text: action2.name,
-          cls: "local-gpt-community-actions-title"
-        });
-        const statusPill = getCommunityActionStatusPill(state2);
-        if (statusPill) {
-          const pill = header.createSpan(
-            "local-gpt-community-actions-status"
-          );
-          pill.setText(statusPill.label);
-          pill.addClass(`local-gpt-is-${statusPill.variant}`);
-        }
-        const score = header.createSpan(
-          "local-gpt-community-actions-score"
-        );
-        score.setText(String(action2.score));
-        score.setAttr(
-          "aria-label",
-          `${I18n.t("settings.communityActionsScoreLabel")} ${action2.score}`
-        );
-        const metaRow = content.createDiv(
-          "local-gpt-community-actions-meta"
-        );
-        if (action2.author) {
-          const author = metaRow.createSpan(
-            "local-gpt-community-actions-meta-item"
-          );
-          author.setText(
-            I18n.t("settings.communityActionsByAuthor", {
-              author: `@${action2.author}`
-            })
-          );
-          author.addClass("local-gpt-community-actions-author");
-        }
-        if (action2.replace) {
-          const replaceTag = metaRow.createSpan(
-            "local-gpt-community-actions-meta-pill"
-          );
-          replaceTag.setText(
-            I18n.t("settings.communityActionsReplaceTag")
-          );
-        }
-        const footer = content.createDiv(
-          "local-gpt-community-actions-footer"
-        );
-        const preview = footer.createDiv(
-          "local-gpt-community-actions-preview"
-        );
-        const description = (_a7 = action2.description) == null ? void 0 : _a7.trim();
-        if (description) {
-          const descriptionLine = preview.createDiv(
-            "local-gpt-community-actions-description"
-          );
-          descriptionLine.setText(description);
-          descriptionLine.setAttr("title", description);
-        } else {
-          addPreviewLine(
-            preview,
-            I18n.t("settings.systemPrompt"),
-            action2.system
-          );
-          addPreviewLine(
-            preview,
-            I18n.t("settings.prompt"),
-            action2.prompt
-          );
-        }
-        const noteText = getCommunityActionNote(state2);
-        if (noteText) {
-          const note = content.createDiv(
-            "local-gpt-community-actions-note"
-          );
-          note.setText(noteText);
-        }
-        const actions = footer.createDiv(
-          "local-gpt-community-actions-actions"
-        );
-        const controlEl = actions.createDiv(
-          "local-gpt-community-actions-control"
-        );
-        const button = new import_obsidian2.ButtonComponent(controlEl);
-        configureCommunityActionButton(button, action2, state2);
-      };
-      const renderCommunityActionsList = (actions) => {
-        if (!communityActionsLoaded) {
-          renderCommunityActionsMessage(
-            I18n.t("settings.communityActionsLoading"),
-            "local-gpt-community-actions-loading"
-          );
-          return;
-        }
-        const selectedLanguage = normalizeLanguageCode(
-          this.communityActionsLanguage || defaultCommunityActionsLanguage
-        );
-        const languageFiltered = actions.filter(
-          (action2) => normalizeLanguageCode(action2.language) === selectedLanguage
-        );
-        if (!languageFiltered.length) {
-          renderCommunityActionsMessage(
-            I18n.t("settings.communityActionsEmpty"),
-            "local-gpt-community-actions-empty"
-          );
-          return;
-        }
-        const query = normalizeSearchValue(communityActionsSearchQuery);
-        let filtered = languageFiltered;
-        if (query) {
-          const matches2 = languageFiltered.map((action2, index3) => {
-            const rank = getCommunityActionSearchRank(
-              action2,
-              query
-            );
-            if (rank === null) {
-              return null;
-            }
-            return { action: action2, rank, index: index3 };
-          }).filter(
-            (match) => Boolean(match)
-          ).sort((a, b) => {
-            if (a.rank !== b.rank) {
-              return a.rank - b.rank;
-            }
-            return a.index - b.index;
-          });
-          if (!matches2.length) {
-            renderCommunityActionsMessage(
-              I18n.t("settings.communityActionsSearchEmpty"),
-              "local-gpt-community-actions-empty"
-            );
-            return;
-          }
-          filtered = matches2.map((match) => match.action);
-        }
-        communityActionsList.empty();
-        const lookup = buildCommunityActionsLookup(
-          this.plugin.settings.actions
-        );
-        filtered.forEach(
-          (action2) => renderCommunityActionRow(
-            action2,
-            resolveCommunityActionState(action2, lookup)
-          )
-        );
-      };
-      refreshCommunityActionsList = () => renderCommunityActionsList(communityActions);
-      const updateCommunityActionsLanguageOptions = (actions) => {
-        if (!languageDropdown) {
-          return;
-        }
-        const languages = new Set(
-          actions.map(
-            (action2) => normalizeLanguageCode(action2.language)
-          )
-        );
-        if (this.communityActionsLanguage) {
-          languages.add(
-            normalizeLanguageCode(this.communityActionsLanguage)
-          );
-        }
-        languages.add(defaultCommunityActionsLanguage);
-        const options = Array.from(languages).sort(
-          (a, b) => a.localeCompare(b)
-        );
-        languageDropdown.selectEl.options.length = 0;
-        options.forEach((language) => {
-          languageDropdown == null ? void 0 : languageDropdown.addOption(language, language);
-        });
-        languageDropdown.setValue(
-          normalizeLanguageCode(
-            this.communityActionsLanguage || defaultCommunityActionsLanguage
-          )
-        );
-      };
-      const syncCommunityActions = async (actions) => {
-        const lookup = buildCommunityActionsLookup(
-          this.plugin.settings.actions
-        );
-        let updated = 0;
-        let skipped = 0;
-        const applyCommunityActionUpdate = (localAction, action2) => {
-          var _a7, _b3;
-          localAction.prompt = (_a7 = action2.prompt) != null ? _a7 : "";
-          localAction.replace = (_b3 = action2.replace) != null ? _b3 : false;
-          if (action2.system) {
-            localAction.system = action2.system;
-          } else {
-            delete localAction.system;
-          }
-          localAction.community = buildCommunityActionRef(action2);
-        };
-        const isCommunityActionModified = (localAction, localSignature) => {
-          var _a7;
-          const storedHash = (_a7 = localAction.community) == null ? void 0 : _a7.hash;
-          return Boolean(storedHash && localSignature !== storedHash);
-        };
-        const shouldUpdateCommunityAction = (localAction, localSignature, remoteSignature, action2) => {
-          var _a7, _b3, _c2, _d, _e;
-          return localSignature !== remoteSignature || ((_a7 = localAction.community) == null ? void 0 : _a7.hash) !== remoteSignature || ((_b3 = localAction.community) == null ? void 0 : _b3.id) !== action2.id || ((_d = (_c2 = localAction.community) == null ? void 0 : _c2.description) == null ? void 0 : _d.trim()) !== (((_e = action2.description) == null ? void 0 : _e.trim()) || void 0);
-        };
-        const tryAdoptCommunityAction = (action2, lookup2) => {
-          const nameMatch = lookup2.byName.get(
-            normalizeActionName(action2.name)
-          );
-          if (!nameMatch) {
-            return { updated: 0, skipped: 0 };
-          }
-          const localSignature = buildCommunityActionSignature(nameMatch);
-          const remoteSignature = buildCommunityActionSignature(action2);
-          if (localSignature !== remoteSignature) {
-            return { updated: 0, skipped: 0 };
-          }
-          nameMatch.community = buildCommunityActionRef(action2);
-          return { updated: 1, skipped: 0 };
-        };
-        const syncCommunityAction = (action2, lookup2) => {
-          const localAction = findCommunityActionLink(action2, lookup2);
-          if (!localAction) {
-            return tryAdoptCommunityAction(action2, lookup2);
-          }
-          const localSignature = buildCommunityActionSignature(localAction);
-          const remoteSignature = buildCommunityActionSignature(action2);
-          if (isCommunityActionModified(localAction, localSignature)) {
-            return { updated: 0, skipped: 1 };
-          }
-          if (!shouldUpdateCommunityAction(
-            localAction,
-            localSignature,
-            remoteSignature,
-            action2
-          )) {
-            return { updated: 0, skipped: 0 };
-          }
-          applyCommunityActionUpdate(localAction, action2);
-          return { updated: 1, skipped: 0 };
-        };
-        actions.forEach((action2) => {
-          const result = syncCommunityAction(action2, lookup);
-          updated += result.updated;
-          skipped += result.skipped;
-        });
-        if (updated > 0) {
-          await this.plugin.saveSettings();
-        }
-        return { updated, skipped };
-      };
-      const buildCommunityActionsSyncMessage = (result) => {
-        if (result.updated > 0 && result.skipped > 0) {
-          return I18n.t("settings.communityActionsSyncSummary", {
-            updated: String(result.updated),
-            skipped: String(result.skipped)
-          });
-        }
-        if (result.updated > 0) {
-          return I18n.t("settings.communityActionsUpdated", {
-            count: String(result.updated)
-          });
-        }
-        if (result.skipped > 0) {
-          return I18n.t("settings.communityActionsSkipped", {
-            count: String(result.skipped)
-          });
-        }
-        return "";
-      };
-      const finishCommunityActionsLoad = (actions) => {
-        communityActionsLoaded = true;
-        updateCommunityActionsLanguageOptions(actions);
-        renderCommunityActionsList(actions);
-      };
-      const handleCommunityActions = async (actions) => {
-        if (this.communityActionsRenderId !== communityActionsRenderId) {
-          return true;
-        }
-        communityActions = actions;
-        const syncResult = await syncCommunityActions(actions);
-        const syncMessage = buildCommunityActionsSyncMessage(syncResult);
-        setCommunityActionsStatusMessage(syncMessage);
-        if (syncResult.updated > 0) {
-          this.display();
-          return true;
-        }
-        finishCommunityActionsLoad(actions);
-        return false;
-      };
-      const handleCommunityActionsError = (error) => {
-        if (this.communityActionsRenderId !== communityActionsRenderId) {
-          return;
-        }
-        console.error("Failed to load community actions", error);
-        communityActionsLoaded = true;
-        setCommunityActionsStatusMessage("");
-        renderCommunityActionsMessage(
-          I18n.t("settings.communityActionsError"),
-          "local-gpt-community-actions-error"
-        );
-      };
-      const loadCommunityActions = async (forceRefresh = false) => {
-        communityActionsLoaded = false;
-        renderCommunityActionsMessage(
-          I18n.t("settings.communityActionsLoading"),
-          "local-gpt-community-actions-loading"
-        );
-        refreshButton == null ? void 0 : refreshButton.setDisabled(true);
-        try {
-          const actions = await CommunityActionsService.getCommunityActions({
-            forceRefresh
-          });
-          await handleCommunityActions(actions);
-        } catch (error) {
-          handleCommunityActionsError(error);
-        } finally {
-          refreshButton == null ? void 0 : refreshButton.setDisabled(false);
-        }
-      };
-      const languageSetting = new import_obsidian2.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsLanguage")).setDesc(I18n.t("settings.communityActionsLanguageDesc")).addDropdown((dropdown) => {
-        languageDropdown = dropdown;
-        const initialLanguage = normalizeLanguageCode(
-          this.communityActionsLanguage || defaultCommunityActionsLanguage
-        );
-        dropdown.addOption(initialLanguage, initialLanguage);
-        dropdown.setValue(initialLanguage);
-        dropdown.onChange((value) => {
-          this.communityActionsLanguage = normalizeLanguageCode(value);
-          renderCommunityActionsList(communityActions);
-        });
-      }).addButton((button) => {
-        refreshButton = button;
-        button.setButtonText(
-          I18n.t("settings.communityActionsRefresh")
-        ).onClick(async () => {
-          CommunityActionsService.clearCache();
-          await loadCommunityActions(true);
-        });
-      });
-      communityActionsSection.insertBefore(
-        languageSetting.settingEl,
-        communityActionsList
-      );
-      const searchSetting = new import_obsidian2.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsSearch")).setDesc("").setClass("local-gpt-community-actions-search").addText((text2) => {
-        text2.setPlaceholder(
-          I18n.t("settings.communityActionsSearchPlaceholder")
-        );
-        text2.onChange((value) => {
-          communityActionsSearchQuery = value;
-          renderCommunityActionsList(communityActions);
-        });
-      });
-      communityActionsSection.insertBefore(
-        searchSetting.settingEl,
-        communityActionsList
-      );
-      modal.onClose = () => {
-        this.communityActionsRenderId = 0;
-        modal.contentEl.empty();
-      };
-      modal.open();
-      loadCommunityActions();
-    };
-    new import_obsidian2.Setting(containerEl).setHeading().setName(I18n.t("settings.advancedSettings")).setDesc(I18n.t("settings.advancedSettingsDesc")).setClass("local-gpt-advanced-toggle").addToggle(
+      },
+      display: () => this.display()
+    });
+    new import_obsidian6.Setting(containerEl).setHeading().setName(I18n.t("settings.advancedSettings")).setDesc(I18n.t("settings.advancedSettingsDesc")).setClass("local-gpt-advanced-toggle").addToggle(
       (toggle) => toggle.setValue(this.isAdvancedMode).onChange((value) => {
         this.isAdvancedMode = value;
         this.display();
@@ -6085,7 +6104,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
       enhancedSection.createEl("h4", {
         text: I18n.t("settings.enhancedActions")
       });
-      new import_obsidian2.Setting(enhancedSection).setName(I18n.t("settings.enhancedActionsLabel")).setDesc(I18n.t("settings.enhancedActionsDesc")).setClass("local-gpt-ai-providers-select").addDropdown((dropdown) => {
+      new import_obsidian6.Setting(enhancedSection).setName(I18n.t("settings.enhancedActionsLabel")).setDesc(I18n.t("settings.enhancedActionsDesc")).setClass("local-gpt-ai-providers-select").addDropdown((dropdown) => {
         dropdown.addOptions({
           local: I18n.t("settings.contextLimitLocal"),
           cloud: I18n.t("settings.contextLimitCloud"),
@@ -6106,7 +6125,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
       dangerSection.createEl("h4", {
         text: I18n.t("settings.dangerZone")
       });
-      new import_obsidian2.Setting(dangerSection).setName(I18n.t("settings.resetActions")).setDesc(I18n.t("settings.resetActionsDesc")).addButton(
+      new import_obsidian6.Setting(dangerSection).setName(I18n.t("settings.resetActions")).setDesc(I18n.t("settings.resetActionsDesc")).addButton(
         (button) => button.setClass("mod-warning").setButtonText(I18n.t("settings.reset")).onClick(async () => {
           if (!this.isConfirmingReset) {
             this.isConfirmingReset = true;
@@ -6137,7 +6156,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
     );
     if (alreadyExistingActionIndex >= 0) {
       this.plugin.settings.actions[alreadyExistingActionIndex] = actionWithId;
-      new import_obsidian2.Notice(
+      new import_obsidian6.Notice(
         I18n.t("notices.actionRewritten", { name: actionWithId.name })
       );
     } else {
@@ -6145,7 +6164,7 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
         actionWithId,
         ...this.plugin.settings.actions
       ];
-      new import_obsidian2.Notice(
+      new import_obsidian6.Notice(
         I18n.t("notices.actionAdded", { name: actionWithId.name })
       );
     }
@@ -6167,8 +6186,48 @@ var LocalGPTSettingTab = class extends import_obsidian2.PluginSettingTab {
 
 // src/spinnerPlugin.ts
 var import_state = require("@codemirror/state");
+var import_view3 = require("@codemirror/view");
+
+// src/spinnerContentWidget.ts
 var import_view = require("@codemirror/view");
-var import_obsidian3 = require("obsidian");
+var ContentWidget = class extends import_view.WidgetType {
+  constructor(text2) {
+    super();
+    this.text = text2;
+    this.dom = null;
+  }
+  eq(other) {
+    return other.text === this.text;
+  }
+  updateText(newText) {
+    if (this.dom && this.text !== newText) {
+      const addedText = newText.slice(this.text.length);
+      this.dom.textContent = newText.slice(0, -addedText.length);
+      let lastSpan = this.dom.querySelector("span:last-child");
+      if (!lastSpan) {
+        lastSpan = document.createElement("span");
+        this.dom.appendChild(lastSpan);
+      }
+      lastSpan.textContent = addedText;
+      this.text = newText;
+    }
+  }
+  toDOM(view) {
+    if (!this.dom) {
+      this.dom = document.createElement("div");
+      this.dom.addClass("local-gpt-content");
+      this.updateText(this.text);
+    }
+    return this.dom;
+  }
+};
+
+// src/spinnerWidgets.ts
+var import_view2 = require("@codemirror/view");
+var import_obsidian8 = require("obsidian");
+
+// src/spinnerIcons.ts
+var import_obsidian7 = require("obsidian");
 var THINKING_ICON_CANDIDATES = [
   "atom",
   "beaker",
@@ -6197,15 +6256,15 @@ var resolveThinkingIconPool = () => {
   }
   let pool = [];
   try {
-    if (typeof import_obsidian3.getIconIds === "function") {
-      const available = new Set((0, import_obsidian3.getIconIds)());
+    if (typeof import_obsidian7.getIconIds === "function") {
+      const available = new Set((0, import_obsidian7.getIconIds)());
       pool = THINKING_ICON_CANDIDATES.filter(
         (icon) => available.has(icon)
       );
     }
-    if (typeof import_obsidian3.getIcon === "function") {
+    if (typeof import_obsidian7.getIcon === "function") {
       const candidates = pool.length ? pool : THINKING_ICON_CANDIDATES;
-      pool = candidates.filter((icon) => Boolean((0, import_obsidian3.getIcon)(icon)));
+      pool = candidates.filter((icon) => Boolean((0, import_obsidian7.getIcon)(icon)));
     }
   } catch (e) {
     pool = [];
@@ -6219,7 +6278,9 @@ var ICON_SWITCH_MIN_MS = 1100;
 var ICON_SWITCH_MAX_MS = 2e3;
 var ICON_CROSSFADE_MS = 560;
 var ICON_GLINT_DURATION_MS = 280;
-var _LoaderWidget = class _LoaderWidget extends import_view.WidgetType {
+
+// src/spinnerWidgets.ts
+var _LoaderWidget = class _LoaderWidget extends import_view2.WidgetType {
   toDOM(view) {
     return _LoaderWidget.element.cloneNode(true);
   }
@@ -6227,7 +6288,7 @@ var _LoaderWidget = class _LoaderWidget extends import_view.WidgetType {
 _LoaderWidget.element = document.createElement("span");
 _LoaderWidget.element.addClasses(["local-gpt-loading", "local-gpt-dots"]);
 var LoaderWidget = _LoaderWidget;
-var ThinkingStreamWidget = class extends import_view.WidgetType {
+var ThinkingStreamWidget = class extends import_view2.WidgetType {
   constructor(thinkingText, answerText, isThinking) {
     super();
     this.thinkingText = thinkingText;
@@ -6473,7 +6534,7 @@ var ThinkingStreamWidget = class extends import_view.WidgetType {
     const incoming = this.iconSecondary;
     const outgoing = this.iconPrimary;
     incoming.textContent = "";
-    (0, import_obsidian3.setIcon)(incoming, nextIcon);
+    (0, import_obsidian8.setIcon)(incoming, nextIcon);
     this.iconCrossfadeRaf = requestAnimationFrame(() => {
       this.iconCrossfadeRaf = null;
       outgoing.classList.remove("local-gpt-is-active");
@@ -6496,7 +6557,7 @@ var ThinkingStreamWidget = class extends import_view.WidgetType {
       return;
     }
     this.iconPrimary.textContent = "";
-    (0, import_obsidian3.setIcon)(this.iconPrimary, iconId);
+    (0, import_obsidian8.setIcon)(this.iconPrimary, iconId);
     this.iconPrimary.classList.add("local-gpt-is-active");
     this.iconSecondary.classList.remove("local-gpt-is-active");
     this.iconSecondary.textContent = "";
@@ -6575,44 +6636,15 @@ var ThinkingStreamWidget = class extends import_view.WidgetType {
     this.stopIconCycle();
   }
 };
-var ContentWidget = class extends import_view.WidgetType {
-  constructor(text2) {
-    super();
-    this.text = text2;
-    this.dom = null;
-  }
-  eq(other) {
-    return other.text === this.text;
-  }
-  updateText(newText) {
-    if (this.dom && this.text !== newText) {
-      const addedText = newText.slice(this.text.length);
-      this.dom.textContent = newText.slice(0, -addedText.length);
-      let lastSpan = this.dom.querySelector("span:last-child");
-      if (!lastSpan) {
-        lastSpan = document.createElement("span");
-        this.dom.appendChild(lastSpan);
-      }
-      lastSpan.textContent = addedText;
-      this.text = newText;
-    }
-  }
-  toDOM(view) {
-    if (!this.dom) {
-      this.dom = document.createElement("div");
-      this.dom.addClass("local-gpt-content");
-      this.updateText(this.text);
-    }
-    return this.dom;
-  }
-};
+
+// src/spinnerPlugin.ts
 var SpinnerPlugin = class {
   constructor(editorView) {
     this.editorView = editorView;
     this.idCounter = 0;
     this.entries = /* @__PURE__ */ new Map();
     this.positionToId = /* @__PURE__ */ new Map();
-    this.decorations = import_view.Decoration.none;
+    this.decorations = import_view3.Decoration.none;
   }
   /**
    * Process text with potential <think> tags and update UI accordingly
@@ -6778,7 +6810,7 @@ var SpinnerPlugin = class {
       builder.add(
         data.position,
         data.position,
-        import_view.Decoration.widget({
+        import_view3.Decoration.widget({
           widget: data.widget,
           side: data.isEndOfLine ? 1 : -1
         })
@@ -6791,13 +6823,13 @@ var SpinnerPlugin = class {
     return position === state2.doc.lineAt(position).to;
   }
 };
-var spinnerPlugin = import_view.ViewPlugin.fromClass(SpinnerPlugin, {
+var spinnerPlugin = import_view3.ViewPlugin.fromClass(SpinnerPlugin, {
   decorations: (v) => v.decorations
 });
 
 // src/requestPositionTracker.ts
 var import_state2 = require("@codemirror/state");
-var import_view2 = require("@codemirror/view");
+var import_view4 = require("@codemirror/view");
 var addTrackedRangeEffect = import_state2.StateEffect.define();
 var removeTrackedRangeEffect = import_state2.StateEffect.define();
 var mapTrackedRange = (range, changes) => {
@@ -6872,7 +6904,7 @@ function releaseTrackedRange(view, id) {
 
 // src/ui/actionPalettePlugin.ts
 var import_state3 = require("@codemirror/state");
-var import_view3 = require("@codemirror/view");
+var import_view5 = require("@codemirror/view");
 
 // node_modules/svelte/src/internal/client/constants.js
 var DERIVED = 1 << 1;
@@ -8490,11 +8522,11 @@ process_fn = function() {
   var effects = collected_effects = [];
   var render_effects = [];
   var updates = legacy_updates = [];
-  for (const root2 of roots) {
+  for (const root3 of roots) {
     try {
-      __privateMethod(this, _Batch_instances, traverse_fn).call(this, root2, effects, render_effects);
+      __privateMethod(this, _Batch_instances, traverse_fn).call(this, root3, effects, render_effects);
     } catch (e) {
-      reset_all(root2);
+      reset_all(root3);
       throw e;
     }
   }
@@ -8556,9 +8588,9 @@ process_fn = function() {
  * @param {Effect[]} effects
  * @param {Effect[]} render_effects
  */
-traverse_fn = function(root2, effects, render_effects) {
-  root2.f ^= CLEAN;
-  var effect2 = root2.first;
+traverse_fn = function(root3, effects, render_effects) {
+  root3.f ^= CLEAN;
+  var effect2 = root3.first;
   while (effect2 !== null) {
     var flags2 = effect2.f;
     var is_branch = (flags2 & (BRANCH_EFFECT | ROOT_EFFECT)) !== 0;
@@ -8652,8 +8684,8 @@ commit_fn = function() {
       }
       if (__privateGet(batch, _roots).length > 0) {
         batch.apply();
-        for (var root2 of __privateGet(batch, _roots)) {
-          __privateMethod(_a7 = batch, _Batch_instances, traverse_fn).call(_a7, root2, [], []);
+        for (var root3 of __privateGet(batch, _roots)) {
+          __privateMethod(_a7 = batch, _Batch_instances, traverse_fn).call(_a7, root3, [], []);
         }
         __privateSet(batch, _roots, []);
       }
@@ -9717,13 +9749,6 @@ function mutable_source(initial_value, immutable = false, trackable = true) {
   }
   return s;
 }
-function mutate(source2, value) {
-  set(
-    source2,
-    untrack(() => get(source2))
-  );
-  return value;
-}
 function set(source2, value, should_proxy = false) {
   if (active_reaction !== null && // since we are untracking the function inside `$inspect.with` we need to add this check
   // to ensure we error if state is set inside an inspect effect
@@ -9959,7 +9984,7 @@ function is_dirty(reaction) {
   }
   return false;
 }
-function schedule_possible_effect_self_invalidation(signal, effect2, root2 = true) {
+function schedule_possible_effect_self_invalidation(signal, effect2, root3 = true) {
   var reactions = signal.reactions;
   if (reactions === null) return;
   if (!async_mode_flag && current_sources !== null && includes.call(current_sources, signal)) {
@@ -9975,7 +10000,7 @@ function schedule_possible_effect_self_invalidation(signal, effect2, root2 = tru
         false
       );
     } else if (effect2 === reaction) {
-      if (root2) {
+      if (root3) {
         set_signal_status(reaction, DIRTY);
       } else if ((reaction.f & CLEAN) !== 0) {
         set_signal_status(reaction, MAYBE_DIRTY);
@@ -11573,22 +11598,6 @@ if (dev_fallback_default) {
   throw_rune_error("$props");
   throw_rune_error("$bindable");
 }
-function onMount(fn) {
-  if (component_context === null) {
-    lifecycle_outside_component("onMount");
-  }
-  if (legacy_mode_flag && component_context.l !== null) {
-    init_update_callbacks(component_context).m.push(fn);
-  } else {
-    user_effect(() => {
-      const cleanup = untrack(fn);
-      if (typeof cleanup === "function") return (
-        /** @type {() => void} */
-        cleanup
-      );
-    });
-  }
-}
 function create_custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   return new CustomEvent(type, { detail, bubbles, cancelable });
 }
@@ -11621,14 +11630,6 @@ function createEventDispatcher() {
     }
     return true;
   };
-}
-function init_update_callbacks(context) {
-  var _a7;
-  var l = (
-    /** @type {ComponentContextLegacy} */
-    context.l
-  );
-  return (_a7 = l.u) != null ? _a7 : l.u = { a: [], b: [], m: [] };
 }
 
 // node_modules/svelte/src/internal/client/dom/blocks/if.js
@@ -12907,33 +12908,407 @@ function get_custom_elements_slots(element2) {
   return result;
 }
 
-// node_modules/tslib/tslib.es6.mjs
-function __awaiter(thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve) {
-      resolve(value);
-    });
+// src/ui/actionPaletteTypes.ts
+var MAX_DROPDOWN_RESULTS = 15;
+var FILE_MENTION_REGEX = /@([^@]+?\.[a-zA-Z0-9]+)(?=\s|$|@)/g;
+var MENTION_PREFIX = "@";
+var SPACE_AFTER_MENTION = " ";
+var COMMAND_REGEX = /\/([^/\s]+)(?=\s|$|\/)/g;
+var COMMAND_PREFIX = "/";
+var SPACE_AFTER_COMMAND = " ";
+var CLEAR_SYSTEM_PROMPT_ID = "__clear_system_prompt__";
+var SYSTEM_PREVIEW_LENGTH = 80;
+
+// src/ui/ActionPaletteDropdowns.svelte
+var root_2 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-file-name"> </span> <span class="local-gpt-file-path"> </span></div>`);
+var root_4 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-command-name"> </span> <span class="local-gpt-command-description"> </span></div>`);
+var root_7 = from_html(`<span class="local-gpt-provider-url"> </span>`);
+var root_6 = from_html(`<div role="option" tabindex="0"><div class="local-gpt-provider-header"><span class="local-gpt-provider-name"> </span> <!></div> <span class="local-gpt-provider-model"> </span></div>`);
+var root_9 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-model-name"> </span></div>`);
+var root_11 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-creativity-name"> </span></div>`);
+var root_14 = from_html(`<span class="local-gpt-system-detail"> </span>`);
+var root_13 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-system-name"> </span> <!></div>`);
+var root = from_html(`<div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
+function ActionPaletteDropdowns($$anchor, $$props) {
+  if (new.target) return createClassComponent({ component: ActionPaletteDropdowns, ...$$anchor });
+  push($$props, false);
+  let activeDropdown = prop($$props, "activeDropdown", 12);
+  let selectedIndex = prop($$props, "selectedIndex", 12);
+  let fileItems = prop($$props, "fileItems", 12);
+  let commandItems = prop($$props, "commandItems", 12);
+  let providerItems = prop($$props, "providerItems", 12);
+  let modelItems = prop($$props, "modelItems", 12);
+  let creativityItems = prop($$props, "creativityItems", 12);
+  let systemItems = prop($$props, "systemItems", 12);
+  let onSelect = prop($$props, "onSelect", 12);
+  let formatSystemPreview2 = prop($$props, "formatSystemPreview", 12);
+  let dropdownElement = prop($$props, "dropdownElement", 12, null);
+  let commandDropdownElement = prop($$props, "commandDropdownElement", 12, null);
+  let providerDropdownElement = prop($$props, "providerDropdownElement", 12, null);
+  let modelDropdownElement = prop($$props, "modelDropdownElement", 12, null);
+  let creativityDropdownElement = prop($$props, "creativityDropdownElement", 12, null);
+  let systemDropdownElement = prop($$props, "systemDropdownElement", 12, null);
+  function selectedClass(index3) {
+    return index3 === selectedIndex() ? "local-gpt-selected" : "";
   }
-  return new (P || (P = Promise))(function(resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
+  var $$exports = {
+    get activeDropdown() {
+      return activeDropdown();
+    },
+    set activeDropdown($$value) {
+      activeDropdown($$value);
+      flushSync();
+    },
+    get selectedIndex() {
+      return selectedIndex();
+    },
+    set selectedIndex($$value) {
+      selectedIndex($$value);
+      flushSync();
+    },
+    get fileItems() {
+      return fileItems();
+    },
+    set fileItems($$value) {
+      fileItems($$value);
+      flushSync();
+    },
+    get commandItems() {
+      return commandItems();
+    },
+    set commandItems($$value) {
+      commandItems($$value);
+      flushSync();
+    },
+    get providerItems() {
+      return providerItems();
+    },
+    set providerItems($$value) {
+      providerItems($$value);
+      flushSync();
+    },
+    get modelItems() {
+      return modelItems();
+    },
+    set modelItems($$value) {
+      modelItems($$value);
+      flushSync();
+    },
+    get creativityItems() {
+      return creativityItems();
+    },
+    set creativityItems($$value) {
+      creativityItems($$value);
+      flushSync();
+    },
+    get systemItems() {
+      return systemItems();
+    },
+    set systemItems($$value) {
+      systemItems($$value);
+      flushSync();
+    },
+    get onSelect() {
+      return onSelect();
+    },
+    set onSelect($$value) {
+      onSelect($$value);
+      flushSync();
+    },
+    get formatSystemPreview() {
+      return formatSystemPreview2();
+    },
+    set formatSystemPreview($$value) {
+      formatSystemPreview2($$value);
+      flushSync();
+    },
+    get dropdownElement() {
+      return dropdownElement();
+    },
+    set dropdownElement($$value) {
+      dropdownElement($$value);
+      flushSync();
+    },
+    get commandDropdownElement() {
+      return commandDropdownElement();
+    },
+    set commandDropdownElement($$value) {
+      commandDropdownElement($$value);
+      flushSync();
+    },
+    get providerDropdownElement() {
+      return providerDropdownElement();
+    },
+    set providerDropdownElement($$value) {
+      providerDropdownElement($$value);
+      flushSync();
+    },
+    get modelDropdownElement() {
+      return modelDropdownElement();
+    },
+    set modelDropdownElement($$value) {
+      modelDropdownElement($$value);
+      flushSync();
+    },
+    get creativityDropdownElement() {
+      return creativityDropdownElement();
+    },
+    set creativityDropdownElement($$value) {
+      creativityDropdownElement($$value);
+      flushSync();
+    },
+    get systemDropdownElement() {
+      return systemDropdownElement();
+    },
+    set systemDropdownElement($$value) {
+      systemDropdownElement($$value);
+      flushSync();
+    },
+    $set: update_legacy_props,
+    $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
+  };
+  init();
+  var fragment = root();
+  var div = first_child(fragment);
+  each(div, 5, fileItems, index2, ($$anchor2, item, index3) => {
+    var fragment_1 = comment();
+    var node = first_child(fragment_1);
+    {
+      var consequent = ($$anchor3) => {
+        var div_1 = root_2();
+        var span = child(div_1);
+        var text2 = child(span);
+        reset(span);
+        var span_1 = sibling(span, 2);
+        var text_1 = child(span_1, true);
+        reset(span_1);
+        reset(div_1);
+        template_effect(
+          ($0) => {
+            var _a7, _b3;
+            set_class(div_1, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_1, "aria-selected", index3 === selectedIndex());
+            set_text(text2, `${(_a7 = (get(item), untrack(() => get(item).basename))) != null ? _a7 : ""}.${(_b3 = (get(item), untrack(() => get(item).extension))) != null ? _b3 : ""}`);
+            set_text(text_1, (get(item), untrack(() => get(item).path)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_1, () => onSelect()(get(item)));
+        event("keydown", div_1, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_1);
+      };
+      if_block(node, ($$render) => {
+        if (activeDropdown() === "file") $$render(consequent);
+      });
     }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
+    append($$anchor2, fragment_1);
   });
+  reset(div);
+  bind_this(div, ($$value) => dropdownElement($$value), () => dropdownElement());
+  var div_2 = sibling(div, 2);
+  each(div_2, 5, commandItems, index2, ($$anchor2, item, index3) => {
+    var fragment_2 = comment();
+    var node_1 = first_child(fragment_2);
+    {
+      var consequent_1 = ($$anchor3) => {
+        var div_3 = root_4();
+        var span_2 = child(div_3);
+        var text_2 = child(span_2);
+        reset(span_2);
+        var span_3 = sibling(span_2, 2);
+        var text_3 = child(span_3, true);
+        reset(span_3);
+        reset(div_3);
+        template_effect(
+          ($0) => {
+            var _a7;
+            set_class(div_3, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_3, "aria-selected", index3 === selectedIndex());
+            set_text(text_2, `/${(_a7 = (get(item), untrack(() => get(item).name))) != null ? _a7 : ""}`);
+            set_text(text_3, (get(item), untrack(() => get(item).description)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_3, () => onSelect()(get(item)));
+        event("keydown", div_3, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_3);
+      };
+      if_block(node_1, ($$render) => {
+        if (activeDropdown() === "command") $$render(consequent_1);
+      });
+    }
+    append($$anchor2, fragment_2);
+  });
+  reset(div_2);
+  bind_this(div_2, ($$value) => commandDropdownElement($$value), () => commandDropdownElement());
+  var div_4 = sibling(div_2, 2);
+  each(div_4, 5, providerItems, index2, ($$anchor2, item, index3) => {
+    var fragment_3 = comment();
+    var node_2 = first_child(fragment_3);
+    {
+      var consequent_3 = ($$anchor3) => {
+        var div_5 = root_6();
+        var div_6 = child(div_5);
+        var span_4 = child(div_6);
+        var text_4 = child(span_4, true);
+        reset(span_4);
+        var node_3 = sibling(span_4, 2);
+        {
+          var consequent_2 = ($$anchor4) => {
+            var span_5 = root_7();
+            var text_5 = child(span_5, true);
+            reset(span_5);
+            template_effect(() => set_text(text_5, (get(item), untrack(() => get(item).providerUrl))));
+            append($$anchor4, span_5);
+          };
+          if_block(node_3, ($$render) => {
+            if (get(item), untrack(() => get(item).providerUrl)) $$render(consequent_2);
+          });
+        }
+        reset(div_6);
+        var span_6 = sibling(div_6, 2);
+        var text_6 = child(span_6, true);
+        reset(span_6);
+        reset(div_5);
+        template_effect(
+          ($0) => {
+            set_class(div_5, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_5, "aria-selected", index3 === selectedIndex());
+            set_text(text_4, (get(item), untrack(() => get(item).providerName)));
+            set_text(text_6, (get(item), untrack(() => get(item).name)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_5, () => onSelect()(get(item)));
+        event("keydown", div_5, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_5);
+      };
+      if_block(node_2, ($$render) => {
+        if (activeDropdown() === "provider") $$render(consequent_3);
+      });
+    }
+    append($$anchor2, fragment_3);
+  });
+  reset(div_4);
+  bind_this(div_4, ($$value) => providerDropdownElement($$value), () => providerDropdownElement());
+  var div_7 = sibling(div_4, 2);
+  each(div_7, 5, modelItems, index2, ($$anchor2, item, index3) => {
+    var fragment_4 = comment();
+    var node_4 = first_child(fragment_4);
+    {
+      var consequent_4 = ($$anchor3) => {
+        var div_8 = root_9();
+        var span_7 = child(div_8);
+        var text_7 = child(span_7, true);
+        reset(span_7);
+        reset(div_8);
+        template_effect(
+          ($0) => {
+            set_class(div_8, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_8, "aria-selected", index3 === selectedIndex());
+            set_text(text_7, (get(item), untrack(() => get(item).name)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_8, () => onSelect()(get(item)));
+        event("keydown", div_8, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_8);
+      };
+      if_block(node_4, ($$render) => {
+        if (activeDropdown() === "model") $$render(consequent_4);
+      });
+    }
+    append($$anchor2, fragment_4);
+  });
+  reset(div_7);
+  bind_this(div_7, ($$value) => modelDropdownElement($$value), () => modelDropdownElement());
+  var div_9 = sibling(div_7, 2);
+  each(div_9, 5, creativityItems, index2, ($$anchor2, item, index3) => {
+    var fragment_5 = comment();
+    var node_5 = first_child(fragment_5);
+    {
+      var consequent_5 = ($$anchor3) => {
+        var div_10 = root_11();
+        var span_8 = child(div_10);
+        var text_8 = child(span_8, true);
+        reset(span_8);
+        reset(div_10);
+        template_effect(
+          ($0) => {
+            set_class(div_10, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_10, "aria-selected", index3 === selectedIndex());
+            set_text(text_8, (get(item), untrack(() => get(item).name)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_10, () => onSelect()(get(item)));
+        event("keydown", div_10, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_10);
+      };
+      if_block(node_5, ($$render) => {
+        if (activeDropdown() === "creativity") $$render(consequent_5);
+      });
+    }
+    append($$anchor2, fragment_5);
+  });
+  reset(div_9);
+  bind_this(div_9, ($$value) => creativityDropdownElement($$value), () => creativityDropdownElement());
+  var div_11 = sibling(div_9, 2);
+  each(div_11, 5, systemItems, index2, ($$anchor2, item, index3) => {
+    var fragment_6 = comment();
+    var node_6 = first_child(fragment_6);
+    {
+      var consequent_7 = ($$anchor3) => {
+        var div_12 = root_13();
+        var span_9 = child(div_12);
+        var text_9 = child(span_9, true);
+        reset(span_9);
+        var node_7 = sibling(span_9, 2);
+        {
+          var consequent_6 = ($$anchor4) => {
+            var span_10 = root_14();
+            var text_10 = child(span_10, true);
+            reset(span_10);
+            template_effect(($0) => set_text(text_10, $0), [
+              () => (deep_read_state(formatSystemPreview2()), get(item), untrack(() => formatSystemPreview2()(get(item).system)))
+            ]);
+            append($$anchor4, span_10);
+          };
+          if_block(node_7, ($$render) => {
+            if (get(item), deep_read_state(CLEAR_SYSTEM_PROMPT_ID), untrack(() => get(item).id !== CLEAR_SYSTEM_PROMPT_ID)) $$render(consequent_6);
+          });
+        }
+        reset(div_12);
+        template_effect(
+          ($0) => {
+            set_class(div_12, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
+            set_attribute2(div_12, "aria-selected", index3 === selectedIndex());
+            set_text(text_9, (get(item), untrack(() => get(item).name)));
+          },
+          [() => (index3, untrack(() => selectedClass(index3)))]
+        );
+        event("click", div_12, () => onSelect()(get(item)));
+        event("keydown", div_12, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_12);
+      };
+      if_block(node_6, ($$render) => {
+        if (activeDropdown() === "system") $$render(consequent_7);
+      });
+    }
+    append($$anchor2, fragment_6);
+  });
+  reset(div_11);
+  bind_this(div_11, ($$value) => systemDropdownElement($$value), () => systemDropdownElement());
+  template_effect(() => {
+    set_style(div, `display: ${activeDropdown() === "file" ? "block" : "none"}`);
+    set_style(div_2, `display: ${activeDropdown() === "command" ? "block" : "none"}`);
+    set_style(div_4, `display: ${activeDropdown() === "provider" ? "block" : "none"}`);
+    set_style(div_7, `display: ${activeDropdown() === "model" ? "block" : "none"}`);
+    set_style(div_9, `display: ${activeDropdown() === "creativity" ? "block" : "none"}`);
+    set_style(div_11, `display: ${activeDropdown() === "system" ? "block" : "none"}`);
+  });
+  append($$anchor, fragment);
+  return pop($$exports);
 }
 
 // src/ui/actionPaletteHistory.ts
@@ -12983,31 +13358,1189 @@ function getPromptHistoryLength() {
   return promptHistory.length;
 }
 
+// src/ui/actionPaletteText.ts
+function getFullFileName(file) {
+  return `${file.basename}.${file.extension}`;
+}
+function findMatchingFile(fileName, availableFiles, selectedFiles) {
+  const normalizedFileName = fileName.toLowerCase();
+  const matchingFiles = availableFiles.filter(
+    (file) => getFullFileName(file).toLowerCase() === normalizedFileName
+  );
+  return matchingFiles.find((file) => selectedFiles.includes(file.path)) || matchingFiles[0];
+}
+function getFileMention(file) {
+  return `${MENTION_PREFIX}${getFullFileName(file)}`;
+}
+function extractMentionsFromText(text2, availableFiles, selectedFiles) {
+  const mentions = [];
+  const newSelectedFiles = [];
+  const mentionMatches = Array.from(text2.matchAll(FILE_MENTION_REGEX));
+  for (const match of mentionMatches) {
+    const fileName = (match[1] || "").trim();
+    const matchedFile = findMatchingFile(
+      fileName,
+      availableFiles,
+      selectedFiles
+    );
+    if (matchedFile && !selectedFiles.includes(matchedFile.path)) {
+      newSelectedFiles.push(matchedFile.path);
+    }
+    mentions.push(match[0]);
+  }
+  return { mentions, newSelectedFiles };
+}
+function parseTextToTokens(text2, availableFiles, selectedFiles, availableCommands) {
+  var _a7;
+  const tokens = [];
+  const { newSelectedFiles } = extractMentionsFromText(
+    text2,
+    availableFiles,
+    selectedFiles
+  );
+  const nextSelectedFiles = newSelectedFiles.length > 0 ? [...selectedFiles, ...newSelectedFiles] : selectedFiles;
+  const mentionMatches = availableFiles.length ? Array.from(text2.matchAll(FILE_MENTION_REGEX)) : [];
+  const commandMatches = Array.from(
+    text2.matchAll(COMMAND_REGEX)
+  );
+  const allMatches = [
+    ...mentionMatches.map((match) => ({ type: "file", match })),
+    ...commandMatches.map((match) => ({ type: "command", match }))
+  ].sort((a, b) => {
+    var _a8, _b3;
+    return ((_a8 = a.match.index) != null ? _a8 : 0) - ((_b3 = b.match.index) != null ? _b3 : 0);
+  });
+  let lastIndex = 0;
+  for (const { type, match } of allMatches) {
+    const matchStart = (_a7 = match.index) != null ? _a7 : 0;
+    const matchEnd = matchStart + match[0].length;
+    addTextToken(tokens, text2, lastIndex, matchStart);
+    if (type === "file") {
+      addFileToken(
+        tokens,
+        match,
+        matchStart,
+        matchEnd,
+        availableFiles,
+        nextSelectedFiles
+      );
+    } else if (type === "command") {
+      addCommandToken(
+        tokens,
+        match,
+        matchStart,
+        matchEnd,
+        availableCommands
+      );
+    }
+    lastIndex = matchEnd;
+  }
+  addTextToken(tokens, text2, lastIndex, text2.length);
+  return { tokens, selectedFiles: nextSelectedFiles };
+}
+function addTextToken(tokens, text2, start, end) {
+  if (start >= end) {
+    return;
+  }
+  tokens.push({
+    type: "text",
+    content: text2.substring(start, end),
+    start,
+    end
+  });
+}
+function addFileToken(tokens, match, matchStart, matchEnd, availableFiles, selectedFiles) {
+  const fileName = (match[1] || "").trim();
+  const matchedFile = findMatchingFile(
+    fileName,
+    availableFiles,
+    selectedFiles
+  );
+  if (matchedFile) {
+    tokens.push({
+      type: "file",
+      content: match[0],
+      start: matchStart,
+      end: matchEnd,
+      filePath: matchedFile.path
+    });
+    return;
+  }
+  tokens.push({
+    type: "text",
+    content: match[0],
+    start: matchStart,
+    end: matchEnd
+  });
+}
+function addCommandToken(tokens, match, matchStart, matchEnd, availableCommands) {
+  const commandName = (match[1] || "").trim();
+  const matchedCommand = availableCommands.find(
+    (cmd) => cmd.name === commandName
+  );
+  if (matchedCommand) {
+    tokens.push({
+      type: "command",
+      content: match[0],
+      start: matchStart,
+      end: matchEnd,
+      commandName: matchedCommand.name
+    });
+    return;
+  }
+  tokens.push({
+    type: "text",
+    content: match[0],
+    start: matchStart,
+    end: matchEnd
+  });
+}
+function escapeHtmlContent(text2) {
+  const temporaryElement = document.createElement("div");
+  temporaryElement.textContent = text2;
+  return temporaryElement.innerHTML;
+}
+function renderTokensAsHtml(tokens) {
+  return tokens.map((token) => {
+    if (token.type === "file") {
+      return `<span class="file-mention" data-path="${token.filePath}">${escapeHtmlContent(token.content)}</span>`;
+    }
+    if (token.type === "command") {
+      return `<span class="command-mention" data-command="${token.commandName}">${escapeHtmlContent(token.content)}</span>`;
+    }
+    return escapeHtmlContent(token.content);
+  }).join("");
+}
+function isCharacterWhitespace(character) {
+  return /\s/.test(character);
+}
+function isCompleteMention(mentionText, availableFiles, selectedFiles) {
+  return selectedFiles.some((filePath) => {
+    const file = availableFiles.find((f) => f.path === filePath);
+    if (!file) return false;
+    const fullFileName = getFullFileName(file);
+    return mentionText === `${MENTION_PREFIX}${fullFileName}`;
+  });
+}
+function getCommandQuery(commandName, textContent, cursorPosition) {
+  const beforeCursor = textContent.substring(0, cursorPosition);
+  const token = `${COMMAND_PREFIX}${commandName}`;
+  const foundIndex = beforeCursor.lastIndexOf(token);
+  if (foundIndex === -1) return "";
+  const charBefore = foundIndex > 0 ? beforeCursor[foundIndex - 1] : " ";
+  if (foundIndex > 0 && !isCharacterWhitespace(charBefore)) return "";
+  const afterNameIndex = foundIndex + token.length;
+  const afterName = textContent.substring(afterNameIndex);
+  const hasSpace = afterName.startsWith(SPACE_AFTER_COMMAND);
+  const queryStart = hasSpace ? afterNameIndex + SPACE_AFTER_COMMAND.length : afterNameIndex;
+  return textContent.substring(queryStart, cursorPosition).trim().toLowerCase();
+}
+function createFileRemovalPattern(file) {
+  const fullFileName = getFullFileName(file);
+  const escapedFileName = fullFileName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`${MENTION_PREFIX}${escapedFileName}\\s?`, "g");
+}
+
+// src/ui/actionPaletteDom.ts
+function getCurrentCursorPosition(contentElement) {
+  var _a7;
+  if (!contentElement) return 0;
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return 0;
+  const range = selection.getRangeAt(0);
+  let position = 0;
+  const walker = document.createTreeWalker(
+    contentElement,
+    NodeFilter.SHOW_TEXT,
+    null
+  );
+  let textNode;
+  while (textNode = walker.nextNode()) {
+    if (textNode === range.startContainer) {
+      return position + range.startOffset;
+    }
+    position += ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
+  }
+  return position;
+}
+function setCursorPosition(contentElement, position) {
+  var _a7;
+  if (!contentElement) return;
+  const selection = window.getSelection();
+  const range = document.createRange();
+  let currentPosition = 0;
+  const walker = document.createTreeWalker(
+    contentElement,
+    NodeFilter.SHOW_TEXT,
+    null
+  );
+  let textNode;
+  while (textNode = walker.nextNode()) {
+    const nodeLength = ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
+    if (currentPosition + nodeLength >= position) {
+      const offset = position - currentPosition;
+      range.setStart(textNode, offset);
+      range.setEnd(textNode, offset);
+      selection == null ? void 0 : selection.removeAllRanges();
+      selection == null ? void 0 : selection.addRange(range);
+      return;
+    }
+    currentPosition += nodeLength;
+  }
+}
+function scrollSelectedIntoView(container, index3) {
+  if (!container || index3 < 0) return;
+  const selectedItem = container.children[index3];
+  if (!selectedItem) return;
+  const dropdownRect = container.getBoundingClientRect();
+  const itemRect = selectedItem.getBoundingClientRect();
+  const isItemVisible = itemRect.top >= dropdownRect.top && itemRect.bottom <= dropdownRect.bottom;
+  if (!isItemVisible) {
+    selectedItem.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth"
+    });
+  }
+}
+function getDropdownElementForKind(kind, elements) {
+  if (kind === "none") {
+    return null;
+  }
+  return elements[kind];
+}
+
+// src/ui/actionPaletteOptions.ts
+function getCreativityOptions() {
+  return [
+    { id: "", name: I18n.t("settings.creativityNone") },
+    { id: "low", name: I18n.t("settings.creativityLow") },
+    { id: "medium", name: I18n.t("settings.creativityMedium") },
+    { id: "high", name: I18n.t("settings.creativityHigh") }
+  ];
+}
+function getAvailableCommands() {
+  return [
+    {
+      name: "provider",
+      description: I18n.t("commands.actionPalette.changeProvider")
+    },
+    {
+      name: "model",
+      description: I18n.t("commands.actionPalette.changeModel")
+    },
+    {
+      name: "creativity",
+      description: I18n.t("commands.actionPalette.changeCreativity")
+    },
+    {
+      name: "system",
+      description: I18n.t("commands.actionPalette.changeSystemPrompt")
+    }
+  ];
+}
+function filterAvailableCommands(query) {
+  const normalizedQuery = query.toLowerCase();
+  return getAvailableCommands().filter((command) => {
+    return command.name.toLowerCase().includes(normalizedQuery) || command.description.toLowerCase().includes(normalizedQuery);
+  }).slice(0, MAX_DROPDOWN_RESULTS);
+}
+function filterAvailableFiles(query, availableFiles, selectedFiles) {
+  const normalizedQuery = query.toLowerCase();
+  return availableFiles.filter((file) => {
+    const fullFileName = getFullFileName(file);
+    const isQueryMatch = file.basename.toLowerCase().includes(normalizedQuery) || fullFileName.toLowerCase().includes(normalizedQuery);
+    const isNotAlreadySelected = !selectedFiles.includes(file.path);
+    return isQueryMatch && isNotAlreadySelected;
+  }).slice(0, MAX_DROPDOWN_RESULTS);
+}
+function filterProviderItems(providers, query) {
+  return providers.filter(
+    (provider) => fuzzyMatch2(provider.name, query) || fuzzyMatch2(provider.providerName, query)
+  ).slice(0, MAX_DROPDOWN_RESULTS);
+}
+function filterModelItems(models, query) {
+  return models.filter((model) => fuzzyMatch2(model.name, query)).slice(0, MAX_DROPDOWN_RESULTS);
+}
+function filterCreativityItems(options, query) {
+  return options.filter((option2) => fuzzyMatch2(option2.name, query)).slice(0, MAX_DROPDOWN_RESULTS);
+}
+function buildSystemPromptOptions(prompts, selectedSystemPromptName) {
+  if (!selectedSystemPromptName) {
+    return prompts;
+  }
+  return [
+    {
+      id: CLEAR_SYSTEM_PROMPT_ID,
+      name: I18n.t("commands.actionPalette.clearSystemPrompt"),
+      system: ""
+    },
+    ...prompts
+  ];
+}
+function filterSystemPromptItems(systemPrompts, query) {
+  const normalizedQuery = query.toLowerCase();
+  const resetOption = systemPrompts.find(
+    (prompt) => prompt.id === CLEAR_SYSTEM_PROMPT_ID
+  );
+  const promptOptions = systemPrompts.filter(
+    (prompt) => prompt.id !== CLEAR_SYSTEM_PROMPT_ID
+  );
+  const matches2 = promptOptions.filter(
+    (prompt) => normalizedQuery ? prompt.name.toLowerCase().includes(normalizedQuery) : true
+  ).sort((a, b) => a.name.localeCompare(b.name)).slice(
+    0,
+    resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? MAX_DROPDOWN_RESULTS - 1 : MAX_DROPDOWN_RESULTS
+  );
+  return resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? [resetOption, ...matches2] : matches2;
+}
+function formatSystemPreview(text2) {
+  const singleLine = text2.replace(/\r?\n/g, " ");
+  if (singleLine.length <= SYSTEM_PREVIEW_LENGTH) return singleLine;
+  return `${singleLine.slice(0, SYSTEM_PREVIEW_LENGTH - 1)}\u2026`;
+}
+function fuzzyMatch2(target, query) {
+  if (!query) return true;
+  let targetIndex = 0;
+  const normalizedTarget = target.toLowerCase();
+  for (const queryCharacter of query) {
+    targetIndex = normalizedTarget.indexOf(queryCharacter, targetIndex);
+    if (targetIndex === -1) return false;
+    targetIndex++;
+  }
+  return true;
+}
+function getProviderLabelParts(providerLabel) {
+  const [providerName = "", modelName = "", creativityBadge = ""] = providerLabel.split(" \xB7 ");
+  return {
+    providerName,
+    modelName: modelName.trim(),
+    creativityBadge: creativityBadge.trim()
+  };
+}
+function buildProviderLabel(providerName, modelName, creativityBadge) {
+  const base = [providerName, modelName].filter(Boolean).join(" \xB7 ");
+  const extras = [creativityBadge].filter(Boolean).join(" \xB7 ");
+  return extras ? `${base} \xB7 ${extras}` : base;
+}
+function getMentionedFilePaths(tokens) {
+  return tokens.filter((token) => token.type === "file" && token.filePath).map((token) => token.filePath);
+}
+
+// src/ui/actionPaletteEditing.ts
+function applyInitialSelectedFiles(context) {
+  if (!context.options.getFiles() || context.options.getInitialSelectedFiles().length === 0) {
+    return;
+  }
+  const availableFiles = context.getFiles();
+  const filesToAdd = context.options.getInitialSelectedFiles().map(
+    (filePath) => availableFiles.find((file) => file.path === filePath)
+  ).filter((file) => Boolean(file)).filter((file) => !context.state.selectedFiles.includes(file.path));
+  if (filesToAdd.length === 0) return;
+  context.state.selectedFiles = [
+    ...context.state.selectedFiles,
+    ...filesToAdd.map((file) => file.path)
+  ];
+  const mentionsToInsert = filesToAdd.map(getFileMention).filter((mention) => !context.state.textContent.includes(mention));
+  if (mentionsToInsert.length === 0) return;
+  const prefix = `${mentionsToInsert.join(SPACE_AFTER_MENTION)}${SPACE_AFTER_MENTION}`;
+  context.state.textContent = context.state.textContent ? `${prefix}${context.state.textContent}` : prefix;
+}
+function applyHistoryEntry(context, text2) {
+  context.state.textContent = text2;
+  context.state.cursorPosition = context.state.textContent.length;
+  context.state.selectedFiles = [];
+  context.state.textTokens = context.parseTextToTokens(
+    context.state.textContent
+  );
+  context.hideDropdown();
+  context.updateContentDisplay();
+  void tick().then(() => {
+    setCursorPosition(
+      context.options.getContentElement(),
+      context.state.textContent.length
+    );
+  });
+  context.commit();
+}
+function insertFileAtCursor(context, file) {
+  if (context.state.mentionStartIndex === -1) return;
+  if (!context.state.selectedFiles.includes(file.path)) {
+    context.state.selectedFiles = [
+      ...context.state.selectedFiles,
+      file.path
+    ];
+  }
+  const fullFileName = getFullFileName(file);
+  const beforeMention = context.state.textContent.substring(
+    0,
+    context.state.mentionStartIndex
+  );
+  const afterCursor = context.state.textContent.substring(
+    context.state.cursorPosition
+  );
+  context.state.textContent = beforeMention + MENTION_PREFIX + fullFileName + SPACE_AFTER_MENTION + afterCursor;
+  context.state.textTokens = context.parseTextToTokens(
+    context.state.textContent
+  );
+  context.hideDropdown();
+  context.updateContentDisplay();
+  void tick().then(() => {
+    const newCursorPosition = beforeMention.length + fullFileName.length + 2;
+    setCursorPosition(
+      context.options.getContentElement(),
+      newCursorPosition
+    );
+  });
+}
+function insertCommandAtCursor(context, command) {
+  if (context.state.commandStartIndex === -1) return;
+  const originalCommandStartIndex = context.state.commandStartIndex;
+  insertCommand(context, command.name);
+  if (context.activateCommandDropdown(command.name)) {
+    return;
+  }
+  const commandLength = COMMAND_PREFIX.length + command.name.length + SPACE_AFTER_COMMAND.length;
+  removeCommandFromText(context, originalCommandStartIndex, commandLength);
+}
+function removeCommandAndQuery(context, commandName) {
+  const token = `${COMMAND_PREFIX}${commandName}`;
+  const foundIndex = context.state.textContent.lastIndexOf(token);
+  if (foundIndex === -1) return;
+  const charBefore = foundIndex > 0 ? context.state.textContent[foundIndex - 1] : " ";
+  if (foundIndex > 0 && !isCharacterWhitespace(charBefore)) return;
+  const removalStart = foundIndex;
+  let idx = foundIndex + token.length;
+  if (context.state.textContent[idx] === SPACE_AFTER_COMMAND) {
+    idx += SPACE_AFTER_COMMAND.length;
+  }
+  while (idx < context.state.textContent.length) {
+    const ch = context.state.textContent[idx];
+    if (isCharacterWhitespace(ch) || ch === "/" || ch === "@") break;
+    idx++;
+  }
+  const before = context.state.textContent.substring(0, removalStart);
+  const after = context.state.textContent.substring(idx);
+  context.state.textContent = before + after;
+  context.state.textTokens = context.parseTextToTokens(
+    context.state.textContent
+  );
+  context.updateContentDisplay();
+  void tick().then(() => {
+    setCursorPosition(context.options.getContentElement(), before.length);
+  });
+}
+function removeFileReference(context, filePath) {
+  context.state.selectedFiles = context.state.selectedFiles.filter(
+    (path) => path !== filePath
+  );
+  const file = context.getFiles().find((item) => item.path === filePath);
+  if (file) {
+    const removalPattern = createFileRemovalPattern(file);
+    context.state.textContent = context.state.textContent.replace(
+      removalPattern,
+      ""
+    );
+    context.state.textTokens = context.parseTextToTokens(
+      context.state.textContent
+    );
+    context.updateContentDisplay();
+  }
+}
+function updateContentDisplay(context) {
+  const contentElement = context.options.getContentElement();
+  if (!contentElement) return;
+  const currentCursor = getCurrentCursorPosition(contentElement);
+  contentElement.innerHTML = renderTokensAsHtml(context.state.textTokens);
+  void tick().then(() => {
+    setCursorPosition(contentElement, currentCursor);
+  });
+}
+function insertCommand(context, commandName) {
+  if (context.state.commandStartIndex === -1) return;
+  const beforeCommand = context.state.textContent.substring(
+    0,
+    context.state.commandStartIndex
+  );
+  const afterCursor = context.state.textContent.substring(
+    context.state.cursorPosition
+  );
+  context.state.textContent = beforeCommand + COMMAND_PREFIX + commandName + SPACE_AFTER_COMMAND + afterCursor;
+  context.state.textTokens = context.parseTextToTokens(
+    context.state.textContent
+  );
+  context.hideDropdown();
+  context.updateContentDisplay();
+  void tick().then(() => {
+    const newCursorPosition = beforeCommand.length + commandName.length + 2;
+    setCursorPosition(
+      context.options.getContentElement(),
+      newCursorPosition
+    );
+  });
+}
+function removeCommandFromText(context, commandStartIndex, commandLength) {
+  if (commandStartIndex === -1) return;
+  const beforeCommand = context.state.textContent.substring(
+    0,
+    commandStartIndex
+  );
+  const afterCommand = context.state.textContent.substring(
+    commandStartIndex + commandLength
+  );
+  context.state.textContent = beforeCommand + afterCommand;
+  context.state.textTokens = context.parseTextToTokens(
+    context.state.textContent
+  );
+  context.updateContentDisplay();
+  void tick().then(() => {
+    setCursorPosition(
+      context.options.getContentElement(),
+      beforeCommand.length
+    );
+  });
+}
+
+// src/ui/actionPaletteSelections.ts
+async function selectProvider(context, provider) {
+  var _a7;
+  try {
+    await ((_a7 = context.options.onProviderChange()) == null ? void 0 : _a7(provider.id));
+    context.setProviderBadgeLabel(provider.providerName, provider.name);
+    context.options.setProviderId(provider.id);
+    context.state.providerName = provider.providerName;
+    completeCommandSelection(context, "provider");
+  } catch (error) {
+    console.error("Error selecting provider:", error);
+    context.hideDropdown();
+  }
+  context.commit();
+}
+async function selectModel(context, model) {
+  var _a7;
+  try {
+    await ((_a7 = context.options.onModelChange()) == null ? void 0 : _a7(model.name));
+    context.setProviderBadgeLabel(context.state.providerName, model.name);
+    completeCommandSelection(context, "model");
+  } catch (error) {
+    console.error("Error selecting model:", error);
+    context.hideDropdown();
+  }
+  context.commit();
+}
+async function selectCreativity(context, option2) {
+  var _a7;
+  try {
+    await ((_a7 = context.options.onCreativityChange()) == null ? void 0 : _a7(option2.id));
+    context.state.creativityBadge = option2.name;
+    context.setProviderBadgeLabel(
+      context.state.providerName,
+      context.state.modelName
+    );
+    completeCommandSelection(context, "creativity");
+  } catch (error) {
+    console.error("Error selecting creativity:", error);
+    context.hideDropdown();
+  }
+  context.commit();
+}
+async function selectSystemPrompt(context, option2) {
+  var _a7, _b3;
+  try {
+    if (option2.id === CLEAR_SYSTEM_PROMPT_ID) {
+      context.state.selectedSystemPromptValue = void 0;
+      context.state.selectedSystemPromptName = "";
+      await ((_a7 = context.options.onSystemPromptChange()) == null ? void 0 : _a7(null));
+      context.highlightBadgeTemporarily();
+      context.removeCommandAndQuery("system");
+      context.hideDropdown();
+      context.commit();
+      return;
+    }
+    context.state.selectedSystemPromptValue = option2.system;
+    context.state.selectedSystemPromptName = option2.name;
+    await ((_b3 = context.options.onSystemPromptChange()) == null ? void 0 : _b3(option2.id));
+    completeCommandSelection(context, "system");
+  } catch (error) {
+    console.error("Error selecting system prompt:", error);
+    context.hideDropdown();
+  }
+  context.commit();
+}
+async function showProviderDropdown(context) {
+  const getProviders = context.options.getProviders();
+  if (!getProviders) return;
+  try {
+    context.state.allProviders = await getProviders();
+    applyProviderFilter(context);
+    showLoadedDropdown(context, "provider", "No providers available");
+  } catch (error) {
+    console.error("Error showing provider dropdown:", error);
+  }
+  context.commit();
+}
+async function showModelDropdown(context) {
+  const getModels = context.options.getModels();
+  const providerId = context.options.getProviderId();
+  if (!getModels || !providerId) return;
+  try {
+    context.state.allModels = await getModels(providerId);
+    applyModelFilter(context);
+    showLoadedDropdown(context, "model", "No models available");
+  } catch (error) {
+    console.error("Error showing model dropdown:", error);
+  }
+  context.commit();
+}
+async function showCreativityDropdown(context) {
+  try {
+    context.state.allCreativities = getCreativityOptions();
+    applyCreativityFilter(context);
+    if (context.state.filteredItems.length > 0) {
+      context.state.activeDropdown = "creativity";
+      context.state.selectedIndex = 0;
+    }
+  } catch (error) {
+    console.error("Error showing creativity dropdown:", error);
+  }
+  context.commit();
+}
+async function showSystemDropdown(context) {
+  const getSystemPrompts2 = context.options.getSystemPrompts();
+  if (!getSystemPrompts2) return;
+  try {
+    context.state.allSystemPrompts = buildSystemPromptOptions(
+      getSystemPrompts2(),
+      context.state.selectedSystemPromptName
+    );
+    applySystemFilter(context);
+    if (context.state.filteredItems.length > 0) {
+      context.state.activeDropdown = "system";
+      context.state.selectedIndex = 0;
+    }
+  } catch (error) {
+    console.error("Error showing system dropdown:", error);
+  }
+  context.commit();
+}
+function applyProviderFilter(context) {
+  if (!context.state.allProviders.length) return;
+  const query = context.getCommandQuery("provider");
+  const matches2 = filterProviderItems(context.state.allProviders, query);
+  context.updateFilteredDropdownItems(matches2);
+  if (query && matches2.length === 1 && matches2[0].name.toLowerCase() === query) {
+    void selectProvider(context, matches2[0]);
+  }
+}
+function applyModelFilter(context) {
+  if (!context.state.allModels.length) return;
+  const query = context.getCommandQuery("model");
+  const matches2 = filterModelItems(context.state.allModels, query);
+  context.updateFilteredDropdownItems(matches2);
+  if (query && matches2.length === 1 && matches2[0].name.toLowerCase() === query) {
+    void selectModel(context, matches2[0]);
+  }
+}
+function applyCreativityFilter(context) {
+  if (!context.state.allCreativities.length) return;
+  const query = context.getCommandQuery("creativity");
+  const matches2 = filterCreativityItems(context.state.allCreativities, query);
+  context.updateFilteredDropdownItems(matches2);
+  if (!query) return;
+  const exact = matches2.find(
+    (option2) => option2.name.toLowerCase() === query.toLowerCase()
+  );
+  if (exact) void selectCreativity(context, exact);
+}
+function applySystemFilter(context) {
+  if (!context.state.allSystemPrompts.length) return;
+  const query = context.getCommandQuery("system");
+  const matches2 = filterSystemPromptItems(
+    context.state.allSystemPrompts,
+    query
+  );
+  context.updateFilteredDropdownItems(matches2);
+  if (!query) return;
+  const exact = context.state.allSystemPrompts.filter((prompt) => prompt.id !== CLEAR_SYSTEM_PROMPT_ID).find((prompt) => prompt.name.toLowerCase() === query.toLowerCase());
+  if (exact) void selectSystemPrompt(context, exact);
+}
+function completeCommandSelection(context, commandName) {
+  context.highlightBadgeTemporarily();
+  context.removeCommandAndQuery(commandName);
+  context.hideDropdown();
+}
+function showLoadedDropdown(context, kind, emptyMessage) {
+  if (context.state.filteredItems.length > 0) {
+    context.state.activeDropdown = kind;
+    context.state.selectedIndex = 0;
+    return;
+  }
+  console.warn(emptyMessage);
+}
+
+// src/ui/actionPaletteNavigation.ts
+function handleDropdownNavigation(context, event2) {
+  if (!hasActiveDropdownItems(context)) {
+    return false;
+  }
+  return handleDropdownMove(context, event2) || handleDropdownSelection(context, event2) || handleDropdownEscape(context, event2);
+}
+function handleGeneralNavigation(context, event2) {
+  var _a7;
+  if (event2.key === "Enter") {
+    if (event2.shiftKey) return;
+    event2.preventDefault();
+    context.submitAction();
+    return;
+  }
+  if (event2.key === "Escape") {
+    event2.preventDefault();
+    (_a7 = context.options.onCancel()) == null ? void 0 : _a7();
+    context.options.dispatchCancel();
+  }
+}
+function handleHistoryNavigation(context, event2) {
+  if (!isHistoryNavigationKey(context, event2)) {
+    return false;
+  }
+  const currentPosition = getCurrentCursorPosition(
+    context.options.getContentElement()
+  );
+  context.state.cursorPosition = currentPosition;
+  if (!canUseHistoryAtCursor(context, event2.key, currentPosition)) {
+    return false;
+  }
+  const historyLength = getPromptHistoryLength();
+  if (historyLength === 0) return false;
+  moveHistoryIndex(context, event2.key, historyLength);
+  const entry = context.state.historyIndex >= 0 && context.state.historyIndex < historyLength ? getPromptHistoryEntry(context.state.historyIndex) : context.state.draftBeforeHistory;
+  event2.preventDefault();
+  applyHistoryEntry(context, entry || "");
+  return true;
+}
+function hasActiveDropdownItems(context) {
+  return context.state.activeDropdown !== "none" && context.state.filteredItems.length > 0;
+}
+function handleDropdownMove(context, event2) {
+  if (event2.key !== "ArrowDown" && event2.key !== "ArrowUp") {
+    return false;
+  }
+  event2.preventDefault();
+  moveSelection(context, event2.key === "ArrowDown" ? 1 : -1);
+  return true;
+}
+function handleDropdownSelection(context, event2) {
+  if (event2.key === "Enter" && event2.shiftKey) return false;
+  if (event2.key !== "Enter" && event2.key !== "Tab") return false;
+  event2.preventDefault();
+  const selectedItem = context.state.filteredItems[context.state.selectedIndex];
+  if (context.state.selectedIndex >= 0 && selectedItem) {
+    context.handleSelection(selectedItem);
+  }
+  return true;
+}
+function handleDropdownEscape(context, event2) {
+  if (event2.key !== "Escape") return false;
+  event2.preventDefault();
+  context.hideDropdown();
+  return true;
+}
+function moveSelection(context, delta) {
+  context.state.selectedIndex = Math.min(
+    Math.max(context.state.selectedIndex + delta, -1),
+    context.state.filteredItems.length - 1
+  );
+  scrollSelectedIntoView(
+    context.options.getDropdownElement(context.state.activeDropdown),
+    context.state.selectedIndex
+  );
+  context.commit();
+}
+function isHistoryNavigationKey(context, event2) {
+  const isHistoryKey = event2.key === "ArrowUp" || event2.key === "ArrowDown";
+  return isHistoryKey && context.state.activeDropdown === "none";
+}
+function canUseHistoryAtCursor(context, key2, currentPosition) {
+  if (key2 === "ArrowUp") {
+    return isCursorOnFirstLine(context, currentPosition);
+  }
+  return isCursorOnLastLine(context, currentPosition);
+}
+function moveHistoryIndex(context, key2, historyLength) {
+  if (context.state.historyIndex === historyLength) {
+    context.state.draftBeforeHistory = context.state.textContent;
+  }
+  if (key2 === "ArrowUp" && context.state.historyIndex > 0) {
+    context.state.historyIndex -= 1;
+    return;
+  }
+  if (key2 === "ArrowDown" && context.state.historyIndex < historyLength) {
+    context.state.historyIndex += 1;
+  }
+}
+function isCursorOnFirstLine(context, position) {
+  const index3 = Math.max(position - 1, 0);
+  return context.state.textContent.lastIndexOf("\n", index3) === -1;
+}
+function isCursorOnLastLine(context, position) {
+  return context.state.textContent.indexOf("\n", position) === -1;
+}
+
+// src/ui/actionPaletteTriggers.ts
+function checkForMentionTrigger(context) {
+  if (!context.options.getFiles()) return;
+  const beforeCursor = context.state.textContent.substring(
+    0,
+    context.state.cursorPosition
+  );
+  const mentionIndex = beforeCursor.lastIndexOf(MENTION_PREFIX);
+  if (mentionIndex === -1) {
+    context.hideDropdown();
+    return;
+  }
+  const characterBeforeMention = mentionIndex > 0 ? beforeCursor[mentionIndex - 1] : " ";
+  if (mentionIndex > 0 && !isCharacterWhitespace(characterBeforeMention)) {
+    context.hideDropdown();
+    return;
+  }
+  const textAfterMention = beforeCursor.substring(mentionIndex + 1);
+  const possibleMention = MENTION_PREFIX + textAfterMention;
+  if (isCompleteMention(
+    possibleMention,
+    context.getFiles(),
+    context.state.selectedFiles
+  )) {
+    context.hideDropdown();
+    return;
+  }
+  context.state.mentionStartIndex = mentionIndex;
+  context.state.filteredItems = filterAvailableFiles(
+    textAfterMention,
+    context.getFiles(),
+    context.state.selectedFiles
+  );
+  showDropdownItems(context, "file");
+}
+function checkForCommandTrigger(context) {
+  const commandContext = getCommandContext(context);
+  if (!commandContext) {
+    if (context.state.activeDropdown !== "file") context.hideDropdown();
+    return;
+  }
+  context.state.commandStartIndex = commandContext.commandIndex;
+  if (context.activateCommandDropdown(commandContext.commandName)) {
+    return;
+  }
+  if (["provider", "model", "creativity", "system"].includes(
+    context.state.activeDropdown
+  )) {
+    context.hideDropdown();
+  }
+  context.state.filteredItems = filterAvailableCommands(
+    commandContext.textAfterCommand
+  );
+  showDropdownItems(context, "command");
+}
+function getCommandContext(context) {
+  const beforeCursor = context.state.textContent.substring(
+    0,
+    context.state.cursorPosition
+  );
+  const commandIndex = beforeCursor.lastIndexOf(COMMAND_PREFIX);
+  if (commandIndex === -1) return null;
+  const characterBeforeCommand = commandIndex > 0 ? beforeCursor[commandIndex - 1] : " ";
+  if (commandIndex > 0 && !isCharacterWhitespace(characterBeforeCommand)) {
+    return null;
+  }
+  const textAfterCommand = beforeCursor.substring(commandIndex + 1);
+  const firstTokenMatch = textAfterCommand.match(/([^\s/]+)/);
+  const commandName = (firstTokenMatch ? firstTokenMatch[1] : "").toLowerCase();
+  return { commandIndex, commandName, textAfterCommand };
+}
+function showDropdownItems(context, kind) {
+  if (context.state.filteredItems.length > 0) {
+    context.state.activeDropdown = kind;
+    context.state.selectedIndex = 0;
+    return;
+  }
+  context.hideDropdown();
+}
+
+// src/ui/actionPaletteController.ts
+var ActionPaletteController = class {
+  constructor(state2, options) {
+    this.state = state2;
+    this.options = options;
+    this.dropdownControllers = {
+      provider: {
+        kind: "provider",
+        show: () => showProviderDropdown(this),
+        refresh: () => applyProviderFilter(this)
+      },
+      model: {
+        kind: "model",
+        show: () => showModelDropdown(this),
+        refresh: () => applyModelFilter(this)
+      },
+      creativity: {
+        kind: "creativity",
+        show: () => showCreativityDropdown(this),
+        refresh: () => applyCreativityFilter(this)
+      },
+      system: {
+        kind: "system",
+        show: () => showSystemDropdown(this),
+        refresh: () => applySystemFilter(this)
+      }
+    };
+  }
+  initializeContent() {
+    this.state.initializedContent = true;
+    if (this.options.getValue()) {
+      this.state.textContent = this.options.getValue();
+    }
+    applyInitialSelectedFiles(this);
+    this.state.textTokens = this.parseTextToTokens(this.state.textContent);
+    this.updateContentDisplay();
+    void tick().then(() => {
+      var _a7;
+      (_a7 = this.options.getContentElement()) == null ? void 0 : _a7.focus();
+      setCursorPosition(
+        this.options.getContentElement(),
+        this.state.textContent.length
+      );
+    });
+    this.commit();
+  }
+  restoreSelectedSystemPrompt() {
+    var _a7;
+    const selectedSystemPromptId = this.options.getSelectedSystemPromptId();
+    const getSystemPrompts2 = this.options.getSystemPrompts();
+    if (!selectedSystemPromptId || !getSystemPrompts2) {
+      this.state.selectedSystemPromptName = "";
+      this.state.selectedSystemPromptValue = void 0;
+      this.commit();
+      return;
+    }
+    const matchedPrompt = getSystemPrompts2().find(
+      (prompt) => prompt.id === selectedSystemPromptId
+    );
+    if (!matchedPrompt) {
+      void ((_a7 = this.options.onSystemPromptChange()) == null ? void 0 : _a7(null));
+      this.state.selectedSystemPromptName = "";
+      this.state.selectedSystemPromptValue = void 0;
+      this.commit();
+      return;
+    }
+    this.state.selectedSystemPromptName = matchedPrompt.name;
+    this.state.selectedSystemPromptValue = matchedPrompt.system;
+    this.commit();
+  }
+  handleKeydown(event2) {
+    if (handleDropdownNavigation(this, event2)) return;
+    if (handleHistoryNavigation(this, event2)) return;
+    handleGeneralNavigation(this, event2);
+    this.commit();
+  }
+  handleInput(event2) {
+    const target = event2.target;
+    this.state.textContent = target.textContent || "";
+    this.state.cursorPosition = getCurrentCursorPosition(
+      this.options.getContentElement()
+    );
+    this.state.historyIndex = getPromptHistoryLength();
+    this.state.draftBeforeHistory = this.state.textContent;
+    this.state.textTokens = this.parseTextToTokens(this.state.textContent);
+    checkForMentionTrigger(this);
+    checkForCommandTrigger(this);
+    const newHtmlContent = renderTokensAsHtml(this.state.textTokens);
+    if (target.innerHTML !== newHtmlContent) {
+      this.updateContentDisplay();
+    }
+    this.commit();
+  }
+  handleSelection(item) {
+    switch (this.state.activeDropdown) {
+      case "file":
+        insertFileAtCursor(this, item);
+        break;
+      case "command":
+        insertCommandAtCursor(this, item);
+        break;
+      case "provider":
+        void selectProvider(this, item);
+        break;
+      case "model":
+        void selectModel(this, item);
+        break;
+      case "creativity":
+        void selectCreativity(this, item);
+        break;
+      case "system":
+        void selectSystemPrompt(
+          this,
+          item
+        );
+        break;
+    }
+    this.commit();
+  }
+  handleContentClick(event2) {
+    const target = event2.target;
+    if (!target.classList.contains("file-mention")) return;
+    const filePath = target.dataset.path;
+    if (filePath) {
+      removeFileReference(this, filePath);
+    }
+    this.commit();
+  }
+  handleKeyup(event2) {
+    if (event2.key !== "Backspace" && event2.key !== "Delete") return;
+    const currentlyMentionedFiles = getMentionedFilePaths(
+      this.state.textTokens
+    );
+    const filesToRemove = this.state.selectedFiles.filter(
+      (filePath) => !currentlyMentionedFiles.includes(filePath)
+    );
+    if (filesToRemove.length > 0) {
+      this.state.selectedFiles = this.state.selectedFiles.filter(
+        (path) => currentlyMentionedFiles.includes(path)
+      );
+      this.commit();
+    }
+  }
+  submitAction() {
+    var _a7;
+    addToPromptHistory(this.state.textContent);
+    this.state.historyIndex = getPromptHistoryLength();
+    this.state.draftBeforeHistory = this.state.textContent;
+    const payload = {
+      text: this.state.textContent,
+      selectedFiles: this.state.selectedFiles,
+      systemPrompt: this.state.selectedSystemPromptValue
+    };
+    (_a7 = this.options.onSubmit()) == null ? void 0 : _a7(payload);
+    this.options.dispatchSubmit(payload);
+    this.commit();
+  }
+  getFiles() {
+    var _a7, _b3;
+    return (_b3 = (_a7 = this.options.getFiles()) == null ? void 0 : _a7()) != null ? _b3 : [];
+  }
+  parseTextToTokens(text2) {
+    const result = parseTextToTokens(
+      text2,
+      this.getFiles(),
+      this.state.selectedFiles,
+      getAvailableCommands()
+    );
+    this.state.selectedFiles = result.selectedFiles;
+    return result.tokens;
+  }
+  activateCommandDropdown(commandName) {
+    const dropdownController = this.dropdownControllers[commandName];
+    if (!dropdownController) return false;
+    if (this.state.activeDropdown !== dropdownController.kind) {
+      void dropdownController.show();
+      return true;
+    }
+    dropdownController.refresh();
+    return true;
+  }
+  updateFilteredDropdownItems(matches2) {
+    this.state.filteredItems = matches2;
+    if (matches2.length === 0) {
+      this.state.selectedIndex = -1;
+    } else if (this.state.selectedIndex < 0 || this.state.selectedIndex >= matches2.length) {
+      this.state.selectedIndex = 0;
+    }
+    this.commit();
+  }
+  hideDropdown() {
+    this.state.activeDropdown = "none";
+    this.state.filteredItems = [];
+    this.state.selectedIndex = -1;
+    this.state.mentionStartIndex = -1;
+    this.state.commandStartIndex = -1;
+    this.state.allProviders = [];
+    this.state.allModels = [];
+    this.state.allCreativities = [];
+    this.state.allSystemPrompts = [];
+    this.commit();
+  }
+  removeCommandAndQuery(commandName) {
+    removeCommandAndQuery(this, commandName);
+  }
+  getCommandQuery(commandName) {
+    return getCommandQuery(
+      commandName,
+      this.state.textContent,
+      this.state.cursorPosition
+    );
+  }
+  updateContentDisplay() {
+    updateContentDisplay(this);
+  }
+  setProviderBadgeLabel(providerName, modelName) {
+    this.state.providerName = providerName;
+    this.state.modelName = modelName;
+    this.options.setProviderLabel(
+      buildProviderLabel(
+        this.state.providerName,
+        this.state.modelName,
+        this.state.creativityBadge
+      )
+    );
+  }
+  highlightBadgeTemporarily() {
+    this.state.badgeHighlight = true;
+    this.commit();
+    setTimeout(() => {
+      this.state.badgeHighlight = false;
+      this.commit();
+    }, 900);
+  }
+  commit() {
+    this.options.invalidate();
+  }
+};
+
+// src/ui/actionPaletteState.ts
+function createActionPaletteState(value, providerLabel) {
+  const { providerName, modelName, creativityBadge } = getProviderLabelParts(providerLabel);
+  return {
+    activeDropdown: "none",
+    filteredItems: [],
+    allProviders: [],
+    allModels: [],
+    allCreativities: [],
+    allSystemPrompts: [],
+    selectedIndex: -1,
+    badgeHighlight: false,
+    selectedSystemPromptValue: void 0,
+    historyIndex: getPromptHistoryLength(),
+    draftBeforeHistory: value,
+    initializedContent: false,
+    selectedFiles: [],
+    textContent: "",
+    cursorPosition: 0,
+    mentionStartIndex: -1,
+    commandStartIndex: -1,
+    textTokens: [],
+    providerName,
+    modelName,
+    creativityBadge,
+    selectedSystemPromptName: ""
+  };
+}
+
 // src/ui/ActionPalette.svelte
-var root_3 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-file-name"> </span> <span class="local-gpt-file-path"> </span></div>`);
-var root_5 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-command-name"> </span> <span class="local-gpt-command-description"> </span></div>`);
-var root_8 = from_html(`<span class="local-gpt-provider-url"> </span>`);
-var root_7 = from_html(`<div role="option" tabindex="0"><div class="local-gpt-provider-header"><span class="local-gpt-provider-name"> </span> <!></div> <span class="local-gpt-provider-model"> </span></div>`);
-var root_10 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-model-name"> </span></div>`);
-var root_12 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-creativity-name"> </span></div>`);
-var root_15 = from_html(`<span class="local-gpt-system-detail"> </span>`);
-var root_14 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-system-name"> </span> <!></div>`);
-var root_1 = from_html(`<div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
-var root_16 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
-var root_17 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
-var root_18 = from_html(`<div> </div>`);
-var root = from_html(`<div class="local-gpt-action-palette-shell"><div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
+var root_22 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
+var root_3 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
+var root_42 = from_html(`<div> </div>`);
+var root2 = from_html(`<div class="local-gpt-action-palette-shell"><div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
 function ActionPalette($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPalette, ...$$anchor });
   push($$props, false);
-  const MAX_DROPDOWN_RESULTS = 15;
-  const FILE_MENTION_REGEX = /@([^@]+?\.[a-zA-Z0-9]+)(?=\s|$|@)/g;
-  const MENTION_PREFIX = "@";
-  const SPACE_AFTER_MENTION = " ";
-  const COMMAND_REGEX = /\/([^\/\s]+)(?=\s|$|\/)/g;
-  const COMMAND_PREFIX = "/";
-  const SPACE_AFTER_COMMAND = " ";
-  const CLEAR_SYSTEM_PROMPT_ID = "__clear_system_prompt__";
   let placeholder = prop($$props, "placeholder", 28, () => I18n.t("commands.actionPalette.placeholder"));
   let value = prop($$props, "value", 12, "");
   let providerLabel = prop($$props, "providerLabel", 12, "");
@@ -13018,8 +14551,9 @@ function ActionPalette($$anchor, $$props) {
   let getModels = prop($$props, "getModels", 12, void 0);
   let onModelChange = prop($$props, "onModelChange", 12, void 0);
   let onCreativityChange = prop($$props, "onCreativityChange", 12, void 0);
-  let getSystemPrompts = prop($$props, "getSystemPrompts", 12, void 0);
+  let getSystemPrompts2 = prop($$props, "getSystemPrompts", 12, void 0);
   let selectedSystemPromptId = prop($$props, "selectedSystemPromptId", 12, null);
+  let initialSelectedFiles = prop($$props, "initialSelectedFiles", 28, () => []);
   let onSystemPromptChange = prop($$props, "onSystemPromptChange", 12, void 0);
   let onSubmit = prop($$props, "onSubmit", 12, void 0);
   let onCancel = prop($$props, "onCancel", 12, void 0);
@@ -13031,995 +14565,78 @@ function ActionPalette($$anchor, $$props) {
   let modelDropdownElement = mutable_source(null);
   let creativityDropdownElement = mutable_source(null);
   let systemDropdownElement = mutable_source(null);
-  let activeDropdown = mutable_source("none");
-  let filteredItems = mutable_source([]);
+  let state2 = mutable_source(createActionPaletteState(value(), providerLabel()));
   let fileItems = mutable_source([]);
   let commandItems = mutable_source([]);
   let providerItems = mutable_source([]);
   let modelItems = mutable_source([]);
   let creativityItems = mutable_source([]);
   let systemItems = mutable_source([]);
-  let allProviders = [];
-  let allModels = [];
-  let allCreativities = [];
-  let allSystemPrompts = [];
-  function updateFilteredDropdownItems(matches2) {
-    set(filteredItems, matches2);
-    if (matches2.length === 0) {
-      set(selectedIndex, -1);
-      return;
-    }
-    if (get(selectedIndex) < 0 || get(selectedIndex) >= matches2.length) {
-      set(selectedIndex, 0);
-    }
-  }
-  const dropdownControllers = {
-    provider: {
-      kind: "provider",
-      show: () => showProviderDropdown(),
-      refresh: () => applyProviderFilter()
+  const controller = new ActionPaletteController(get(state2), {
+    getValue: () => value(),
+    getProviderId: () => providerId(),
+    setProviderId: (nextProviderId) => {
+      providerId(nextProviderId);
     },
-    model: {
-      kind: "model",
-      show: () => showModelDropdown(),
-      refresh: () => applyModelFilter()
+    getInitialSelectedFiles: () => initialSelectedFiles(),
+    getSelectedSystemPromptId: () => selectedSystemPromptId(),
+    getFiles: () => getFiles(),
+    getProviders: () => getProviders(),
+    getModels: () => getModels(),
+    getSystemPrompts: () => getSystemPrompts2(),
+    onProviderChange: () => onProviderChange(),
+    onModelChange: () => onModelChange(),
+    onCreativityChange: () => onCreativityChange(),
+    onSystemPromptChange: () => onSystemPromptChange(),
+    onSubmit: () => onSubmit(),
+    onCancel: () => onCancel(),
+    setProviderLabel: (nextProviderLabel) => {
+      providerLabel(nextProviderLabel);
     },
-    creativity: {
-      kind: "creativity",
-      show: () => showCreativityDropdown(),
-      refresh: () => applyCreativityFilter()
-    },
-    system: {
-      kind: "system",
-      show: () => showSystemDropdown(),
-      refresh: () => applySystemFilter()
+    getContentElement: () => get(contentElement),
+    getDropdownElement: (kind) => getDropdownElementForKind(kind, {
+      file: get(dropdownElement),
+      command: get(commandDropdownElement),
+      provider: get(providerDropdownElement),
+      model: get(modelDropdownElement),
+      creativity: get(creativityDropdownElement),
+      system: get(systemDropdownElement)
+    }),
+    dispatchSubmit: (payload) => dispatch("submit", payload),
+    dispatchCancel: () => dispatch("cancel"),
+    invalidate: () => {
+      set(state2, get(state2));
     }
-  };
-  let selectedIndex = mutable_source(-1);
-  let badgeHighlight = mutable_source(false);
-  let selectedSystemPromptValue = void 0;
-  let historyIndex = getPromptHistoryLength();
-  let draftBeforeHistory = value();
-  let selectedFiles = [];
-  let textContent = "";
-  let cursorPosition = 0;
-  let mentionStartIndex = -1;
-  let commandStartIndex = -1;
-  let textTokens = [];
-  let providerName = providerLabel().split(" \xB7 ")[0] || "";
-  let modelName = (providerLabel().split(" \xB7 ")[1] || "").trim();
-  let creativityBadge = (providerLabel().split(" \xB7 ")[2] || "").trim();
-  let selectedSystemPromptName = mutable_source("");
-  const SYSTEM_PREVIEW_LENGTH = 80;
-  function getCreativityOptions() {
-    return [
-      { id: "", name: I18n.t("settings.creativityNone") },
-      { id: "low", name: I18n.t("settings.creativityLow") },
-      { id: "medium", name: I18n.t("settings.creativityMedium") },
-      { id: "high", name: I18n.t("settings.creativityHigh") }
-    ];
-  }
-  function findMatchingFile(fileName, availableFiles) {
-    const normalizedFileName = fileName.toLowerCase();
-    return availableFiles.find((file) => {
-      const fullFileName = `${file.basename}.${file.extension}`;
-      return fullFileName.toLowerCase() === normalizedFileName;
-    });
-  }
-  function extractMentionsFromText(text2) {
-    if (!getFiles()) {
-      return { mentions: [], newSelectedFiles: [] };
-    }
-    const availableFiles = getFiles()();
-    const mentions = [];
-    const newSelectedFiles = [];
-    const mentionMatches = Array.from(text2.matchAll(FILE_MENTION_REGEX));
-    for (const match of mentionMatches) {
-      const fileName = (match[1] || "").trim();
-      const matchedFile = findMatchingFile(fileName, availableFiles);
-      if (matchedFile && !selectedFiles.includes(matchedFile.path)) {
-        newSelectedFiles.push(matchedFile.path);
-      }
-      mentions.push(match[0]);
-    }
-    return { mentions, newSelectedFiles };
-  }
-  function getAvailableCommands() {
-    return [
-      {
-        name: "provider",
-        description: I18n.t("commands.actionPalette.changeProvider")
-      },
-      {
-        name: "model",
-        description: I18n.t("commands.actionPalette.changeModel")
-      },
-      {
-        name: "creativity",
-        description: I18n.t("commands.actionPalette.changeCreativity")
-      },
-      {
-        name: "system",
-        description: I18n.t("commands.actionPalette.changeSystemPrompt")
-      }
-    ];
-  }
-  function fetchAvailableProviders() {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (!getProviders()) return [];
-      try {
-        return yield getProviders()();
-      } catch (error) {
-        console.error("Error fetching providers:", error);
-        return [];
-      }
-    });
-  }
-  function fetchAvailableModels() {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (!getModels() || !providerId()) return [];
-      try {
-        return yield getModels()(providerId());
-      } catch (error) {
-        console.error("Error fetching models:", error);
-        return [];
-      }
-    });
-  }
-  function parseTextToTokens(text2) {
-    var _a7;
-    const tokens = [];
-    if (getFiles()) {
-      const availableFiles = getFiles()();
-      const { newSelectedFiles } = extractMentionsFromText(text2);
-      if (newSelectedFiles.length > 0) {
-        selectedFiles = [...selectedFiles, ...newSelectedFiles];
-      }
-    }
-    const mentionMatches = getFiles() ? Array.from(text2.matchAll(FILE_MENTION_REGEX)) : [];
-    const commandMatches = Array.from(text2.matchAll(COMMAND_REGEX));
-    const allMatches = [
-      ...mentionMatches.map((match) => ({ type: "file", match })),
-      ...commandMatches.map((match) => ({ type: "command", match }))
-    ].sort((a, b) => {
-      var _a8, _b3;
-      return ((_a8 = a.match.index) !== null && _a8 !== void 0 ? _a8 : 0) - ((_b3 = b.match.index) !== null && _b3 !== void 0 ? _b3 : 0);
-    });
-    let lastIndex = 0;
-    for (const { type, match } of allMatches) {
-      const matchStart = (_a7 = match.index) !== null && _a7 !== void 0 ? _a7 : 0;
-      const matchEnd = matchStart + match[0].length;
-      if (matchStart > lastIndex) {
-        tokens.push({
-          type: "text",
-          content: text2.substring(lastIndex, matchStart),
-          start: lastIndex,
-          end: matchStart
-        });
-      }
-      if (type === "file" && getFiles()) {
-        const fileName = (match[1] || "").trim();
-        const availableFiles = getFiles()();
-        const matchedFile = findMatchingFile(fileName, availableFiles);
-        if (matchedFile) {
-          tokens.push({
-            type: "file",
-            content: match[0],
-            start: matchStart,
-            end: matchEnd,
-            filePath: matchedFile.path
-          });
-        } else {
-          tokens.push({
-            type: "text",
-            content: match[0],
-            start: matchStart,
-            end: matchEnd
-          });
-        }
-      } else if (type === "command") {
-        const commandName = (match[1] || "").trim();
-        const availableCommands = getAvailableCommands();
-        const matchedCommand = availableCommands.find((cmd) => cmd.name === commandName);
-        if (matchedCommand) {
-          tokens.push({
-            type: "command",
-            content: match[0],
-            start: matchStart,
-            end: matchEnd,
-            commandName: matchedCommand.name
-          });
-        } else {
-          tokens.push({
-            type: "text",
-            content: match[0],
-            start: matchStart,
-            end: matchEnd
-          });
-        }
-      }
-      lastIndex = matchEnd;
-    }
-    if (lastIndex < text2.length) {
-      tokens.push({
-        type: "text",
-        content: text2.substring(lastIndex),
-        start: lastIndex,
-        end: text2.length
-      });
-    }
-    return tokens;
-  }
-  function getCurrentCursorPosition() {
-    var _a7;
-    if (!get(contentElement)) return 0;
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return 0;
-    const range = selection.getRangeAt(0);
-    let position = 0;
-    const walker = document.createTreeWalker(get(contentElement), NodeFilter.SHOW_TEXT, null);
-    let textNode;
-    while (textNode = walker.nextNode()) {
-      if (textNode === range.startContainer) {
-        return position + range.startOffset;
-      }
-      position += ((_a7 = textNode.textContent) === null || _a7 === void 0 ? void 0 : _a7.length) || 0;
-    }
-    return position;
-  }
-  function setCursorPosition(position) {
-    var _a7;
-    if (!get(contentElement)) return;
-    const selection = window.getSelection();
-    const range = document.createRange();
-    let currentPosition = 0;
-    const walker = document.createTreeWalker(get(contentElement), NodeFilter.SHOW_TEXT, null);
-    let textNode;
-    while (textNode = walker.nextNode()) {
-      const nodeLength = ((_a7 = textNode.textContent) === null || _a7 === void 0 ? void 0 : _a7.length) || 0;
-      if (currentPosition + nodeLength >= position) {
-        const offset = position - currentPosition;
-        range.setStart(textNode, offset);
-        range.setEnd(textNode, offset);
-        selection === null || selection === void 0 ? void 0 : selection.removeAllRanges();
-        selection === null || selection === void 0 ? void 0 : selection.addRange(range);
-        return;
-      }
-      currentPosition += nodeLength;
-    }
-  }
-  function escapeHtmlContent(text2) {
-    const temporaryElement = document.createElement("div");
-    temporaryElement.textContent = text2;
-    return temporaryElement.innerHTML;
-  }
-  function renderTokensAsHtml() {
-    return textTokens.map((token) => {
-      if (token.type === "file") {
-        return `<span class="file-mention" data-path="${token.filePath}">${escapeHtmlContent(token.content)}</span>`;
-      }
-      if (token.type === "command") {
-        return `<span class="command-mention" data-command="${token.commandName}">${escapeHtmlContent(token.content)}</span>`;
-      }
-      return escapeHtmlContent(token.content);
-    }).join("");
-  }
-  function updateContentDisplay() {
-    if (!get(contentElement)) return;
-    const currentCursor = getCurrentCursorPosition();
-    mutate(contentElement, get(contentElement).innerHTML = renderTokensAsHtml());
-    tick().then(() => {
-      setCursorPosition(currentCursor);
-    });
-  }
-  function setProviderBadgeLabel(pName, mName) {
-    providerName = pName;
-    modelName = mName;
-    const base = [providerName, modelName].filter(Boolean).join(" \xB7 ");
-    const extras = [creativityBadge].filter(Boolean).join(" \xB7 ");
-    providerLabel(extras ? `${base} \xB7 ${extras}` : base);
-  }
-  function highlightBadgeTemporarily() {
-    set(badgeHighlight, true);
-    setTimeout(
-      () => {
-        set(badgeHighlight, false);
-      },
-      900
-    );
-  }
-  function applyHistoryEntry(text2) {
-    textContent = text2;
-    cursorPosition = textContent.length;
-    selectedFiles = [];
-    textTokens = parseTextToTokens(textContent);
-    hideDropdown();
-    updateContentDisplay();
-    tick().then(() => {
-      setCursorPosition(textContent.length);
-    });
-  }
-  restoreSelectedSystemPrompt();
-  onMount(() => {
-    queueMicrotask(() => {
-      get(contentElement) === null || get(contentElement) === void 0 ? void 0 : get(contentElement).focus();
-      if (value()) {
-        textContent = value();
-        textTokens = parseTextToTokens(textContent);
-        updateContentDisplay();
-      }
-    });
   });
-  function restoreSelectedSystemPrompt() {
-    if (!selectedSystemPromptId() || !getSystemPrompts()) {
-      set(selectedSystemPromptName, "");
-      selectedSystemPromptValue = void 0;
-      return;
-    }
-    const availablePrompts = getSystemPrompts()();
-    const matchedPrompt = availablePrompts.find((prompt) => prompt.id === selectedSystemPromptId());
-    if (!matchedPrompt) {
-      void (onSystemPromptChange() === null || onSystemPromptChange() === void 0 ? void 0 : onSystemPromptChange()(null));
-      set(selectedSystemPromptName, "");
-      selectedSystemPromptValue = void 0;
-      return;
-    }
-    set(selectedSystemPromptName, matchedPrompt.name);
-    selectedSystemPromptValue = matchedPrompt.system;
-  }
-  function handleDropdownNavigation(event2) {
-    if (get(activeDropdown) === "none" || get(filteredItems).length === 0) return false;
-    function moveSelection(delta) {
-      set(selectedIndex, Math.min(Math.max(get(selectedIndex) + delta, -1), get(filteredItems).length - 1));
-      scrollSelectedIntoView(getDropdownElementForActiveType(), get(selectedIndex));
-    }
-    switch (event2.key) {
-      case "ArrowDown":
-        event2.preventDefault();
-        moveSelection(1);
-        return true;
-      case "ArrowUp":
-        event2.preventDefault();
-        moveSelection(-1);
-        return true;
-      case "Enter":
-        if (event2.shiftKey) return false;
-      case "Tab":
-        event2.preventDefault();
-        if (get(selectedIndex) >= 0 && get(filteredItems)[get(selectedIndex)]) {
-          handleSelection(get(filteredItems)[get(selectedIndex)]);
-        }
-        return true;
-      case "Escape":
-        event2.preventDefault();
-        hideDropdown();
-        return true;
-      default:
-        return false;
-    }
-  }
-  function getDropdownElementForActiveType() {
-    switch (get(activeDropdown)) {
-      case "file":
-        return get(dropdownElement);
-      case "command":
-        return get(commandDropdownElement);
-      case "provider":
-        return get(providerDropdownElement);
-      case "model":
-        return get(modelDropdownElement);
-      case "creativity":
-        return get(creativityDropdownElement);
-      case "system":
-        return get(systemDropdownElement);
-      default:
-        return null;
-    }
-  }
-  function handleGeneralNavigation(event2) {
-    switch (event2.key) {
-      case "Enter":
-        if (event2.shiftKey) return;
-        event2.preventDefault();
-        submitAction();
-        break;
-      case "Escape":
-        event2.preventDefault();
-        onCancel() === null || onCancel() === void 0 ? void 0 : onCancel()();
-        dispatch("cancel");
-        break;
-    }
-  }
-  function handleKeydown(event2) {
-    if (handleDropdownNavigation(event2)) {
-      return;
-    }
-    if (handleHistoryNavigation(event2)) {
-      return;
-    }
-    handleGeneralNavigation(event2);
-  }
-  function handleHistoryNavigation(event2) {
-    const isHistoryKey = event2.key === "ArrowUp" || event2.key === "ArrowDown";
-    if (!isHistoryKey || get(activeDropdown) !== "none") {
-      return false;
-    }
-    const currentPosition = getCurrentCursorPosition();
-    cursorPosition = currentPosition;
-    if (event2.key === "ArrowUp" && !isCursorOnFirstLine(currentPosition)) {
-      return false;
-    }
-    if (event2.key === "ArrowDown" && !isCursorOnLastLine(currentPosition)) {
-      return false;
-    }
-    const historyLength = getPromptHistoryLength();
-    if (historyLength === 0) return false;
-    if (historyIndex === historyLength) {
-      draftBeforeHistory = textContent;
-    }
-    if (event2.key === "ArrowUp") {
-      if (historyIndex > 0) {
-        historyIndex -= 1;
-      }
-    } else if (event2.key === "ArrowDown") {
-      if (historyIndex < historyLength) {
-        historyIndex += 1;
-      }
-    }
-    const entry = historyIndex >= 0 && historyIndex < historyLength ? getPromptHistoryEntry(historyIndex) : draftBeforeHistory;
-    event2.preventDefault();
-    applyHistoryEntry(entry || "");
-    return true;
-  }
-  function isCursorOnFirstLine(position) {
-    const index3 = Math.max(position - 1, 0);
-    return textContent.lastIndexOf("\n", index3) === -1;
-  }
-  function isCursorOnLastLine(position) {
-    return textContent.indexOf("\n", position) === -1;
+  controller.restoreSelectedSystemPrompt();
+  function handleSelection(item) {
+    controller.handleSelection(item);
   }
   function handleInput(event2) {
-    const target = event2.target;
-    const newTextContent = target.textContent || "";
-    textContent = newTextContent;
-    cursorPosition = getCurrentCursorPosition();
-    historyIndex = getPromptHistoryLength();
-    draftBeforeHistory = textContent;
-    textTokens = parseTextToTokens(textContent);
-    checkForMentionTrigger();
-    checkForCommandTrigger();
-    if (get(activeDropdown) === "provider") {
-      applyProviderFilter();
+    controller.handleInput(event2);
+  }
+  legacy_pre_effect(() => (get(contentElement), get(state2)), () => {
+    if (get(contentElement) && !get(state2).initializedContent) {
+      controller.initializeContent();
     }
-    if (get(activeDropdown) === "model") {
-      applyModelFilter();
-    }
-    const newHtmlContent = renderTokensAsHtml();
-    if (target.innerHTML !== newHtmlContent) {
-      updateContentDisplay();
-    }
-  }
-  function isCharacterWhitespace(character) {
-    return /\s/.test(character);
-  }
-  function isCompleteMention(mentionText) {
-    if (!getFiles()) return false;
-    return selectedFiles.some((filePath) => {
-      var _a7;
-      const file = (_a7 = getFiles()()) === null || _a7 === void 0 ? void 0 : _a7.find((f) => f.path === filePath);
-      if (!file) return false;
-      const fullFileName = `${file.basename}.${file.extension}`;
-      return mentionText === `${MENTION_PREFIX}${fullFileName}`;
-    });
-  }
-  function isCompleteCommand(commandText) {
-    const availableCommands = getAvailableCommands();
-    return availableCommands.some((cmd) => commandText === `${COMMAND_PREFIX}${cmd.name}`);
-  }
-  function getCommandQuery(commandName) {
-    const beforeCursor = textContent.substring(0, cursorPosition);
-    const token = `${COMMAND_PREFIX}${commandName}`;
-    const foundIndex = beforeCursor.lastIndexOf(token);
-    if (foundIndex === -1) return "";
-    const charBefore = foundIndex > 0 ? beforeCursor[foundIndex - 1] : " ";
-    if (foundIndex > 0 && !isCharacterWhitespace(charBefore)) return "";
-    const afterNameIndex = foundIndex + token.length;
-    const afterName = textContent.substring(afterNameIndex);
-    const hasSpace = afterName.startsWith(SPACE_AFTER_COMMAND);
-    const queryStart = hasSpace ? afterNameIndex + SPACE_AFTER_COMMAND.length : afterNameIndex;
-    return textContent.substring(queryStart, cursorPosition).trim().toLowerCase();
-  }
-  function filterAvailableCommands(query) {
-    const availableCommands = getAvailableCommands();
-    const normalizedQuery = query.toLowerCase();
-    return availableCommands.filter((command) => {
-      return command.name.toLowerCase().includes(normalizedQuery) || command.description.toLowerCase().includes(normalizedQuery);
-    }).slice(0, MAX_DROPDOWN_RESULTS);
-  }
-  function filterAvailableFiles(query) {
-    if (!getFiles()) return [];
-    const availableFiles = getFiles()();
-    const normalizedQuery = query.toLowerCase();
-    return availableFiles.filter((file) => {
-      const fullFileName = `${file.basename}.${file.extension}`;
-      const isQueryMatch = file.basename.toLowerCase().includes(normalizedQuery) || fullFileName.toLowerCase().includes(normalizedQuery);
-      const isNotAlreadySelected = !selectedFiles.includes(file.path);
-      return isQueryMatch && isNotAlreadySelected;
-    }).slice(0, MAX_DROPDOWN_RESULTS);
-  }
-  function checkForMentionTrigger() {
-    if (!getFiles()) return;
-    const beforeCursor = textContent.substring(0, cursorPosition);
-    const mentionIndex = beforeCursor.lastIndexOf(MENTION_PREFIX);
-    if (mentionIndex === -1) {
-      hideDropdown();
-      return;
-    }
-    const characterBeforeMention = mentionIndex > 0 ? beforeCursor[mentionIndex - 1] : " ";
-    if (mentionIndex > 0 && !isCharacterWhitespace(characterBeforeMention)) {
-      hideDropdown();
-      return;
-    }
-    const textAfterMention = beforeCursor.substring(mentionIndex + 1);
-    const possibleMention = MENTION_PREFIX + textAfterMention;
-    if (isCompleteMention(possibleMention)) {
-      hideDropdown();
-      return;
-    }
-    mentionStartIndex = mentionIndex;
-    set(filteredItems, filterAvailableFiles(textAfterMention));
-    if (get(filteredItems).length > 0) {
-      set(activeDropdown, "file");
-      set(selectedIndex, 0);
-    } else {
-      hideDropdown();
-    }
-  }
-  function hideDropdown() {
-    set(activeDropdown, "none");
-    set(filteredItems, []);
-    set(selectedIndex, -1);
-    mentionStartIndex = -1;
-    commandStartIndex = -1;
-    allProviders = [];
-    allModels = [];
-    allCreativities = [];
-    allSystemPrompts = [];
-  }
-  function scrollSelectedIntoView(container, index3) {
-    if (!container || index3 < 0) return;
-    const selectedItem = container.children[index3];
-    if (!selectedItem) return;
-    const dropdownRect = container.getBoundingClientRect();
-    const itemRect = selectedItem.getBoundingClientRect();
-    const isItemVisible = itemRect.top >= dropdownRect.top && itemRect.bottom <= dropdownRect.bottom;
-    if (!isItemVisible) {
-      selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-  }
-  function insertFileAtCursor(file) {
-    if (mentionStartIndex === -1) return;
-    if (!selectedFiles.includes(file.path)) {
-      selectedFiles = [...selectedFiles, file.path];
-    }
-    const fullFileName = `${file.basename}.${file.extension}`;
-    const beforeMention = textContent.substring(0, mentionStartIndex);
-    const afterCursor = textContent.substring(cursorPosition);
-    const newText = beforeMention + MENTION_PREFIX + fullFileName + SPACE_AFTER_MENTION + afterCursor;
-    textContent = newText;
-    textTokens = parseTextToTokens(textContent);
-    hideDropdown();
-    if (get(contentElement)) {
-      updateContentDisplay();
-      tick().then(() => {
-        const newCursorPosition = beforeMention.length + fullFileName.length + 2;
-        setCursorPosition(newCursorPosition);
-      });
-    }
-  }
-  function checkForCommandTrigger() {
-    const beforeCursor = textContent.substring(0, cursorPosition);
-    const commandIndex = beforeCursor.lastIndexOf(COMMAND_PREFIX);
-    if (commandIndex === -1) {
-      if (get(activeDropdown) !== "file") {
-        hideDropdown();
-      }
-      return;
-    }
-    const characterBeforeCommand = commandIndex > 0 ? beforeCursor[commandIndex - 1] : " ";
-    if (commandIndex > 0 && !isCharacterWhitespace(characterBeforeCommand)) {
-      if (get(activeDropdown) !== "file") {
-        hideDropdown();
-      }
-      return;
-    }
-    const textAfterCommand = beforeCursor.substring(commandIndex + 1);
-    const firstTokenMatch = textAfterCommand.match(/([^\s\/]+)/);
-    const typedName = firstTokenMatch ? firstTokenMatch[1] : "";
-    const commandName = typedName.toLowerCase();
-    commandStartIndex = commandIndex;
-    const dropdownController = dropdownControllers[commandName];
-    if (dropdownController) {
-      if (get(activeDropdown) !== dropdownController.kind) {
-        void dropdownController.show();
-      } else {
-        dropdownController.refresh();
-      }
-      return;
-    }
-    if (["provider", "model", "creativity", "system"].includes(get(activeDropdown))) {
-      hideDropdown();
-    }
-    set(filteredItems, filterAvailableCommands(textAfterCommand));
-    if (get(filteredItems).length > 0) {
-      set(activeDropdown, "command");
-      set(selectedIndex, 0);
-    } else {
-      hideDropdown();
-    }
-  }
-  function insertCommandAtCursor(command) {
-    if (commandStartIndex === -1) return;
-    const dropdownController = dropdownControllers[command.name];
-    if (dropdownController) {
-      insertCommand(command.name);
-      void dropdownController.show();
-      return;
-    }
-    insertCommand(command.name);
-    const commandLength = COMMAND_PREFIX.length + command.name.length + SPACE_AFTER_COMMAND.length;
-    removeCommandFromText(commandStartIndex, commandLength);
-  }
-  function insertCommand(commandName) {
-    if (commandStartIndex === -1) return;
-    const beforeCommand = textContent.substring(0, commandStartIndex);
-    const afterCursor = textContent.substring(cursorPosition);
-    const newText = beforeCommand + COMMAND_PREFIX + commandName + SPACE_AFTER_COMMAND + afterCursor;
-    textContent = newText;
-    textTokens = parseTextToTokens(textContent);
-    hideDropdown();
-    if (get(contentElement)) {
-      updateContentDisplay();
-      tick().then(() => {
-        const newCursorPosition = beforeCommand.length + commandName.length + 2;
-        setCursorPosition(newCursorPosition);
-      });
-    }
-  }
-  const selectionHandlers = {
-    none: () => void 0,
-    file: (item) => insertFileAtCursor(item),
-    command: (item) => insertCommandAtCursor(item),
-    provider: (item) => selectProvider(item),
-    model: (item) => selectModel(item),
-    creativity: (item) => selectCreativity(item),
-    system: (item) => selectSystemPrompt(item)
-  };
-  function handleSelection(item) {
-    var _a7;
-    void ((_a7 = selectionHandlers[get(activeDropdown)]) === null || _a7 === void 0 ? void 0 : _a7.call(selectionHandlers, item));
-  }
-  function selectProvider(provider) {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        if (onProviderChange()) {
-          yield onProviderChange()(provider.id);
-        }
-        setProviderBadgeLabel(provider.providerName, provider.name);
-        providerId(provider.id);
-        providerName = provider.providerName;
-        highlightBadgeTemporarily();
-        removeCommandAndQuery("provider");
-        hideDropdown();
-      } catch (error) {
-        console.error("Error selecting provider:", error);
-        hideDropdown();
-      }
-    });
-  }
-  function selectModel(model) {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        if (onModelChange()) {
-          yield onModelChange()(model.name);
-        }
-        setProviderBadgeLabel(providerName, model.name);
-        highlightBadgeTemporarily();
-        removeCommandAndQuery("model");
-        hideDropdown();
-      } catch (error) {
-        console.error("Error selecting model:", error);
-        hideDropdown();
-      }
-    });
-  }
-  function applyCreativityFilter() {
-    if (!allCreativities || allCreativities.length === 0) return;
-    const q = getCommandQuery("creativity");
-    const matches2 = allCreativities.filter((c) => fuzzyMatch(c.name, q)).slice(0, MAX_DROPDOWN_RESULTS);
-    updateFilteredDropdownItems(matches2);
-    if (q) {
-      const norm = (s) => s.toLowerCase();
-      const exact = matches2.find((c) => norm(c.name) === norm(q));
-      if (exact) {
-        void selectCreativity(exact);
-      }
-    }
-  }
-  function showCreativityDropdown() {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        allCreativities = getCreativityOptions();
-        applyCreativityFilter();
-        if (get(filteredItems).length > 0) {
-          set(activeDropdown, "creativity");
-          set(selectedIndex, 0);
-        }
-      } catch (error) {
-        console.error("Error showing creativity dropdown:", error);
-      }
-    });
-  }
-  function selectCreativity(option2) {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        if (onCreativityChange()) {
-          yield onCreativityChange()(option2.id);
-        }
-        creativityBadge = option2.name;
-        setProviderBadgeLabel(providerName, modelName);
-        highlightBadgeTemporarily();
-        removeCommandAndQuery("creativity");
-        hideDropdown();
-      } catch (error) {
-        console.error("Error selecting creativity:", error);
-        hideDropdown();
-      }
-    });
-  }
-  function applySystemFilter() {
-    if (!allSystemPrompts || allSystemPrompts.length === 0) return;
-    const q = getCommandQuery("system");
-    const normalizedQuery = q.toLowerCase();
-    const resetOption = allSystemPrompts.find((s) => s.id === CLEAR_SYSTEM_PROMPT_ID);
-    const promptOptions = allSystemPrompts.filter((s) => s.id !== CLEAR_SYSTEM_PROMPT_ID);
-    const matches2 = promptOptions.filter((s) => normalizedQuery ? s.name.toLowerCase().includes(normalizedQuery) : true).sort((a, b) => a.name.localeCompare(b.name)).slice(0, resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? MAX_DROPDOWN_RESULTS - 1 : MAX_DROPDOWN_RESULTS);
-    const visibleMatches = resetOption && (!normalizedQuery || resetOption.name.toLowerCase().includes(normalizedQuery)) ? [resetOption, ...matches2] : matches2;
-    updateFilteredDropdownItems(visibleMatches);
-    if (q) {
-      const norm = (s) => s.toLowerCase();
-      const exact = promptOptions.find((s) => norm(s.name) === norm(q));
-      if (exact) {
-        void selectSystemPrompt(exact);
-      }
-    }
-  }
-  function showSystemDropdown() {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (!getSystemPrompts()) return;
-      try {
-        const prompts = getSystemPrompts()();
-        allSystemPrompts = get(selectedSystemPromptName) ? [
-          {
-            id: CLEAR_SYSTEM_PROMPT_ID,
-            name: I18n.t("commands.actionPalette.clearSystemPrompt"),
-            system: ""
-          },
-          ...prompts
-        ] : prompts;
-        applySystemFilter();
-        if (get(filteredItems).length > 0) {
-          set(activeDropdown, "system");
-          set(selectedIndex, 0);
-        }
-      } catch (error) {
-        console.error("Error showing system dropdown:", error);
-      }
-    });
-  }
-  function selectSystemPrompt(option2) {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        if (option2.id === CLEAR_SYSTEM_PROMPT_ID) {
-          yield clearSystemPromptSelection();
-          removeCommandAndQuery("system");
-          hideDropdown();
-          return;
-        }
-        selectedSystemPromptValue = option2.system;
-        set(selectedSystemPromptName, option2.name);
-        yield onSystemPromptChange() === null || onSystemPromptChange() === void 0 ? void 0 : onSystemPromptChange()(option2.id);
-        highlightBadgeTemporarily();
-        removeCommandAndQuery("system");
-        hideDropdown();
-      } catch (error) {
-        console.error("Error selecting system prompt:", error);
-        hideDropdown();
-      }
-    });
-  }
-  function clearSystemPromptSelection() {
-    return __awaiter(this, void 0, void 0, function* () {
-      selectedSystemPromptValue = void 0;
-      set(selectedSystemPromptName, "");
-      yield onSystemPromptChange() === null || onSystemPromptChange() === void 0 ? void 0 : onSystemPromptChange()(null);
-      highlightBadgeTemporarily();
-    });
-  }
-  function formatSystemPreview(text2) {
-    const singleLine = text2.replace(/\r?\n/g, " ");
-    if (singleLine.length <= SYSTEM_PREVIEW_LENGTH) return singleLine;
-    return `${singleLine.slice(0, SYSTEM_PREVIEW_LENGTH - 1)}\u2026`;
-  }
-  function fuzzyMatch(target, query) {
-    if (!query) return true;
-    let ti = 0;
-    const t = target.toLowerCase();
-    for (const qc of query) {
-      ti = t.indexOf(qc, ti);
-      if (ti === -1) return false;
-      ti++;
-    }
-    return true;
-  }
-  function applyProviderFilter() {
-    if (!allProviders || allProviders.length === 0) return;
-    const q = getCommandQuery("provider");
-    const matches2 = allProviders.filter((p) => fuzzyMatch(p.name, q) || fuzzyMatch(p.providerName, q)).slice(0, MAX_DROPDOWN_RESULTS);
-    updateFilteredDropdownItems(matches2);
-    if (q && matches2.length === 1 && matches2[0].name.toLowerCase() === q) {
-      void selectProvider(matches2[0]);
-    }
-  }
-  function removeCommandAndQuery(commandName) {
-    const token = `${COMMAND_PREFIX}${commandName}`;
-    const foundIndex = textContent.lastIndexOf(token);
-    if (foundIndex === -1) return;
-    const charBefore = foundIndex > 0 ? textContent[foundIndex - 1] : " ";
-    if (foundIndex > 0 && !isCharacterWhitespace(charBefore)) return;
-    let removalStart = foundIndex;
-    let idx = foundIndex + token.length;
-    if (textContent[idx] === SPACE_AFTER_COMMAND) {
-      idx += SPACE_AFTER_COMMAND.length;
-    }
-    while (idx < textContent.length) {
-      const ch = textContent[idx];
-      if (isCharacterWhitespace(ch) || ch === "/" || ch === "@") break;
-      idx++;
-    }
-    const removalEnd = idx;
-    const before = textContent.substring(0, removalStart);
-    const after = textContent.substring(removalEnd);
-    textContent = before + after;
-    textTokens = parseTextToTokens(textContent);
-    if (get(contentElement)) {
-      updateContentDisplay();
-      tick().then(() => {
-        setCursorPosition(before.length);
-      });
-    }
-  }
-  function showProviderDropdown() {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (!getProviders()) return;
-      try {
-        const providers = yield fetchAvailableProviders();
-        allProviders = providers;
-        applyProviderFilter();
-        if (get(filteredItems).length > 0) {
-          set(activeDropdown, "provider");
-          set(selectedIndex, 0);
-        } else {
-          console.warn("No providers available");
-        }
-      } catch (error) {
-        console.error("Error showing provider dropdown:", error);
-      }
-    });
-  }
-  function applyModelFilter() {
-    if (!allModels || allModels.length === 0) return;
-    const q = getCommandQuery("model");
-    const matches2 = allModels.filter((m) => fuzzyMatch(m.name, q)).slice(0, MAX_DROPDOWN_RESULTS);
-    updateFilteredDropdownItems(matches2);
-    if (q && matches2.length === 1 && matches2[0].name.toLowerCase() === q) {
-      void selectModel(matches2[0]);
-    }
-  }
-  function showModelDropdown() {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (!getModels() || !providerId()) return;
-      try {
-        const models = yield fetchAvailableModels();
-        allModels = models;
-        applyModelFilter();
-        if (get(filteredItems).length > 0) {
-          set(activeDropdown, "model");
-          set(selectedIndex, 0);
-        } else {
-          console.warn("No models available");
-        }
-      } catch (error) {
-        console.error("Error showing model dropdown:", error);
-      }
-    });
-  }
-  function handleContentClick(event2) {
-    const target = event2.target;
-    if (target.classList.contains("file-mention")) {
-      const filePath = target.dataset.path;
-      if (filePath) {
-        removeFileReference(filePath);
-      }
-    }
-  }
-  function createFileRemovalPattern(file) {
-    const fullFileName = `${file.basename}.${file.extension}`;
-    const escapedFileName = fullFileName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`${MENTION_PREFIX}${escapedFileName}\\s?`, "g");
-  }
-  function removeCommandFromText(commandStartIndex2, commandLength) {
-    if (commandStartIndex2 === -1) return;
-    const beforeCommand = textContent.substring(0, commandStartIndex2);
-    const afterCommand = textContent.substring(commandStartIndex2 + commandLength);
-    textContent = beforeCommand + afterCommand;
-    textTokens = parseTextToTokens(textContent);
-    if (get(contentElement)) {
-      updateContentDisplay();
-      tick().then(() => {
-        setCursorPosition(beforeCommand.length);
-      });
-    }
-  }
-  function removeFileReference(filePath) {
-    var _a7;
-    selectedFiles = selectedFiles.filter((path) => path !== filePath);
-    const file = (_a7 = getFiles() === null || getFiles() === void 0 ? void 0 : getFiles()()) === null || _a7 === void 0 ? void 0 : _a7.find((f) => f.path === filePath);
-    if (file) {
-      const removalPattern = createFileRemovalPattern(file);
-      textContent = textContent.replace(removalPattern, "");
-      textTokens = parseTextToTokens(textContent);
-      updateContentDisplay();
-    }
-  }
-  function submitAction() {
-    addToPromptHistory(textContent);
-    historyIndex = getPromptHistoryLength();
-    draftBeforeHistory = textContent;
-    const payload = {
-      text: textContent,
-      selectedFiles,
-      systemPrompt: selectedSystemPromptValue
-    };
-    onSubmit() === null || onSubmit() === void 0 ? void 0 : onSubmit()(payload);
-    dispatch("submit", payload);
-  }
-  function handleKeyup(event2) {
-    if (event2.key === "Backspace" || event2.key === "Delete") {
-      const currentlyMentionedFiles = textTokens.filter((token) => token.type === "file" && token.filePath).map((token) => token.filePath);
-      const filesToRemove = selectedFiles.filter((filePath) => !currentlyMentionedFiles.includes(filePath));
-      if (filesToRemove.length > 0) {
-        selectedFiles = selectedFiles.filter((path) => currentlyMentionedFiles.includes(path));
-      }
-    }
-  }
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(fileItems, get(activeDropdown) === "file" ? get(filteredItems) : []);
   });
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(commandItems, get(activeDropdown) === "command" ? get(filteredItems) : []);
+  legacy_pre_effect(() => get(state2), () => {
+    set(fileItems, get(state2).activeDropdown === "file" ? get(state2).filteredItems : []);
   });
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(providerItems, get(activeDropdown) === "provider" ? get(filteredItems) : []);
+  legacy_pre_effect(() => get(state2), () => {
+    set(commandItems, get(state2).activeDropdown === "command" ? get(state2).filteredItems : []);
   });
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(modelItems, get(activeDropdown) === "model" ? get(filteredItems) : []);
+  legacy_pre_effect(() => get(state2), () => {
+    set(providerItems, get(state2).activeDropdown === "provider" ? get(state2).filteredItems : []);
   });
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(creativityItems, get(activeDropdown) === "creativity" ? get(filteredItems) : []);
+  legacy_pre_effect(() => get(state2), () => {
+    set(modelItems, get(state2).activeDropdown === "model" ? get(state2).filteredItems : []);
   });
-  legacy_pre_effect(() => (get(activeDropdown), get(filteredItems)), () => {
-    set(systemItems, get(activeDropdown) === "system" ? get(filteredItems) : []);
+  legacy_pre_effect(() => get(state2), () => {
+    set(creativityItems, get(state2).activeDropdown === "creativity" ? get(state2).filteredItems : []);
+  });
+  legacy_pre_effect(() => get(state2), () => {
+    set(systemItems, get(state2).activeDropdown === "system" ? get(state2).filteredItems : []);
   });
   legacy_pre_effect_reset();
   var $$exports = {
@@ -14094,10 +14711,10 @@ function ActionPalette($$anchor, $$props) {
       flushSync();
     },
     get getSystemPrompts() {
-      return getSystemPrompts();
+      return getSystemPrompts2();
     },
     set getSystemPrompts($$value) {
-      getSystemPrompts($$value);
+      getSystemPrompts2($$value);
       flushSync();
     },
     get selectedSystemPromptId() {
@@ -14105,6 +14722,13 @@ function ActionPalette($$anchor, $$props) {
     },
     set selectedSystemPromptId($$value) {
       selectedSystemPromptId($$value);
+      flushSync();
+    },
+    get initialSelectedFiles() {
+      return initialSelectedFiles();
+    },
+    set initialSelectedFiles($$value) {
+      initialSelectedFiles($$value);
       flushSync();
     },
     get onSystemPromptChange() {
@@ -14132,300 +14756,145 @@ function ActionPalette($$anchor, $$props) {
     $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
   };
   init();
-  var div = root();
+  var div = root2();
   var div_1 = child(div);
   bind_this(div_1, ($$value) => set(contentElement, $$value), () => get(contentElement));
   var node = sibling(div_1, 2);
   {
-    var consequent_8 = ($$anchor2) => {
-      var fragment = root_1();
-      var div_2 = first_child(fragment);
-      each(div_2, 5, () => get(fileItems), index2, ($$anchor3, item, index3) => {
-        var fragment_1 = comment();
-        var node_1 = first_child(fragment_1);
-        {
-          var consequent = ($$anchor4) => {
-            var div_3 = root_3();
-            var span = child(div_3);
-            var text_1 = child(span);
-            reset(span);
-            var span_1 = sibling(span, 2);
-            var text_2 = child(span_1, true);
-            reset(span_1);
-            reset(div_3);
-            template_effect(() => {
-              var _a7, _b3;
-              set_class(div_3, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_3, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_1, `${(_a7 = (get(item), untrack(() => get(item).basename))) != null ? _a7 : ""}.${(_b3 = (get(item), untrack(() => get(item).extension))) != null ? _b3 : ""}`);
-              set_text(text_2, (get(item), untrack(() => get(item).path)));
-            });
-            event("click", div_3, () => handleSelection(get(item)));
-            event("keydown", div_3, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_3);
-          };
-          if_block(node_1, ($$render) => {
-            if (get(activeDropdown) === "file") $$render(consequent);
-          });
-        }
-        append($$anchor3, fragment_1);
+    var consequent = ($$anchor2) => {
+      ActionPaletteDropdowns($$anchor2, {
+        get activeDropdown() {
+          return get(state2), untrack(() => get(state2).activeDropdown);
+        },
+        get selectedIndex() {
+          return get(state2), untrack(() => get(state2).selectedIndex);
+        },
+        get fileItems() {
+          return get(fileItems);
+        },
+        get commandItems() {
+          return get(commandItems);
+        },
+        get providerItems() {
+          return get(providerItems);
+        },
+        get modelItems() {
+          return get(modelItems);
+        },
+        get creativityItems() {
+          return get(creativityItems);
+        },
+        get systemItems() {
+          return get(systemItems);
+        },
+        onSelect: handleSelection,
+        get formatSystemPreview() {
+          return formatSystemPreview;
+        },
+        get dropdownElement() {
+          return get(dropdownElement);
+        },
+        set dropdownElement($$value) {
+          set(dropdownElement, $$value);
+        },
+        get commandDropdownElement() {
+          return get(commandDropdownElement);
+        },
+        set commandDropdownElement($$value) {
+          set(commandDropdownElement, $$value);
+        },
+        get providerDropdownElement() {
+          return get(providerDropdownElement);
+        },
+        set providerDropdownElement($$value) {
+          set(providerDropdownElement, $$value);
+        },
+        get modelDropdownElement() {
+          return get(modelDropdownElement);
+        },
+        set modelDropdownElement($$value) {
+          set(modelDropdownElement, $$value);
+        },
+        get creativityDropdownElement() {
+          return get(creativityDropdownElement);
+        },
+        set creativityDropdownElement($$value) {
+          set(creativityDropdownElement, $$value);
+        },
+        get systemDropdownElement() {
+          return get(systemDropdownElement);
+        },
+        set systemDropdownElement($$value) {
+          set(systemDropdownElement, $$value);
+        },
+        $$legacy: true
       });
-      reset(div_2);
-      bind_this(div_2, ($$value) => set(dropdownElement, $$value), () => get(dropdownElement));
-      var div_4 = sibling(div_2, 2);
-      each(div_4, 5, () => get(commandItems), index2, ($$anchor3, item, index3) => {
-        var fragment_2 = comment();
-        var node_2 = first_child(fragment_2);
-        {
-          var consequent_1 = ($$anchor4) => {
-            var div_5 = root_5();
-            var span_2 = child(div_5);
-            var text_3 = child(span_2);
-            reset(span_2);
-            var span_3 = sibling(span_2, 2);
-            var text_4 = child(span_3, true);
-            reset(span_3);
-            reset(div_5);
-            template_effect(() => {
-              var _a7;
-              set_class(div_5, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_5, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_3, `/${(_a7 = (get(item), untrack(() => get(item).name))) != null ? _a7 : ""}`);
-              set_text(text_4, (get(item), untrack(() => get(item).description)));
-            });
-            event("click", div_5, () => handleSelection(get(item)));
-            event("keydown", div_5, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_5);
-          };
-          if_block(node_2, ($$render) => {
-            if (get(activeDropdown) === "command") $$render(consequent_1);
-          });
-        }
-        append($$anchor3, fragment_2);
-      });
-      reset(div_4);
-      bind_this(div_4, ($$value) => set(commandDropdownElement, $$value), () => get(commandDropdownElement));
-      var div_6 = sibling(div_4, 2);
-      each(div_6, 5, () => get(providerItems), index2, ($$anchor3, item, index3) => {
-        var fragment_3 = comment();
-        var node_3 = first_child(fragment_3);
-        {
-          var consequent_3 = ($$anchor4) => {
-            var div_7 = root_7();
-            var div_8 = child(div_7);
-            var span_4 = child(div_8);
-            var text_5 = child(span_4, true);
-            reset(span_4);
-            var node_4 = sibling(span_4, 2);
-            {
-              var consequent_2 = ($$anchor5) => {
-                var span_5 = root_8();
-                var text_6 = child(span_5, true);
-                reset(span_5);
-                template_effect(() => set_text(text_6, (get(item), untrack(() => get(item).providerUrl))));
-                append($$anchor5, span_5);
-              };
-              if_block(node_4, ($$render) => {
-                if (get(item), untrack(() => get(item).providerUrl)) $$render(consequent_2);
-              });
-            }
-            reset(div_8);
-            var span_6 = sibling(div_8, 2);
-            var text_7 = child(span_6, true);
-            reset(span_6);
-            reset(div_7);
-            template_effect(() => {
-              set_class(div_7, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_7, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_5, (get(item), untrack(() => get(item).providerName)));
-              set_text(text_7, (get(item), untrack(() => get(item).name)));
-            });
-            event("click", div_7, () => handleSelection(get(item)));
-            event("keydown", div_7, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_7);
-          };
-          if_block(node_3, ($$render) => {
-            if (get(activeDropdown) === "provider") $$render(consequent_3);
-          });
-        }
-        append($$anchor3, fragment_3);
-      });
-      reset(div_6);
-      bind_this(div_6, ($$value) => set(providerDropdownElement, $$value), () => get(providerDropdownElement));
-      var div_9 = sibling(div_6, 2);
-      each(div_9, 5, () => get(modelItems), index2, ($$anchor3, item, index3) => {
-        var fragment_4 = comment();
-        var node_5 = first_child(fragment_4);
-        {
-          var consequent_4 = ($$anchor4) => {
-            var div_10 = root_10();
-            var span_7 = child(div_10);
-            var text_8 = child(span_7, true);
-            reset(span_7);
-            reset(div_10);
-            template_effect(() => {
-              set_class(div_10, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_10, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_8, (get(item), untrack(() => get(item).name)));
-            });
-            event("click", div_10, () => handleSelection(get(item)));
-            event("keydown", div_10, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_10);
-          };
-          if_block(node_5, ($$render) => {
-            if (get(activeDropdown) === "model") $$render(consequent_4);
-          });
-        }
-        append($$anchor3, fragment_4);
-      });
-      reset(div_9);
-      bind_this(div_9, ($$value) => set(modelDropdownElement, $$value), () => get(modelDropdownElement));
-      var div_11 = sibling(div_9, 2);
-      each(div_11, 5, () => get(creativityItems), index2, ($$anchor3, item, index3) => {
-        var fragment_5 = comment();
-        var node_6 = first_child(fragment_5);
-        {
-          var consequent_5 = ($$anchor4) => {
-            var div_12 = root_12();
-            var span_8 = child(div_12);
-            var text_9 = child(span_8, true);
-            reset(span_8);
-            reset(div_12);
-            template_effect(() => {
-              set_class(div_12, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_12, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_9, (get(item), untrack(() => get(item).name)));
-            });
-            event("click", div_12, () => handleSelection(get(item)));
-            event("keydown", div_12, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_12);
-          };
-          if_block(node_6, ($$render) => {
-            if (get(activeDropdown) === "creativity") $$render(consequent_5);
-          });
-        }
-        append($$anchor3, fragment_5);
-      });
-      reset(div_11);
-      bind_this(div_11, ($$value) => set(creativityDropdownElement, $$value), () => get(creativityDropdownElement));
-      var div_13 = sibling(div_11, 2);
-      each(div_13, 5, () => get(systemItems), index2, ($$anchor3, item, index3) => {
-        var fragment_6 = comment();
-        var node_7 = first_child(fragment_6);
-        {
-          var consequent_7 = ($$anchor4) => {
-            var div_14 = root_14();
-            var span_9 = child(div_14);
-            var text_10 = child(span_9, true);
-            reset(span_9);
-            var node_8 = sibling(span_9, 2);
-            {
-              var consequent_6 = ($$anchor5) => {
-                var span_10 = root_15();
-                var text_11 = child(span_10, true);
-                reset(span_10);
-                template_effect(($0) => set_text(text_11, $0), [
-                  () => (get(item), untrack(() => formatSystemPreview(get(item).system)))
-                ]);
-                append($$anchor5, span_10);
-              };
-              if_block(node_8, ($$render) => {
-                if (get(item), untrack(() => get(item).id !== CLEAR_SYSTEM_PROMPT_ID)) $$render(consequent_6);
-              });
-            }
-            reset(div_14);
-            template_effect(() => {
-              set_class(div_14, 1, `local-gpt-dropdown-item ${index3 === get(selectedIndex) ? "local-gpt-selected" : ""}`);
-              set_attribute2(div_14, "aria-selected", index3 === get(selectedIndex));
-              set_text(text_10, (get(item), untrack(() => get(item).name)));
-            });
-            event("click", div_14, () => handleSelection(get(item)));
-            event("keydown", div_14, (event2) => event2.key === "Enter" && handleSelection(get(item)));
-            append($$anchor4, div_14);
-          };
-          if_block(node_7, ($$render) => {
-            if (get(activeDropdown) === "system") $$render(consequent_7);
-          });
-        }
-        append($$anchor3, fragment_6);
-      });
-      reset(div_13);
-      bind_this(div_13, ($$value) => set(systemDropdownElement, $$value), () => get(systemDropdownElement));
-      template_effect(() => {
-        set_style(div_2, `display: ${get(activeDropdown) === "file" ? "block" : "none"}`);
-        set_style(div_4, `display: ${get(activeDropdown) === "command" ? "block" : "none"}`);
-        set_style(div_6, `display: ${get(activeDropdown) === "provider" ? "block" : "none"}`);
-        set_style(div_9, `display: ${get(activeDropdown) === "model" ? "block" : "none"}`);
-        set_style(div_11, `display: ${get(activeDropdown) === "creativity" ? "block" : "none"}`);
-        set_style(div_13, `display: ${get(activeDropdown) === "system" ? "block" : "none"}`);
-      });
-      append($$anchor2, fragment);
     };
     if_block(node, ($$render) => {
-      if (get(activeDropdown), get(filteredItems), untrack(() => get(activeDropdown) !== "none" && get(filteredItems).length > 0)) $$render(consequent_8);
+      if (get(state2), untrack(() => get(state2).activeDropdown !== "none" && get(state2).filteredItems.length > 0)) $$render(consequent);
     });
   }
-  var div_15 = sibling(node, 2);
-  var node_9 = child(div_15);
+  var div_2 = sibling(node, 2);
+  var node_1 = child(div_2);
   {
-    var consequent_9 = ($$anchor2) => {
-      var div_16 = root_16();
-      var span_11 = child(div_16);
-      var text_12 = child(span_11, true);
-      reset(span_11);
-      reset(div_16);
+    var consequent_1 = ($$anchor2) => {
+      var div_3 = root_22();
+      var span = child(div_3);
+      var text2 = child(span, true);
+      reset(span);
+      reset(div_3);
       template_effect(() => {
-        set_class(div_16, 1, clsx2(get(badgeHighlight) ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator"));
-        set_text(text_12, get(selectedSystemPromptName));
+        set_class(div_3, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator"))));
+        set_text(text2, (get(state2), untrack(() => get(state2).selectedSystemPromptName)));
       });
-      append($$anchor2, div_16);
+      append($$anchor2, div_3);
     };
     var alternate = ($$anchor2) => {
-      var div_17 = root_17();
-      var text_13 = child(div_17, true);
-      reset(div_17);
-      template_effect(($0) => set_text(text_13, $0), [
+      var div_4 = root_3();
+      var text_1 = child(div_4, true);
+      reset(div_4);
+      template_effect(($0) => set_text(text_1, $0), [
         () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.hint")))
       ]);
-      append($$anchor2, div_17);
+      append($$anchor2, div_4);
     };
-    if_block(node_9, ($$render) => {
-      if (get(selectedSystemPromptName)) $$render(consequent_9);
+    if_block(node_1, ($$render) => {
+      if (get(state2), untrack(() => get(state2).selectedSystemPromptName)) $$render(consequent_1);
       else $$render(alternate, -1);
     });
   }
-  var node_10 = sibling(node_9, 2);
+  var node_2 = sibling(node_1, 2);
   {
-    var consequent_10 = ($$anchor2) => {
-      var div_18 = root_18();
-      var text_14 = child(div_18, true);
-      reset(div_18);
+    var consequent_2 = ($$anchor2) => {
+      var div_5 = root_42();
+      var text_2 = child(div_5, true);
+      reset(div_5);
       template_effect(() => {
-        set_class(div_18, 1, clsx2(get(badgeHighlight) ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label"));
-        set_text(text_14, providerLabel());
+        set_class(div_5, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label"))));
+        set_text(text_2, providerLabel());
       });
-      append($$anchor2, div_18);
+      append($$anchor2, div_5);
     };
-    if_block(node_10, ($$render) => {
-      if (providerLabel()) $$render(consequent_10);
+    if_block(node_2, ($$render) => {
+      if (providerLabel()) $$render(consequent_2);
     });
   }
-  reset(div_15);
+  reset(div_2);
   reset(div);
   template_effect(() => {
     set_attribute2(div_1, "aria-label", placeholder());
     set_attribute2(div_1, "data-placeholder", placeholder());
   });
-  event("keydown", div_1, handleKeydown);
+  event("keydown", div_1, (event2) => controller.handleKeydown(event2));
   event("input", div_1, handleInput);
-  event("keyup", div_1, handleKeyup);
-  event("click", div_1, handleContentClick);
+  event("keyup", div_1, (event2) => controller.handleKeyup(event2));
+  event("click", div_1, (event2) => controller.handleContentClick(event2));
   append($$anchor, div);
   return pop($$exports);
 }
 
 // src/ui/actionPalettePlugin.ts
-var SvelteActionPaletteWidget = class extends import_view3.WidgetType {
+var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
   constructor(options) {
     super();
     this.options = options;
@@ -14452,6 +14921,7 @@ var SvelteActionPaletteWidget = class extends import_view3.WidgetType {
         getSystemPrompts: this.options.getSystemPrompts,
         selectedSystemPromptId: this.options.selectedSystemPromptId,
         onSystemPromptChange: this.options.onSystemPromptChange,
+        initialSelectedFiles: this.options.initialSelectedFiles,
         onSubmit: (event2) => {
           var _a7, _b3;
           (_b3 = (_a7 = this.options).onSubmit) == null ? void 0 : _b3.call(
@@ -14499,13 +14969,13 @@ function mapRanges(ranges, changes) {
 function buildDecorations(pos, options, fakeSelections) {
   const builder = new import_state3.RangeSetBuilder();
   const widget = new SvelteActionPaletteWidget(options);
-  builder.add(pos, pos, import_view3.Decoration.widget({ widget, side: -1, block: true }));
+  builder.add(pos, pos, import_view5.Decoration.widget({ widget, side: -1, block: true }));
   if (fakeSelections) {
     for (const r2 of fakeSelections) {
       builder.add(
         r2.from,
         r2.to,
-        import_view3.Decoration.mark({ class: "local-gpt-fake-selection" })
+        import_view5.Decoration.mark({ class: "local-gpt-fake-selection" })
       );
     }
   }
@@ -14514,7 +14984,7 @@ function buildDecorations(pos, options, fakeSelections) {
 var actionPaletteStateField = import_state3.StateField.define({
   create() {
     return {
-      deco: import_view3.Decoration.none,
+      deco: import_view5.Decoration.none,
       pos: null,
       fakeSelections: null,
       previousSelectionRanges: null,
@@ -14552,7 +15022,7 @@ var actionPaletteStateField = import_state3.StateField.define({
         fakeSelections = null;
         previousSelectionRanges = null;
         previousCursor = null;
-        deco = import_view3.Decoration.none;
+        deco = import_view5.Decoration.none;
       }
     }
     return {
@@ -14563,7 +15033,7 @@ var actionPaletteStateField = import_state3.StateField.define({
       previousCursor
     };
   },
-  provide: (f) => import_view3.EditorView.decorations.from(f, (v) => v.deco)
+  provide: (f) => import_view5.EditorView.decorations.from(f, (v) => v.deco)
 });
 var actionPalettePlugin = [actionPaletteStateField];
 function showActionPalette(view, pos, options) {
@@ -14597,6 +15067,748 @@ function hideActionPalette(view) {
   view.dispatch({ effects: HideActionPaletteEffect.of(null) });
 }
 
+// node_modules/idb/build/index.js
+var instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+var idbProxyableTypes;
+var cursorAdvanceMethods;
+function getIdbProxyableTypes() {
+  return idbProxyableTypes || (idbProxyableTypes = [
+    IDBDatabase,
+    IDBObjectStore,
+    IDBIndex,
+    IDBCursor,
+    IDBTransaction
+  ]);
+}
+function getCursorAdvanceMethods() {
+  return cursorAdvanceMethods || (cursorAdvanceMethods = [
+    IDBCursor.prototype.advance,
+    IDBCursor.prototype.continue,
+    IDBCursor.prototype.continuePrimaryKey
+  ]);
+}
+var transactionDoneMap = /* @__PURE__ */ new WeakMap();
+var transformCache = /* @__PURE__ */ new WeakMap();
+var reverseTransformCache = /* @__PURE__ */ new WeakMap();
+function promisifyRequest(request) {
+  const promise = new Promise((resolve, reject) => {
+    const unlisten = () => {
+      request.removeEventListener("success", success);
+      request.removeEventListener("error", error);
+    };
+    const success = () => {
+      resolve(wrap(request.result));
+      unlisten();
+    };
+    const error = () => {
+      reject(request.error);
+      unlisten();
+    };
+    request.addEventListener("success", success);
+    request.addEventListener("error", error);
+  });
+  reverseTransformCache.set(promise, request);
+  return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+  if (transactionDoneMap.has(tx))
+    return;
+  const done = new Promise((resolve, reject) => {
+    const unlisten = () => {
+      tx.removeEventListener("complete", complete);
+      tx.removeEventListener("error", error);
+      tx.removeEventListener("abort", error);
+    };
+    const complete = () => {
+      resolve();
+      unlisten();
+    };
+    const error = () => {
+      reject(tx.error || new DOMException("AbortError", "AbortError"));
+      unlisten();
+    };
+    tx.addEventListener("complete", complete);
+    tx.addEventListener("error", error);
+    tx.addEventListener("abort", error);
+  });
+  transactionDoneMap.set(tx, done);
+}
+var idbProxyTraps = {
+  get(target, prop2, receiver) {
+    if (target instanceof IDBTransaction) {
+      if (prop2 === "done")
+        return transactionDoneMap.get(target);
+      if (prop2 === "store") {
+        return receiver.objectStoreNames[1] ? void 0 : receiver.objectStore(receiver.objectStoreNames[0]);
+      }
+    }
+    return wrap(target[prop2]);
+  },
+  set(target, prop2, value) {
+    target[prop2] = value;
+    return true;
+  },
+  has(target, prop2) {
+    if (target instanceof IDBTransaction && (prop2 === "done" || prop2 === "store")) {
+      return true;
+    }
+    return prop2 in target;
+  }
+};
+function replaceTraps(callback) {
+  idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+  if (getCursorAdvanceMethods().includes(func)) {
+    return function(...args) {
+      func.apply(unwrap(this), args);
+      return wrap(this.request);
+    };
+  }
+  return function(...args) {
+    return wrap(func.apply(unwrap(this), args));
+  };
+}
+function transformCachableValue(value) {
+  if (typeof value === "function")
+    return wrapFunction(value);
+  if (value instanceof IDBTransaction)
+    cacheDonePromiseForTransaction(value);
+  if (instanceOfAny(value, getIdbProxyableTypes()))
+    return new Proxy(value, idbProxyTraps);
+  return value;
+}
+function wrap(value) {
+  if (value instanceof IDBRequest)
+    return promisifyRequest(value);
+  if (transformCache.has(value))
+    return transformCache.get(value);
+  const newValue = transformCachableValue(value);
+  if (newValue !== value) {
+    transformCache.set(value, newValue);
+    reverseTransformCache.set(newValue, value);
+  }
+  return newValue;
+}
+var unwrap = (value) => reverseTransformCache.get(value);
+function openDB(name, version3, { blocked, upgrade, blocking, terminated } = {}) {
+  const request = indexedDB.open(name, version3);
+  const openPromise = wrap(request);
+  if (upgrade) {
+    request.addEventListener("upgradeneeded", (event2) => {
+      upgrade(wrap(request.result), event2.oldVersion, event2.newVersion, wrap(request.transaction), event2);
+    });
+  }
+  if (blocked) {
+    request.addEventListener("blocked", (event2) => blocked(
+      // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+      event2.oldVersion,
+      event2.newVersion,
+      event2
+    ));
+  }
+  openPromise.then((db) => {
+    if (terminated)
+      db.addEventListener("close", () => terminated());
+    if (blocking) {
+      db.addEventListener("versionchange", (event2) => blocking(event2.oldVersion, event2.newVersion, event2));
+    }
+  }).catch(() => {
+  });
+  return openPromise;
+}
+var readMethods = ["get", "getKey", "getAll", "getAllKeys", "count"];
+var writeMethods = ["put", "add", "delete", "clear"];
+var cachedMethods = /* @__PURE__ */ new Map();
+function getMethod(target, prop2) {
+  if (!(target instanceof IDBDatabase && !(prop2 in target) && typeof prop2 === "string")) {
+    return;
+  }
+  if (cachedMethods.get(prop2))
+    return cachedMethods.get(prop2);
+  const targetFuncName = prop2.replace(/FromIndex$/, "");
+  const useIndex = prop2 !== targetFuncName;
+  const isWrite = writeMethods.includes(targetFuncName);
+  if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) || !(isWrite || readMethods.includes(targetFuncName))
+  ) {
+    return;
+  }
+  const method = async function(storeName, ...args) {
+    const tx = this.transaction(storeName, isWrite ? "readwrite" : "readonly");
+    let target2 = tx.store;
+    if (useIndex)
+      target2 = target2.index(args.shift());
+    return (await Promise.all([
+      target2[targetFuncName](...args),
+      isWrite && tx.done
+    ]))[0];
+  };
+  cachedMethods.set(prop2, method);
+  return method;
+}
+replaceTraps((oldTraps) => ({
+  ...oldTraps,
+  get: (target, prop2, receiver) => getMethod(target, prop2) || oldTraps.get(target, prop2, receiver),
+  has: (target, prop2) => !!getMethod(target, prop2) || oldTraps.has(target, prop2)
+}));
+var advanceMethodProps = ["continue", "continuePrimaryKey", "advance"];
+var methodMap = {};
+var advanceResults = /* @__PURE__ */ new WeakMap();
+var ittrProxiedCursorToOriginalProxy = /* @__PURE__ */ new WeakMap();
+var cursorIteratorTraps = {
+  get(target, prop2) {
+    if (!advanceMethodProps.includes(prop2))
+      return target[prop2];
+    let cachedFunc = methodMap[prop2];
+    if (!cachedFunc) {
+      cachedFunc = methodMap[prop2] = function(...args) {
+        advanceResults.set(this, ittrProxiedCursorToOriginalProxy.get(this)[prop2](...args));
+      };
+    }
+    return cachedFunc;
+  }
+};
+async function* iterate(...args) {
+  let cursor = this;
+  if (!(cursor instanceof IDBCursor)) {
+    cursor = await cursor.openCursor(...args);
+  }
+  if (!cursor)
+    return;
+  cursor = cursor;
+  const proxiedCursor = new Proxy(cursor, cursorIteratorTraps);
+  ittrProxiedCursorToOriginalProxy.set(proxiedCursor, cursor);
+  reverseTransformCache.set(proxiedCursor, unwrap(cursor));
+  while (cursor) {
+    yield proxiedCursor;
+    cursor = await (advanceResults.get(proxiedCursor) || cursor.continue());
+    advanceResults.delete(proxiedCursor);
+  }
+}
+function isIteratorProp(target, prop2) {
+  return prop2 === Symbol.asyncIterator && instanceOfAny(target, [IDBIndex, IDBObjectStore, IDBCursor]) || prop2 === "iterate" && instanceOfAny(target, [IDBIndex, IDBObjectStore]);
+}
+replaceTraps((oldTraps) => ({
+  ...oldTraps,
+  get(target, prop2, receiver) {
+    if (isIteratorProp(target, prop2))
+      return iterate;
+    return oldTraps.get(target, prop2, receiver);
+  },
+  has(target, prop2) {
+    return isIteratorProp(target, prop2) || oldTraps.has(target, prop2);
+  }
+}));
+
+// src/indexedDB.ts
+var FileCache = class {
+  constructor() {
+    this.db = null;
+    this.vaultId = "";
+  }
+  async init(vaultId) {
+    this.vaultId = vaultId;
+    const dbName = `LocalGPTCache/${this.vaultId}`;
+    this.db = await openDB(dbName, 3, {
+      upgrade(db, oldVersion, newVersion) {
+        if (oldVersion < 1) {
+          if (!db.objectStoreNames.contains("embeddings")) {
+            db.createObjectStore("embeddings");
+          }
+        }
+        if (oldVersion < 2) {
+          if (!db.objectStoreNames.contains("content")) {
+            db.createObjectStore("content");
+          }
+        }
+        if (oldVersion < 3) {
+          if (db.objectStoreNames.contains("embeddings")) {
+            db.deleteObjectStore("embeddings");
+          }
+        }
+      }
+    });
+  }
+  async getContent(key2) {
+    if (!this.db) throw new Error("Database not initialized");
+    return this.db.get("content", key2);
+  }
+  async setContent(key2, value) {
+    if (!this.db) throw new Error("Database not initialized");
+    await this.db.put("content", value, key2);
+  }
+  async clearContent() {
+    if (!this.db) throw new Error("Database not initialized");
+    await this.db.clear("content");
+  }
+  async clearAll() {
+    if (!this.db) throw new Error("Database not initialized");
+    await this.db.clear("content");
+  }
+};
+var fileCache = new FileCache();
+
+// src/main.ts
+var import_sdk4 = __toESM(require_dist());
+
+// src/progressStatusBar.ts
+var MIN_BASE_SPEED = 0.02 / 16;
+var MAX_BASE_SPEED = 3 / 16;
+var ProgressStatusBar = class {
+  constructor(statusBarItem) {
+    this.statusBarItem = statusBarItem;
+    this.currentPercentage = 0;
+    this.targetPercentage = 0;
+    this.frameId = null;
+    this.lastFrameTime = null;
+    this.displayedPercentage = 0;
+    this.baseSpeed = 0;
+    this.lastTargetUpdateTime = null;
+    this.progressFinished = false;
+    this.totalProgressSteps = 0;
+    this.completedProgressSteps = 0;
+    this.animationLoop = (time) => {
+      if (this.lastFrameTime === null) {
+        this.lastFrameTime = time;
+      }
+      const delta = time - this.lastFrameTime;
+      this.lastFrameTime = time;
+      const target = this.targetPercentage;
+      if (delta > 0 && this.displayedPercentage < target) {
+        let speed = this.baseSpeed;
+        if (speed === 0) {
+          speed = (target - this.displayedPercentage) / 400;
+        }
+        this.displayedPercentage = Math.min(
+          target,
+          this.displayedPercentage + speed * delta
+        );
+        const rounded = Math.floor(this.displayedPercentage);
+        if (rounded !== this.currentPercentage) {
+          this.currentPercentage = rounded;
+          this.updateStatusBar();
+        }
+      }
+      if (this.displayedPercentage >= target) {
+        this.displayedPercentage = target;
+        this.currentPercentage = target;
+        this.updateStatusBar();
+      }
+      if (this.currentPercentage < this.targetPercentage || this.displayedPercentage < this.targetPercentage) {
+        this.frameId = requestAnimationFrame(this.animationLoop);
+        return;
+      }
+      this.stopAnimation();
+    };
+    this.statusBarItem.addClass("local-gpt-status");
+    this.statusBarItem.hide();
+  }
+  initialize() {
+    this.totalProgressSteps = 0;
+    this.completedProgressSteps = 0;
+    this.currentPercentage = 0;
+    this.targetPercentage = 0;
+    this.displayedPercentage = 0;
+    this.baseSpeed = 0;
+    this.lastTargetUpdateTime = null;
+    this.lastFrameTime = null;
+    this.progressFinished = false;
+    this.stopAnimation();
+    this.statusBarItem.show();
+    this.updateStatusBar();
+  }
+  addTotalProgressSteps(steps) {
+    this.totalProgressSteps += steps;
+    this.updateProgressBar();
+  }
+  updateCompletedSteps(steps) {
+    this.completedProgressSteps += steps;
+    if (this.completedProgressSteps > this.totalProgressSteps) {
+      this.totalProgressSteps = this.completedProgressSteps;
+    }
+    this.updateProgressBar();
+  }
+  hide() {
+    this.statusBarItem.hide();
+    this.totalProgressSteps = 0;
+    this.completedProgressSteps = 0;
+    this.currentPercentage = 0;
+    this.targetPercentage = 0;
+    this.displayedPercentage = 0;
+    this.baseSpeed = 0;
+    this.lastTargetUpdateTime = null;
+    this.lastFrameTime = null;
+    this.progressFinished = false;
+    this.stopAnimation();
+  }
+  markFinished() {
+    if (this.progressFinished) {
+      return;
+    }
+    this.progressFinished = true;
+    this.currentPercentage = 100;
+    this.displayedPercentage = 100;
+    this.targetPercentage = 100;
+    this.updateStatusBar();
+  }
+  dispose() {
+    this.stopAnimation();
+  }
+  updateProgressBar() {
+    const newTarget = this.calculateTargetPercentage();
+    if (newTarget === this.targetPercentage) {
+      return;
+    }
+    const now = performance.now();
+    this.baseSpeed = this.calculateBaseSpeed(newTarget, now);
+    this.targetPercentage = newTarget;
+    this.lastTargetUpdateTime = now;
+    this.ensureAnimationLoop();
+  }
+  calculateTargetPercentage() {
+    if (this.totalProgressSteps <= 0) {
+      return 0;
+    }
+    const ratio = Math.min(
+      this.completedProgressSteps / this.totalProgressSteps,
+      1
+    );
+    return Math.floor(ratio * 100);
+  }
+  calculateBaseSpeed(newTarget, now) {
+    if (this.lastTargetUpdateTime === null) {
+      return this.baseSpeed;
+    }
+    const dt = now - this.lastTargetUpdateTime;
+    const diff = newTarget - this.targetPercentage;
+    if (dt <= 0 || diff <= 0) {
+      return this.baseSpeed;
+    }
+    const instantaneous = diff / dt;
+    const blended = this.baseSpeed === 0 ? instantaneous : this.baseSpeed * 0.75 + instantaneous * 0.25;
+    return Math.min(MAX_BASE_SPEED, Math.max(MIN_BASE_SPEED, blended));
+  }
+  ensureAnimationLoop() {
+    if (this.frameId !== null) {
+      return;
+    }
+    this.lastFrameTime = null;
+    this.frameId = requestAnimationFrame(this.animationLoop);
+  }
+  updateStatusBar() {
+    const shown = this.progressFinished ? this.currentPercentage : Math.min(this.currentPercentage, 99);
+    this.statusBarItem.setAttr(
+      "data-text",
+      shown ? I18n.t("statusBar.enhancingWithProgress", {
+        percent: String(shown)
+      }) : I18n.t("statusBar.enhancing")
+    );
+    this.statusBarItem.setText(` `);
+  }
+  stopAnimation() {
+    if (this.frameId !== null) {
+      cancelAnimationFrame(this.frameId);
+    }
+    this.frameId = null;
+    this.lastFrameTime = null;
+  }
+};
+
+// src/settingsMigration.ts
+var import_obsidian9 = require("obsidian");
+var import_sdk2 = __toESM(require_dist());
+var legacyDefaultProviders = {
+  ollama: {
+    url: "http://localhost:11434",
+    defaultModel: "gemma2",
+    embeddingModel: "",
+    type: "ollama"
+  },
+  ollama_fallback: {
+    url: "http://localhost:11434",
+    defaultModel: "gemma2",
+    embeddingModel: "",
+    type: "ollama"
+  },
+  openaiCompatible: {
+    url: "http://localhost:8080/v1",
+    apiKey: "",
+    embeddingModel: "",
+    type: "openaiCompatible"
+  },
+  openaiCompatible_fallback: {
+    url: "http://localhost:8080/v1",
+    apiKey: "",
+    embeddingModel: "",
+    type: "openaiCompatible"
+  }
+};
+async function migrateSettings(loadedData, legacyActionPaletteSystemPromptStorageKey) {
+  if (!loadedData) {
+    return { settings: loadedData, changed: false };
+  }
+  const preAsyncMigrations = [
+    migrateToVersion2,
+    migrateToVersion3,
+    migrateToVersion4,
+    migrateToVersion5,
+    migrateToVersion6
+  ];
+  const postAsyncMigrations = [
+    migrateToVersion8,
+    migrateToVersion9,
+    (settings) => migrateToVersion10(
+      settings,
+      legacyActionPaletteSystemPromptStorageKey
+    )
+  ];
+  const changed = preAsyncMigrations.reduce(
+    (hasChanged, migrate) => migrate(loadedData) || hasChanged,
+    false
+  );
+  const changedAsync = await migrateToVersion7(loadedData);
+  const changedPostAsync = postAsyncMigrations.reduce(
+    (hasChanged, migrate) => migrate(loadedData) || hasChanged,
+    false
+  );
+  return {
+    settings: loadedData,
+    changed: changed || changedAsync || changedPostAsync
+  };
+}
+function migrateToVersion2(settings) {
+  if (settings._version && settings._version >= 1) {
+    return false;
+  }
+  const providers = JSON.parse(
+    JSON.stringify(legacyDefaultProviders)
+  );
+  settings.providers = providers;
+  settings.providers.ollama.ollamaUrl = settings.ollamaUrl;
+  delete settings.ollamaUrl;
+  settings.providers.ollama.defaultModel = settings.defaultModel;
+  delete settings.defaultModel;
+  settings.providers.openaiCompatible && (settings.providers.openaiCompatible.apiKey = "");
+  settings._version = 2;
+  return true;
+}
+function migrateToVersion3(settings) {
+  if (settings._version && settings._version >= 3) {
+    return false;
+  }
+  settings.defaultProvider = settings.selectedProvider || "ollama";
+  delete settings.selectedProvider;
+  const providers = settings.providers;
+  if (providers) {
+    Object.keys(providers).forEach((key2) => {
+      providers[key2].type = key2;
+    });
+  }
+  settings._version = 3;
+  return true;
+}
+function migrateToVersion4(settings) {
+  if (settings._version && settings._version >= 4) {
+    return false;
+  }
+  settings.defaults = {
+    provider: settings.defaultProvider || "ollama",
+    fallbackProvider: settings.fallbackProvider || "",
+    creativity: "low"
+  };
+  delete settings.defaultProvider;
+  delete settings.fallbackProvider;
+  settings._version = 4;
+  return true;
+}
+function migrateToVersion5(settings) {
+  if (settings._version && settings._version >= 5) {
+    return false;
+  }
+  const providers = settings.providers;
+  if (providers) {
+    Object.keys(legacyDefaultProviders).forEach((provider) => {
+      if (providers[provider]) {
+        providers[provider].embeddingModel = legacyDefaultProviders[provider].embeddingModel;
+      }
+    });
+  }
+  settings._version = 5;
+  setTimeout(() => {
+    new import_obsidian9.Notice(
+      `\u{1F389} LocalGPT can finally use
+context from links!
+Check the Settings!`,
+      0
+    );
+  }, 1e4);
+  return true;
+}
+function migrateToVersion6(settings) {
+  if (settings._version && settings._version >= 6) {
+    return false;
+  }
+  const providers = settings.providers;
+  if (providers) {
+    Object.keys(legacyDefaultProviders).forEach((provider) => {
+      var _a7, _b3;
+      if (((_a7 = providers[provider]) == null ? void 0 : _a7.type) === "ollama") {
+        providers[provider].url = providers[provider].ollamaUrl;
+        delete providers[provider].ollamaUrl;
+      }
+      if (((_b3 = providers[provider]) == null ? void 0 : _b3.type) === "openaiCompatible") {
+        providers[provider].url = providers[provider].url.replace(/\/+$/i, "") + "/v1";
+      }
+    });
+  }
+  settings._version = 6;
+  return true;
+}
+async function migrateToVersion7(settings) {
+  if (settings._version && settings._version >= 7) {
+    return false;
+  }
+  new import_obsidian9.Notice(I18n.t("notices.importantUpdate"), 0);
+  const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
+  const aiProviders = await aiRequestWaiter.promise;
+  settings.aiProviders = {
+    main: null,
+    embedding: null,
+    vision: null
+  };
+  const oldProviders = settings.providers;
+  const oldDefaults = settings.defaults;
+  if (oldProviders && (oldDefaults == null ? void 0 : oldDefaults.provider)) {
+    await migrateLegacyProviderConfig(
+      settings,
+      aiProviders,
+      oldProviders,
+      oldDefaults
+    );
+  }
+  delete settings.defaults;
+  delete settings.providers;
+  settings._version = 7;
+  return true;
+}
+async function migrateLegacyProviderConfig(settings, aiProviders, oldProviders, oldDefaults) {
+  const provider = oldDefaults.provider;
+  const typesMap = {
+    ollama: "ollama",
+    openaiCompatible: "openai"
+  };
+  const providerConfig = oldProviders[provider];
+  if (!providerConfig) {
+    return;
+  }
+  const type = typesMap[providerConfig.type];
+  await createMigratedProvider(
+    settings,
+    aiProviders,
+    provider,
+    providerConfig,
+    type,
+    "main",
+    providerConfig.defaultModel
+  );
+  await createMigratedProvider(
+    settings,
+    aiProviders,
+    provider,
+    providerConfig,
+    type,
+    "embedding",
+    providerConfig.embeddingModel
+  );
+}
+async function createMigratedProvider(settings, aiProviders, provider, providerConfig, type, targetKey, model) {
+  if (!model) {
+    return;
+  }
+  let adjustedModel = model;
+  if (type === "ollama" && !adjustedModel.endsWith(":latest")) {
+    adjustedModel = `${adjustedModel}:latest`;
+  }
+  const id = `id-${Date.now().toString()}`;
+  const newProvider = await aiProviders.migrateProvider({
+    id,
+    name: targetKey === "main" ? `Local GPT ${provider}` : `Local GPT ${provider} embeddings`,
+    apiKey: providerConfig.apiKey,
+    url: providerConfig.url,
+    type,
+    model: adjustedModel
+  });
+  if (newProvider) {
+    settings.aiProviders[targetKey] = newProvider.id;
+  }
+}
+function migrateToVersion8(settings) {
+  if (settings._version && settings._version >= 8) {
+    return false;
+  }
+  settings.defaults = settings.defaults || {};
+  settings.defaults.contextLimit = settings.defaults.contextLimit || "local";
+  settings._version = 8;
+  return true;
+}
+function migrateToVersion9(settings) {
+  if (settings._version && settings._version >= 9) {
+    return false;
+  }
+  const { actions } = ensureActionIds(settings.actions || []);
+  settings.actions = actions;
+  settings._version = 9;
+  return true;
+}
+function migrateToVersion10(settings, legacyActionPaletteSystemPromptStorageKey) {
+  if (settings._version && settings._version >= 10) {
+    return false;
+  }
+  settings.actionPalette = settings.actionPalette || {};
+  if (settings.actionPalette.systemPromptActionId == null) {
+    settings.actionPalette.systemPromptActionId = readLegacyActionPaletteSystemPromptId(
+      legacyActionPaletteSystemPromptStorageKey
+    );
+  }
+  clearLegacyActionPaletteSystemPromptId(
+    legacyActionPaletteSystemPromptStorageKey
+  );
+  settings._version = 10;
+  return true;
+}
+function readLegacyActionPaletteSystemPromptId(storageKey) {
+  try {
+    const raw = window.localStorage.getItem(storageKey);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed.id === "string" ? parsed.id : null;
+  } catch (error) {
+    console.error(
+      "Failed to migrate Action Palette system prompt selection:",
+      error
+    );
+    return null;
+  }
+}
+function clearLegacyActionPaletteSystemPromptId(storageKey) {
+  try {
+    window.localStorage.removeItem(storageKey);
+  } catch (error) {
+    console.error(
+      "Failed to clean up legacy Action Palette system prompt selection:",
+      error
+    );
+  }
+}
+
+// src/localGptCommands.ts
+var import_obsidian10 = require("obsidian");
+var import_sdk3 = __toESM(require_dist());
+
 // src/actionMenu.ts
 var populateActionContextMenu = (menu, actions, onAction) => {
   actions.forEach((action2) => {
@@ -14610,8 +15822,211 @@ var populateActionContextMenu = (menu, actions, onAction) => {
   });
 };
 
+// src/localGptCommands.ts
+function registerLocalGPTCommands(plugin) {
+  registerContextMenuCommand(plugin);
+  registerQuickAccessCommands(plugin);
+  registerActionPaletteCommand(plugin);
+}
+function registerContextMenuCommand(plugin) {
+  plugin.addCommand({
+    id: "context-menu",
+    name: I18n.t("commands.showContextMenu"),
+    editorCallback: (editor) => {
+      const editorView = editor.cm;
+      const cursorPositionFrom = editor.getCursor("from");
+      const cursorPositionTo = editor.getCursor("to");
+      const contextMenu = new import_obsidian10.Menu();
+      populateActionContextMenu(
+        contextMenu,
+        plugin.settings.actions,
+        (action2) => plugin.runAction(action2, editor)
+      );
+      const fromRect = editorView.coordsAtPos(
+        editor.posToOffset(cursorPositionFrom)
+      );
+      const toRect = editorView.coordsAtPos(
+        editor.posToOffset(cursorPositionTo)
+      );
+      contextMenu.showAtPosition({
+        x: fromRect.left,
+        y: toRect.top + (editorView.defaultLineHeight || 0)
+      });
+    }
+  });
+}
+function registerQuickAccessCommands(plugin) {
+  getRunnableActions(plugin.settings.actions).forEach((action2, index3) => {
+    plugin.addCommand({
+      id: `quick-access-${index3 + 1}`,
+      name: `${index3 + 1} | ${action2.name}`,
+      editorCallback: (editor) => {
+        plugin.runAction(action2, editor);
+      }
+    });
+  });
+}
+function registerActionPaletteCommand(plugin) {
+  plugin.addCommand({
+    id: "local-gpt-action-palette",
+    name: I18n.t("commands.actionPalette.name"),
+    editorCallback: async (editor) => {
+      var _a7, _b3;
+      const editorView = editor.cm;
+      const cursorPositionFrom = editor.getCursor("from");
+      const insertPos = editor.posToOffset({
+        line: cursorPositionFrom.line,
+        ch: 0
+      });
+      const initialSelectedFiles = getActionPaletteInitialSelectedFiles(
+        plugin,
+        editor
+      );
+      const paletteLabel = await getActionPaletteLabel(plugin);
+      showActionPalette(editorView, insertPos, {
+        onSubmit: (text2, selectedFiles = [], systemPrompt) => {
+          var _a8, _b4, _c2;
+          const overrideProviderId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+          const creativityKey = (_b4 = (_a8 = plugin.actionPaletteCreativityKey) != null ? _a8 : plugin.settings.defaults.creativity) != null ? _b4 : "";
+          const temperatureOverride = (_c2 = CREATIVITY[creativityKey]) == null ? void 0 : _c2.temperature;
+          plugin.runFreeform(
+            editor,
+            text2,
+            selectedFiles,
+            overrideProviderId,
+            temperatureOverride,
+            systemPrompt
+          ).finally(() => {
+          });
+          hideActionPalette(editorView);
+          plugin.app.workspace.updateOptions();
+        },
+        onCancel: () => {
+          hideActionPalette(editorView);
+          plugin.app.workspace.updateOptions();
+        },
+        placeholder: I18n.t("commands.actionPalette.placeholder"),
+        modelLabel: paletteLabel.modelLabel,
+        providerId: paletteLabel.currentProviderId,
+        getFiles: () => getActionPaletteFiles(plugin),
+        getProviders: () => getActionPaletteProviders(),
+        getModels: (providerId) => getActionPaletteModels(providerId),
+        onProviderChange: async (providerId) => {
+          plugin.actionPaletteProviderId = providerId;
+          plugin.actionPaletteModel = null;
+          plugin.actionPaletteModelProviderId = null;
+        },
+        onModelChange: async (model) => {
+          const providerId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+          plugin.actionPaletteModel = model;
+          plugin.actionPaletteModelProviderId = providerId;
+        },
+        onCreativityChange: async (creativityKey) => {
+          plugin.actionPaletteCreativityKey = creativityKey;
+        },
+        getSystemPrompts: () => getSystemPrompts(plugin),
+        selectedSystemPromptId: (_b3 = (_a7 = plugin.settings.actionPalette) == null ? void 0 : _a7.systemPromptActionId) != null ? _b3 : null,
+        onSystemPromptChange: async (systemPromptId) => {
+          plugin.settings.actionPalette = {
+            ...plugin.settings.actionPalette || {},
+            systemPromptActionId: systemPromptId
+          };
+          await plugin.saveData(plugin.settings);
+        },
+        initialSelectedFiles
+      });
+      plugin.app.workspace.updateOptions();
+    }
+  });
+}
+function getActionPaletteInitialSelectedFiles(plugin, editor) {
+  if (editor.getSelection()) {
+    return [];
+  }
+  const activeFile = plugin.app.workspace.getActiveFile();
+  return activeFile ? [activeFile.path] : [];
+}
+async function getActionPaletteLabel(plugin) {
+  var _a7, _b3;
+  let modelLabel = "";
+  let currentProviderId;
+  try {
+    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiProviders = await aiRequestWaiter.promise;
+    const selectedProviderId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+    const provider = aiProviders.providers.find(
+      (p) => p.id === selectedProviderId
+    );
+    if (provider) {
+      currentProviderId = provider.id;
+      const modelToShow = plugin.actionPaletteModelProviderId === provider.id ? plugin.actionPaletteModel || provider.model : provider.model;
+      const creativityKey = (_b3 = (_a7 = plugin.actionPaletteCreativityKey) != null ? _a7 : plugin.settings.defaults.creativity) != null ? _b3 : "";
+      const creativityLabelMap = {
+        "": I18n.t("settings.creativityNone"),
+        low: I18n.t("settings.creativityLow"),
+        medium: I18n.t("settings.creativityMedium"),
+        high: I18n.t("settings.creativityHigh")
+      };
+      const creativityLabel = creativityLabelMap[creativityKey] || "";
+      modelLabel = [provider.name, modelToShow, creativityLabel].filter(Boolean).join(" \xB7 ");
+    }
+  } catch (error) {
+    void error;
+  }
+  return { modelLabel, currentProviderId };
+}
+function getActionPaletteFiles(plugin) {
+  return plugin.app.vault.getMarkdownFiles().concat(
+    plugin.app.vault.getFiles().filter((f) => f.extension === "pdf")
+  ).map((file) => ({
+    path: file.path,
+    basename: file.basename,
+    extension: file.extension
+  }));
+}
+async function getActionPaletteProviders() {
+  try {
+    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiProviders = await aiRequestWaiter.promise;
+    return aiProviders.providers.filter((p) => Boolean(p.model)).map((p) => ({
+      id: p.id,
+      name: p.model || I18n.t("commands.actionPalette.unknownModel"),
+      providerName: p.name,
+      providerUrl: p.url || ""
+    }));
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    return [];
+  }
+}
+async function getActionPaletteModels(providerId) {
+  try {
+    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiProviders = await aiRequestWaiter.promise;
+    const provider = aiProviders.providers.find(
+      (p) => p.id === providerId
+    );
+    if (!provider) return [];
+    const models = provider.availableModels || await aiProviders.fetchModels(provider);
+    return models.map((m) => ({ id: m, name: m }));
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    return [];
+  }
+}
+function getSystemPrompts(plugin) {
+  return getRunnableActions(plugin.settings.actions).filter((action2) => action2.system).map((action2) => ({
+    id: getActionIdentifier(action2),
+    name: action2.name,
+    system: action2.system
+  }));
+}
+
+// src/contextEnhancer.ts
+var import_obsidian12 = require("obsidian");
+
 // src/rag.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian11 = require("obsidian");
 
 // node_modules/pdfjs-dist/legacy/build/pdf.mjs
 var import_meta = {};
@@ -17938,13 +19353,13 @@ var __webpack_modules__ = {
     var $parse = function(source2, reviver) {
       source2 = toString(source2);
       var context = new Context(source2, 0, "");
-      var root2 = context.parse();
-      var value = root2.value;
-      var endIndex = context.skip(IS_WHITESPACE, root2.end);
+      var root3 = context.parse();
+      var value = root3.value;
+      var endIndex = context.skip(IS_WHITESPACE, root3.end);
       if (endIndex < source2.length) {
         throw new SyntaxError2('Unexpected extra character: "' + at(source2, endIndex) + '" after the parsed data at: ' + endIndex);
       }
-      return isCallable(reviver) ? internalize({ "": value }, "", reviver, root2) : value;
+      return isCallable(reviver) ? internalize({ "": value }, "", reviver, root3) : value;
     };
     var internalize = function(holder, name, reviver, node) {
       var val = holder[name];
@@ -18204,10 +19619,10 @@ var __webpack_modules__ = {
         else if (typeof element2 == "number" || classof(element2) === "Number" || classof(element2) === "String") push2(keys, toString(element2));
       }
       var keysLength = keys.length;
-      var root2 = true;
+      var root3 = true;
       return function(key2, value) {
-        if (root2) {
-          root2 = false;
+        if (root3) {
+          root3 = false;
           return value;
         }
         if (isArray(this)) return value;
@@ -19955,13 +21370,13 @@ var XfaLayer = class {
     var _a7, _b3;
     const storage = parameters.annotationStorage;
     const linkService = parameters.linkService;
-    const root2 = parameters.xfaHtml;
+    const root3 = parameters.xfaHtml;
     const intent = parameters.intent || "display";
-    const rootHtml = document.createElement(root2.name);
-    if (root2.attributes) {
+    const rootHtml = document.createElement(root3.name);
+    if (root3.attributes) {
       this.setAttributes({
         html: rootHtml,
-        element: root2,
+        element: root3,
         intent,
         linkService
       });
@@ -19977,11 +21392,11 @@ var XfaLayer = class {
       rootDiv.setAttribute("class", "xfaLayer xfaFont");
     }
     const textDivs = [];
-    if (root2.children.length === 0) {
-      if (root2.value) {
-        const node = document.createTextNode(root2.value);
+    if (root3.children.length === 0) {
+      if (root3.value) {
+        const node = document.createTextNode(root3.value);
         rootHtml.append(node);
-        if (isNotForRichText && XfaText.shouldBuildText(root2.name)) {
+        if (isNotForRichText && XfaText.shouldBuildText(root3.name)) {
           textDivs.push(node);
         }
       }
@@ -19989,7 +21404,7 @@ var XfaLayer = class {
         textDivs
       };
     }
-    const stack2 = [[root2, -1, rootHtml]];
+    const stack2 = [[root3, -1, rootHtml]];
     while (stack2.length > 0) {
       const [parent, i, html2] = stack2.at(-1);
       if (i + 1 === parent.children.length) {
@@ -35998,8 +37413,8 @@ openDropdown_fn = function(event2) {
     __privateGet(this, _dropdown).classList.remove("hidden");
     return;
   }
-  const root2 = __privateSet(this, _dropdown, __privateMethod(this, _ColorPicker_instances, getDropdownRoot_fn).call(this));
-  __privateGet(this, _button).append(root2);
+  const root3 = __privateSet(this, _dropdown, __privateMethod(this, _ColorPicker_instances, getDropdownRoot_fn).call(this));
+  __privateGet(this, _button).append(root3);
 };
 pointerDown_fn2 = function(event2) {
   var _a7;
@@ -39068,8 +40483,8 @@ var InkAnnotationElement = class extends AnnotationElement {
         width,
         height
       } = __privateMethod(this, _InkAnnotationElement_instances, getTransform_fn).call(this, this.data.rotation, rect);
-      const root2 = g.parentElement;
-      root2.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      const root3 = g.parentElement;
+      root3.setAttribute("viewBox", `0 0 ${width} ${height}`);
       g.setAttribute("transform", transform);
     }
   }
@@ -41948,10 +43363,10 @@ var DrawingOptions = class {
     __privateGet(this, _svgProperties)[name] = value;
   }
   toSVGProperties() {
-    const root2 = __privateGet(this, _svgProperties);
+    const root3 = __privateGet(this, _svgProperties);
     __privateSet(this, _svgProperties, /* @__PURE__ */ Object.create(null));
     return {
-      root: root2
+      root: root3
     };
   }
   reset() {
@@ -45990,9 +47405,9 @@ var _DrawLayer = class _DrawLayer {
     }
     if (__privateGet(this, _parent2) !== parent) {
       if (__privateGet(this, _mapping).size > 0) {
-        for (const root2 of __privateGet(this, _mapping).values()) {
-          root2.remove();
-          parent.append(root2);
+        for (const root3 of __privateGet(this, _mapping).values()) {
+          root3.remove();
+          parent.append(root3);
         }
       }
       __privateSet(this, _parent2, parent);
@@ -46003,9 +47418,9 @@ var _DrawLayer = class _DrawLayer {
   }
   draw(properties, isPathUpdatable = false, hasClip = false) {
     const id = __privateWrapper(_DrawLayer, _id5)._++;
-    const root2 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
+    const root3 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
     const defs = _DrawLayer._svgFactory.createElement("defs");
-    root2.append(defs);
+    root3.append(defs);
     const path = _DrawLayer._svgFactory.createElement("path");
     defs.append(path);
     const pathId = `path_${id}`;
@@ -46016,10 +47431,10 @@ var _DrawLayer = class _DrawLayer {
     }
     const clipPathId = hasClip ? __privateMethod(this, _DrawLayer_instances, createClipPath_fn).call(this, defs, pathId) : null;
     const use = _DrawLayer._svgFactory.createElement("use");
-    root2.append(use);
+    root3.append(use);
     use.setAttribute("href", `#${pathId}`);
-    this.updateProperties(root2, properties);
-    __privateGet(this, _mapping).set(id, root2);
+    this.updateProperties(root3, properties);
+    __privateGet(this, _mapping).set(id, root3);
     return {
       id,
       clipPathId: `url(#${clipPathId})`
@@ -46027,9 +47442,9 @@ var _DrawLayer = class _DrawLayer {
   }
   drawOutline(properties, mustRemoveSelfIntersections) {
     const id = __privateWrapper(_DrawLayer, _id5)._++;
-    const root2 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
+    const root3 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
     const defs = _DrawLayer._svgFactory.createElement("defs");
-    root2.append(defs);
+    root3.append(defs);
     const path = _DrawLayer._svgFactory.createElement("path");
     defs.append(path);
     const pathId = `path_${id}`;
@@ -46056,17 +47471,17 @@ var _DrawLayer = class _DrawLayer {
       use.classList.add("mask");
     }
     const use1 = _DrawLayer._svgFactory.createElement("use");
-    root2.append(use1);
+    root3.append(use1);
     use1.setAttribute("href", `#${pathId}`);
     if (maskId) {
       use1.setAttribute("mask", `url(#${maskId})`);
     }
     const use2 = use1.cloneNode();
-    root2.append(use2);
+    root3.append(use2);
     use1.classList.add("mainOutline");
     use2.classList.add("secondaryOutline");
-    this.updateProperties(root2, properties);
-    __privateGet(this, _mapping).set(id, root2);
+    this.updateProperties(root3, properties);
+    __privateGet(this, _mapping).set(id, root3);
     return id;
   }
   finalizeDraw(id, properties) {
@@ -46079,7 +47494,7 @@ var _DrawLayer = class _DrawLayer {
       return;
     }
     const {
-      root: root2,
+      root: root3,
       bbox,
       rootClass,
       path
@@ -46088,8 +47503,8 @@ var _DrawLayer = class _DrawLayer {
     if (!element2) {
       return;
     }
-    if (root2) {
-      __privateMethod(this, _DrawLayer_instances, updateProperties_fn).call(this, element2, root2);
+    if (root3) {
+      __privateMethod(this, _DrawLayer_instances, updateProperties_fn).call(this, element2, root3);
     }
     if (bbox) {
       __privateMethod(_a7 = _DrawLayer, _DrawLayer_static, setBox_fn).call(_a7, element2, bbox);
@@ -46112,13 +47527,13 @@ var _DrawLayer = class _DrawLayer {
     if (layer === this) {
       return;
     }
-    const root2 = __privateGet(this, _mapping).get(id);
-    if (!root2) {
+    const root3 = __privateGet(this, _mapping).get(id);
+    if (!root3) {
       return;
     }
-    __privateGet(layer, _parent2).append(root2);
+    __privateGet(layer, _parent2).append(root3);
     __privateGet(this, _mapping).delete(id);
-    __privateGet(layer, _mapping).set(id, root2);
+    __privateGet(layer, _mapping).set(id, root3);
   }
   remove(id) {
     __privateGet(this, _toUpdate).delete(id);
@@ -46130,8 +47545,8 @@ var _DrawLayer = class _DrawLayer {
   }
   destroy() {
     __privateSet(this, _parent2, null);
-    for (const root2 of __privateGet(this, _mapping).values()) {
-      root2.remove();
+    for (const root3 of __privateGet(this, _mapping).values()) {
+      root3.remove();
     }
     __privateGet(this, _mapping).clear();
     __privateGet(this, _toUpdate).clear();
@@ -46422,298 +47837,20 @@ ${item.str}`);
   return textItems.join("") + "\n\n";
 }
 
-// node_modules/idb/build/index.js
-var instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-var idbProxyableTypes;
-var cursorAdvanceMethods;
-function getIdbProxyableTypes() {
-  return idbProxyableTypes || (idbProxyableTypes = [
-    IDBDatabase,
-    IDBObjectStore,
-    IDBIndex,
-    IDBCursor,
-    IDBTransaction
-  ]);
-}
-function getCursorAdvanceMethods() {
-  return cursorAdvanceMethods || (cursorAdvanceMethods = [
-    IDBCursor.prototype.advance,
-    IDBCursor.prototype.continue,
-    IDBCursor.prototype.continuePrimaryKey
-  ]);
-}
-var transactionDoneMap = /* @__PURE__ */ new WeakMap();
-var transformCache = /* @__PURE__ */ new WeakMap();
-var reverseTransformCache = /* @__PURE__ */ new WeakMap();
-function promisifyRequest(request) {
-  const promise = new Promise((resolve, reject) => {
-    const unlisten = () => {
-      request.removeEventListener("success", success);
-      request.removeEventListener("error", error);
-    };
-    const success = () => {
-      resolve(wrap(request.result));
-      unlisten();
-    };
-    const error = () => {
-      reject(request.error);
-      unlisten();
-    };
-    request.addEventListener("success", success);
-    request.addEventListener("error", error);
-  });
-  reverseTransformCache.set(promise, request);
-  return promise;
-}
-function cacheDonePromiseForTransaction(tx) {
-  if (transactionDoneMap.has(tx))
-    return;
-  const done = new Promise((resolve, reject) => {
-    const unlisten = () => {
-      tx.removeEventListener("complete", complete);
-      tx.removeEventListener("error", error);
-      tx.removeEventListener("abort", error);
-    };
-    const complete = () => {
-      resolve();
-      unlisten();
-    };
-    const error = () => {
-      reject(tx.error || new DOMException("AbortError", "AbortError"));
-      unlisten();
-    };
-    tx.addEventListener("complete", complete);
-    tx.addEventListener("error", error);
-    tx.addEventListener("abort", error);
-  });
-  transactionDoneMap.set(tx, done);
-}
-var idbProxyTraps = {
-  get(target, prop2, receiver) {
-    if (target instanceof IDBTransaction) {
-      if (prop2 === "done")
-        return transactionDoneMap.get(target);
-      if (prop2 === "store") {
-        return receiver.objectStoreNames[1] ? void 0 : receiver.objectStore(receiver.objectStoreNames[0]);
-      }
-    }
-    return wrap(target[prop2]);
-  },
-  set(target, prop2, value) {
-    target[prop2] = value;
-    return true;
-  },
-  has(target, prop2) {
-    if (target instanceof IDBTransaction && (prop2 === "done" || prop2 === "store")) {
-      return true;
-    }
-    return prop2 in target;
-  }
-};
-function replaceTraps(callback) {
-  idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-  if (getCursorAdvanceMethods().includes(func)) {
-    return function(...args) {
-      func.apply(unwrap(this), args);
-      return wrap(this.request);
-    };
-  }
-  return function(...args) {
-    return wrap(func.apply(unwrap(this), args));
-  };
-}
-function transformCachableValue(value) {
-  if (typeof value === "function")
-    return wrapFunction(value);
-  if (value instanceof IDBTransaction)
-    cacheDonePromiseForTransaction(value);
-  if (instanceOfAny(value, getIdbProxyableTypes()))
-    return new Proxy(value, idbProxyTraps);
-  return value;
-}
-function wrap(value) {
-  if (value instanceof IDBRequest)
-    return promisifyRequest(value);
-  if (transformCache.has(value))
-    return transformCache.get(value);
-  const newValue = transformCachableValue(value);
-  if (newValue !== value) {
-    transformCache.set(value, newValue);
-    reverseTransformCache.set(newValue, value);
-  }
-  return newValue;
-}
-var unwrap = (value) => reverseTransformCache.get(value);
-function openDB(name, version3, { blocked, upgrade, blocking, terminated } = {}) {
-  const request = indexedDB.open(name, version3);
-  const openPromise = wrap(request);
-  if (upgrade) {
-    request.addEventListener("upgradeneeded", (event2) => {
-      upgrade(wrap(request.result), event2.oldVersion, event2.newVersion, wrap(request.transaction), event2);
-    });
-  }
-  if (blocked) {
-    request.addEventListener("blocked", (event2) => blocked(
-      // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
-      event2.oldVersion,
-      event2.newVersion,
-      event2
-    ));
-  }
-  openPromise.then((db) => {
-    if (terminated)
-      db.addEventListener("close", () => terminated());
-    if (blocking) {
-      db.addEventListener("versionchange", (event2) => blocking(event2.oldVersion, event2.newVersion, event2));
-    }
-  }).catch(() => {
-  });
-  return openPromise;
-}
-var readMethods = ["get", "getKey", "getAll", "getAllKeys", "count"];
-var writeMethods = ["put", "add", "delete", "clear"];
-var cachedMethods = /* @__PURE__ */ new Map();
-function getMethod(target, prop2) {
-  if (!(target instanceof IDBDatabase && !(prop2 in target) && typeof prop2 === "string")) {
-    return;
-  }
-  if (cachedMethods.get(prop2))
-    return cachedMethods.get(prop2);
-  const targetFuncName = prop2.replace(/FromIndex$/, "");
-  const useIndex = prop2 !== targetFuncName;
-  const isWrite = writeMethods.includes(targetFuncName);
-  if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) || !(isWrite || readMethods.includes(targetFuncName))
-  ) {
-    return;
-  }
-  const method = async function(storeName, ...args) {
-    const tx = this.transaction(storeName, isWrite ? "readwrite" : "readonly");
-    let target2 = tx.store;
-    if (useIndex)
-      target2 = target2.index(args.shift());
-    return (await Promise.all([
-      target2[targetFuncName](...args),
-      isWrite && tx.done
-    ]))[0];
-  };
-  cachedMethods.set(prop2, method);
-  return method;
-}
-replaceTraps((oldTraps) => ({
-  ...oldTraps,
-  get: (target, prop2, receiver) => getMethod(target, prop2) || oldTraps.get(target, prop2, receiver),
-  has: (target, prop2) => !!getMethod(target, prop2) || oldTraps.has(target, prop2)
-}));
-var advanceMethodProps = ["continue", "continuePrimaryKey", "advance"];
-var methodMap = {};
-var advanceResults = /* @__PURE__ */ new WeakMap();
-var ittrProxiedCursorToOriginalProxy = /* @__PURE__ */ new WeakMap();
-var cursorIteratorTraps = {
-  get(target, prop2) {
-    if (!advanceMethodProps.includes(prop2))
-      return target[prop2];
-    let cachedFunc = methodMap[prop2];
-    if (!cachedFunc) {
-      cachedFunc = methodMap[prop2] = function(...args) {
-        advanceResults.set(this, ittrProxiedCursorToOriginalProxy.get(this)[prop2](...args));
-      };
-    }
-    return cachedFunc;
-  }
-};
-async function* iterate(...args) {
-  let cursor = this;
-  if (!(cursor instanceof IDBCursor)) {
-    cursor = await cursor.openCursor(...args);
-  }
-  if (!cursor)
-    return;
-  cursor = cursor;
-  const proxiedCursor = new Proxy(cursor, cursorIteratorTraps);
-  ittrProxiedCursorToOriginalProxy.set(proxiedCursor, cursor);
-  reverseTransformCache.set(proxiedCursor, unwrap(cursor));
-  while (cursor) {
-    yield proxiedCursor;
-    cursor = await (advanceResults.get(proxiedCursor) || cursor.continue());
-    advanceResults.delete(proxiedCursor);
-  }
-}
-function isIteratorProp(target, prop2) {
-  return prop2 === Symbol.asyncIterator && instanceOfAny(target, [IDBIndex, IDBObjectStore, IDBCursor]) || prop2 === "iterate" && instanceOfAny(target, [IDBIndex, IDBObjectStore]);
-}
-replaceTraps((oldTraps) => ({
-  ...oldTraps,
-  get(target, prop2, receiver) {
-    if (isIteratorProp(target, prop2))
-      return iterate;
-    return oldTraps.get(target, prop2, receiver);
-  },
-  has(target, prop2) {
-    return isIteratorProp(target, prop2) || oldTraps.has(target, prop2);
-  }
-}));
-
-// src/indexedDB.ts
-var FileCache = class {
-  constructor() {
-    this.db = null;
-    this.vaultId = "";
-  }
-  async init(vaultId) {
-    this.vaultId = vaultId;
-    const dbName = `LocalGPTCache/${this.vaultId}`;
-    this.db = await openDB(dbName, 3, {
-      upgrade(db, oldVersion, newVersion) {
-        if (oldVersion < 1) {
-          if (!db.objectStoreNames.contains("embeddings")) {
-            db.createObjectStore("embeddings");
-          }
-        }
-        if (oldVersion < 2) {
-          if (!db.objectStoreNames.contains("content")) {
-            db.createObjectStore("content");
-          }
-        }
-        if (oldVersion < 3) {
-          if (db.objectStoreNames.contains("embeddings")) {
-            db.deleteObjectStore("embeddings");
-          }
-        }
-      }
-    });
-  }
-  async getContent(key2) {
-    if (!this.db) throw new Error("Database not initialized");
-    return this.db.get("content", key2);
-  }
-  async setContent(key2, value) {
-    if (!this.db) throw new Error("Database not initialized");
-    await this.db.put("content", value, key2);
-  }
-  async clearContent() {
-    if (!this.db) throw new Error("Database not initialized");
-    await this.db.clear("content");
-  }
-  async clearAll() {
-    if (!this.db) throw new Error("Database not initialized");
-    await this.db.clear("content");
-  }
-};
-var fileCache = new FileCache();
-
 // src/rag.ts
 var MAX_DEPTH = 10;
 var WIKI_LINK_REGEX = /\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]/g;
 var MARKDOWN_LINK_REGEX = /\[[^\]]+\]\(([^)]+)\)/g;
 var SUPPORTED_RAG_EXTENSIONS = /* @__PURE__ */ new Set(["md", "pdf"]);
-async function startProcessing(linkedFiles, vault, metadataCache, activeFile, updateCompletedSteps) {
+async function startProcessing(linkedFiles, vault, metadataCache, activeFile, updateCompletedSteps, includeActiveFileContent) {
   logger.info("Starting RAG processing");
   const processedDocs = /* @__PURE__ */ new Map();
-  const context = { vault, metadataCache, activeFile };
+  const context = {
+    vault,
+    metadataCache,
+    activeFile,
+    includeActiveFileContent
+  };
   await Promise.all(
     linkedFiles.map(async (file) => {
       await processDocumentForRAG(file, context, processedDocs, 0, false);
@@ -46743,7 +47880,7 @@ async function processDocumentForRAG(file, context, processedDocs, depth, isBack
     return processedDocs;
   }
   try {
-    if (file.path === context.activeFile.path) {
+    if (file.path === context.activeFile.path && !context.includeActiveFileContent) {
       await traverseLinkedGraph(file, context, processedDocs, depth, {
         includeBacklinks: false
       });
@@ -46847,7 +47984,7 @@ function getLinkedFiles(content, vault, metadataCache, currentFilePath, includeA
   }).filter(isSupportedRagFile);
 }
 function isSupportedRagFile(file) {
-  return file instanceof import_obsidian4.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
+  return file instanceof import_obsidian11.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
 }
 function sanitizeMarkdownForLinks(content) {
   return content.replace(/```[\s\S]*?```/g, "").replace(/<!--[\s\S]*?-->/g, "").replace(/`[^`]*`/g, "");
@@ -46992,8 +48129,179 @@ function formatSingleGroup(groupResults, contextLimit, currentLength) {
   return { text: groupText, length: addedLength };
 }
 
-// src/main.ts
-var import_sdk2 = __toESM(require_dist());
+// src/contextEnhancer.ts
+async function enhanceWithContext({
+  app,
+  settings,
+  selectedText,
+  aiProviders,
+  aiProvider,
+  abortController,
+  selectedFiles,
+  queryText,
+  initializeProgress,
+  updateCompletedSteps,
+  addTotalProgressSteps,
+  hideStatusBar
+}) {
+  const activeFile = app.workspace.getActiveFile();
+  if (!activeFile || !aiProvider || (abortController == null ? void 0 : abortController.signal.aborted)) {
+    return "";
+  }
+  const allLinkedFiles = collectLinkedFilesForContext(
+    app,
+    selectedText,
+    selectedFiles,
+    activeFile.path
+  );
+  if (allLinkedFiles.length === 0) {
+    return "";
+  }
+  try {
+    const relevantContext = await retrieveRelevantContext({
+      app,
+      settings,
+      activeFile,
+      allLinkedFiles,
+      aiProviders,
+      aiProvider,
+      abortController,
+      selectedFiles,
+      queryText,
+      initializeProgress,
+      updateCompletedSteps,
+      addTotalProgressSteps
+    });
+    return finishContextProcessing(relevantContext, hideStatusBar);
+  } catch (error) {
+    return handleContextError(error, abortController, hideStatusBar);
+  }
+}
+async function retrieveRelevantContext({
+  app,
+  settings,
+  activeFile,
+  allLinkedFiles,
+  aiProviders,
+  aiProvider,
+  abortController,
+  selectedFiles,
+  queryText,
+  initializeProgress,
+  updateCompletedSteps,
+  addTotalProgressSteps
+}) {
+  var _a7;
+  initializeProgress();
+  const processedDocs = await startProcessing(
+    allLinkedFiles,
+    app.vault,
+    app.metadataCache,
+    activeFile,
+    updateCompletedSteps,
+    (_a7 = selectedFiles == null ? void 0 : selectedFiles.includes(activeFile.path)) != null ? _a7 : false
+  );
+  if (shouldAbortProcessing(processedDocs, abortController)) {
+    return "";
+  }
+  const retrieveDocuments = Array.from(processedDocs.values());
+  if (abortController == null ? void 0 : abortController.signal.aborted) {
+    return "";
+  }
+  const relevantContext = await searchDocuments(
+    queryText,
+    retrieveDocuments,
+    aiProviders,
+    aiProvider,
+    abortController,
+    updateCompletedSteps,
+    addTotalProgressSteps,
+    resolveContextLimit(settings)
+  );
+  return relevantContext.trim() || "";
+}
+function finishContextProcessing(result, hideStatusBar) {
+  hideStatusBar();
+  return result;
+}
+function handleContextError(error, abortController, hideStatusBar) {
+  hideStatusBar();
+  if (!(abortController == null ? void 0 : abortController.signal.aborted)) {
+    console.error("Error processing RAG:", error);
+    new import_obsidian12.Notice(
+      I18n.t("notices.errorProcessingRag", {
+        message: error.message
+      })
+    );
+  }
+  return "";
+}
+function collectLinkedFilesForContext(app, selectedText, selectedFiles, activeFilePath) {
+  const linkedFiles = getLinkedFiles(
+    selectedText,
+    app.vault,
+    app.metadataCache,
+    activeFilePath
+  );
+  const additionalFiles = (selectedFiles == null ? void 0 : selectedFiles.map((filePath) => app.vault.getAbstractFileByPath(filePath)).filter(
+    (file) => file !== null && file instanceof import_obsidian12.TFile && (file.extension === "md" || file.extension === "pdf")
+  )) || [];
+  return [...linkedFiles, ...additionalFiles];
+}
+function shouldAbortProcessing(processedDocs, abortController) {
+  return processedDocs.size === 0 || (abortController == null ? void 0 : abortController.signal.aborted);
+}
+function resolveContextLimit(settings) {
+  var _a7;
+  const preset = (_a7 = settings == null ? void 0 : settings.defaults) == null ? void 0 : _a7.contextLimit;
+  const map = {
+    local: 1e4,
+    cloud: 32e3,
+    advanced: 1e5,
+    max: 3e6
+  };
+  return map[preset];
+}
+
+// src/selectionImages.ts
+async function extractImagesFromSelection(app, selectedText) {
+  const regexp = /!\[\[(.+?\.(?:png|jpe?g))]]/gi;
+  const fileNames = Array.from(
+    selectedText.matchAll(regexp),
+    (match) => match[1]
+  );
+  const cleanedText = selectedText.replace(regexp, "");
+  const imagesInBase64 = (await Promise.all(
+    fileNames.map((fileName) => readImageAsDataUrl(app, fileName))
+  )).filter(Boolean) || [];
+  return { cleanedText, imagesInBase64 };
+}
+async function readImageAsDataUrl(app, fileName) {
+  var _a7, _b3;
+  const activePath = (_b3 = (_a7 = app.workspace.getActiveFile()) == null ? void 0 : _a7.path) != null ? _b3 : "";
+  const filePath = app.metadataCache.getFirstLinkpathDest(
+    fileName,
+    activePath
+  );
+  if (!filePath) {
+    return "";
+  }
+  return app.vault.adapter.readBinary(filePath.path).then((buffer) => {
+    const extension = filePath.extension.toLowerCase();
+    const mimeType = extension === "jpg" ? "jpeg" : extension;
+    const blob = new Blob([buffer], {
+      type: `image/${mimeType}`
+    });
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  });
+}
+
+// src/providerRequest.ts
+var import_obsidian13 = require("obsidian");
 
 // src/utils.ts
 function preparePrompt(prompt = "", selectedText, context) {
@@ -47034,13 +48342,74 @@ function resolveConditionalContext(prompt, context) {
   return prompt;
 }
 
-// src/main.ts
+// src/providerRequest.ts
+function selectProvider2(aiProviders, settings, hasImages, overrideProviderId) {
+  const visionCandidate = hasImages ? aiProviders.providers.find(
+    (p) => p.id === settings.aiProviders.vision
+  ) : void 0;
+  const preferredProviderId = overrideProviderId || settings.aiProviders.main;
+  const fallback2 = aiProviders.providers.find(
+    (p) => p.id === preferredProviderId
+  );
+  const provider = visionCandidate || fallback2;
+  if (!provider) {
+    throw new Error("No AI provider found");
+  }
+  return provider;
+}
+function overrideProviderModel(provider, overrideProviderId, actionPaletteModel, actionPaletteModelProviderId) {
+  if (actionPaletteModel && overrideProviderId && actionPaletteModelProviderId === overrideProviderId) {
+    return { ...provider, model: actionPaletteModel };
+  }
+  return provider;
+}
+async function executeProviderRequest({
+  aiProviders,
+  provider,
+  settings,
+  prompt,
+  system,
+  temperature,
+  selectedText,
+  context,
+  imagesInBase64,
+  abortController,
+  onUpdate
+}) {
+  try {
+    return await aiProviders.execute({
+      provider,
+      prompt: preparePrompt(prompt, selectedText, context),
+      images: imagesInBase64,
+      systemPrompt: system,
+      options: {
+        temperature: temperature != null ? temperature : CREATIVITY[settings.defaults.creativity].temperature
+      },
+      onProgress: (_chunk, accumulatedText) => {
+        onUpdate(accumulatedText);
+      },
+      abortController
+    });
+  } catch (error) {
+    if (!abortController.signal.aborted) {
+      new import_obsidian13.Notice(
+        I18n.t("notices.errorGenerating", {
+          message: error.message
+        })
+      );
+    }
+    logger.separator();
+    return "";
+  }
+}
+
+// src/textProcessing.ts
 function removeThinkingTags(text2) {
   return text2.replace(/^<think>[\s\S]*?<\/think>\s*/, "");
 }
-var MIN_BASE_SPEED = 0.02 / 16;
-var MAX_BASE_SPEED = 3 / 16;
-var LocalGPT2 = class extends import_obsidian5.Plugin {
+
+// src/main.ts
+var LocalGPT2 = class extends import_obsidian14.Plugin {
   constructor() {
     super(...arguments);
     this.actionPaletteProviderId = null;
@@ -47049,46 +48418,6 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
     this.actionPaletteCreativityKey = null;
     // "", "low", "medium", "high"
     this.abortControllers = [];
-    this.currentPercentage = 0;
-    this.targetPercentage = 0;
-    this.frameId = null;
-    this.lastFrameTime = null;
-    this.displayedPercentage = 0;
-    // fractional internal value
-    this.baseSpeed = 0;
-    // percent per ms (smoothed)
-    this.lastTargetUpdateTime = null;
-    this.progressFinished = false;
-    // controls when we can show 100%
-    this.totalProgressSteps = 0;
-    this.completedProgressSteps = 0;
-    // Legacy provider defaults used by older settings migrations
-    this.legacyDefaultProviders = {
-      ollama: {
-        url: "http://localhost:11434",
-        defaultModel: "gemma2",
-        embeddingModel: "",
-        type: "ollama"
-      },
-      ollama_fallback: {
-        url: "http://localhost:11434",
-        defaultModel: "gemma2",
-        embeddingModel: "",
-        type: "ollama"
-      },
-      openaiCompatible: {
-        url: "http://localhost:8080/v1",
-        apiKey: "",
-        embeddingModel: "",
-        type: "openaiCompatible"
-      },
-      openaiCompatible_fallback: {
-        url: "http://localhost:8080/v1",
-        apiKey: "",
-        embeddingModel: "",
-        type: "openaiCompatible"
-      }
-    };
     this.escapeHandler = (event2) => {
       if (event2.key === "Escape") {
         this.abortControllers.forEach(
@@ -47099,42 +48428,9 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
         this.abortControllers = [];
       }
     };
-    this.animationLoop = (time) => {
-      if (this.lastFrameTime === null) {
-        this.lastFrameTime = time;
-      }
-      const delta = time - this.lastFrameTime;
-      this.lastFrameTime = time;
-      const target = this.targetPercentage;
-      if (delta > 0 && this.displayedPercentage < target) {
-        let speed = this.baseSpeed;
-        if (speed === 0) {
-          speed = (target - this.displayedPercentage) / 400;
-        }
-        this.displayedPercentage = Math.min(
-          target,
-          this.displayedPercentage + speed * delta
-        );
-        const rounded = Math.floor(this.displayedPercentage);
-        if (rounded !== this.currentPercentage) {
-          this.currentPercentage = rounded;
-          this.updateStatusBar();
-        }
-      }
-      if (this.displayedPercentage >= target) {
-        this.displayedPercentage = target;
-        this.currentPercentage = target;
-        this.updateStatusBar();
-      }
-      if (this.currentPercentage < this.targetPercentage || this.displayedPercentage < this.targetPercentage) {
-        this.frameId = requestAnimationFrame(this.animationLoop);
-        return;
-      }
-      this.stopAnimation();
-    };
   }
   async onload() {
-    (0, import_sdk2.initAI)(this.app, this, async () => {
+    (0, import_sdk4.initAI)(this.app, this, async () => {
       await this.loadSettings();
       this.addSettingTab(new LocalGPTSettingTab(this.app, this));
       this.reload();
@@ -47151,9 +48447,7 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
     });
   }
   initializeStatusBar() {
-    this.statusBarItem = this.addStatusBarItem();
-    this.statusBarItem.addClass("local-gpt-status");
-    this.statusBarItem.hide();
+    this.progressStatusBar = new ProgressStatusBar(this.addStatusBarItem());
   }
   getLegacyActionPaletteSystemPromptStorageKey() {
     var _a7, _b3, _c2;
@@ -47170,178 +48464,10 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
     );
   }
   addCommands() {
-    this.addCommand({
-      id: "context-menu",
-      name: I18n.t("commands.showContextMenu"),
-      editorCallback: (editor) => {
-        const editorView = editor.cm;
-        const cursorPositionFrom = editor.getCursor("from");
-        const cursorPositionTo = editor.getCursor("to");
-        const contextMenu = new import_obsidian5.Menu();
-        populateActionContextMenu(
-          contextMenu,
-          this.settings.actions,
-          (action2) => this.runAction(action2, editor)
-        );
-        const fromRect = editorView.coordsAtPos(
-          editor.posToOffset(cursorPositionFrom)
-        );
-        const toRect = editorView.coordsAtPos(
-          editor.posToOffset(cursorPositionTo)
-        );
-        contextMenu.showAtPosition({
-          x: fromRect.left,
-          y: toRect.top + (editorView.defaultLineHeight || 0)
-        });
-      }
-    });
-    getRunnableActions(this.settings.actions).forEach((action2, index3) => {
-      this.addCommand({
-        id: `quick-access-${index3 + 1}`,
-        name: `${index3 + 1} | ${action2.name}`,
-        editorCallback: (editor) => {
-          this.runAction(action2, editor);
-        }
-      });
-    });
-    this.addCommand({
-      id: "local-gpt-action-palette",
-      name: I18n.t("commands.actionPalette.name"),
-      editorCallback: async (editor) => {
-        var _a7, _b3, _c2, _d;
-        const editorView = editor.cm;
-        const cursorPositionFrom = editor.getCursor("from");
-        const insertPos = editor.posToOffset({
-          line: cursorPositionFrom.line,
-          ch: 0
-        });
-        let modelLabel = "";
-        let currentProviderId;
-        try {
-          const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
-          const aiProviders = await aiRequestWaiter.promise;
-          const selectedProviderId = this.actionPaletteProviderId || this.settings.aiProviders.main;
-          const provider = aiProviders.providers.find(
-            (p) => p.id === selectedProviderId
-          );
-          if (provider) {
-            currentProviderId = provider.id;
-            const modelToShow = this.actionPaletteModelProviderId === provider.id ? this.actionPaletteModel || provider.model : provider.model;
-            const creativityKey = (_b3 = (_a7 = this.actionPaletteCreativityKey) != null ? _a7 : this.settings.defaults.creativity) != null ? _b3 : "";
-            const creativityLabelMap = {
-              "": I18n.t("settings.creativityNone"),
-              low: I18n.t("settings.creativityLow"),
-              medium: I18n.t("settings.creativityMedium"),
-              high: I18n.t("settings.creativityHigh")
-            };
-            const creativityLabel = creativityLabelMap[creativityKey] || "";
-            modelLabel = [
-              provider.name,
-              modelToShow,
-              creativityLabel
-            ].filter(Boolean).join(" \xB7 ");
-          }
-        } catch (e) {
-          void e;
-        }
-        showActionPalette(editorView, insertPos, {
-          onSubmit: (text2, selectedFiles = [], systemPrompt) => {
-            var _a8, _b4, _c3;
-            const overrideProviderId = this.actionPaletteProviderId || this.settings.aiProviders.main;
-            const creativityKey = (_b4 = (_a8 = this.actionPaletteCreativityKey) != null ? _a8 : this.settings.defaults.creativity) != null ? _b4 : "";
-            const temperatureOverride = (_c3 = CREATIVITY[creativityKey]) == null ? void 0 : _c3.temperature;
-            this.runFreeform(
-              editor,
-              text2,
-              selectedFiles,
-              overrideProviderId,
-              temperatureOverride,
-              systemPrompt
-            ).finally(() => {
-            });
-            hideActionPalette(editorView);
-            this.app.workspace.updateOptions();
-          },
-          onCancel: () => {
-            hideActionPalette(editorView);
-            this.app.workspace.updateOptions();
-          },
-          placeholder: I18n.t("commands.actionPalette.placeholder"),
-          modelLabel,
-          providerId: currentProviderId,
-          getFiles: () => {
-            return this.app.vault.getMarkdownFiles().concat(
-              this.app.vault.getFiles().filter((f) => f.extension === "pdf")
-            ).map((file) => ({
-              path: file.path,
-              basename: file.basename,
-              extension: file.extension
-            }));
-          },
-          getProviders: async () => {
-            try {
-              const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
-              const aiProviders = await aiRequestWaiter.promise;
-              return aiProviders.providers.filter((p) => Boolean(p.model)).map((p) => ({
-                id: p.id,
-                name: p.model || I18n.t(
-                  "commands.actionPalette.unknownModel"
-                ),
-                providerName: p.name,
-                providerUrl: p.url || ""
-              }));
-            } catch (error) {
-              console.error("Error fetching models:", error);
-              return [];
-            }
-          },
-          getModels: async (providerId) => {
-            try {
-              const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
-              const aiProviders = await aiRequestWaiter.promise;
-              const provider = aiProviders.providers.find(
-                (p) => p.id === providerId
-              );
-              if (!provider) return [];
-              const models = provider.availableModels || await aiProviders.fetchModels(provider);
-              return models.map((m) => ({ id: m, name: m }));
-            } catch (error) {
-              console.error("Error fetching models:", error);
-              return [];
-            }
-          },
-          onProviderChange: async (providerId) => {
-            this.actionPaletteProviderId = providerId;
-            this.actionPaletteModel = null;
-            this.actionPaletteModelProviderId = null;
-          },
-          onModelChange: async (model) => {
-            const providerId = this.actionPaletteProviderId || this.settings.aiProviders.main;
-            this.actionPaletteModel = model;
-            this.actionPaletteModelProviderId = providerId;
-          },
-          onCreativityChange: async (creativityKey) => {
-            this.actionPaletteCreativityKey = creativityKey;
-          },
-          getSystemPrompts: () => {
-            return getRunnableActions(this.settings.actions).filter((action2) => action2.system).map((action2) => ({
-              id: getActionIdentifier(action2),
-              name: action2.name,
-              system: action2.system
-            }));
-          },
-          selectedSystemPromptId: (_d = (_c2 = this.settings.actionPalette) == null ? void 0 : _c2.systemPromptActionId) != null ? _d : null,
-          onSystemPromptChange: async (systemPromptId) => {
-            this.settings.actionPalette = {
-              ...this.settings.actionPalette || {},
-              systemPromptActionId: systemPromptId
-            };
-            await this.saveData(this.settings);
-          }
-        });
-        this.app.workspace.updateOptions();
-      }
-    });
+    registerLocalGPTCommands(this);
+  }
+  getActionPaletteInitialSelectedFiles(editor) {
+    return getActionPaletteInitialSelectedFiles(this, editor);
   }
   async runFreeform(editor, userInput, selectedFiles = [], overrideProviderId, customTemperature, systemPrompt) {
     return this.executeAction(
@@ -47351,7 +48477,8 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
         replace: false,
         selectedFiles,
         overrideProviderId: overrideProviderId || void 0,
-        temperature: customTemperature
+        temperature: customTemperature,
+        selectionContextMode: "selection"
       },
       editor
     );
@@ -47362,7 +48489,8 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
         prompt: action2.prompt,
         system: action2.system,
         replace: !!action2.replace,
-        temperature: action2.temperature || CREATIVITY[this.settings.defaults.creativity].temperature
+        temperature: action2.temperature || CREATIVITY[this.settings.defaults.creativity].temperature,
+        selectionContextMode: "selection-or-document"
       },
       editor
     );
@@ -47373,7 +48501,7 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
       cursorOffsetFrom,
       cursorOffsetTo,
       selectedTextRef
-    } = this.extractSelectionContext(editor);
+    } = this.extractSelectionContext(editor, params.selectionContextMode);
     const { abortController, hideSpinner, onUpdate } = this.createExecutionContext(
       editorView,
       cursorOffsetTo,
@@ -47396,44 +48524,55 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
       releaseSelectionTracker
     );
     try {
-      const { cleanedText, imagesInBase64 } = await this.extractImagesFromSelection(selectedTextRef.value);
+      const { cleanedText, imagesInBase64 } = await extractImagesFromSelection(
+        this.app,
+        selectedTextRef.value
+      );
       selectedTextRef.value = cleanedText;
       logger.time("Processing Embeddings");
       logger.timeEnd("Processing Embeddings");
       logger.debug("Selected text", cleanedText);
-      const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
+      const aiRequestWaiter = await (0, import_sdk4.waitForAI)();
       const aiProviders = await aiRequestWaiter.promise;
       const embeddingProvider = aiProviders.providers.find(
         (provider2) => provider2.id === this.settings.aiProviders.embedding
       );
+      const contextQuery = cleanedText.trim() ? cleanedText : params.prompt;
       const context = await this.enhanceWithContext(
         cleanedText,
         aiProviders,
         embeddingProvider,
         abortController,
-        params.selectedFiles
+        params.selectedFiles,
+        contextQuery
       );
-      const provider = this.selectProvider(
+      const provider = selectProvider2(
         aiProviders,
+        this.settings,
         imagesInBase64.length > 0,
         params.overrideProviderId
       );
-      const adjustedProvider = this.overrideProviderModel(
+      const adjustedProvider = overrideProviderModel(
         provider,
-        params
+        params.overrideProviderId,
+        this.actionPaletteModel,
+        this.actionPaletteModelProviderId
       );
       let fullText = "";
       try {
-        fullText = await this.executeProviderRequest(
+        fullText = await executeProviderRequest({
           aiProviders,
-          adjustedProvider,
-          params,
-          cleanedText,
+          provider: adjustedProvider,
+          settings: this.settings,
+          prompt: params.prompt,
+          system: params.system,
+          temperature: params.temperature,
+          selectedText: cleanedText,
           context,
           imagesInBase64,
           abortController,
           onUpdate
-        );
+        });
       } finally {
         hideSpinner && hideSpinner();
         this.app.workspace.updateOptions();
@@ -47461,10 +48600,12 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
       releaseSelectionTracker();
     }
   }
-  extractSelectionContext(editor) {
+  extractSelectionContext(editor, selectionContextMode) {
     const editorView = editor.cm;
     const selection = editor.getSelection();
-    const selectedTextRef = { value: selection || editor.getValue() };
+    const selectedTextRef = {
+      value: selection || (selectionContextMode === "selection-or-document" ? editor.getValue() : "")
+    };
     const cursorPositionFrom = editor.getCursor("from");
     const cursorPositionTo = editor.getCursor("to");
     const cursorOffsetFrom = editor.posToOffset(cursorPositionFrom);
@@ -47497,90 +48638,6 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
     };
     return { abortController, hideSpinner, onUpdate };
   }
-  async extractImagesFromSelection(selectedText) {
-    const regexp = /!\[\[(.+?\.(?:png|jpe?g))]]/gi;
-    const fileNames = Array.from(
-      selectedText.matchAll(regexp),
-      (match) => match[1]
-    );
-    const cleanedText = selectedText.replace(regexp, "");
-    const imagesInBase64 = (await Promise.all(
-      fileNames.map(
-        (fileName) => this.readImageAsDataUrl(fileName)
-      )
-    )).filter(Boolean) || [];
-    return { cleanedText, imagesInBase64 };
-  }
-  async readImageAsDataUrl(fileName) {
-    const filePath = this.app.metadataCache.getFirstLinkpathDest(
-      fileName,
-      // @ts-ignore
-      this.app.workspace.getActiveFile().path
-    );
-    if (!filePath) {
-      return "";
-    }
-    return this.app.vault.adapter.readBinary(filePath.path).then((buffer) => {
-      const extension = filePath.extension.toLowerCase();
-      const mimeType = extension === "jpg" ? "jpeg" : extension;
-      const blob = new Blob([buffer], {
-        type: `image/${mimeType}`
-      });
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
-      });
-    });
-  }
-  selectProvider(aiProviders, hasImages, overrideProviderId) {
-    const visionCandidate = hasImages ? aiProviders.providers.find(
-      (p) => p.id === this.settings.aiProviders.vision
-    ) : void 0;
-    const preferredProviderId = overrideProviderId || this.settings.aiProviders.main;
-    const fallback2 = aiProviders.providers.find(
-      (p) => p.id === preferredProviderId
-    );
-    const provider = visionCandidate || fallback2;
-    if (!provider) {
-      throw new Error("No AI provider found");
-    }
-    return provider;
-  }
-  overrideProviderModel(provider, params) {
-    if (this.actionPaletteModel && params.overrideProviderId && this.actionPaletteModelProviderId === params.overrideProviderId) {
-      return { ...provider, model: this.actionPaletteModel };
-    }
-    return provider;
-  }
-  async executeProviderRequest(aiProviders, provider, params, selectedText, context, imagesInBase64, abortController, onUpdate) {
-    var _a7;
-    try {
-      return await aiProviders.execute({
-        provider,
-        prompt: preparePrompt(params.prompt, selectedText, context),
-        images: imagesInBase64,
-        systemPrompt: params.system,
-        options: {
-          temperature: (_a7 = params.temperature) != null ? _a7 : CREATIVITY[this.settings.defaults.creativity].temperature
-        },
-        onProgress: (_chunk, accumulatedText) => {
-          onUpdate(accumulatedText);
-        },
-        abortController
-      });
-    } catch (error) {
-      if (!abortController.signal.aborted) {
-        new import_obsidian5.Notice(
-          I18n.t("notices.errorGenerating", {
-            message: error.message
-          })
-        );
-      }
-      logger.separator();
-      return "";
-    }
-  }
   applyTextResult(editor, replaceSelection, finalText, selectedText, cursorOffsetFrom, cursorOffsetTo) {
     const cursorPositionFrom = editor.offsetToPos(cursorOffsetFrom);
     const cursorPositionTo = editor.offsetToPos(cursorOffsetTo);
@@ -47599,101 +48656,27 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
       line: cursorPositionTo.line + 1
     });
   }
-  async enhanceWithContext(selectedText, aiProviders, aiProvider, abortController, selectedFiles) {
-    const activeFile = this.app.workspace.getActiveFile();
-    if (!activeFile || !aiProvider || (abortController == null ? void 0 : abortController.signal.aborted)) {
-      return "";
-    }
-    const allLinkedFiles = this.collectLinkedFilesForContext(
+  async enhanceWithContext(selectedText, aiProviders, aiProvider, abortController, selectedFiles, queryText) {
+    return enhanceWithContext({
+      app: this.app,
+      settings: this.settings,
       selectedText,
+      aiProviders,
+      aiProvider,
+      abortController,
       selectedFiles,
-      activeFile.path
-    );
-    if (allLinkedFiles.length === 0) {
-      return "";
-    }
-    try {
-      this.initializeProgress();
-      const processedDocs = await startProcessing(
-        allLinkedFiles,
-        this.app.vault,
-        this.app.metadataCache,
-        activeFile,
-        this.updateCompletedSteps.bind(this)
-      );
-      if (this.shouldAbortProcessing(processedDocs, abortController)) {
-        return this.finishContextProcessing("");
-      }
-      const retrieveDocuments = Array.from(processedDocs.values());
-      if (abortController == null ? void 0 : abortController.signal.aborted) {
-        return this.finishContextProcessing("");
-      }
-      const contextLimit = this.resolveContextLimit();
-      const relevantContext = await searchDocuments(
-        selectedText,
-        retrieveDocuments,
-        aiProviders,
-        aiProvider,
-        abortController,
-        this.updateCompletedSteps.bind(this),
-        this.addTotalProgressSteps.bind(this),
-        contextLimit
-      );
-      return this.finishContextProcessing(relevantContext.trim() || "");
-    } catch (error) {
-      return this.handleContextError(error, abortController);
-    }
-  }
-  collectLinkedFilesForContext(selectedText, selectedFiles, activeFilePath) {
-    const linkedFiles = getLinkedFiles(
-      selectedText,
-      this.app.vault,
-      this.app.metadataCache,
-      activeFilePath
-    );
-    const additionalFiles = (selectedFiles == null ? void 0 : selectedFiles.map(
-      (filePath) => this.app.vault.getAbstractFileByPath(filePath)
-    ).filter(
-      (file) => file !== null && file instanceof import_obsidian5.TFile && (file.extension === "md" || file.extension === "pdf")
-    )) || [];
-    return [...linkedFiles, ...additionalFiles];
-  }
-  shouldAbortProcessing(processedDocs, abortController) {
-    return processedDocs.size === 0 || (abortController == null ? void 0 : abortController.signal.aborted);
-  }
-  resolveContextLimit() {
-    var _a7, _b3;
-    const preset = (_b3 = (_a7 = this.settings) == null ? void 0 : _a7.defaults) == null ? void 0 : _b3.contextLimit;
-    const map = {
-      local: 1e4,
-      cloud: 32e3,
-      advanced: 1e5,
-      max: 3e6
-    };
-    return map[preset];
-  }
-  finishContextProcessing(result) {
-    this.hideStatusBar();
-    return result;
-  }
-  handleContextError(error, abortController) {
-    this.hideStatusBar();
-    if (!(abortController == null ? void 0 : abortController.signal.aborted)) {
-      console.error("Error processing RAG:", error);
-      new import_obsidian5.Notice(
-        I18n.t("notices.errorProcessingRag", {
-          message: error.message
-        })
-      );
-    }
-    return "";
+      queryText,
+      initializeProgress: () => this.initializeProgress(),
+      updateCompletedSteps: (steps) => this.updateCompletedSteps(steps),
+      addTotalProgressSteps: (steps) => this.addTotalProgressSteps(steps),
+      hideStatusBar: () => this.hideStatusBar()
+    });
   }
   onunload() {
+    var _a7;
     document.removeEventListener("keydown", this.escapeHandler);
     window.clearInterval(this.updatingInterval);
-    if (this.frameId !== null) {
-      cancelAnimationFrame(this.frameId);
-    }
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.dispose();
   }
   async loadSettings() {
     const loadedData = await this.loadData();
@@ -47706,264 +48689,14 @@ var LocalGPT2 = class extends import_obsidian5.Plugin {
     }
   }
   async migrateSettings(loadedData) {
-    if (!loadedData) {
-      return { settings: loadedData, changed: false };
-    }
-    const preAsyncMigrations = [
-      this.migrateToVersion2,
-      this.migrateToVersion3,
-      this.migrateToVersion4,
-      this.migrateToVersion5,
-      this.migrateToVersion6
-    ];
-    const postAsyncMigrations = [
-      this.migrateToVersion8,
-      this.migrateToVersion9,
-      this.migrateToVersion10
-    ];
-    const changed = preAsyncMigrations.reduce(
-      (hasChanged, migrate) => migrate.call(this, loadedData) || hasChanged,
-      false
+    return migrateSettings(
+      loadedData,
+      this.getLegacyActionPaletteSystemPromptStorageKey()
     );
-    const changedAsync = await this.migrateToVersion7(loadedData);
-    const changedPostAsync = postAsyncMigrations.reduce(
-      (hasChanged, migrate) => migrate.call(this, loadedData) || hasChanged,
-      false
-    );
-    return {
-      settings: loadedData,
-      changed: changed || changedAsync || changedPostAsync
-    };
-  }
-  migrateToVersion2(settings) {
-    if (settings._version && settings._version >= 1) {
-      return false;
-    }
-    const providers = JSON.parse(
-      JSON.stringify(this.legacyDefaultProviders)
-    );
-    settings.providers = providers;
-    settings.providers.ollama.ollamaUrl = settings.ollamaUrl;
-    delete settings.ollamaUrl;
-    settings.providers.ollama.defaultModel = settings.defaultModel;
-    delete settings.defaultModel;
-    settings.providers.openaiCompatible && (settings.providers.openaiCompatible.apiKey = "");
-    settings._version = 2;
-    return true;
-  }
-  migrateToVersion3(settings) {
-    if (settings._version && settings._version >= 3) {
-      return false;
-    }
-    settings.defaultProvider = settings.selectedProvider || "ollama";
-    delete settings.selectedProvider;
-    const providers = settings.providers;
-    if (providers) {
-      Object.keys(providers).forEach((key2) => {
-        providers[key2].type = key2;
-      });
-    }
-    settings._version = 3;
-    return true;
-  }
-  migrateToVersion4(settings) {
-    if (settings._version && settings._version >= 4) {
-      return false;
-    }
-    settings.defaults = {
-      provider: settings.defaultProvider || "ollama",
-      fallbackProvider: settings.fallbackProvider || "",
-      creativity: "low"
-    };
-    delete settings.defaultProvider;
-    delete settings.fallbackProvider;
-    settings._version = 4;
-    return true;
-  }
-  migrateToVersion5(settings) {
-    if (settings._version && settings._version >= 5) {
-      return false;
-    }
-    const providers = settings.providers;
-    if (providers) {
-      Object.keys(this.legacyDefaultProviders).forEach((provider) => {
-        if (providers[provider]) {
-          providers[provider].embeddingModel = this.legacyDefaultProviders[provider].embeddingModel;
-        }
-      });
-    }
-    settings._version = 5;
-    setTimeout(() => {
-      new import_obsidian5.Notice(
-        `\u{1F389} LocalGPT can finally use
-context from links!
-Check the Settings!`,
-        0
-      );
-    }, 1e4);
-    return true;
-  }
-  migrateToVersion6(settings) {
-    if (settings._version && settings._version >= 6) {
-      return false;
-    }
-    const providers = settings.providers;
-    if (providers) {
-      Object.keys(this.legacyDefaultProviders).forEach((provider) => {
-        var _a7, _b3;
-        if (((_a7 = providers[provider]) == null ? void 0 : _a7.type) === "ollama") {
-          providers[provider].url = providers[provider].ollamaUrl;
-          delete providers[provider].ollamaUrl;
-        }
-        if (((_b3 = providers[provider]) == null ? void 0 : _b3.type) === "openaiCompatible") {
-          providers[provider].url = providers[provider].url.replace(/\/+$/i, "") + "/v1";
-        }
-      });
-    }
-    settings._version = 6;
-    return true;
-  }
-  async migrateToVersion7(settings) {
-    if (settings._version && settings._version >= 7) {
-      return false;
-    }
-    new import_obsidian5.Notice(I18n.t("notices.importantUpdate"), 0);
-    const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
-    const aiProviders = await aiRequestWaiter.promise;
-    settings.aiProviders = {
-      main: null,
-      embedding: null,
-      vision: null
-    };
-    const oldProviders = settings.providers;
-    const oldDefaults = settings.defaults;
-    if (oldProviders && (oldDefaults == null ? void 0 : oldDefaults.provider)) {
-      await this.migrateLegacyProviderConfig(
-        settings,
-        aiProviders,
-        oldProviders,
-        oldDefaults
-      );
-    }
-    delete settings.defaults;
-    delete settings.providers;
-    settings._version = 7;
-    return true;
-  }
-  async migrateLegacyProviderConfig(settings, aiProviders, oldProviders, oldDefaults) {
-    const provider = oldDefaults.provider;
-    const typesMap = {
-      ollama: "ollama",
-      openaiCompatible: "openai"
-    };
-    const providerConfig = oldProviders[provider];
-    if (!providerConfig) {
-      return;
-    }
-    const type = typesMap[providerConfig.type];
-    await this.createMigratedProvider(
-      settings,
-      aiProviders,
-      provider,
-      providerConfig,
-      type,
-      "main",
-      providerConfig.defaultModel
-    );
-    await this.createMigratedProvider(
-      settings,
-      aiProviders,
-      provider,
-      providerConfig,
-      type,
-      "embedding",
-      providerConfig.embeddingModel
-    );
-  }
-  async createMigratedProvider(settings, aiProviders, provider, providerConfig, type, targetKey, model) {
-    if (!model) {
-      return;
-    }
-    let adjustedModel = model;
-    if (type === "ollama" && !adjustedModel.endsWith(":latest")) {
-      adjustedModel = `${adjustedModel}:latest`;
-    }
-    const id = `id-${Date.now().toString()}`;
-    const newProvider = await aiProviders.migrateProvider({
-      id,
-      name: targetKey === "main" ? `Local GPT ${provider}` : `Local GPT ${provider} embeddings`,
-      apiKey: providerConfig.apiKey,
-      url: providerConfig.url,
-      type,
-      model: adjustedModel
-    });
-    if (newProvider) {
-      settings.aiProviders[targetKey] = newProvider.id;
-    }
-  }
-  migrateToVersion8(settings) {
-    if (settings._version && settings._version >= 8) {
-      return false;
-    }
-    settings.defaults = settings.defaults || {};
-    settings.defaults.contextLimit = settings.defaults.contextLimit || "local";
-    settings._version = 8;
-    return true;
-  }
-  migrateToVersion9(settings) {
-    if (settings._version && settings._version >= 9) {
-      return false;
-    }
-    const { actions } = ensureActionIds(settings.actions || []);
-    settings.actions = actions;
-    settings._version = 9;
-    return true;
-  }
-  migrateToVersion10(settings) {
-    if (settings._version && settings._version >= 10) {
-      return false;
-    }
-    settings.actionPalette = settings.actionPalette || {};
-    if (settings.actionPalette.systemPromptActionId == null) {
-      settings.actionPalette.systemPromptActionId = this.readLegacyActionPaletteSystemPromptId();
-    }
-    this.clearLegacyActionPaletteSystemPromptId();
-    settings._version = 10;
-    return true;
-  }
-  readLegacyActionPaletteSystemPromptId() {
-    try {
-      const raw = window.localStorage.getItem(
-        this.getLegacyActionPaletteSystemPromptStorageKey()
-      );
-      if (!raw) {
-        return null;
-      }
-      const parsed = JSON.parse(raw);
-      return parsed && typeof parsed.id === "string" ? parsed.id : null;
-    } catch (error) {
-      console.error(
-        "Failed to migrate Action Palette system prompt selection:",
-        error
-      );
-      return null;
-    }
-  }
-  clearLegacyActionPaletteSystemPromptId() {
-    try {
-      window.localStorage.removeItem(
-        this.getLegacyActionPaletteSystemPromptStorageKey()
-      );
-    } catch (error) {
-      console.error(
-        "Failed to clean up legacy Action Palette system prompt selection:",
-        error
-      );
-    }
   }
   async checkUpdates() {
     try {
-      const { json: response } = await (0, import_obsidian5.requestUrl)({
+      const { json: response } = await (0, import_obsidian14.requestUrl)({
         url: "https://api.github.com/repos/pfrankov/obsidian-local-gpt/releases/latest",
         method: "GET",
         headers: {
@@ -47972,7 +48705,7 @@ Check the Settings!`,
         contentType: "application/json"
       });
       if (response.tag_name !== this.manifest.version) {
-        new import_obsidian5.Notice(I18n.t("notices.newVersion"));
+        new import_obsidian14.Notice(I18n.t("notices.newVersion"));
       }
     } catch (error) {
       console.error("Error checking for updates:", error);
@@ -47993,110 +48726,24 @@ Check the Settings!`,
     this.reload();
   }
   initializeProgress() {
-    this.totalProgressSteps = 0;
-    this.completedProgressSteps = 0;
-    this.currentPercentage = 0;
-    this.targetPercentage = 0;
-    this.displayedPercentage = 0;
-    this.baseSpeed = 0;
-    this.lastTargetUpdateTime = null;
-    this.lastFrameTime = null;
-    this.progressFinished = false;
-    this.stopAnimation();
-    this.statusBarItem.show();
-    this.updateStatusBar();
+    var _a7;
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.initialize();
   }
   addTotalProgressSteps(steps) {
-    this.totalProgressSteps += steps;
-    this.updateProgressBar();
+    var _a7;
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.addTotalProgressSteps(steps);
   }
   updateCompletedSteps(steps) {
-    this.completedProgressSteps += steps;
-    if (this.completedProgressSteps > this.totalProgressSteps) {
-      this.totalProgressSteps = this.completedProgressSteps;
-    }
-    this.updateProgressBar();
-  }
-  updateProgressBar() {
-    const newTarget = this.calculateTargetPercentage();
-    if (newTarget === this.targetPercentage) {
-      return;
-    }
-    const now = performance.now();
-    this.baseSpeed = this.calculateBaseSpeed(newTarget, now);
-    this.targetPercentage = newTarget;
-    this.lastTargetUpdateTime = now;
-    this.ensureAnimationLoop();
-  }
-  calculateTargetPercentage() {
-    if (this.totalProgressSteps <= 0) {
-      return 0;
-    }
-    const ratio = Math.min(
-      this.completedProgressSteps / this.totalProgressSteps,
-      1
-    );
-    return Math.floor(ratio * 100);
-  }
-  calculateBaseSpeed(newTarget, now) {
-    if (this.lastTargetUpdateTime === null) {
-      return this.baseSpeed;
-    }
-    const dt = now - this.lastTargetUpdateTime;
-    const diff = newTarget - this.targetPercentage;
-    if (dt <= 0 || diff <= 0) {
-      return this.baseSpeed;
-    }
-    const instantaneous = diff / dt;
-    const blended = this.baseSpeed === 0 ? instantaneous : this.baseSpeed * 0.75 + instantaneous * 0.25;
-    return Math.min(MAX_BASE_SPEED, Math.max(MIN_BASE_SPEED, blended));
-  }
-  ensureAnimationLoop() {
-    if (this.frameId !== null) {
-      return;
-    }
-    this.lastFrameTime = null;
-    this.frameId = requestAnimationFrame(this.animationLoop);
-  }
-  updateStatusBar() {
-    const shown = this.progressFinished ? this.currentPercentage : Math.min(this.currentPercentage, 99);
-    this.statusBarItem.setAttr(
-      "data-text",
-      shown ? I18n.t("statusBar.enhancingWithProgress", {
-        percent: String(shown)
-      }) : I18n.t("statusBar.enhancing")
-    );
-    this.statusBarItem.setText(` `);
-  }
-  stopAnimation() {
-    if (this.frameId !== null) {
-      cancelAnimationFrame(this.frameId);
-    }
-    this.frameId = null;
-    this.lastFrameTime = null;
+    var _a7;
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.updateCompletedSteps(steps);
   }
   hideStatusBar() {
-    this.statusBarItem.hide();
-    this.totalProgressSteps = 0;
-    this.completedProgressSteps = 0;
-    this.currentPercentage = 0;
-    this.targetPercentage = 0;
-    this.displayedPercentage = 0;
-    this.baseSpeed = 0;
-    this.lastTargetUpdateTime = null;
-    this.lastFrameTime = null;
-    this.progressFinished = false;
-    this.stopAnimation();
+    var _a7;
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.hide();
   }
   markProgressFinished() {
-    if (this.progressFinished) {
-      return;
-    }
-    this.progressFinished = true;
-    this.currentPercentage = 100;
-    this.displayedPercentage = 100;
-    this.targetPercentage = 100;
-    this.updateStatusBar();
+    var _a7;
+    (_a7 = this.progressStatusBar) == null ? void 0 : _a7.markFinished();
   }
 };
 /*! Bundled license information:

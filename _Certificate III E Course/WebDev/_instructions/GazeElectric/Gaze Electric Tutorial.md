@@ -12,7 +12,7 @@ needsUpdating: true
 
 In order to support the website that will be developed, some initial tables need to be configured in the database.
 
-However, before you do that, you need to have some background knowledge on databases.
+However, before you do that, you need to have some background knowledge on databases. See here : [[Slides - Databases]]
 
 
 ## Initial data

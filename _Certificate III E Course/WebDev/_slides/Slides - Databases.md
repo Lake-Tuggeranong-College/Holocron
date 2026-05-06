@@ -75,6 +75,16 @@ In MariaDB, every column must have a "Type." This helps the computer save space 
 - **DATE:** For birthdays or "joined on" dates.
 
 ---
+
+# Introducing Keys
+
+There are a number of special columns that can be utilised in databases for different reasons. 
+
+There are two main ones - **primary** and **foreign** keys.
+
+
+--
+
 # Primary Keys (PK)
 
 Every table **must** have a Primary Key.
@@ -82,9 +92,19 @@ Every table **must** have a Primary Key.
 - It is a **unique identifier** for every row.
 - **Pro Tip:** We usually set this to **Auto Increment (A_I)** so MariaDB gives every new entry the next number (1, 2, 3...) automatically.
 
-**Example:** Even if two students are both named "Alex Tan," they will have different `student_id` values.
+**Example:** Even if two students are both named "Alex Smith," they will have different `student_id` values.
 
----
+--
+
+# Primary Key example
+|**student_id (PK)**|**Student Name**|**Major**|**Enrollment Year**|
+|---|---|---|---|
+|**2026-001**|Alex Smith|Computer Science|2026|
+|**2026-002**|Jordan Lee|Biology|2026|
+|**2026-003**|Alex Smith|Art History|2026|
+
+
+--
 # Foreign Keys - Establishing Relationships
 
 **What are Foreign Keys?**
@@ -113,8 +133,6 @@ This means each order is associated with a specific customer.  The `CustomerID` 
 
 --
 
-**Mermaid Diagram:**
-
 ```mermaid
 erDiagram
     Customers {
@@ -136,7 +154,6 @@ note:
 
 **Explanation of the Mermaid Diagram:**
 
-*   `erDiagram`:  This declares that we're creating an Entity-Relationship Diagram.
 *   `Customers { ... }`: Defines the `Customers` table.
 *   `Orders { ... }`: Defines the `Orders` table.
 *   `int CustomerID PK`:  Specifies that `CustomerID` is an integer and the primary key (PK) in the `Customers` table.
@@ -153,24 +170,18 @@ note:
 *   The `CustomerID` in the `Orders` table is linked to the `CustomerID` in the `Customers` table.
 *   The relationship is represented by the line connecting the tables, with the label "places" indicating the nature of the relationship.
 
----
 
-**How to Use This:**
+--
 
-1.  **Copy the Text:** Copy the text content above.
-2.  **Create a Slide:** In your presentation software, create a new slide.
-3.  **Paste the Text:** Paste the text into the slide.
-4.  **Insert the Mermaid Diagram:**  Most presentation tools have a way to embed Mermaid diagrams.  You'll typically need to:
-    *   Use a Mermaid Live editor (e.g., [https://mermaid.live/](https://mermaid.live/)) to generate the diagram's code.
-    *   Copy the code from the Mermaid diagram section above.
-    *   Paste the code into the appropriate field in your presentation software.  The software should then render the diagram.
 
-**Important Notes:**
+# Other Key Types
 
-*   **Mermaid Support:** Ensure your presentation software fully supports Mermaid diagrams.  Not all tools have native support; some require plugins.
-*   **Customization:**  You can customize the Mermaid diagram further to match your specific database schema.
+* **Unique Keys:** Similar to primary keys, but can allow NULL values in some database systems.
+* **Composite Keys:**  A primary key made up of two or more columns.
 
-Let me know if you'd like me to modify this slide in any way (e.g., change the example tables, add more detail, or adjust the Mermaid diagram).
+note:
+“There are other types of keys, but we’ve focused on the most important ones.  Unique keys enforce uniqueness, and composite keys combine multiple columns to create a unique identifier.”*
+
 
 ---
 
@@ -184,12 +195,16 @@ Let me know if you'd like me to modify this slide in any way (e.g., change the e
     *   Lacks context
     *   Can be ambiguous
     *   Often quantitative (numbers) or qualitative (descriptions)
-*   **Examples:**
-    *   `123` (a number)
-    *   `"John Doe"` (a name)
-    *   `"Red"` (a color)
-    *   A single temperature reading: `25°C`
-    *   A list of customer IDs: `CustomerID1, CustomerID2, CustomerID3`
+
+--
+
+# Data Examples 
+
+*   `123` (a number)
+*   `"John Doe"` (a name)
+*   `"Red"` (a color)
+*   A single temperature reading: `25°C`
+*   A list of customer IDs: `CustomerID1, CustomerID2, CustomerID3`
 
 --
 
@@ -201,15 +216,18 @@ Let me know if you'd like me to modify this slide in any way (e.g., change the e
     *   Contextualised
     *   Reduces Ambiguity
     *   Often qualitative (insights, conclusions)
-*   **Examples:**
-    *   "Sales increased by 15% last quarter." (Based on sales data)
-    *   "The average customer age is 32." (Based on customer data)
-    *   "Customers prefer blue products." (Based on product sales data and customer feedback)
-    *   A sales report showing monthly revenue trends.
+
+--
+# Information Examples
+
+*   "Sales increased by 15% last quarter." (Based on sales data)
+*   "The average customer age is 32." (Based on customer data)
+*   "Customers prefer blue products." (Based on product sales data and customer feedback)
+*   A sales report showing monthly revenue trends.
 
 ---
 
-## phpMyAdmin: Your Control Panel
+# phpMyAdmin: Your Control Panel
 
 We use **phpMyAdmin** to talk to MariaDB without writing raw code yet.
 
@@ -218,13 +236,122 @@ We use **phpMyAdmin** to talk to MariaDB without writing raw code yet.
 - **Insert Tab:** A simple form to add new data to a table.
 - **SQL Tab:** Where you can type manual commands to the database.
 
-## Relationships: The "Relational" Part
+---
 
-Tables can "talk" to each other using **Foreign Keys**.
+# Introduction to SQL
 
-- **Scenario:** You have a `users` table and an `orders` table.
-- Instead of typing the user's name in the order, you just store their `user_id`.
-- This creates a **One-to-Many** relationship: One user can have many orders.
+ **SQL** (Structured Query Language) is the standard language for interacting with relational databases.  
+
+```sql
+SELECT * FROM Customers;
+```
+
+note:
+SQL can be written directly into phpmyadmin, however the majority of SQL written for this project will be embedded in PHP
+
+
+--
+
+# CRUD - The Core of SQL
+
+* **What is CRUD?**
+    * **C**reate: Adding new data to the database.
+    * **R**ead: Retrieving data from the database.
+    * **U**pdate: Modifying existing data in the database.
+    * **D**elete: Removing data from the database.
+
+
+
+--
+
+# CREATE - Adding Data
+
+* **Command:** `CREATE TABLE`
+* **Example:**
+```sql
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(255),
+    LastName VARCHAR(255),
+    City VARCHAR(255)
+);
+```
+
+This creates a table named "Customers" with four columns. `PRIMARY KEY` designates the `CustomerID` as the unique identifier for each row.
+
+
+
+--
+
+
+# READ - Retrieving Data
+
+* **Command:** `SELECT`
+* **Example:**
+```sql
+SELECT * FROM Customers;
+```
+This retrieves *all* columns (`*`) and *all* rows from the "Customers" table.
+* **More Complex Queries:**
+```sql
+SELECT FirstName, LastName FROM Customers WHERE City = 'London';
+```
+
+(Selects only first and last names from customers in London)
+
+
+--
+
+# UPDATE - Modifying Data
+
+* **Command:** `UPDATE`
+* **Example:**
+```sql
+UPDATE Customers
+SET City = 'New York'
+WHERE CustomerID = 1;
+```
+* **Explanation:** This changes the "City" column to "New York" for the customer with `CustomerID` equal to 1.
+* **Important:**  Always use a `WHERE` clause to specify *which* rows to update!  Otherwise, you'll update *all* rows.
+
+
+
+--
+
+# DELETE - Removing Data
+
+* **Command:** `DELETE`
+* **Example:**
+```sql
+DELETE FROM Customers
+WHERE CustomerID = 5;
+```
+* **Explanation:** This deletes the row from the "Customers" table where `CustomerID` is equal to 5.
+* **Important:**  Use with caution!  Deleting data is permanent.  Always double-check your `WHERE` clause.
+
+--
+
+# SQL in PHP
+
+```php
+$sql = "SELECT name, email FROM users WHERE id = :id";
+$stmt = $pdo->prepare($sql);
+
+// Execute with data binding (prevents SQL injection)
+$stmt->execute(['id' => 1]);
+
+// Fetch and display results
+$user = $stmt->fetch();
+```
+
+--
+
+# Summary & Next Steps
+
+* **Recap:**
+    * SQL is the language for interacting with relational databases.
+    * CRUD (Create, Read, Update, Delete) is the fundamental process.
+    * `CREATE`, `SELECT`, `UPDATE`, and `DELETE` are the core commands.
 
 ---
 

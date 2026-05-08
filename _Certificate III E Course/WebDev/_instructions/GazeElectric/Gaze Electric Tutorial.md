@@ -10,25 +10,34 @@ needsUpdating: true
 
 # Database Configuration
 
-In order to support the website that will be developed, some initial tables need to be configured in the database.
+Before executing commands, it is essential to understand the structure of relational databases. This background knowledge ensures you understand why tables are structured with specific data types and constraints.
 
-However, before you do that, you need to have some background knowledge on databases. See here : [[Slides - Databases]]
+See here : [[Slides - Databases]]
 
 
-## Initial data
+## Create your first table
 
-Open PHPMyAdmin, and log in with the username and password defined in the `docker-compose.yml` for the project. The ones used previously in the course are:
-Username : `shopfront`
-Password: `shopfront`
+> [!note] This guide will walk you through setting up the initial database infrastructure required for the shopfront web application.
 
+### Step 1: Accessing the Database Manager
+
+1. Open **PHPMyAdmin** in your browser.
+2. Log in using the credentials defined in your `docker-compose.yml` file.
+    - **Username:** `shopfront`
+    - **Password:** `shopfront`
 
 ![[dbPHPMyAdmin.png]]
 
-Select the `shopfront` database and then click the SQL tab.
+### Step 2: Selecting the Database
+
+Once logged in, locate the sidebar and select the **shopfront** database. This ensures your commands are executed in the correct context.
 
 ![[dbInitialiseSQLTab.png]]
 
-Enter the following SQL into the text box and press **Go**.
+### Step 3: Executing the SQL Command
+
+1. Click on the **SQL** tab in the top navigation bar.
+2. Copy and paste the following code into the query box:
 
 ![[dbInitialiseUserTable.png]]
 
@@ -45,11 +54,28 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 ```
 
-The SQL will be processed and you'll be presented with message of success. Afterwards, select the shopfront database again, and the **users** table will appear. Click on the **Structure** tab to see the table definition.
+3. Press **Go** to execute the command.
+
+#### Reference: The `users` Table Schema
+
+After execution, you can verify the structure by clicking the **Structure** tab.
+
+|**Field**|**Type**|**Attributes**|**Description**|
+|---|---|---|---|
+|**user_id**|`int`|Primary Key, Auto Increment|Unique identifier for every user.|
+|**username**|`text`|NOT NULL|The user's login handle.|
+|**password_hash**|`text`|NOT NULL|Securely hashed password string.|
+|**first_name**|`text`|NOT NULL|User's legal first name.|
+|**second_name**|`text`|NOT NULL|User's legal surname.|
+
 
 ![[dbInitialiseUserTableComplete.png]]
 
-Notice the 🔑 icon next to `user_id` which indicates that it is a **primary key**.
+**Key Indicator:** The 🔑 icon next to `user_id` confirms it is the **Primary Key**, ensuring no two users share the same ID.
+
+### Step 4. How-To: Next Steps
+
+Now that your database is initialised, you are ready to begin the application development phase. Your next task is to connect your web server to this database using the credentials provided in the login step.
 
 # `config.php`
 

@@ -202,6 +202,35 @@ networks:
 
 ```
 
+`Dockerfile`:
+```Dockerfile
+FROM php:8.2-apache
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+RUN a2enmod rewrite
+
+EXPOSE 8880
+```
+
+`devcontainer.json`:
+```devcontainer
+{
+    "name": "PHP Apache MySQL Dev Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "rjc-certIII-web",
+    "workspaceFolder": "/var/www/html",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php"
+            }
+        }
+    }
+}
+```
+
 Finally, define a persistent storage volume called `db_data`
 
 ### Test configuration

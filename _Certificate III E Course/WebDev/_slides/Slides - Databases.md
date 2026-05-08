@@ -13,13 +13,13 @@ Goals:
 
 ---
 
-
 ## What is MariaDB?
+
+![[dbMariadb.png|200]]
 
 You might hear the term **MySQL**, but we are using **MariaDB**.
 
 - **The History:** When MySQL was bought by a big corporation (Oracle), the original creators "forked" the code to keep it truly open-source and community-driven.
-- **The Name:** It’s named after the founder's younger daughter, Maria. (MySQL was named after his older daughter, My!)
 - **Compatibility:** It is a "drop-in replacement." This means all your PHP code and phpMyAdmin tools work exactly the same way.
 
 ---
@@ -29,9 +29,7 @@ In simple terms, a database is an **organised collection of structured informati
 
 Think of it like a digital filing cabinet. Instead of paper folders, we use **Tables**.
 
-**Example:**
-
-An E-commerce website stores products, customer details, and order history in a database so it can quickly find "All orders from User #105."
+**Example:** An E-commerce website stores products, customer details, and order history in a database so it can quickly find "All orders from User #105."
 
 ---
 ## Why not just use Excel?
@@ -54,11 +52,11 @@ Spreadsheets are for people; Databases are for **applications**.
 ---
 # Anatomy of a Table
 
-| **id (PK)** | **product_name**    | **price** | **stock** |
-| ----------- | ------------------- | --------- | --------- |
-| 1           | Gaming Mouse        | 45.00     | 12        |
-| 2           | Mechanical Keyboard | 89.00     | 5         |
-| 3           | USB-C Cable         | 12.50     | 50        |
+| student_id (PK) | Student Name | Major            | Enrollment Year |
+| --------------- | ------------ | ---------------- | --------------- |
+| 2026-001    | Alex Smith   | Computer Science | 2026            |
+| 2026-002    | Jordan Lee   | Biology          | 2026            |
+| 2026-003    | Alex Smith   | Art History      | 2026            |
 
 - **Columns:** The "headers" that define what data we store.
 - **Rows:** The actual data entries.
@@ -97,11 +95,11 @@ Every table **must** have a Primary Key.
 --
 
 # Primary Key example
-|**student_id (PK)**|**Student Name**|**Major**|**Enrollment Year**|
-|---|---|---|---|
-|**2026-001**|Alex Smith|Computer Science|2026|
-|**2026-002**|Jordan Lee|Biology|2026|
-|**2026-003**|Alex Smith|Art History|2026|
+| **student_id (PK)** | **Student Name** | **Major**        | **Enrollment Year** |
+| ------------------- | ---------------- | ---------------- | ------------------- |
+| **2026-001**        | Alex Smith       | Computer Science | 2026                |
+| **2026-002**        | Jordan Lee       | Biology          | 2026                |
+| **2026-003**        | Alex Smith       | Art History      | 2026                |
 
 
 --
@@ -132,24 +130,7 @@ Let's say we have two tables:
 This means each order is associated with a specific customer.  The `CustomerID` in the `Orders` table tells us which customer placed that order.
 
 --
-
-```mermaid
-erDiagram
-    Customers {
-        int CustomerID PK
-        string Name
-        string Address
-    }
-
-    Orders {
-        int OrderID PK
-        int CustomerID FK
-        date OrderDate
-    }
-
-    Customers ||--o{ Orders : places
-```
-
+![[dbERD.png]]
 note:
 
 **Explanation of the Mermaid Diagram:**
@@ -236,6 +217,10 @@ We use **phpMyAdmin** to talk to MariaDB without writing raw code yet.
 - **Insert Tab:** A simple form to add new data to a table.
 - **SQL Tab:** Where you can type manual commands to the database.
 
+--
+
+![[dbPHPMyAdmin.png]]
+
 ---
 
 # Introduction to SQL
@@ -260,6 +245,9 @@ SQL can be written directly into phpmyadmin, however the majority of SQL written
     * **U**pdate: Modifying existing data in the database.
     * **D**elete: Removing data from the database.
 
+--
+
+![[dbCRUD.jpeg]]
 
 
 --
@@ -277,7 +265,9 @@ CREATE TABLE Customers (
 );
 ```
 
-This creates a table named "Customers" with four columns. `PRIMARY KEY` designates the `CustomerID` as the unique identifier for each row.
+This creates a table named "Customers" with four columns. 
+
+`PRIMARY KEY` designates the `CustomerID` as the unique identifier for each row.
 
 
 

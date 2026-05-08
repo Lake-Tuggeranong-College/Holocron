@@ -21,11 +21,11 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | ---------------------------- | ---------------------------------------------------------------------------------- | --------- | --------------- |
 | 1                            | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]  |           |                 |
 | 2                            | [[Slides - Databases]]                                                             |           |                 |
-| 3                            | Shopfront Project                                                                  |           |                 |
-| 4                            | Shopfront Project                                                                  |           |                 |
-| 5                            | Shopfront Project                                                                  |           |                 |
-| 6                            | Shopfront Project                                                                  |           |                 |
-| 7                            | Shopfront Project                                                                  |           | Task 2.1 Due    |
+| 3                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 4                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 5                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 6                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 7                            | [[_Gaze Electric Tutorial]]                                                        |           | Task 2.1 Due    |
 | 8                            | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]] |           |                 |
 | 9                            | Showcase Development                                                               |           |                 |
 | 10                           | Showcase Development                                                               |           |                 |

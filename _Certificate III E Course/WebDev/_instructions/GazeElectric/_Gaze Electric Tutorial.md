@@ -425,7 +425,7 @@ include "template.php";
 ![[registerInit.png]]
 
 2. Set the Page Title. Add a `<title>` tag to identify the page for the browser tab. For register.php: `<title>Register | Create Your Account</title>`
-3. For the Registration Page: Add styles for a softer background (#f8f9fa) and defined section titles to organize the long form.
+3. For the Registration Page: Add styles for a softer background (#f8f9fa) and defined section titles to organise the long form.
 ```css
 <style>
     body { background-color: #f8f9fa; }

@@ -80,8 +80,8 @@ Now that your database is initialised, you are ready to begin the application de
 ## Explanation
 
 Understanding why we configure a table with specific types and constraints is the difference between simply running code and building a scalable system. Here is the rationale behind the configuration used in your first table.
-=======
-## 1. Explanation: The Configuration Centralization
+
+## 1. Explanation: The Configuration Centralisation
 
 ### The Necessity of the Primary Key (`user_id`)
 

@@ -18,7 +18,7 @@ This process creates a [[Repository|repository]] which you will use throughout t
 
 # Clone Repository
 
-We are going to [[clone]] your project. Think of **cloning** as downloading a live version of your school assignment folder that stays connected to GitHub so you can turn in your work easily.
+We are going to [[Clone]] your project. Think of **cloning** as downloading a live version of your school assignment folder that stays connected to GitHub so you can turn in your work easily.
 
 > [!info] Github desktop is the GUI interface to clone, commit, push etc repositories to and from Github that runs on your local computer.
 

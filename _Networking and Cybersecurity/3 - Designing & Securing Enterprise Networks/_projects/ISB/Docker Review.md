@@ -4,7 +4,7 @@ needsUpdating: false
 ---
 # Introduction to Docker
 
-Docker is a popular [[containerisation]] platform that allows developers to package, ship, and run applications in containers. In this page, we'll explore the high-level concepts of Docker and how it differs from other forms of [[Virtualisation]].
+Docker is a popular [[Containerisation]] platform that allows developers to package, ship, and run applications in containers. In this page, we'll explore the high-level concepts of Docker and how it differs from other forms of [[Virtualisation]].
 
 ## What is Docker?
 

@@ -80,6 +80,8 @@ Now that your database is initialised, you are ready to begin the application de
 ## Explanation
 
 Understanding why we configure a table with specific types and constraints is the difference between simply running code and building a scalable system. Here is the rationale behind the configuration used in your first table.
+=======
+## 1. Explanation: The Configuration Centralization
 
 ### The Necessity of the Primary Key (`user_id`)
 
@@ -187,7 +189,6 @@ In web development, we can use a `config.php` file to centralise database creden
 - **`session_start()`**: Initialises or resumes a session. This allows the server to track a user's "Session ID" via a browser cookie, enabling persistence across different pages.
 - **`session_status()` check**: Verifies if a session is already active to prevent "headers already sent" errors.
 
-Save the file.
 
 # Creating the website template
 

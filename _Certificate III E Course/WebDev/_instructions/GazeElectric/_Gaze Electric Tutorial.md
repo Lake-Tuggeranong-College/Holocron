@@ -404,6 +404,235 @@ The code in **Step 3** uses Bootstrap’s "Navbar-Toggler."
 
 ## Tutorial
 
+### Step 1: Create the Registration Page (`register.php`)
+
+This file handles the creation of new user accounts.
+
+1. **Create `register.php`** and include `template.php` at the top.
+
+```php
+<?php
+// Start output buffering to handle header redirection
+ob_start();
+
+// Include template (config.php inside template.php handles session_start)
+include "template.php"; 
+
+/** @var $db */
+?>
+```
+
+![[registerInit.png]]
+
+2. Set the Page Title. Add a `<title>` tag to identify the page for the browser tab. For register.php: `<title>Register | Create Your Account</title>`
+3. For the Registration Page: Add styles for a softer background (#f8f9fa) and defined section titles to organize the long form.
+```css
+<style>
+    body { background-color: #f8f9fa; }
+    .card-registration { border-radius: 15px; border: none; }
+    .form-section-title { 
+        font-size: 1.1rem; 
+        font-weight: bold; 
+        color: #495057; 
+        border-bottom: 2px solid #e9ecef; 
+        padding-bottom: 10px; 
+        margin-bottom: 20px; 
+    }
+</style>
+```
+
+![[registerTitleStyle.png]]
+
+
+3. **Add the HTML Form:** Use `method="post"` and ensure each input name (`username`, `password`, `first_name`, etc.) matches the keys used in your PHP logic.
+
+
+```php
+
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card card-registration shadow-lg">
+          <div class="card-body p-5">
+            <h2 class="text-center fw-bold mb-5">Create Your Account</h2>
+
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+              
+              <div class="form-section-title"><i class="fas fa-lock me-2"></i>Account Security</div>
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Email / Username</label>
+                  <input type="email" name="username" class="form-control" placeholder="name@example.com" required />
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Password</label>
+                  <input type="password" name="password" class="form-control" required />
+                </div>
+              </div>
+
+              <div class="form-section-title"><i class="fas fa-user me-2"></i>Personal Information</div>
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">First Name</label>
+                  <input type="text" name="first_name" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Second Name</label> <input type="text" name="second_name" class="form-control" required />
+                </div>
+              </div>
+
+              <div class="form-section-title"><i class="fas fa-address-book me-2"></i>Contact & Shipping</div>
+              <div class="mb-4">
+                <label class="form-label">Address</label> <textarea name="address" class="form-control" rows="2" required></textarea>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" name="phone_number" class="form-control" placeholder="e.g., +1234567890" required />
+              </div>
+
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="terms" required />
+                <label class="form-check-label" for="terms">I agree to the terms and conditions</label>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" name="register" class="btn btn-primary btn-lg shadow-sm">Complete Registration</button>
+              </div>
+              
+              <p class="text-center mt-4">Already have an account? <a href="login.php">Login here</a></p>
+            </form>
+```
+
+![[registerFormCode.png]]
+
+4. **Insert the Logic:**
+	- Sanitise the data.
+    - Check for existing users.
+    - Hash the password using `password_hash()`.
+    - Execute the `INSERT` query and redirect to `login.php` on success.
+
+```php
+            <?php
+            if (isset($_POST['register'])) {
+                // Sanitise all inputs
+                $v_username    = sanitiseData($_POST['username']);
+                $v_password    = $_POST['password']; 
+                $v_first_name  = sanitiseData($_POST['first_name']);
+                $v_second_name = sanitiseData($_POST['second_name']); // Updated variable name
+                $v_address     = sanitiseData($_POST['address']);     // Updated variable name
+                $v_phone       = sanitiseData($_POST['phone_number']);
+                
+                $hashed_password = password_hash($v_password, PASSWORD_DEFAULT);
+
+                // Check if username exists
+                $query = $db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+                $query->execute([':username' => $v_username]);
+                
+                if ($query->fetchColumn() > 0) {
+                    $_SESSION['error_message'] = "This email is already registered.";
+                    header("Location: register.php");
+                    exit();
+                } else {
+                    // Updated SQL query to use second_name and address columns
+                    $sql = "INSERT INTO users (username, password_hash, first_name, second_name, address, phone_number, access_level) 
+                            VALUES (:username, :password, :fname, :sname, :address, :phone, 1)";
+                    
+                    $stmt = $db->prepare($sql);
+                    $success = $stmt->execute([
+                        ':username' => $v_username,
+                        ':password' => $hashed_password,
+                        ':fname'    => $v_first_name,
+                        ':sname'    => $v_second_name,
+                        ':address'  => $v_address,
+                        ':phone'    => $v_phone
+                    ]);
+
+                    if ($success) {
+                        $_SESSION['success_message'] = "Registration successful! Welcome to the Widget Shop.";
+                        header("Location: login.php");
+                        exit();
+                    } else {
+                        $_SESSION['error_message'] = "An error occurred. Please try again.";
+                        header("Location: register.php");
+                        exit();
+                    }
+                }
+            }
+            ?>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+![[registerFormLogic.png]]
+
+5. End the output buffer.
+
+```php
+
+<?php
+ob_end_flush();
+?>
+
+```
+
+![[registerOBEnd.png]]
+
+#### Explanation
+
+- **Password Hashing:** We never store passwords as plain text. The `password_hash()` function creates a secure, one-way cryptographic string. Even if your database is stolen, the passwords remain unreadable.
+- **Validation Logic:** Before saving a new user, the script checks if the username is already taken. This maintains the **Unique Constraint** of your database.
+
+#### Why use Output Buffering?
+
+In the provided scripts for `login.php`, `register.php`, and `profile.php`, you will notice the functions `ob_start()` at the very top and `ob_end_flush()` at the very bottom.
+
+##### The "Headers Already Sent" Problem
+
+Web servers send information to your browser in two parts: **Headers** (metadata like "redirect to this page") and the **Body** (the HTML you see).
+
+- **The Rule:** Once the server starts sending the Body (even a single empty space outside of PHP tags), it can no longer send Headers.
+- **The Conflict:** Because our scripts include `template.php` (which contains HTML) before our logic determines if a user should be redirected, we would normally trigger an error when calling `header("Location: ...")`.
+    
+
+##### The Solution: `ob_start()`
+
+- **The Buffer:** `ob_start()` tells PHP to hold all generated HTML in a "buffer" (internal memory) instead of sending it to the browser immediately.
+- **Flexibility:** This allows the script to process all logic—including redirects—at any point.
+- **Final Delivery:** `ob_end_flush()` releases the stored HTML to the browser only after the script has finished its logic.
+
+### Step 2: Create the Login Page (`login.php`)
+
+This file authenticates existing users and starts their session.
+
+1. **Create `login.php`**.
+2. **Verify Credentials:**
+    - Fetch the user record based on the provided email/username.
+    - Use `password_verify()` to check the password.
+3. **Establish the Session:** If valid, save the user's ID and access level to `$_SESSION` and redirect to `index.php`.
+
+### Step 3: Create the Logout Script (`logout.php`)
+
+This file ends the user's authenticated state.
+
+1. **Create `logout.php`**.
+2. **Clear Data:** Use `unset()` for `$_SESSION['user_id']` and other user-specific data.
+3. **Notify:** Set a `logout_message` in the session and redirect the user back to the homepage.
+
+### Step 4: Create the Profile Management Page (`profile.php`)
+
+This file allows logged-in users to update their information.
+
+1. **Create `profile.php`**.
+2. **Access Control:** Add a check at the top: if `$_SESSION['user_id']` is not set, redirect the user to the login page.
+3. **Fetch & Display:** Run a `SELECT` query using the session's user ID to pre-fill the form fields.
+4. **Update Logic:** Handle the `POST` request with an `UPDATE` SQL statement to save changes back to the `users` table.
+
 ****
 
 ![[commonBlocks#Commit & Push]]

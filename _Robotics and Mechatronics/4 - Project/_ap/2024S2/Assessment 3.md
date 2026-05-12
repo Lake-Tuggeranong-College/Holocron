@@ -1,7 +1,7 @@
 ---
 isCurrent: false
 publish: false
-needsUpdating: false
+needsUpdating: true
 ---
 # Project Goals
 

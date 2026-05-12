@@ -1,7 +1,7 @@
 ---
 isCurrent: false
 publish: false
-needsUpdating: false
+needsUpdating: true
 ---
 
 > [!important] View the assessment on Google Classroom for specific details.

@@ -1,7 +1,7 @@
 ---
 isCurrent: false
 publish: false
-needsUpdating: false
+needsUpdating: true
 ---
 ![[Shared Content/Assessment Support/2026S1/Task 1|Common]]
 

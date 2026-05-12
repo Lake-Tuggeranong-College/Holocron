@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-needsUpdating: false
+needsUpdating: true
 ---
 > [!important] Goal - Get the game to a workable standard, all text to the theme etc. The end-point is a trial run with students running through the game.
 

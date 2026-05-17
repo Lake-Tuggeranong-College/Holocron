@@ -611,11 +611,170 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 This file authenticates existing users and starts their session.
 
 1. **Create `login.php`**.
-2. **Verify Credentials:**
-    - Fetch the user record based on the provided email/username.
-    - Use `password_verify()` to check the password.
-3. **Establish the Session:** If valid, save the user's ID and access level to `$_SESSION` and redirect to `index.php`.
+![[loginInit.png]]
+2. Create the UI for the login page.
 
+![[loginUI.png]]
+
+```php
+<?php
+// Start output buffering to handle header redirection
+ob_start();
+
+// Include template (config.php inside template.php should have session_start())
+include "template.php";
+
+/** @var $db */
+?>
+<title>Login | Access Your Account</title>
+
+<style>
+    body {
+        background-color: #eee;
+    }
+
+    .card-login {
+        border-radius: 25px;
+    }
+
+    .form-icon {
+        color: #aaa;
+        margin-right: 10px;
+    }
+
+    .vh-100 {
+        min-height: 100vh;
+    }
+</style>
+
+<section class="vh-100 py-5">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black card-login shadow-lg">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-2 order-lg-1">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                                    class="img-fluid" alt="Login illustration">
+                            </div>
+
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
+
+                                <form class="mx-1 mx-md-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-envelope fa-lg me-3 fa-fw form-icon"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="username">Email Address</label>
+                                            <input type="email" id="username" name="username" class="form-control form-control-lg" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-lock fa-lg me-3 fa-fw form-icon"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="password">Password</label>
+                                            <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center text-lg-start mt-4 pt-2">
+                                        <button type="submit" name="login" class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
+                                        <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account?
+                                            <a href="register.php" class="link-danger text-decoration-none">Register</a>
+                                        </p>
+                                    </div>
+
+                                </form>
+
+                               
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php
+ob_end_flush();
+?>
+```
+
+3. **Verify** the username and password entered against the database.
+
+![[loginVerify.png]]
+
+```php
+ <div class="mt-4">
+                                    <?php
+                                    if (isset($_POST['login'])) {
+                                        $v_input_user = sanitiseData($_POST['username']);
+                                        $v_input_pass = $_POST['password'];
+
+                                        $stmt = $db->prepare("SELECT user_id, username,  password_hash,first_name, access_level FROM users WHERE username = :username");
+                                        $stmt->execute([':username' => $v_input_user]);
+                                        $user = $stmt->fetch();
+
+                                        if ($user && password_verify($v_input_pass, $user['password_hash'])) {
+                                            // Set session variables
+                                            $_SESSION['user_id']      = $user['user_id'];
+                                            $_SESSION['username']     = $user['username'];
+                                            $_SESSION['first_name']   = $user['first_name'];
+                                            $_SESSION['access_level'] = $user['access_level'];
+
+                                            // --- FLASH MESSAGE ---
+                                            $_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "! You have successfully logged in.";
+
+                                            // Redirect to index.php
+                                            header("Location: index.php");
+                                            exit();
+                                        } else {
+                                            // Note: Error messages can also be flash messages, but here we display 
+                                            // it immediately on the login page for better UX.
+                                            echo '<div class="alert alert-danger d-flex align-items-center">
+                                  <i class="fas fa-exclamation-triangle me-2"></i>
+                                  <div>Invalid email or password.</div>
+                                </div>';
+                                        }
+                                    }
+                                    ?>
+                                </div>
+```
+> [!note] The verification code needs to be placed in the correct place within the HTML. Ensure that the code gets entered **after** the `</form>` and before the `</div>` as shown in the screenshot.
+
+#### Explanation
+
+In a relational database system, the login process isn't just about checking a password; it’s about **Identity Management**.
+
+##### 1. The HTML Form Structure (`POST` Method)
+
+The form uses `method="post"`.
+
+- **Security:** Unlike `GET` (which puts your password in the URL bar), `POST` sends the data inside the body of the HTTP request, keeping sensitive information hidden from browser history.
+- **The `name` Attribute:** This is the most important part of your HTML. When you write `<input name="username">`, PHP creates a key in the `$_POST` array called `['username']`. Without the `name` attribute, PHP cannot "see" what the user typed.
+
+##### 2. The Logic Flow: Fetch, then Verify
+
+The PHP logic follows a specific "if-then" architecture:
+
+- **The Fetch:** First, we ask the database: _"Does this username exist?"_ We use a Prepared Statement (`$db->prepare`) to prevent SQL injection.
+- **The Verification:** If the user exists, we get the hashed password from the database. We then use `password_verify()`. This function takes the plain-text password from the form, hashes it using the same algorithm used during registration, and checks if the results match.
+- **The Result:** If they match, we "set the session"—this is like giving the user a VIP wristband that they wear as they browse the rest of your shop.
+- Once verified, you must store data that the template.php can use to update the navbar.
+```php
+$_SESSION['user_id']: Used for database queries on the profile page.
+
+$_SESSION['first_name']: Used to say "Welcome, [Name]" in the header.
+
+$_SESSION['access_level']: Used to hide or show "Admin" buttons.
+
+```
 ### Step 3: Create the Logout Script (`logout.php`)
 
 This file ends the user's authenticated state.

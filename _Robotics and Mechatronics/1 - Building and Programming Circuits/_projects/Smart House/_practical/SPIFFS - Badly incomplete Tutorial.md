@@ -139,7 +139,7 @@ server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
 
 If you want to output values into the HTML, such as the temperature value or another sensor, you can do this through a number of steps.
 
-1. Include a placeholder string in place that you want to replace later, such as `TEMPERATUREVALUE`. E.g.
+1. Include a placeholder string in place that you want to replace later, such as `%TEMPERATUREVALUE%`. E.g.
 ```html
 <!DOCTYPE html>
 <html lang="en">

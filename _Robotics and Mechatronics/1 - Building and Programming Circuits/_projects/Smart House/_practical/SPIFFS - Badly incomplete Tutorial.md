@@ -135,3 +135,53 @@ server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
 });
 ```
 
+# Including Telemetry data in HTML
+
+If you want to output values into the HTML, such as the temperature value or another sensor, you can do this through a number of steps.
+
+1. Include a placeholder string in place that you want to replace later, such as `TEMPERATUREVALUE`. E.g.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ESP32 SPIFFS Demo</title>
+ 
+</head>
+<body>
+    <h1>ESP32 SPIFFS Demo</h1>
+    <p>
+      This page demonstrates loading a file from SPIFFS on the ESP32.
+    </p>
+    <p> The temperature is currently: %TEMPERATUREVALUE%</p>
+
+</body>
+</html>
+```
+2. Include a `processor()` function which detects the placeholder string and replaces it with the value you want.
+```arduino
+String processor(const String& var) {
+  Serial.println(var);
+  
+  if (var == "TEMPERATUREVALUE") {
+    return String(dhtTemperature);
+  }
+  if (var == "EXAMPLEOUTPUT") {
+    // Process data...
+    return "This is example data";
+  }
+  
+  return String();
+}
+```
+
+> [!note] The data needs to be a string when returned.
+3. Include/update the route to run the processor function prior to sending the html to the browser.
+```arduino
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest * request) {
+    request->send(SPIFFS, "/temperature.html", "text/html", false, processor);
+  });
+```
+
+> [!note] The `false` parameter in `request->send()` means the file will be displayed in the browser. Change this to true if you want to force the file to download (e.g., for log files).
+> 

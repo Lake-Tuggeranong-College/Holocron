@@ -63,6 +63,9 @@ Imagine you're building a web interface for a sensor that's collecting data.  Yo
 ---
 # Implementing SPIFFS in Platform IO
 
+> [!note] Important - **do not install** the SPIFFS plugin referenced on other sites. 
+> PlatformIO has the ability to interact with the SPIFFS partition without the need for the plugin.
+
 ## Create HTML file to upload
 
 First, in VSCode open the project, and create a `data` folder in the root directory of the project.

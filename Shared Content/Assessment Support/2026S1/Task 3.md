@@ -5,6 +5,11 @@ needsUpdating: false
 # How you write a Technical Tutorial
 [[Student Guide - How to Write a Technical Tutorial]]
 
+# Video Overview
+
+![https://youtu.be/qiIAkJbAtqU](https://youtu.be/qiIAkJbAtqU)
+
+
 # Assessment Context
 
 You are employed by Riker's Beard - a small, established software development company of 5 people, which is part of a larger organisation.

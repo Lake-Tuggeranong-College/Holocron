@@ -80,8 +80,6 @@ Now that your database is initialised, you are ready to begin the application de
 
 Understanding why we configure a table with specific types and constraints is the difference between simply running code and building a scalable system. Here is the rationale behind the configuration used in your first table.
 
-## 1. Explanation: The Configuration Centralisation
-
 ### The Necessity of the Primary Key (`user_id`)
 
 In a relational database, every row must be uniquely identifiable. The `user_id` serves as the **Primary Key**.
@@ -309,7 +307,7 @@ Add the following code after the HTML header code.
 
 ![[templateNavbar.png]]
 
-## Step 4: *Footer* Code
+### Step 4: *Footer* Code
 
 Add the following code to the **end** of the file.
 

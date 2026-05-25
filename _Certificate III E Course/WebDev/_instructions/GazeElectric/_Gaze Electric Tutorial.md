@@ -400,9 +400,7 @@ The code in **Step 3** uses Bootstrap’s "Navbar-Toggler."
 
 > [!note] Goal: To develop the pages and logic required to allow users to register, login, logout and edit their profiles.
 
-## Tutorial
-
-### Step 1: Create the Registration Page (`register.php`)
+## Create the Registration Page (`register.php`)
 
 This file handles the creation of new user accounts.
 
@@ -586,7 +584,7 @@ ob_end_flush();
 - **Password Hashing:** We never store passwords as plain text. The `password_hash()` function creates a secure, one-way cryptographic string. Even if your database is stolen, the passwords remain unreadable.
 - **Validation Logic:** Before saving a new user, the script checks if the username is already taken. This maintains the **Unique Constraint** of your database.
 
-#### Why use Output Buffering?
+##### Why use Output Buffering?
 
 In the provided scripts for `login.php`, `register.php`, and `profile.php`, you will notice the functions `ob_start()` at the very top and `ob_end_flush()` at the very bottom.
 
@@ -604,7 +602,7 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 - **Flexibility:** This allows the script to process all logic—including redirects—at any point.
 - **Final Delivery:** `ob_end_flush()` releases the stored HTML to the browser only after the script has finished its logic.
 
-### Step 2: Create the Login Page (`login.php`)
+## Create the Login Page (`login.php`)
 
 This file authenticates existing users and starts their session.
 
@@ -773,7 +771,8 @@ $_SESSION['first_name']: Used to say "Welcome, [Name]" in the header.
 $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 
 ```
-### Step 3: Create the Logout Script (`logout.php`)
+
+## Create the Logout Script (`logout.php`)
 
 This file ends the user's authenticated state.
 
@@ -857,21 +856,282 @@ The final two lines manage server-to-browser network communication.
 - **`header("Location: index.php")`:** This sends a raw HTTP `302 Redirect` header back to the browser, instructing it to immediately load `index.php`.
 - **`exit()`:** **Crucial Security Element.** The `header()` function does not stop PHP from executing the rest of the script. If there were malicious code underneath a header redirect, a hacker could ignore the redirect and execute the downstream code. `exit()` halts script execution instantly on the server.
 
-### Step 4: Create the Profile Management Page (`profile.php`)
+## Create the Profile Management Page (`profile.php`)
 
 This file allows logged-in users to update their information.
 
 1. **Create `profile.php`**.
-2. **Access Control:** Add a check at the top: if `$_SESSION['user_id']` is not set, redirect the user to the login page.
-3. **Fetch & Display:** Run a `SELECT` query using the session's user ID to pre-fill the form fields.
-4. **Update Logic:** Handle the `POST` request with an `UPDATE` SQL statement to save changes back to the `users` table.
+![[userMgmtProfileInit.png]]
 
-****
+2. Include the default output buffering, used throughout the site - [[#Why use Output Buffering?|Click Here for details.]]  Import `template.php` to standardise the UI of the site.
+![[userMgmtProfileInclude.png]]
+
+```php
+<?php
+// Start output buffering to handle header redirection
+ob_start();
+
+// Include template (config.php inside template.php handles session_start)
+include "template.php"; 
+
+/** @var $db */
+?>
+
+
+<?php
+ob_end_flush();
+?>
+```
+2. Add a check at the top: if `$_SESSION['user_id']` is not set, redirect the user to the login page. After that, set the `user_id` variable to the used later in the code.
+![[userMgmtProfileCheckUser.png]]
+
+```php
+// Redirect to login if not logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['error_message'] = "Please log in to view your profile.";
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+```
+
+
+3. Include custom CSS to improve the User Interface (UI) for the user. 
+
+![[userMgmtProfileStyle.png]]
+
+```css
+<style>
+    body { background-color: #f0f2f5; }
+    .profile-card {
+        background-color: #ffffff;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid #dee2e6;
+    }
+    .form-label { fw-bold; color: #495057; }
+</style>
+```
+
+> [!note] Notice that the `<style>...</style>` block is located *in between* the PHP blocks. This means that it is treated as HTML code.
+
+
+4. Create the form using HTML, with Bootstrap styles.
+![[userMgmtProfileForm.png]]
+
+```html
+<div class="container">
+    <div class="profile-card">
+        <div class="text-center mb-4">
+            <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+            <h2 class="fw-bold">My Profile</h2>
+            <p class="text-muted">Manage your personal information and account settings</p>
+        </div>
+
+        <form action="profile.php" method="post">
+            <div class="row">
+                <div class="col-12 mb-4 border-bottom pb-2">
+                    <h5 class="text-primary"><i class="fas fa-lock me-2"></i>Account Details</h5>
+                </div>
+                
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Email / Username</label>
+                    <input type="email" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required>
+                </div>
+
+                <div class="col-12 mb-4 mt-3 border-bottom pb-2">
+                    <h5 class="text-primary"><i class="fas fa-id-card me-2"></i>Personal Information</h5>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control" value="<?= htmlspecialchars($user['first_name']) ?>" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Second Name</label>
+                    <input type="text" name="second_name" class="form-control" value="<?= htmlspecialchars($user['second_name']) ?>" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone_number" class="form-control" value="<?= htmlspecialchars($user['phone_number']) ?>" required>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Address</label>
+                    <textarea name="address" class="form-control" rows="3" required><?= htmlspecialchars($user['address']) ?></textarea>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" name="update_profile" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
+                <a href="index.php" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+```
+
+This code will be rendered by the browser to show the following form.
+
+![[userMgmtProfileRendered.png]]
+
+5.  Focusing on the functionality, now that the UI has been completed, sanitise the form data by calling `sanitiseData()` for each form input box. 
+![[userMgmtProfileSanitiseFormData.png]]
+
+```php
+// 1. Handle Form Submission (Update Data)
+if (isset($_POST['update_profile'])) {
+    $v_first_name  = sanitiseData($_POST['first_name']);
+    $v_second_name = sanitiseData($_POST['second_name']);
+    $v_address     = sanitiseData($_POST['address']);
+    $v_phone       = sanitiseData($_POST['phone_number']);
+    $v_username    = sanitiseData($_POST['username']);
+
+}
+```
+
+>[!note] Each form element has a `name` attribute set. Use this name to retrieve the data for `sanitiseData()`.
+>![[userMgmtProfileNameAttribute.png]]
+
+>[!note] `isset($_POST['update_profile'])` will be `true` after the user has pressed the **Save Changes** button in the form, identified by the `name` attribute.
+>![[userMgmtProfileNameAttributeSubmit.png]]
+
+6. Build the structure to update the database with the new data previously collected.
+
+![[userMgmtProfileTryCatch.png]]
+
+```php
+try {
+       
+
+        $_SESSION['success_message'] = "Profile updated successfully!";
+        header("Location: profile.php");
+        exit();
+    } catch (PDOException $e) {
+        $_SESSION['error_message'] = "Failed to update profile. Please try again.";
+        header("Location: profile.php");
+        exit();
+    }
+
+```
+
+7. Include the code to configure the SQL to update the `users` table with the updated data for the current user.
+
+![[userMgmtProfileSQL.png]]
+
+```php
+        $sql = "UPDATE users 
+                SET username = :username, 
+                    first_name = :fname, 
+                    second_name = :sname, 
+                    address = :address, 
+                    phone_number = :phone 
+                WHERE user_id = :id";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':username' => $v_username,
+            ':fname'    => $v_first_name,
+            ':sname'    => $v_second_name,
+            ':address'  => $v_address,
+            ':phone'    => $v_phone,
+            ':id'       => $user_id
+        ]);
+        
+        // Update session username in case they changed their email
+		$_SESSION['username'] = $v_username;
+```
+
 
 ![[commonBlocks#Commit & Push]]
 
 ## Explanation
 
+The `profile.php` file manages a fundamental CRUD operation: **U**pdating existing database records. Unlike registration, this file requires an active authentication state and robust defense mechanics against web vulnerabilities.
+
+### 1. Access Control (The Gatekeeper)
+
+Before rendering any HTML or executing queries, the script evaluates the application state:
+
+```PHP
+if (!isset($_SESSION['user_id'])) { ... }
+```
+
+Because HTTP is inherently stateless, the server relies on the active session array to check if a user is logged in. If `$_SESSION['user_id']` is absent, execution is blocked immediately, and the client is forced to `login.php`. This acts as an access barrier to protect user data from unauthorised manipulation.
+
+In a stateless protocol, the web server treats every single incoming request as an entirely new, isolated event. The server has total amnesia. It retains zero context or memory of what happened a fraction of a second ago.
+
+### 2. Form Architecture and Superglobals (`$_POST`)
+
+When an individual alters their account information and submits the form, the web browser builds an HTTP request container using the `POST` method. On the server side, PHP instantly parses this payload into the **`$_POST` superglobal array**.
+
+- **Scope and Access:** `$_POST` is an associative array containing keys that identically match the `name=""` attribute values assigned to the HTML form elements (e.g., `$_POST['first_name']`).
+- **State Mutation:** We leverage the `POST` method over `GET` for processing actions that write or modify database records. `GET` exposes submitted parameters inside the URL query string, making it highly unsafe and easily cached by web proxies.
+
+### 3. Prepared Statements vs. SQL Injection
+
+The profile update script communicates with the relational database system through a parameterised query:
+
+```PHP
+$sql = "UPDATE users SET username = :username ... WHERE user_id = :id";
+$stmt = $db->prepare($sql);
+```
+
+> [!warning]- SQL Injections
+> The SQL can be coded in one step, without the preparation or binding of variables to the SQL.  An example of this method could be:
+>
+> ```php
+// INSECURE: Building the SQL query by directly embedding variables into the string
+$sql = "SELECT * FROM users WHERE username = '" . $v_input_user . "'";
+>
+// Execution happens immediately without separating code from data
+$result = $db->query($sql);
+$user = $result->fetch();
+>```
+>**Scenario A: Normal Input**
+User inputs: john@example.com
+> 
+> Resulting SQL string: 
+> ```sql
+> SELECT * FROM users WHERE username = 'john@example.com'
+> ```
+> 
+> Outcome: The query executes perfectly, searching safely for John's profile.
+> 
+> **Scenario B: The Exploitation Input (Bypassing Authentication)**
+> User inputs: ' OR '1'='1
+> 
+> Resulting SQL string: 
+> ```sql
+> SELECT * FROM users WHERE username = '' OR '1'='1'
+> ```
+> 
+> Outcome: Because `'1'='1'` is always true, the database completely ignores the username requirement and returns the very first record in your database (which is almost always the Administrator account), logging the attacker in without a valid password!
+> 
+> **Scenario C: The Destructive Input**
+> User inputs: admin@example.com'; DROP TABLE users; --
+> 
+> Resulting SQL string: ```sql
+> SELECT * FROM users WHERE username = 'admin@example.com'; DROP TABLE users; --'
+> 
+> Outcome: The semicolon instructs the database engine that the first command is finished, and it immediately executes the next command: DROP TABLE users;. The trailing dashes (--) turn the rest of your original query code into a comment, preventing a syntax error. Your user table is instantly deleted.
+
+
+Constructing SQL strings by directly interpolating data from a form payload (e.g., `"SET username = " . $_POST['username']`) introduces a fatal security vulnerability known as **SQL Injection (SQLi)**.
+
+Prepared statements completely mitigate this risk by executing the query engine in a two-step handshake:
+
+1. **Compilation Phase:** The database compiles the SQL query structure using literal placeholders (`:username`, `:fname`). The template architecture is locked in place.
+    
+2. **Binding Phase:** The raw strings provided inside the `$_POST` array are sent separately and bound strictly as _data payloads_. Even if an attacker passes a string loaded with SQL commands (like `'; DROP TABLE users;--`), the database treat it purely as text data, neutralizing malicious executions.
 
 # Administrator Access
 

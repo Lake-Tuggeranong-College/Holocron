@@ -420,7 +420,7 @@ include "template.php";
 ?>
 ```
 
-![[registerInit.png]]
+![[userMgmtRegisterInit.png]]
 
 2. Set the Page Title. Add a `<title>` tag to identify the page for the browser tab. For register.php: `<title>Register | Create Your Account</title>`
 3. For the Registration Page: Add styles for a softer background (#f8f9fa) and defined section titles to organise the long form.
@@ -439,7 +439,7 @@ include "template.php";
 </style>
 ```
 
-![[registerTitleStyle.png]]
+![[userMgmtRegisterTitleStyle.png]]
 
 
 3. **Add the HTML Form:** Use `method="post"` and ensure each input name (`username`, `password`, `first_name`, etc.) matches the keys used in your PHP logic.
@@ -502,7 +502,7 @@ include "template.php";
             </form>
 ```
 
-![[registerFormCode.png]]
+![[userMgmtRegisterFormCode.png]]
 
 4. **Insert the Logic:**
 	- Sanitise the data.
@@ -567,7 +567,7 @@ include "template.php";
 </section>
 ```
 
-![[registerFormLogic.png]]
+![[userMgmtRegisterFormLogic.png]]
 
 5. End the output buffer.
 
@@ -579,7 +579,7 @@ ob_end_flush();
 
 ```
 
-![[registerOBEnd.png]]
+![[userMgmtRegisterOBEnd.png]]
 
 #### Explanation
 
@@ -609,10 +609,10 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 This file authenticates existing users and starts their session.
 
 1. **Create `login.php`**.
-![[loginInit.png]]
+![[userMgmtLoginInit.png]]
 2. Create the UI for the login page.
 
-![[loginUI.png]]
+![[userMgmtLoginUI.png]]
 
 ```php
 <?php
@@ -706,7 +706,7 @@ ob_end_flush();
 
 3. **Verify** the username and password entered against the database.
 
-![[loginVerify.png]]
+![[userMgmtLoginVerify.png]]
 
 ```php
  <div class="mt-4">
@@ -778,11 +778,11 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 This file ends the user's authenticated state.
 
 1. **Create `logout.php`**.
-![[logoutInit.png]]
+![[userMgmtLogoutInit.png]]
 
 2. Clear Browser Cache Data: Use `unset()` for `$_SESSION['user_id']` and other user-specific data.
 
-![[logoutUnset.png]]
+![[userMgmtLogoutUnset.png]]
 
 ```php
 <?php
@@ -799,7 +799,7 @@ This will clear the browser's memory of any private user data.
 
 3. Notify the user of the successful action: Set a `logout_message` in the session and redirect the user back to the homepage.
 
-![[logoutFlash.png]]
+![[userMgmtLogoutFlash.png]]
 
 ```php
 // Set the flash message
@@ -808,7 +808,7 @@ $_SESSION['logout_message'] = "You have successfully logged out.";
 
 4. Redirect the user to the home page.
 
-![[logoutRedirect.png]]
+![[userMgmtLogoutRedirect.png]]
 
 ```php
 header("Location: index.php");

@@ -778,8 +778,84 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 This file ends the user's authenticated state.
 
 1. **Create `logout.php`**.
-2. **Clear Data:** Use `unset()` for `$_SESSION['user_id']` and other user-specific data.
-3. **Notify:** Set a `logout_message` in the session and redirect the user back to the homepage.
+![[logoutInit.png]]
+
+2. Clear Browser Cache Data: Use `unset()` for `$_SESSION['user_id']` and other user-specific data.
+
+![[logoutUnset.png]]
+
+```php
+<?php
+session_start();
+
+// Instead of destroying the whole session, just clear the user data
+// This is more reliable for "Flash Messages"
+unset($_SESSION['user_id']);
+unset($_SESSION['username']);
+unset($_SESSION['access_level']);
+?>
+```
+This will clear the browser's memory of any private user data.
+
+3. Notify the user of the successful action: Set a `logout_message` in the session and redirect the user back to the homepage.
+
+![[logoutFlash.png]]
+
+```php
+// Set the flash message
+$_SESSION['logout_message'] = "You have successfully logged out.";
+```
+
+4. Redirect the user to the home page.
+
+![[logoutRedirect.png]]
+
+```php
+header("Location: index.php");
+exit();
+```
+
+#### Explanation
+
+The logout process seems simple on the surface, but it represents an architectural decision regarding how user state and temporary application notifications interact.
+
+##### 1. `session_start()` and the Session Lifecycle
+
+Every PHP file that needs to read or write session data must invoke `session_start()` before any output is generated.
+
+- **The Connection:** This function tells PHP to look for a unique session identifier cookie (usually called `PHPSESSID`) sent by the user's browser.
+- **The Retrieval:** If it finds it, PHP reconstructs the `$_SESSION` global array with the data stored on the server for that specific user. Without this call, `$_SESSION` remains empty and unlinked.
+
+##### 2. Selective Destruction: `unset()` vs. `session_destroy()`
+
+A common approach to logging out a user is calling `session_destroy()`. However, the provided code purposefully takes a different approach:
+
+```PHP
+unset($_SESSION['user_id']);
+unset($_SESSION['username']);
+unset($_SESSION['access_level']);
+```
+
+- Calling `session_destroy()` deletes the entire session file on the server. While this completely logs out the user, it immediately wipes out any ability to carry information forward to the next page layout.
+- By using `unset()`, you surgically remove only the identity indicators (`user_id`, `username`, `access_level`) that grant authenticated access. The session container itself remains alive.
+	- **This will leave any other session variables in memory!**
+
+##### 3. The Mechanics of Flash Messages
+
+Because `unset()` leaves the session container intact, you can store temporary data right before the user leaves the page:
+
+```PHP
+$_SESSION['logout_message'] = "You have successfully logged out.";
+```
+
+- **Persistence across Redirects:** This creates a **Flash Message**. When the user is redirected to the home page, the homepage logic can read `$_SESSION['logout_message']`, render a clean Bootstrap notification alert, and then immediately run `unset($_SESSION['logout_message'])` so it never displays again on a refresh.
+
+##### 4. Network Clean Exit (`header` and `exit`)
+
+The final two lines manage server-to-browser network communication.
+
+- **`header("Location: index.php")`:** This sends a raw HTTP `302 Redirect` header back to the browser, instructing it to immediately load `index.php`.
+- **`exit()`:** **Crucial Security Element.** The `header()` function does not stop PHP from executing the rest of the script. If there were malicious code underneath a header redirect, a hacker could ignore the redirect and execute the downstream code. `exit()` halts script execution instantly on the server.
 
 ### Step 4: Create the Profile Management Page (`profile.php`)
 

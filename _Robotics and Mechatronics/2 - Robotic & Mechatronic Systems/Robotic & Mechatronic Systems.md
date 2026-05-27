@@ -3,7 +3,7 @@ isCurrent: false
 needsUpdating: true
 ---
 > [!note]- Project Overview
-> ![[Smart Car#Project Overview]]
+> ![[Smart Car Project#Project Overview]]
 
 
 # Semester Plan

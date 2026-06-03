@@ -221,7 +221,6 @@ Now enter the HTML `<header>` section of the page.
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Widget Shop</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1114,7 +1113,7 @@ User inputs: john@example.com
 > Outcome: The query executes perfectly, searching safely for John's profile.
 > 
 > **Scenario B: The Exploitation Input (Bypassing Authentication)**
-> User inputs: ' OR '1'='1
+> User inputs: ' OR '1'='1'
 > 
 > Resulting SQL string: 
 > ```sql

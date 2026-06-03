@@ -627,22 +627,10 @@ include "template.php";
 <title>Login | Access Your Account</title>
 
 <style>
-    body {
-        background-color: #eee;
-    }
-
-    .card-login {
-        border-radius: 25px;
-    }
-
-    .form-icon {
-        color: #aaa;
-        margin-right: 10px;
-    }
-
-    .vh-100 {
-        min-height: 100vh;
-    }
+    body { background-color: #eee; }
+    .card-login { border-radius: 25px; }
+    .form-icon { color: #aaa; margin-right: 10px; }
+    .vh-100 { min-height: 100vh; }
 </style>
 
 <section class="vh-100 py-5">
@@ -654,20 +642,18 @@ include "template.php";
                         <div class="row justify-content-center">
 
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-2 order-lg-1">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                                    class="img-fluid" alt="Login illustration">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Login illustration">
                             </div>
 
                             <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2">
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
                                 <form class="mx-1 mx-md-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw form-icon"></i>
                                         <div class="form-outline flex-fill mb-0">
-                                            <label class="form-label" for="username">Email Address</label>
-                                            <input type="email" id="username" name="username" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="username">Email/Username</label>
+                                            <input type="text" id="username" name="username" class="form-control form-control-lg" required />
                                         </div>
                                     </div>
 
@@ -675,20 +661,46 @@ include "template.php";
                                         <i class="fas fa-lock fa-lg me-3 fa-fw form-icon"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <label class="form-label" for="password">Password</label>
-                                            <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                                            <input type="password" id="password" name="password" class="form-control form-control-lg" />
                                         </div>
                                     </div>
 
                                     <div class="text-center text-lg-start mt-4 pt-2">
                                         <button type="submit" name="login" class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
-                                        <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account?
-                                            <a href="register.php" class="link-danger text-decoration-none">Register</a>
-                                        </p>
                                     </div>
-
                                 </form>
 
-                               
+                                <div class="mt-4">
+                                    <?php
+                                    if (isset($_POST['login'])) {
+                                        $v_input_user = $_POST['username'];
+                                        $v_input_pass = $_POST['password'];
+
+                                        // VULNERABLE: Direct concatenation allowing SQLi
+                                        $query = "SELECT user_id, username, first_name, access_level FROM users WHERE username = '$v_input_user'";
+                                        
+                                        // Debug helper for students to see their payload in action
+                                        echo "<div class='alert alert-info small'><strong>Executed Query:</strong> <br><code>" . htmlspecialchars($query) . "</code></div>";
+
+                                        $result = $db->query($query);
+                                        $user = $result ? $result->fetch() : false;
+
+                                        // VULNERABLE PASSTHROUGH: Checking only if a record was returned, ignoring password verification
+                                        if ($user) {
+                                            $_SESSION['user_id']      = $user['user_id'];
+                                            $_SESSION['username']     = $user['username'];
+                                            $_SESSION['first_name']   = $user['first_name'];
+                                            $_SESSION['access_level'] = $user['access_level'];
+
+                                            echo '<div class="alert alert-success">Login successful! Welcome ' . htmlspecialchars($user['first_name']) . '</div>';
+                                            // header("Location: index.php");
+                                            exit();
+                                        } else {
+                                            echo '<div class="alert alert-danger">Incorrect Username or password</div>';
+                                        }
+                                    }
+                                    ?>
+                                </div>
 
                             </div>
                         </div>
@@ -703,6 +715,7 @@ include "template.php";
 ob_end_flush();
 ?>
 ```
+
 
 3. **Verify** the username and password entered against the database.
 
@@ -767,12 +780,147 @@ The PHP logic follows a specific "if-then" architecture:
 - Once verified, you must store data that the template.php can use to update the navbar.
 ```php
 $_SESSION['user_id']: Used for database queries on the profile page.
-
 $_SESSION['first_name']: Used to say "Welcome, [Name]" in the header.
-
 $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 
 ```
+
+## Update the Login script
+
+After a security audit, the login script was vulnerable to SQL Injection attacks. 
+
+Update it to use `prepare` statements - Use PDO prepared statements with placeholders. This ensures the database treats user input strictly as data, not executable code. This mitigates the potential SQL Injection attack vector.
+
+![[userMgmtLoginUpdated.png]]
+
+```php
+<?php
+// Start output buffering to handle header redirection
+ob_start();
+
+// Include template (config.php inside template.php should have session_start())
+include "template.php";
+
+
+/** @var $db */
+?>
+<title>Login | Access Your Account</title>
+
+<style>
+    body {
+        background-color: #eee;
+    }
+
+    .card-login {
+        border-radius: 25px;
+    }
+
+    .form-icon {
+        color: #aaa;
+        margin-right: 10px;
+    }
+
+    .vh-100 {
+        min-height: 100vh;
+    }
+</style>
+
+<section class="vh-100 py-5">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black card-login shadow-lg">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-2 order-lg-1">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                                    class="img-fluid" alt="Login illustration">
+                            </div>
+
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
+
+                                <form class="mx-1 mx-md-4"
+                                    action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-envelope fa-lg me-3 fa-fw form-icon"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="username">Email Address</label>
+                                            <input type="email" id="username" name="username"
+                                                class="form-control form-control-lg" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-lock fa-lg me-3 fa-fw form-icon"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="password">Password</label>
+                                            <input type="password" id="password" name="password"
+                                                class="form-control form-control-lg" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center text-lg-start mt-4 pt-2">
+                                        <button type="submit" name="login"
+                                            class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
+                                        <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account?
+                                            <a href="register.php" class="link-danger text-decoration-none">Register</a>
+                                        </p>
+                                    </div>
+
+                                </form>
+
+                                <div class="mt-4">
+                                    <?php
+                                    if (isset($_POST['login'])) {
+                                        // 1. Trim input to eliminate accidental whitespace issues
+                                        $v_input_user = sanitiseData($_POST['username']);
+                                        $v_input_pass = sanitiseData($_POST['password']);
+
+                                        // 2. Use a Prepared Statement to completely neutralize SQLi
+                                        $stmt = $db->prepare("SELECT user_id, username, password_hash, first_name, access_level FROM users WHERE username = :username");
+                                        $stmt->execute(['username' => $v_input_user]);
+                                        $user = $stmt->fetch();
+
+                                        // 3. Securely verify the password
+                                        if ($user && password_verify($v_input_pass, $user['password_hash'])) {
+
+                                            // 4. Prevent Session Fixation
+                                            session_regenerate_id(true);
+
+                                            $_SESSION['user_id'] = $user['user_id'];
+                                            $_SESSION['username'] = $user['username'];
+                                            $_SESSION['first_name'] = $user['first_name'];
+                                            $_SESSION['access_level'] = $user['access_level'];
+
+                                            $_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
+
+                                            header("Location: index.php");
+                                            exit();
+                                        } else {
+                                            // Use generic error messages to prevent user enumeration
+                                            $_SESSION['error_message'] = "Invalid email/username or password.";
+                                        }
+                                    }
+                                    ?>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php
+ob_end_flush();
+?>
+```
+
 
 ## Create the Logout Script (`logout.php`)
 
@@ -1113,7 +1261,7 @@ User inputs: john@example.com
 > Outcome: The query executes perfectly, searching safely for John's profile.
 > 
 > **Scenario B: The Exploitation Input (Bypassing Authentication)**
-> User inputs: ' OR '1'='1'
+> User inputs: ' OR '1'='1
 > 
 > Resulting SQL string: 
 > ```sql

@@ -14,7 +14,7 @@ Before executing commands, it is essential to understand the structure of relati
 See here : [[Slides - Databases]]
 
 
-## Tutorial: Create your first table
+## Step-by-Step Guide: Create your first table
 
 > [!note] Goal: This guide will walk you through setting up the initial database infrastructure required for the shopfront web application.
 
@@ -110,7 +110,7 @@ Notice that the field is named `password_hash`, not `password`.
 
 # Connecting the Website to The Database `config.php`
 
-## Tutorial: Creating the `config.php` File
+## Step-by-Step Guide: Creating the `config.php` File
 
 Follow these steps to establish the "handshake" between your PHP code and the MariaDB database.
 
@@ -191,7 +191,7 @@ In web development, we can use a `config.php` file to centralise database creden
 
 > [!note] Goal: Create the initial version of `template.php` which defines a standard interface to the whole site.
 
-## Tutorial
+## Step-by-Step Guide
 
 ### Step 1: Create the file
 
@@ -402,6 +402,8 @@ The code in **Step 3** uses Bootstrap’s "Navbar-Toggler."
 
 ## Create the Registration Page (`register.php`)
 
+### Step-by-Step Guide
+
 This file handles the creation of new user accounts.
 
 1. **Create `register.php`** and include `template.php` at the top.
@@ -579,7 +581,7 @@ ob_end_flush();
 
 ![[userMgmtRegisterOBEnd.png]]
 
-#### Explanation
+### Explanation
 
 - **Password Hashing:** We never store passwords as plain text. The `password_hash()` function creates a secure, one-way cryptographic string. Even if your database is stolen, the passwords remain unreadable.
 - **Validation Logic:** Before saving a new user, the script checks if the username is already taken. This maintains the **Unique Constraint** of your database.
@@ -603,6 +605,8 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 - **Final Delivery:** `ob_end_flush()` releases the stored HTML to the browser only after the script has finished its logic.
 
 ## Create the Login Page (`login.php`)
+
+### Step-by-Step Guide
 
 This file authenticates existing users and starts their session.
 
@@ -744,7 +748,7 @@ ob_end_flush();
 ```
 > [!note] The verification code needs to be placed in the correct place within the HTML. Ensure that the code gets entered **after** the `</form>` and before the `</div>` as shown in the screenshot.
 
-#### Explanation
+### Explanation
 
 In a relational database system, the login process isn't just about checking a password; it’s about **Identity Management**.
 
@@ -773,6 +777,8 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 ```
 
 ## Create the Logout Script (`logout.php`)
+
+### Step-by-Step Guide
 
 This file ends the user's authenticated state.
 
@@ -814,18 +820,18 @@ header("Location: index.php");
 exit();
 ```
 
-#### Explanation
+### Explanation
 
 The logout process seems simple on the surface, but it represents an architectural decision regarding how user state and temporary application notifications interact.
 
-##### 1. `session_start()` and the Session Lifecycle
+#### 1. `session_start()` and the Session Lifecycle
 
 Every PHP file that needs to read or write session data must invoke `session_start()` before any output is generated.
 
 - **The Connection:** This function tells PHP to look for a unique session identifier cookie (usually called `PHPSESSID`) sent by the user's browser.
 - **The Retrieval:** If it finds it, PHP reconstructs the `$_SESSION` global array with the data stored on the server for that specific user. Without this call, `$_SESSION` remains empty and unlinked.
 
-##### 2. Selective Destruction: `unset()` vs. `session_destroy()`
+#### 2. Selective Destruction: `unset()` vs. `session_destroy()`
 
 A common approach to logging out a user is calling `session_destroy()`. However, the provided code purposefully takes a different approach:
 
@@ -839,7 +845,7 @@ unset($_SESSION['access_level']);
 - By using `unset()`, you surgically remove only the identity indicators (`user_id`, `username`, `access_level`) that grant authenticated access. The session container itself remains alive.
 	- **This will leave any other session variables in memory!**
 
-##### 3. The Mechanics of Flash Messages
+#### 3. The Mechanics of Flash Messages
 
 Because `unset()` leaves the session container intact, you can store temporary data right before the user leaves the page:
 
@@ -849,7 +855,7 @@ $_SESSION['logout_message'] = "You have successfully logged out.";
 
 - **Persistence across Redirects:** This creates a **Flash Message**. When the user is redirected to the home page, the homepage logic can read `$_SESSION['logout_message']`, render a clean Bootstrap notification alert, and then immediately run `unset($_SESSION['logout_message'])` so it never displays again on a refresh.
 
-##### 4. Network Clean Exit (`header` and `exit`)
+#### 4. Network Clean Exit (`header` and `exit`)
 
 The final two lines manage server-to-browser network communication.
 
@@ -857,6 +863,8 @@ The final two lines manage server-to-browser network communication.
 - **`exit()`:** **Crucial Security Element.** The `header()` function does not stop PHP from executing the rest of the script. If there were malicious code underneath a header redirect, a hacker could ignore the redirect and execute the downstream code. `exit()` halts script execution instantly on the server.
 
 ## Create the Profile Management Page (`profile.php`)
+
+### Step-by-Step Guide
 
 This file allows logged-in users to update their information.
 
@@ -1053,11 +1061,11 @@ try {
 
 ![[commonBlocks#Commit & Push]]
 
-## Explanation
+### Explanation
 
 The `profile.php` file manages a fundamental CRUD operation: **U**pdating existing database records. Unlike registration, this file requires an active authentication state and robust defense mechanics against web vulnerabilities.
 
-### 1. Access Control (The Gatekeeper)
+#### 1. Access Control (The Gatekeeper)
 
 Before rendering any HTML or executing queries, the script evaluates the application state:
 
@@ -1069,14 +1077,14 @@ Because HTTP is inherently stateless, the server relies on the active session ar
 
 In a stateless protocol, the web server treats every single incoming request as an entirely new, isolated event. The server has total amnesia. It retains zero context or memory of what happened a fraction of a second ago.
 
-### 2. Form Architecture and Superglobals (`$_POST`)
+#### 2. Form Architecture and Superglobals (`$_POST`)
 
 When an individual alters their account information and submits the form, the web browser builds an HTTP request container using the `POST` method. On the server side, PHP instantly parses this payload into the **`$_POST` superglobal array**.
 
 - **Scope and Access:** `$_POST` is an associative array containing keys that identically match the `name=""` attribute values assigned to the HTML form elements (e.g., `$_POST['first_name']`).
 - **State Mutation:** We leverage the `POST` method over `GET` for processing actions that write or modify database records. `GET` exposes submitted parameters inside the URL query string, making it highly unsafe and easily cached by web proxies.
 
-### 3. Prepared Statements vs. SQL Injection
+#### 3. Prepared Statements vs. SQL Injection
 
 The profile update script communicates with the relational database system through a parameterised query:
 
@@ -1138,7 +1146,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Tutorial
+## Step-by-Step Guide
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation

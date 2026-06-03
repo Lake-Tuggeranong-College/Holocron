@@ -2,7 +2,7 @@
 isCurrent: true
 needsUpdating: true
 ---
-> [!note] This page will hold the whole tutorial for the Gaze Electric Website. The tutorial will be updated throughout the development process as the project develops.
+> [!note] This page will hold the whole How To Guide:  for the Gaze Electric Website. The How To Guide:  will be updated throughout the development process as the project develops.
 
 ==TODO== - db init_scripts
 ==TODO== 404 page. 
@@ -13,8 +13,7 @@ Before executing commands, it is essential to understand the structure of relati
 
 See here : [[Slides - Databases]]
 
-
-## Step-by-Step Guide: Create your first table
+## How To Guide: Create your first table
 
 > [!note] Goal: This guide will walk you through setting up the initial database infrastructure required for the shopfront web application.
 
@@ -110,7 +109,7 @@ Notice that the field is named `password_hash`, not `password`.
 
 # Connecting the Website to The Database `config.php`
 
-## Step-by-Step Guide: Creating the `config.php` File
+## How To Guide: Creating the `config.php` File
 
 Follow these steps to establish the "handshake" between your PHP code and the MariaDB database.
 
@@ -191,7 +190,7 @@ In web development, we can use a `config.php` file to centralise database creden
 
 > [!note] Goal: Create the initial version of `template.php` which defines a standard interface to the whole site.
 
-## Step-by-Step Guide
+## How To Guide: Creating the standard interface
 
 ### Step 1: Create the file
 
@@ -402,7 +401,7 @@ The code in **Step 3** uses Bootstrap’s "Navbar-Toggler."
 
 ## Create the Registration Page (`register.php`)
 
-### Step-by-Step Guide
+### How To Guide
 
 This file handles the creation of new user accounts.
 
@@ -606,7 +605,7 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 
 ## Create the Login Page (`login.php`)
 
-### Step-by-Step Guide
+### How To Guide
 
 This file authenticates existing users and starts their session.
 
@@ -778,7 +777,7 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 
 ## Create the Logout Script (`logout.php`)
 
-### Step-by-Step Guide
+### How To Guide
 
 This file ends the user's authenticated state.
 
@@ -864,7 +863,7 @@ The final two lines manage server-to-browser network communication.
 
 ## Create the Profile Management Page (`profile.php`)
 
-### Step-by-Step Guide
+### How To Guide
 
 This file allows logged-in users to update their information.
 
@@ -1146,7 +1145,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Step-by-Step Guide
+## How To Guide
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1158,7 +1157,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Tutorial
+## How To Guide: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1170,7 +1169,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Tutorial
+## How To Guide: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1182,7 +1181,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Tutorial
+## How To Guide: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1194,7 +1193,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## Tutorial
+## How To Guide: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation

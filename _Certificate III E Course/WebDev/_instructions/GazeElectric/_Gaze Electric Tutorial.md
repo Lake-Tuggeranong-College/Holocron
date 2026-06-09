@@ -9,7 +9,11 @@ needsUpdating: true
 
 # Database Configuration
 
-Before executing commands, it is essential to understand the structure of relational databases. This background knowledge ensures you understand why tables are structured with specific data types and constraints.
+Before starting the website development, it is essential to understand the structure of relational databases. This background knowledge ensures you understand why tables are structured with specific data types and constraints.
+
+Importantly, you need to understand CRUD.
+
+![[dbCRUD.jpeg]]
 
 See here : [[Slides - Databases]]
 
@@ -17,6 +21,10 @@ See here : [[Slides - Databases]]
 
 > [!note] Goal: This guide will walk you through setting up the initial database infrastructure required for the shopfront web application.
 
+> [!important] Learning Outcome/s:
+> - How to configure a database table
+> - Database terms,
+> - SQL Fundamentals
 ### Step 1: Accessing the Database Manager
 
 1. Open **PHPMyAdmin** in your browser.
@@ -111,6 +119,13 @@ Notice that the field is named `password_hash`, not `password`.
 
 ## How To Guide: Creating the `config.php` File
 
+> [!note] Goal: To build the bridge between the website and the database.
+
+> [!important] Learning Outcomes:
+> - How to create a PHP Page
+> - PHP syntax fundamentals
+> - PHP code to connect to the database
+
 Follow these steps to establish the "handshake" between your PHP code and the MariaDB database.
 
 ### Step 1: Create the File
@@ -188,10 +203,14 @@ In web development, we can use a `config.php` file to centralise database creden
 
 # Creating the website template
 
-> [!note] Goal: Create the initial version of `template.php` which defines a standard interface to the whole site.
-
 ## How To Guide: Creating the standard interface
 
+> [!note] Goal: Create the initial version of `template.php` which defines a standard interface to the whole site.
+
+> [!important] Learning Outcomes:
+> - Standardising User Interface (UI) across the whole site
+> - Navigation throughout the site
+ 
 ### Step 1: Create the file
 
 Create a new file, called `template.php` in the root directory of the project.
@@ -400,6 +419,15 @@ The code in **Step 3** uses Bootstrap’s "Navbar-Toggler."
 
 ## Create the Registration Page (`register.php`)
 
+
+> [!note] Goal: Develop a page to allow users to register an account on the website.
+
+> [!important] Learning Outcomes:
+> - Further PHP development skills
+> - Building from the template
+> - HTML form development
+> - Embedding SQL into PHP to execute commands on the database
+
 ### How To Guide
 
 This file handles the creation of new user accounts.
@@ -604,6 +632,13 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 
 ## Create the Login Page (`login.php`)
 
+
+> [!note] Goal: Develop a page to allow users to login to their account.
+
+> [!important] Learning Outcomes:
+> - Further PHP development skills
+> - Security issues with PHP development
+
 ### How To Guide
 
 This file authenticates existing users and starts their session.
@@ -787,6 +822,14 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 
 ## Update the Login script
 
+
+> [!note] Goal: Improve the login page to resolve security issues.
+
+> [!important] Learning Outcomes:
+> - Understand security issues with PHP development
+> - Attempt to 'hack' your website.
+> - Resolve the issues.
+
 After a security audit, the login script was vulnerable to SQL Injection attacks. 
 
 Update it to use `prepare` statements - Use PDO prepared statements with placeholders. This ensures the database treats user input strictly as data, not executable code. This mitigates the potential SQL Injection attack vector.
@@ -924,6 +967,13 @@ ob_end_flush();
 
 ## Create the Logout Script (`logout.php`)
 
+
+> [!note] Goal: Develop a page to allow users to logout of their account.
+
+> [!important] Learning Outcomes:
+> - Simple, effective and secure logging out of account.
+
+
 ### How To Guide
 
 This file ends the user's authenticated state.
@@ -1009,6 +1059,13 @@ The final two lines manage server-to-browser network communication.
 - **`exit()`:** **Crucial Security Element.** The `header()` function does not stop PHP from executing the rest of the script. If there were malicious code underneath a header redirect, a hacker could ignore the redirect and execute the downstream code. `exit()` halts script execution instantly on the server.
 
 ## Create the Profile Management Page (`profile.php`)
+
+
+> [!note] Goal: Allow users to edit their details in the database
+
+> [!important] Learning Outcomes:
+> - Preloading user details
+> - Allowing Update of data.
 
 ### How To Guide
 
@@ -1292,7 +1349,11 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!note] Goal: TODO
 
-## How To Guide
+> [!important] Learning Outcomes:
+> - TODO
+## How To Guide: 
+
+### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1301,34 +1362,46 @@ Prepared statements completely mitigate this risk by executing the query engine 
 # Product Management
 
 
-
 > [!note] Goal: TODO
 
+> [!important] Learning Outcomes:
+> - TODO
 ## How To Guide: 
+
+### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
+
 
 
 # Order Form
 
 
-
 > [!note] Goal: TODO
 
+> [!important] Learning Outcomes:
+> - TODO
 ## How To Guide: 
+
+### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
 
 
-# Shopping Cart
 
+
+# Shopping Cart
 
 
 > [!note] Goal: TODO
 
+> [!important] Learning Outcomes:
+> - TODO
 ## How To Guide: 
+
+### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
@@ -1337,10 +1410,13 @@ Prepared statements completely mitigate this risk by executing the query engine 
 # Invoicing
 
 
-
 > [!note] Goal: TODO
 
+> [!important] Learning Outcomes:
+> - TODO
 ## How To Guide: 
+
+### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation

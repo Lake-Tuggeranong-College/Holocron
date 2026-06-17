@@ -52,11 +52,11 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Task 2.1 Competencies
 
-| Unit Code                                                                        | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| -------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
-| ~~[CUADIG303](https://training.gov.au/Training/Details/CUADIG303/unitdetails)~~  | ~~Produce and prepare photo images~~      |              |      ~~✅~~       |               |       ~~✅~~       |
-| [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                   |              |        ✅         |               |                   |
+| Unit Code                                                                        | Unit Title                                         | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| -------------------------------------------------------------------------------- | -------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques          |              |                  |       ✅       |                   |
+| [ICTPRG430](https://training.gov.au/training/details/ICTPRG430/qualifications)   | Apply introductory object-oriented language skills |              |                  |               |       ~~✅~~       |
+| [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                            |              |        ✅         |               |                   |
 
 
 

@@ -1289,9 +1289,9 @@ Before rendering any HTML or executing queries, the script evaluates the applica
 if (!isset($_SESSION['user_id'])) { ... }
 ```
 
-Because HTTP is inherently stateless, the server relies on the active session array to check if a user is logged in. If `$_SESSION['user_id']` is absent, execution is blocked immediately, and the client is forced to `login.php`. This acts as an access barrier to protect user data from unauthorised manipulation.
+Because HTTP is inherently [[Stateless Protocol (HTTP)|stateless]], the server relies on the active session array to check if a user is logged in. If `$_SESSION['user_id']` is absent, execution is blocked immediately, and the client is forced to `login.php`. This acts as an access barrier to protect user data from unauthorised manipulation.
 
-In a stateless protocol, the web server treats every single incoming request as an entirely new, isolated event. The server has total amnesia. It retains zero context or memory of what happened a fraction of a second ago.
+In a [[Stateless Protocol (HTTP)|stateless]] protocol, the web server treats every single incoming request as an entirely new, isolated event. The server has total amnesia. It retains zero context or memory of what happened a fraction of a second ago.
 
 #### 2. Form Architecture and Superglobals (`$_POST`)
 
@@ -1405,7 +1405,43 @@ Prepared statements completely mitigate this risk by executing the query engine 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
 
+In web applications, the user interface (UI) must adapt dynamically based on the user's authentication state. This ensures a clean User Experience (UX) and prevents logical errors, such as a logged-in user trying to register again.
 
+### 1. The Role of the Session Superglobal (`$_SESSION`)
+
+Because HTTP is inherently [[Stateless Protocol (HTTP)|stateless]], the server uses a secure cookie containing a Session ID to link the browser to a temporary storage file on the web server.
+
+- In PHP, this file's contents are populated into the `$_SESSION` associative array when `session_start()` is called.
+- By checking if a key like `$_SESSION['username']` is set, we can determine the client's authentication status before rendering any HTML.
+
+### 2. Defensive UI vs Server-Side Authorization
+
+- **Client-Side/UI Masking:** Hiding navigation links (like removing the "Login" button or the "Registration" link once authenticated) is a core tenet of defensive UX design. It streamlines the interface and limits user confusion.
+- **Important Distinction:** Masking links in the UI does _not_ secure the backend. An unauthorised user can still type `profile.php` directly into their browser's URL bar. Therefore, UI conditional rendering must always be paired with server-side authorization checks (such as the checking logic implemented at the top of your `profile.php` or `admin_users.php` scripts).
+
+### 3. Dynamic Navigation Control Logic
+
+The conditional routing of your navigation bar is governed by two boolean questions:
+
+1. **Is the user currently an unauthenticated guest?** If yes, show the "Registration" option and the "Login" CTA.
+2. **Is the user currently authenticated?** If yes, suppress the entry options and mount a personalised control dropdown.
+
+```mermaid
+graph TD
+    A([Page Request: template.php loaded]) --> B{"Is $_SESSION[username] set?"}
+    
+    %% NOT LOGGED IN PATH
+    B -- No (Guest State) --> C[Show Registration Link]
+    C --> D[Show Login Button]
+    D --> E[Hide Profile Settings & Orders Menu]
+    E --> F([Render Navbar to Client])
+
+    %% LOGGED IN PATH
+    B -- Yes (Authenticated) --> G[Hide 'Registration' Link]
+    G --> H[Hide Login Button]
+    H --> I[Show User Dropdown Menu with Profile & Orders]
+    I --> F
+```
 
 
 # Administrator Tool - User Accounts

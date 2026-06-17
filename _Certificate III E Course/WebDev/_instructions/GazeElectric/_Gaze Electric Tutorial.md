@@ -56,6 +56,7 @@ CREATE TABLE users (
   second_name text NOT NULL,
   address text NOT NULL,
   phone_number text NOT NULL,
+  access_level int(11) NOT NULL,
   PRIMARY KEY (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 ```
@@ -1344,6 +1345,22 @@ Prepared statements completely mitigate this risk by executing the query engine 
     
 2. **Binding Phase:** The raw strings provided inside the `$_POST` array are sent separately and bound strictly as _data payloads_. Even if an attacker passes a string loaded with SQL commands (like `'; DROP TABLE users;--`), the database treat it purely as text data, neutralizing malicious executions.
 
+
+
+# Product Management
+
+> [!note] Goal: TODO
+
+> [!important] Learning Outcomes:
+> - TODO
+## How To Guide: 
+
+### Step 1: 
+
+![[commonBlocks#Commit & Push]]
+## Explanation
+
+
 # Administrator Access
 
 
@@ -1351,28 +1368,18 @@ Prepared statements completely mitigate this risk by executing the query engine 
 
 > [!important] Learning Outcomes:
 > - TODO
+
+This stage of development relies heavily on the `access_level` field in the `users` table in the database.
+
+**Recall** that the `access_level` value is retrieved from the database when the user successfully logs in to the site and is stored in a session variable.
+
+![[adminSessionVariable.png]]
 ## How To Guide: 
 
 ### Step 1: 
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
-
-
-# Product Management
-
-
-> [!note] Goal: TODO
-
-> [!important] Learning Outcomes:
-> - TODO
-## How To Guide: 
-
-### Step 1: 
-
-![[commonBlocks#Commit & Push]]
-## Explanation
-
 
 
 # Order Form

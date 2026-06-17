@@ -69,7 +69,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
-You need to create a 10-minute video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
+You need to create a 5-minute video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
 
 
 ### Deliverables

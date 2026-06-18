@@ -49,10 +49,10 @@ See [[Course|Course]] for details on the course
 > - [BSBSUS211	Participate in sustainable work practices](https://training.gov.au/training/details/BSBSUS211/unitdetails)
 > - [BSBTEC202 Use digital technologies to communicate in a work environment](https://training.gov.au/training/details/bsbtec202/unitdetails)
 > - [BSBWHS211 Contribute to the health and safety of self and others](https://training.gov.au/training/details/BSBWHS211/unitdetails)
->**Elective**
-> BSBTEC203 Research using the internet
 > 
 >**If you are continuing with the Certificate III, these units are not required.**
+>
+>See [[#ICT20120 Certificate II Competencies|below]] for details
 
 
 # Semester 3 - Group Practical Project

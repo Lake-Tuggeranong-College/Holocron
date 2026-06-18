@@ -55,7 +55,6 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | Unit Code                                                                        | Unit Title                                         | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | -------------------------------------------------------------------------------- | -------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques          |              |                  |       ✅       |                   |
-| [ICTPRG430](https://training.gov.au/training/details/ICTPRG430/qualifications)   | Apply introductory object-oriented language skills |              |                  |               |       ~~✅~~       |
 | [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                            |              |        ✅         |               |                   |
 
 
@@ -69,7 +68,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
-You need to create a 5-minute video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
+You need to create a video showcasing a website you developed, presenting it as if you're demonstrating it to a client or at a public event. The video must feature a voiceover explaining how the website meets its goals and user needs, and it should display the site's functionality. The final submission must be a polished, edited video that includes title and credit sequences, background music, and the voiceover. Before submitting, you must get feedback on a draft from your instructor and incorporate it into your final video.
 
 
 ### Deliverables
@@ -92,24 +91,29 @@ You need to create a 5-minute video showcasing a website you developed, presenti
 ==TODO Link to Google Classroom==
 
 ---
-## Task 2.3 - Tutorial
+## Task 2.3 - Post-Launch Technical Interview & Code Review
 ### Task Overview
 
-You're tasked with creating a tutorial for future students that explains an advanced part of your project. This tutorial must clearly state its aim and educational goals, explaining what the reader will learn and achieve. It needs to include an explanation of the underlying theoretical concepts, such as modularisation, and analyse why these concepts are important to the overall project. The core of the tutorial will be a step-by-step guide on how to complete the task, along with an analysis of how this addition improves the project. Finally, you must get feedback on a draft from your instructor and incorporate their suggestions into your final submission.
+> [!important] This is for students completing the Certificate II in Applied Digital Technologies ONLY.
+
+Now that your PHP website and MySQL database are operational, your development team is conducting a post-launch code review and database validation.
+In this task, you will identify a critical issue, vulnerability, or area of improvement within your developed application and its database backend. You will use the internet to research modern, industry-standard solutions, document your database management and query procedures, and then sit for a Technical Interview & Code Review with your Assessor (acting as the Lead Developer) to explain, run, and defend your database operations and proposed changes using live evidence from your project.
+
 
 ### Deliverable/s
 
-| Deliverables                 | Submitted via   |
-| ---------------------------- | --------------- |
-| Written Tutorial in Markdown | ==TODO GitHub== |
+| Deliverables              | Submitted via |
+| ------------------------- | ------------- |
+| Interview, Video Recorded | Live          |
 
 
 ### Task 2.3 Competencies
 
-| Unit Code                                                                      | Unit Title                                       | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| ------------------------------------------------------------------------------ | ------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT216](https://training.gov.au/Training/Details/ICTICT216/unitdetails)    | Design and create basic organisational documents |              |        ✅         |               |         ✅         |
-| [BSBTEC301](https://training.gov.au/training/details/BSBTEC301/qualifications) | Design and produce business documents            |              |        ✅         |               |                   |
+| Unit Code                                                                   | Unit Title                                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBCRT201](https://training.gov.au/training/details/BSBCRT201/unitdetails) | Develop and apply thinking and problem solving skills |              |        ✅         |               |                   |
+| [BSBTEC203](https://training.gov.au/training/details/BSBTEC203/unitdetails) | Research using the internet                           |              |        ✅         |               |                   |
+| [ICTICT226](https://training.gov.au/training/details/ICTICT226/unitdetails) | Operate simple database applications                  |              |        ✅         |               |                   |
 
 
 

@@ -1,4 +1,0 @@
----
-needsUpdating: false
-isCurrent: true
----

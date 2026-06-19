@@ -11,6 +11,7 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 - Repetition (loops)
 - Functions
 
+>[!important] Task 2.3 is only required for those students completing the Certificate II.
 
 # Schedule
 

@@ -1,6 +1,6 @@
 ---
-isCurrent: true
-needsUpdating: true
+isCurrent: false
+needsUpdating: false
 ---
 
 Click on the link to the GitHub Classroom assignment:

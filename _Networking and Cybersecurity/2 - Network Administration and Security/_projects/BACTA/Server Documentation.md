@@ -1,6 +1,6 @@
 ---
-isCurrent: true
-needsUpdating: true
+isCurrent: false
+needsUpdating: false
 ---
 > [!tip] The goal of this stage is to document the implementation of the project.
 

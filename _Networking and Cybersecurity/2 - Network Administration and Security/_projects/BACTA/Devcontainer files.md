@@ -1,6 +1,6 @@
 ---
-isCurrent: true
-needsUpdating: true
+isCurrent: false
+needsUpdating: false
 ---
 # .devcontainer/devcontainer.json
 

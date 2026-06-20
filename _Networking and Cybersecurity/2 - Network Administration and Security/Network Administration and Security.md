@@ -8,28 +8,28 @@ needsUpdating: true
 # Semester Plan
 
 
-| Week                                     | Content | Submissions |
-| ---------------------------------------- | ------- | ----------- |
-| ![[S2 Calendar#School Events - Week 1]]  |         |             |
-| ![[S2 Calendar#School Events - Week 2]]  |         |             |
-| ![[S2 Calendar#School Events - Week 3]]  |         |             |
-| ![[S2 Calendar#School Events - Week 4]]  |         |             |
-| ![[S2 Calendar#School Events - Week 5]]  |         |             |
-| ![[S2 Calendar#School Events - Week 6]]  |         |             |
-| ![[S2 Calendar#School Events - Week 7]]  |         |             |
-| ![[S2 Calendar#School Events - Week 8]]  |         |             |
-| ![[S2 Calendar#School Events - Week 9]]  |         |             |
-| ![[S2 Calendar#School Events - Week 10]] |         |             |
-| ![[S2 Calendar#School Events - Week 11]] |         |             |
-| ![[S2 Calendar#School Events - Week 12]] |         |             |
-| ![[S2 Calendar#School Events - Week 13]] |         |             |
-| ![[S2 Calendar#School Events - Week 14]] |         |             |
-| ![[S2 Calendar#School Events - Week 15]] |         |             |
-| ![[S2 Calendar#School Events - Week 16]] |         |             |
-| ![[S2 Calendar#School Events - Week 17]] |         |             |
-| ![[S2 Calendar#School Events - Week 18]] |         |             |
-| ![[S2 Calendar#School Events - Week 19]] |         |             |
-| ![[S2 Calendar#School Events - Week 20]] |         |             |
+| Week                                     | Content | Submissions                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![[S2 Calendar#School Events - Week 1]]  |         | [[_Networking and Cybersecurity/2 - Network Administration and Security/_tasks/Assessment 1\|Assessment 1]]<br>[[_Networking and Cybersecurity/2 - Network Administration and Security/_tasks/Assessment 2\|Assessment 2]]<br>[[_Networking and Cybersecurity/2 - Network Administration and Security/_tasks/Assessment 3\|Assessment 3]] |
+| ![[S2 Calendar#School Events - Week 2]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 3]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 4]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 5]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 6]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 7]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 8]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 9]]  |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 10]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 11]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 12]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 13]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 14]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 15]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 16]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 17]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 18]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 19]] |         |                                                                                                                                                                                                                                                                                                                                           |
+| ![[S2 Calendar#School Events - Week 20]] |         |                                                                                                                                                                                                                                                                                                                                           |
 
 # Subject Information
 

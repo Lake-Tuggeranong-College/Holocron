@@ -14,6 +14,8 @@ Commit and Push to Github. Create a Pull Request once ready to merge.
 
 # Contact Details
 
+^079a95
+
 |                                                                                         | Email                                                                                                     |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | ${\color{black} \fcolorbox{chocolate}{chocolate} {Ryan Cather}}$<br>![[ryanAvatar.png]] | ryan.cather@ed.act.edu.au                                                                                 |

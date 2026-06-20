@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 needsUpdating: true
 ---
 In preparation for the assessment task, you are to prepare and plan for future development. **The information you produce can be used in your first assessment task.**

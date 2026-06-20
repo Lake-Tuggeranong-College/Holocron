@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 softwareVersion:
   - PlatformIO
 needsUpdating: false

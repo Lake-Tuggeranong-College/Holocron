@@ -2,7 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
-isCurrent: true
+isCurrent: false
 softwareVersion:
   - Godot 4.3
   - Godot 4.6

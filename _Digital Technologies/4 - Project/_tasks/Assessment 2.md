@@ -1,7 +1,7 @@
 ---
-isCurrent: false
+isCurrent: true
 publish: false
-needsUpdating: false
+needsUpdating: true
 ---
 # Assessment Support
 

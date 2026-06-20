@@ -2,7 +2,7 @@
 theme: simple
 highlightTheme: zenburn
 css: css/holocronSlides.css
-isCurrent: true
+isCurrent: false
 needsUpdating: false
 ---
 # Internet Protocol (IP) 

@@ -8,6 +8,11 @@ Below are some examples of Assessments that students have submitted in the past.
 
 [Meet Google Drive - One place for all your files](https://drive.google.com/drive/folders/1g8jxVFm5FgpJ-CkK8mPSGcsTDPCbzMf4?usp=sharing)
 
+# Evaluation
+
+[[evaluation]]
+[[evaluationChecklist]]
+
 # Documentation Structure Example
 These examples can be used as a guide on how to structure your responses in written tasks.
 

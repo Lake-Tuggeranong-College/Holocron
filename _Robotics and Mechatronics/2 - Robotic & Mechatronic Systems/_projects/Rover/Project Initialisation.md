@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 needsUpdating: true
 ---
 > [!note] In this section you will get access to the code required to start the project. Over the course of this project you will be using GitHub, GitHub Classrooms to manage the code repository, as the Arduino IDE for the development process.

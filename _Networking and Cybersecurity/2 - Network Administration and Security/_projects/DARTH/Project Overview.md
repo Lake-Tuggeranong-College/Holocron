@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: true
+---
 # Database Application for Remote Telemetry Hosting (DARTH)
 
 ### Executive Summary

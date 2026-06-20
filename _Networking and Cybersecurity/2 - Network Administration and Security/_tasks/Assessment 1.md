@@ -1,6 +1,6 @@
 ---
-isCurrent: false
+isCurrent: true
 publish: false
-needsUpdating: false
+needsUpdating: true
 ---
 Task 1

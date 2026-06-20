@@ -2,13 +2,16 @@
   "outputFileName": "orphaned files output",
   "disableWorkingLinks": false,
   "directoriesToIgnore": [
-    "_Robotics and Mechatronics/1 - Building and Programming Circuits/_projects/Bank Alarm/",
-    "Administration/"
+    "Administration/",
+    "_Digital Technologies/1 - Digital Assets/_projects/Space Invaders/"
   ],
   "filesToIgnore": [
-    "Administration/Content Management.base"
+    "Administration/Content Management.base",
+    "_Robotics and Mechatronics/_shared/Train Remote Controle/Arduino-PowerFunctions-master.zip"
   ],
-  "fileTypesToIgnore": [],
+  "fileTypesToIgnore": [
+    "zip"
+  ],
   "linksToIgnore": [],
   "tagsToIgnore": [],
   "fileTypesToDelete": [],

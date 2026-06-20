@@ -1,3 +1,7 @@
+---
+isCurrent: false
+needsUpdating: false
+---
 These are archived as the project has evolved.
 
 [[Administrator Access]]

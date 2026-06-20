@@ -1,5 +1,5 @@
 ---
-isCurrent: false
+isCurrent: true
 needsUpdating: true
 ---
 Prepare for Assessment 2 documentation by creating a new Google Doc.

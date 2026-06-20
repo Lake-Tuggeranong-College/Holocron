@@ -1,6 +1,6 @@
 ---
-isCurrent: false
-needsUpdating: false
+isCurrent: true
+needsUpdating: true
 ---
 # Install file
 [Docker Installer - Linux. Download this file](https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb)

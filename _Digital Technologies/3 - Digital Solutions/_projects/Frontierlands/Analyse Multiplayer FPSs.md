@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 needsUpdating: false
 ---
 Focus on:

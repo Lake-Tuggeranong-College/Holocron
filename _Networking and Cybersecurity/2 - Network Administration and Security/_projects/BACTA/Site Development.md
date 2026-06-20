@@ -1,6 +1,6 @@
 ---
-isCurrent: false
-needsUpdating: false
+isCurrent: true
+needsUpdating: true
 ---
 
 # Complete the User Management files

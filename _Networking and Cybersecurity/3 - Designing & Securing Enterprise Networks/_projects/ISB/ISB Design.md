@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 needsUpdating: false
 ---
 > [!note] Based on the outcome of the [[Analysis Outcomes]].

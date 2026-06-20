@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 needsUpdating: false
 ---
 # Subject-Specific Advice
@@ -7,4 +7,4 @@ needsUpdating: false
 TBA
 
 
-![[Shared Content/Assessment Support/2026S1/Task 2|Common]]
+![[Shared Content/Assessment Support/S1/Task 2|Common]]

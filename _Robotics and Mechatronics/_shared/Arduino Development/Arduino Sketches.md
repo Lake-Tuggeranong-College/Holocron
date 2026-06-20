@@ -1,0 +1,1 @@
+![[Structure_of_an_Arduino_Sketch_example_with_code.png]]

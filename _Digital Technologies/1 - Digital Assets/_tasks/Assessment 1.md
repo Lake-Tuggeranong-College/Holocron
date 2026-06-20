@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 publish: true
 needsUpdating: false
 ---
@@ -14,4 +14,4 @@ The solution for the project will relate to the topic below.
 | Subject                 | Focus          |
 | 11 Digital Technologies | Modularisation |
 
-![[Shared Content/Assessment Support/2026S1/Task 1|Common]]
+![[Shared Content/Assessment Support/S1/Task 1|Common]]

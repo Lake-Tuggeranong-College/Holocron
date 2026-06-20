@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 needsUpdating: false
 ---
 
@@ -12,5 +12,5 @@ The solution for the project will relate to the topic below.
 | Subject                      | Focus                 |
 | 12 Digital Technologies      | Signals               |
 
-![[Shared Content/Assessment Support/2026S1/Task 1|Common]]
+![[Shared Content/Assessment Support/S1/Task 1|Common]]
 

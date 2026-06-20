@@ -16,7 +16,7 @@ For suggestions on how to structure your report, see this page:
 
 These are the details you are to cover in the topics in Assessment 2. More Specific Details will be added later in the document.
 
-![[_Robotics and Mechatronics/4 - Project/_ap/2024S2/_images/assessment2Topics.png]]
+![[assessment2Topics.png]]
 
 ![[Shared Content/Assessment Support/2024S2/Task 2#Project Overview|Task 2]]
 

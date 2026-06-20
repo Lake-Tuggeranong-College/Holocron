@@ -2158,6 +2158,8 @@ if (!is_dir($upload_dir)) {
 
 4. Include a function to generate a randomised [[Universal Unique Identifier (UUID)|UUID]]. 
 
+![[prodMgmtUUID.png]]
+
 ```php
 // Function to generate a simple UUID-like string
 function generate_uuid() {

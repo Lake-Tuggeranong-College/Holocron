@@ -3,7 +3,7 @@ isCurrent: true
 needsUpdating: true
 ---
 > [!note]- Project Overview
-> ![[_Networking and Cybersecurity/2 - Network Administration and Security/_projects/SCARIF/Project Overview|Project Overview]]
+> ![[SCARIF Project Overview|SCARIF Project Overview]]
 
 # Semester Plan
 

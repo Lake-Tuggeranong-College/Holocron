@@ -2,12 +2,11 @@
 isCurrent: true
 needsUpdating: true
 ---
-# Database Application for Remote Telemetry Hosting (DARTH)
+# Project SCARIF (Secure Containerised Archive for Remote Interface Feedback)
 
 ### Executive Summary
 
-Project **D.A.R.T.H.** is a comprehensive full-stack engineering initiative designed to bridge the gap between physical hardware and modern web-based data management. By integrating low-level **Arduino** hardware with a containerised **PHP**, **Python**, and **MariaDB** backend, the project establishes a robust, bidirectional communication pipeline for real-time data acquisition and remote system control.
-
+Project **S.C.A.R.I.F.** is a comprehensive full-stack engineering initiative designed to bridge the gap between physical hardware and modern web-based data management. By integrating low-level **Adafruit Feather HUZZAH32** hardware with a containerised **PHP**, **Python**, and **MariaDB** backend, the project establishes a robust, bidirectional communication pipeline for real-time data acquisition and remote system control.
 ### System Architecture Diagram
 
 The following diagram illustrates the interaction between the physical hardware and the dockerised infrastructure:
@@ -18,7 +17,7 @@ The following diagram illustrates the interaction between the physical hardware 
 
 ### Project Objective
 
-The primary goal is to develop a secure, scalable, and portable system for **Remote Telemetry Hosting**. In this ecosystem, remote hardware nodes (Arduinos) collect environmental or system data and "uplink" it to a centralised server. This server manages the data through a dockerised architecture, allowing for seamless deployment, real-time monitoring, and the ability to send remote command execution signals back to the hardware nodes.
+The primary goal is to develop a secure, scalable, and portable system for **Remote Telemetry Hosting**. In this ecosystem, remote hardware nodes (Adafruit Feather HUZZAH32s) collect environmental or system data and "uplink" it to a centralised server. This server manages the data through a dockerised architecture, allowing for seamless deployment, real-time monitoring, and the ability to send remote command execution signals back to the hardware nodes.
 
 ### The Tech Stack (The "Sith" Core)
 
@@ -32,21 +31,30 @@ The primary goal is to develop a secure, scalable, and portable system for **Rem
 
 ### System Architecture
 
-1. **Data Acquisition:** The Arduino reads digital or analogue signals from connected sensors.
-2. **The Uplink:** The Arduino publishes this data as an MQTT message to a specific topic on the dockerised broker.
+1. **Data Acquisition:** The HUZZAH32 reads digital or analogue signals from connected sensors.
+    
+2. **The Uplink:** The HUZZAH32 publishes this data as an MQTT message to a specific topic on the dockerised broker.
+    
 3. **Containerised Processing:** The **Docker Network** facilitates secure, private communication between the MQTT broker, the unified Python engine, the PHP engine, and the MariaDB instance.
+    
 4. **Data Persistence:** The Python Integration Engine receives the incoming telemetry and commits it directly to the database archive.
+    
 5. **State Synchronisation:** The same Python container monitors the MariaDB binary logs. Upon detecting changes to device states or settings in the database (modified via the PHP dashboard), it publishes the updated values back to the MQTT broker to ensure the hardware remains in sync.
-6. **Telemetry Feedback Loop:** The Arduino, subscribed to a command topic on the broker, receives updated instructions (e.g. "Switch on LED" or "Adjust sensor threshold") and executes them immediately.
+    
+6. **Telemetry Feedback Loop:** The HUZZAH32, subscribed to a command topic on the broker, receives updated instructions (e.g. "Switch on LED" or "Adjust sensor threshold") and executes them immediately.
 
 ### Cyber & Networking Security Features
 
-To ensure the **D.A.R.T.H.** system remains impenetrable from Rebel interference, the project focuses on:
+To ensure the **S.C.A.R.I.F.** system remains impenetrable from Rebel interference, the project focuses on:
 
 - **Container Isolation:** Using Docker to isolate the database from the public internet, allowing access only through the internal backend services.
+    
 - **Sanitisation:** Strict prevention of SQL injection and Cross-Site Scripting (XSS) within the PHP and Python logic.
+    
 - **Security Auditing & Monitoring:** Active monitoring of all system traffic and application logic using **Burp Suite** and other professional cyber security tools to identify and mitigate vulnerabilities.
+    
 - **Vulnerability Analysis:** Ongoing assessment of the MQTT broker and web interface to ensure the "Empire's" data remains confidential and integral.
+    
 
 ### Expected Outcome
 

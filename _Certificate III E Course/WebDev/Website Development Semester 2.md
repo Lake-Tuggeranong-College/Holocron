@@ -11,7 +11,7 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 - Repetition (loops)
 - Functions
 
->[!important] Task 2.3 is only required for those students completing the Certificate II.
+>[!important] Tasks 2.2 & 2.3 are only required for those students completing the Certificate II.
 
 # Schedule
 
@@ -26,10 +26,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | 4                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
 | 5                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
 | 6                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
-| 7                            | [[_Gaze Electric Tutorial]]                                                        |           | Task 2.1 Due    |
-| 8                            | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]] |           |                 |
-| 9                            | Showcase Development                                                               |           |                 |
-| 10                           | Showcase Development                                                               |           |                 |
+| 7                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 8                            |                                                                                    |           |                 |
+| 9                            |                                                                                    |           | Task 2.1 Due    |
+| 10                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]] |           |                 |
 | 11                           | Showcase Development                                                               |           | Task 2.2 Due    |
 | 12                           | Slides - [[Slides - Tutorial Writing]]<br>[[Tutorial Writing]]                     |           |                 |
 | 13                           | Tutorial Development                                                               |           |                 |

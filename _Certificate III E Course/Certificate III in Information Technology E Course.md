@@ -35,7 +35,6 @@ See [[Course|Course]] for details on the course
 ![[Website Development Semester 2#Overview]]
 
 ![[Website Development Semester 2#Task 2.1 Competencies]]
-
 ![[Website Development Semester 2#Task 2.2 Competencies]]
 ![[Website Development Semester 2#Task 2.3 Competencies]]
 

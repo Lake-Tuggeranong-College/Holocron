@@ -74,7 +74,6 @@ Hopefully, you will see some files and directories on the left hand side, and th
 > [!danger] The first time you open the project in a container, it could take a long time.
 
 
-![[vsCodeOpenInContainer.png]]
 
 # Build Rovers
 

@@ -11,8 +11,6 @@ In this task, you will develop a static PHP-based website. Throughout the develo
 - Repetition (loops)
 - Functions
 
->[!important] Tasks 2.2 & 2.3 are only required for those students completing the Certificate II.
-
 # Schedule
 
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
@@ -53,6 +51,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ### Task 2.1 Competencies
 
+>[!warning] This is for students completing either the;
+>- Certificate II in Applied Digital Technologies, or 
+>- Certificate III in Information Technology
+
 | Unit Code                                                                        | Unit Title                                         | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | -------------------------------------------------------------------------------- | -------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques          |              |                  |       ✅       |                   |
@@ -80,6 +82,8 @@ You need to create a video showcasing a website you developed, presenting it as 
 
 ### Task 2.2 Competencies
 
+>[!warning] This is for students completing the Certificate II in Applied Digital Technologies ONLY.
+
 | Unit Code                                                                       | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | ------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages |      ✅       |                  |               |         ✅         |
@@ -95,8 +99,6 @@ You need to create a video showcasing a website you developed, presenting it as 
 ## Task 2.3 - Post-Launch Technical Interview & Code Review
 ### Task Overview
 
-> [!important] This is for students completing the Certificate II in Applied Digital Technologies ONLY.
-
 Now that your PHP website and MySQL database are operational, your development team is conducting a post-launch code review and database validation.
 In this task, you will identify a critical issue, vulnerability, or area of improvement within your developed application and its database backend. You will use the internet to research modern, industry-standard solutions, document your database management and query procedures, and then sit for a Technical Interview & Code Review with your Assessor (acting as the Lead Developer) to explain, run, and defend your database operations and proposed changes using live evidence from your project.
 
@@ -109,6 +111,8 @@ In this task, you will identify a critical issue, vulnerability, or area of impr
 
 
 ### Task 2.3 Competencies
+
+>[!warning] This is for students completing the Certificate II in Applied Digital Technologies ONLY.
 
 | Unit Code                                                                   | Unit Title                                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | --------------------------------------------------------------------------- | ----------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |

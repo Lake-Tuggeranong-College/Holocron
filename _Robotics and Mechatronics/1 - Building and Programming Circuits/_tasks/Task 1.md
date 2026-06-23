@@ -12,4 +12,4 @@ The solution for the project will relate to the topic below.
 | 11 Robotics | Modularisation |
 
 
-![[Shared Content/Assessment Support/S1/Task 1|Common]]
+![[S1 - Task 1|Common]]

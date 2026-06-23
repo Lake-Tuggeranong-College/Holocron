@@ -7,6 +7,6 @@ needsUpdating: false
 
 TBA
 
-![[Shared Content/Assessment Support/S1/Task 3|Common]]
+![[S1 - Task 3|Common]]
 
 

@@ -3,4 +3,4 @@ isCurrent: true
 publish: false
 needsUpdating: true
 ---
-Task 1
+![[S2 - Task 1]]

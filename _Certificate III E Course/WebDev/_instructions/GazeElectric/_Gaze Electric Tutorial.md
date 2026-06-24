@@ -5,7 +5,6 @@ needsUpdating: true
 > [!note] This page will hold the whole How To Guide:  for the Gaze Electric Website. The How To Guide:  will be updated throughout the development process as the project develops.
 
 ==TODO== - db init_scripts
-==TODO== 404 page. 
 
 # Database Configuration
 

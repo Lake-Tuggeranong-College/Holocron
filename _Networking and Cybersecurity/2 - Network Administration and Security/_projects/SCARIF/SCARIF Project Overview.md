@@ -19,9 +19,9 @@ The following diagram illustrates the interaction between the physical hardware 
 
 The primary goal is to develop a secure, scalable, and portable system for **Remote Telemetry Hosting**. In this ecosystem, remote hardware nodes (Adafruit Feather HUZZAH32s) collect environmental or system data and "uplink" it to a centralised server. This server manages the data through a dockerised architecture, allowing for seamless deployment, real-time monitoring, and the ability to send remote command execution signals back to the hardware nodes.
 
-### The Tech Stack (The "Sith" Core)
+### The Tech Stack
 
-- **Hardware (The Apprentice):** **Adafruit Feather HUZZAH32** microcontrollers utilizing WiFi to communicate across a dedicated **air-gapped WiFi network**. These act as the "boots on the ground", gathering raw sensor telemetry.
+- **Hardware (The Apprentice):** **Adafruit Feather HUZZAH32** microcontrollers utilising WiFi to communicate across a dedicated **air-gapped WiFi network**. These act as the "boots on the ground", gathering raw sensor telemetry.
 - **Containerised Infrastructure:** The entire backend is orchestrated using **Docker**, ensuring a consistent environment across development and production.
     - **The Master (PHP):** A dockerised **PHP** container serving as the web dashboard and command interface.
     - **The Inquisitor (Python Integration Engine):** A single, multi-threaded **Python** container that handles all backend logic, acting as the MQTT subscriber for incoming data and the Binlog monitor for outgoing synchronisation.
@@ -32,15 +32,10 @@ The primary goal is to develop a secure, scalable, and portable system for **Rem
 ### System Architecture
 
 1. **Data Acquisition:** The HUZZAH32 reads digital or analogue signals from connected sensors.
-    
 2. **The Uplink:** The HUZZAH32 publishes this data as an MQTT message to a specific topic on the dockerised broker.
-    
 3. **Containerised Processing:** The **Docker Network** facilitates secure, private communication between the MQTT broker, the unified Python engine, the PHP engine, and the MariaDB instance.
-    
 4. **Data Persistence:** The Python Integration Engine receives the incoming telemetry and commits it directly to the database archive.
-    
 5. **State Synchronisation:** The same Python container monitors the MariaDB binary logs. Upon detecting changes to device states or settings in the database (modified via the PHP dashboard), it publishes the updated values back to the MQTT broker to ensure the hardware remains in sync.
-    
 6. **Telemetry Feedback Loop:** The HUZZAH32, subscribed to a command topic on the broker, receives updated instructions (e.g. "Switch on LED" or "Adjust sensor threshold") and executes them immediately.
 
 ### Cyber & Networking Security Features
@@ -48,13 +43,9 @@ The primary goal is to develop a secure, scalable, and portable system for **Rem
 To ensure the **S.C.A.R.I.F.** system remains impenetrable from Rebel interference, the project focuses on:
 
 - **Container Isolation:** Using Docker to isolate the database from the public internet, allowing access only through the internal backend services.
-    
 - **Sanitisation:** Strict prevention of SQL injection and Cross-Site Scripting (XSS) within the PHP and Python logic.
-    
 - **Security Auditing & Monitoring:** Active monitoring of all system traffic and application logic using **Burp Suite** and other professional cyber security tools to identify and mitigate vulnerabilities.
-    
 - **Vulnerability Analysis:** Ongoing assessment of the MQTT broker and web interface to ensure the "Empire's" data remains confidential and integral.
-    
 
 ### Expected Outcome
 

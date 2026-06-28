@@ -1,3 +1,6 @@
+---
+publish: false
+---
 # LTC Holocron 🌌
 
 ![College](https://img.shields.io/badge/College-Lake%20Tuggeranong-blue)

@@ -9,9 +9,9 @@ publish: false
 ![Platform](https://img.shields.io/badge/Published%20Via-Obsidian%20Publish-7C3AED)
 ![Last Commit](https://img.shields.io/github/last-commit/Lake-Tuggeranong-College/Holocron)
 
-Welcome to the **Holocron**, the centralized knowledge base and curriculum repository for Computing and IT subjects at **Lake Tuggeranong College**.
+Welcome to the **Holocron**, the centralised knowledge base and curriculum repository for Computing and IT subjects at **Lake Tuggeranong College**.
 
-This repository serves as the backend for our digital classroom environment. All course materials, lab instructions, and technical notes are managed here and synchronized for a seamless learning experience.
+This repository serves as the backend for our digital classroom environment. All course materials, lab instructions, and technical notes are managed here and synchronised for a seamless learning experience.
 
 ## 🌐 Live Site
 
@@ -51,4 +51,4 @@ Vocational education focusing on industry-standard IT skills and workplace readi
 1. **Fork** the repository if you wish to suggest changes.
 2. Create a **New Branch** for your updates.
 3. Submit a **Pull Request** describing the additions.
-4. Maintain the existing directory structure and file organization. Ensure all images are linked relatively.
+4. Maintain the existing directory structure and file organisation. Ensure all images are linked relatively.

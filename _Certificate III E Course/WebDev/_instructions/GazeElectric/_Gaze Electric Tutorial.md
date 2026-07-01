@@ -2565,7 +2565,7 @@ The database contains an `enabled` boolean field (storing `1` for active or `0` 
 
 
 
-# Shopping Cart
+# Checkout
 
 
 > [!note] Goal: TODO

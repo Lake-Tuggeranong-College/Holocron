@@ -630,7 +630,7 @@ Web servers send information to your browser in two parts: **Headers** (metadata
 - **Flexibility:** This allows the script to process all logic—including redirects—at any point.
 - **Final Delivery:** `ob_end_flush()` releases the stored HTML to the browser only after the script has finished its logic.
 
-## Create the Login Page (`login.php`)
+## Create the first version of the Login Page (`login.php`)
 
 
 > [!note] Goal: Develop a page to allow users to login to their account.
@@ -657,15 +657,28 @@ ob_start();
 // Include template (config.php inside template.php should have session_start())
 include "template.php";
 
+
 /** @var $db */
 ?>
 <title>Login | Access Your Account</title>
 
 <style>
-    body { background-color: #eee; }
-    .card-login { border-radius: 25px; }
-    .form-icon { color: #aaa; margin-right: 10px; }
-    .vh-100 { min-height: 100vh; }
+    body {
+        background-color: #eee;
+    }
+
+    .card-login {
+        border-radius: 25px;
+    }
+
+    .form-icon {
+        color: #aaa;
+        margin-right: 10px;
+    }
+
+    .vh-100 {
+        min-height: 100vh;
+    }
 </style>
 
 <section class="vh-100 py-5">
@@ -677,18 +690,22 @@ include "template.php";
                         <div class="row justify-content-center">
 
                             <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-2 order-lg-1">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Login illustration">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                                    class="img-fluid" alt="Login illustration">
                             </div>
 
                             <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2">
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
 
-                                <form class="mx-1 mx-md-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <form class="mx-1 mx-md-4"
+                                    action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw form-icon"></i>
                                         <div class="form-outline flex-fill mb-0">
-                                            <label class="form-label" for="username">Email/Username</label>
-                                            <input type="text" id="username" name="username" class="form-control form-control-lg" required />
+                                            <label class="form-label" for="username">Email Address</label>
+                                            <input type="email" id="username" name="username"
+                                                class="form-control form-control-lg" required />
                                         </div>
                                     </div>
 
@@ -696,45 +713,23 @@ include "template.php";
                                         <i class="fas fa-lock fa-lg me-3 fa-fw form-icon"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <label class="form-label" for="password">Password</label>
-                                            <input type="password" id="password" name="password" class="form-control form-control-lg" />
+                                            <input type="password" id="password" name="password"
+                                                class="form-control form-control-lg" required />
                                         </div>
                                     </div>
 
                                     <div class="text-center text-lg-start mt-4 pt-2">
-                                        <button type="submit" name="login" class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
+                                        <button type="submit" name="login"
+                                            class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
+                                        <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account?
+                                            <a href="register.php" class="link-danger text-decoration-none">Register</a>
+                                        </p>
                                     </div>
+
                                 </form>
 
                                 <div class="mt-4">
-                                    <?php
-                                    if (isset($_POST['login'])) {
-                                        $v_input_user = $_POST['username'];
-                                        $v_input_pass = $_POST['password'];
-
-                                        // VULNERABLE: Direct concatenation allowing SQLi
-                                        $query = "SELECT user_id, username, first_name, access_level FROM users WHERE username = '$v_input_user'";
-                                        
-                                        // Debug helper for students to see their payload in action
-                                        echo "<div class='alert alert-info small'><strong>Executed Query:</strong> <br><code>" . htmlspecialchars($query) . "</code></div>";
-
-                                        $result = $db->query($query);
-                                        $user = $result ? $result->fetch() : false;
-
-                                        // VULNERABLE PASSTHROUGH: Checking only if a record was returned, ignoring password verification
-                                        if ($user) {
-                                            $_SESSION['user_id']      = $user['user_id'];
-                                            $_SESSION['username']     = $user['username'];
-                                            $_SESSION['first_name']   = $user['first_name'];
-                                            $_SESSION['access_level'] = $user['access_level'];
-
-                                            echo '<div class="alert alert-success">Login successful! Welcome ' . htmlspecialchars($user['first_name']) . '</div>';
-                                            // header("Location: index.php");
-                                            exit();
-                                        } else {
-                                            echo '<div class="alert alert-danger">Incorrect Username or password</div>';
-                                        }
-                                    }
-                                    ?>
+                                    
                                 </div>
 
                             </div>
@@ -749,51 +744,69 @@ include "template.php";
 <?php
 ob_end_flush();
 ?>
+
 ```
 
 
 3. **Verify** the username and password entered against the database.
 
-![[userMgmtLoginVerify.png]]
+![[userMgmtLoginVerifyV1.png]]
 
 ```php
- <div class="mt-4">
-                                    <?php
-                                    if (isset($_POST['login'])) {
-                                        $v_input_user = sanitiseData($_POST['username']);
-                                        $v_input_pass = $_POST['password'];
-
-                                        $stmt = $db->prepare("SELECT user_id, username,  password_hash,first_name, access_level FROM users WHERE username = :username");
-                                        $stmt->execute([':username' => $v_input_user]);
-                                        $user = $stmt->fetch();
-
-                                        if ($user && password_verify($v_input_pass, $user['password_hash'])) {
-                                            // Set session variables
-                                            $_SESSION['user_id']      = $user['user_id'];
-                                            $_SESSION['username']     = $user['username'];
-                                            $_SESSION['first_name']   = $user['first_name'];
-                                            $_SESSION['access_level'] = $user['access_level'];
-
-                                            // --- FLASH MESSAGE ---
-                                            $_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "! You have successfully logged in.";
-
-                                            // Redirect to index.php
-                                            header("Location: index.php");
-                                            exit();
-                                        } else {
-                                            // Note: Error messages can also be flash messages, but here we display 
-                                            // it immediately on the login page for better UX.
-                                            echo '<div class="alert alert-danger d-flex align-items-center">
-                                  <i class="fas fa-exclamation-triangle me-2"></i>
-                                  <div>Invalid email or password.</div>
-                                </div>';
-                                        }
-                                    }
-                                    ?>
-                                </div>
+<?php
+	if (isset($_POST['login'])) {
+		$v_input_user = $_POST['username'];
+		$v_input_pass = $_POST['password'];
+		
+		$sql = "SELECT * FROM users WHERE email_address = '$v_input_user' AND password = '$v_input_pass'";
+		$stmt = $pdo->query($sql);
+		$user = $stmt->fetch();
+	}
+?>
 ```
 > [!note] The verification code needs to be placed in the correct place within the HTML. Ensure that the code gets entered **after** the `</form>` and before the `</div>` as shown in the screenshot.
 
+4. Finalise the authentication of the user (if the username and password match) or inform the user that there was an error
+
+![[userMgmtLoginUserFoundV1.png]]
+
+```php
+if ($user) {
+	// User is found and authenticated correctly.
+	$_SESSION['user_id'] = $user['user_id'];
+	$_SESSION['username'] = $user['username'];
+	$_SESSION['first_name'] = $user['first_name'];
+	$_SESSION['access_level'] = $user['access_level'];
+
+	$_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
+} else {
+	// Username and/or password is incorrect.
+	$_SESSION['error_message'] = "Invalid email/username or password.";
+}
+```
+
+5. Test the login process by logging in with a previously created account. 
+
+>[!note]- There is an issue with the authentication. Do you know what it is?
+>The passwords are **hashed** prior to being stored in the database during registration. If the user enters the password as `password` it is stored in database as `$2y$12$FlcnjrEWjyLWoXrjd1pV8uIUbVq6wMyIetARNRkG/A6Qd6D0ysvyi` or similar. 
+>So, when the user attempts to log in, the system won't be able to successfully compare `password` to `$2y$12$FlcnjrEWjyLWoXrjd1pV8uIUbVq6wMyIetARNRkG/A6Qd6D0ysvyi` as the code is attempting to do so.
+>To solve this, the code will need to hash what the user has entered into the login form and then compare that hash against what's stored in the database. Therefore it will compare `$2y$12$FlcnjrEWjyLWoXrjd1pV8uIUbVq6wMyIetARNRkG/A6Qd6D0ysvyi` to `$2y$12$FlcnjrEWjyLWoXrjd1pV8uIUbVq6wMyIetARNRkG/A6Qd6D0ysvyi` and determine the password is correct.
+
+6.  Update the login process to first find if the user exists and *then* compare the hashed password.
+
+![[userMgmtLoginPasswordHashV1.png]]
+
+```php
+  $sql = "SELECT * FROM users WHERE email_address = '$v_input_user'";
+```
+
+and
+
+```php
+if ($user && password_verify($v_input_pass, $user['password_hash'])) {
+```
+
+7. Test the Login process now. You should find it successful.
 ### Explanation
 
 In a relational database system, the login process isn't just about checking a password; it’s about **Identity Management**.
@@ -817,10 +830,25 @@ The PHP logic follows a specific "if-then" architecture:
 $_SESSION['user_id']: Used for database queries on the profile page.
 $_SESSION['first_name']: Used to say "Welcome, [Name]" in the header.
 $_SESSION['access_level']: Used to hide or show "Admin" buttons.
-
 ```
 
-## Update the Login script
+
+## Update to the second version of the Login Page (`login.php`)
+
+
+> [!note] Goal: Attempt to resolve the security issue with the existing login script.
+
+> [!important] LEARNING OUTCOME/S: 
+> - SQL Injections
+> - How to mitigate the risk or SQL Injections
+## How To Guide: 
+
+### Step 1: 
+
+![[commonBlocks#Commit & Push]]
+## Explanation
+
+## Update to the third version of the Login Page (`login.php`)
 
 
 > [!note] Goal: Improve the login page to resolve security issues.

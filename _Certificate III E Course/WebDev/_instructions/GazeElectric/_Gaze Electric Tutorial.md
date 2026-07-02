@@ -837,161 +837,164 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 
 
 > [!note] Goal: Attempt to resolve the security issue with the existing login script.
+> Identify the structural flaw in your current login script and rewrite it using defensive coding practices to ensure user input cannot be executed as database commands.
 
 > [!important] LEARNING OUTCOME/S: 
 > - SQL Injections
 > - How to mitigate the risk or SQL Injections
-## How To Guide: 
+> - Using PDO Prepared statements 
 
-### Step 1: 
+Many web applications appear secure on the outside, but underneath their login forms lies a critical vulnerability: **SQL Injection (SQLi)**. If a login script is built by directly gluing user inputs into an SQL command, an attacker can bypass authentication entirely without needing a valid password.
 
-![[commonBlocks#Commit & Push]]
-## Explanation
+This guide takes your existing login form (`login.php`) and teaches you how to identify this major security vulnerability, exploit it in a safe testing environment, and then completely secure it using **SQL Prepared Statements**.
 
-## Update to the third version of the Login Page (`login.php`)
+### How To Guide
 
+1.  Open your existing `login.php` file. Look closely at the inline processing block located near the bottom of the file. Notice how the raw `$v_input_user` variable is concatenated (glued) directly inside the SQL string:
+![[userMgmtLoginIdIssue.png]]
 
-> [!note] Goal: Improve the login page to resolve security issues.
+2.  Test the Exploit (Safe Penetration Testing), to prove that your original script is vulnerable execute a classic SQL Injection bypass attack.
+	1. Open your browser and navigate to your local login page.
+	2. In the **Email Address** field, enter the following payload exactly:
+    ```
+    admin@system.io' OR '1'='1
+    ```
+    3. Type any random letters into the **Password** field (e.g., `invalid_password`) and click **Login**.
+    4. **The Result:** The SQL interpreter evaluates the condition `'1'='1'` as `true`. This causes the database to return the administrator account and log you in _without_ requiring a valid cryptographic password match!
+    
+3. Secure the Script Using Prepared Statements
 
-> [!important] Learning Outcomes:
-> - Understand security issues with PHP development
-> - Attempt to 'hack' your website.
-> - Resolve the issues.
+To eliminate this risk, we must separate the SQL commands (the structural query) from the user-supplied data variables. We do this by replacing the concatenated variables with **named parameters** (`:username` or `:email`) and letting PDO compile them separately.
 
-After a security audit, the login script was vulnerable to SQL Injection attacks. 
+Replace the contents of your `login.php` with this secure, updated implementation. This script integrates your original Bootstrap template and styling with defensive filtering, session regeneration, and secure parameter binding:
 
-Update it to use `prepare` statements - Use PDO prepared statements with placeholders. This ensures the database treats user input strictly as data, not executable code. This mitigates the potential SQL Injection attack vector.
-
-![[userMgmtLoginUpdated.png]]
+![[userMgmtLoginV2Resolved.png]]
 
 ```php
-<?php
-// Start output buffering to handle header redirection
-ob_start();
+ <?php
+if (isset($_POST['login'])) {
+	// 1. Trim and sanitise input to eliminate accidental whitespace or tags
+	$v_input_user = sanitiseData($_POST['username'] ?? '');
+	$v_input_pass = $_POST['password'] ?? '';
 
-// Include template (config.php inside template.php should have session_start())
-include "template.php";
+	if (empty($v_input_user) || empty($v_input_pass)) {
+		$_SESSION['error_message'] = "Please fill in all authentication fields.";
+	} else {
+		try {
+			// 2. DEFENSIVE FIX: Use a named placeholder (:username) instead of string concatenation
+			// (Note: we use 'username' as the database email column matching Unit 3 guidelines)
+			$sql = "SELECT user_id, username, password_hash, first_name, access_level 
+					FROM users 
+					WHERE username = :username";
 
+			// 3. Prepare the statement with the database engine
+			$stmt = $db->prepare($sql);
 
-/** @var $db */
-?>
-<title>Login | Access Your Account</title>
+			// 4. Execute the query, binding our sanitised input variable to the placeholder
+			$stmt->execute(['username' => $v_input_user]);
+			$user = $stmt->fetch();
 
-<style>
-    body {
-        background-color: #eee;
-    }
+			if ($user && password_verify($v_input_pass, $user['password_hash'])) {
+				// User is found and authenticated correctly.
+				$_SESSION['user_id'] = $user['user_id'];
+				$_SESSION['username'] = $user['username'];
+				$_SESSION['first_name'] = $user['first_name'];
+				$_SESSION['access_level'] = $user['access_level'];
 
-    .card-login {
-        border-radius: 25px;
-    }
+				$_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
 
-    .form-icon {
-        color: #aaa;
-        margin-right: 10px;
-    }
-
-    .vh-100 {
-        min-height: 100vh;
-    }
-</style>
-
-<section class="vh-100 py-5">
-    <div class="container h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-lg-12 col-xl-11">
-                <div class="card text-black card-login shadow-lg">
-                    <div class="card-body p-md-5">
-                        <div class="row justify-content-center">
-
-                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-2 order-lg-1">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                                    class="img-fluid" alt="Login illustration">
-                            </div>
-
-                            <div class="col-md-10 col-lg-6 col-xl-5 order-1 order-lg-2">
-                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Login</p>
-
-                                <form class="mx-1 mx-md-4"
-                                    action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-envelope fa-lg me-3 fa-fw form-icon"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <label class="form-label" for="username">Email Address</label>
-                                            <input type="email" id="username" name="username"
-                                                class="form-control form-control-lg" required />
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-lock fa-lg me-3 fa-fw form-icon"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <label class="form-label" for="password">Password</label>
-                                            <input type="password" id="password" name="password"
-                                                class="form-control form-control-lg" required />
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center text-lg-start mt-4 pt-2">
-                                        <button type="submit" name="login"
-                                            class="btn btn-primary btn-lg px-5 shadow w-100">Login</button>
-                                        <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account?
-                                            <a href="register.php" class="link-danger text-decoration-none">Register</a>
-                                        </p>
-                                    </div>
-
-                                </form>
-
-                                <div class="mt-4">
-                                    <?php
-                                    if (isset($_POST['login'])) {
-                                        // 1. Trim input to eliminate accidental whitespace issues
-                                        $v_input_user = sanitiseData($_POST['username']);
-                                        $v_input_pass = sanitiseData($_POST['password']);
-
-                                        // 2. Use a Prepared Statement to completely neutralize SQLi
-                                        $stmt = $db->prepare("SELECT user_id, username, password_hash, first_name, access_level FROM users WHERE username = :username");
-                                        $stmt->execute(['username' => $v_input_user]);
-                                        $user = $stmt->fetch();
-
-                                        // 3. Securely verify the password
-                                        if ($user && password_verify($v_input_pass, $user['password_hash'])) {
-
-                                            // 4. Prevent Session Fixation
-                                            session_regenerate_id(true);
-
-                                            $_SESSION['user_id'] = $user['user_id'];
-                                            $_SESSION['username'] = $user['username'];
-                                            $_SESSION['first_name'] = $user['first_name'];
-                                            $_SESSION['access_level'] = $user['access_level'];
-
-                                            $_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
-
-                                            header("Location: index.php");
-                                            exit();
-                                        } else {
-                                            // Use generic error messages to prevent user enumeration
-                                            $_SESSION['error_message'] = "Invalid email/username or password.";
-                                        }
-                                    }
-                                    ?>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<?php
-ob_end_flush();
+			} else {
+				// Username and/or password is incorrect.
+				$_SESSION['error_message'] = "Invalid email/username or password.";
+			}
+		} catch (PDOException $e) {
+			// Log errors internally; hide raw database errors from the client
+			error_log("Secure Database Exception: " . $e->getMessage());
+			$_SESSION['error_message'] = "A secure authentication error occurred. Please try again later.";
+		}
+	}
+}
 ?>
 ```
 
+4. Verification & Testing Protocol (Docker Desktop & phpMyAdmin)
+
+To document your defensive programming evidence:
+
+1. Open **Docker Desktop** and verify your container stack is active.
+2. Open your website in your browser and click on the "Login" page.
+3. Attempt to run the exact same SQL Injection bypass payload from Step 2:
+    - **Email Address:** `admin@system.io' OR '1'='1`
+    - **Password:** `any_invalid_password`
+4. **Expected Outcome:** The login attempt must fail immediately, redirecting you back to the login screen with the error banner: _"Invalid email/username or password credentials."_
+5. Log into **phpMyAdmin**, browse to your `users` table, and verify that no tables or data rows were exposed, modified, or altered by the attack payload.
+
+
+
+![[commonBlocks#Commit & Push]]
+### Explanation
+
+Let's break down the system security architecture of how an SQL Injection attack manipulates database engines and how prepared statements block them.
+
+#### 1. How String Concatenation Causes SQL Injection
+
+When the server processes your vulnerable `v1` script, it takes whatever string the user inputs and glues it directly inside the single quotes of your query:
+
+```sql
+SELECT * FROM users WHERE email_address = '[USER_INPUT]'
+```
+
+When an attacker inputs the payload `admin@system.io' OR '1'='1`, the raw query processed by the database engine changes structurally to this:
+
+```sql
+SELECT * FROM users WHERE email_address = 'admin@system.io' OR '1'='1'
+```
+
+- **The Breakout:** The single quote inside our payload closes the SQL string literal early.
+- **The Injection:** The `OR` operator injected by the attacker appends a secondary conditional test.
+- **The Logic Flaw:** Because `'1'='1'` is **always true**, the database engine ignores the email check completely and returns every single row in the `users` table. The PHP script simply selects the first row returned (typically the administrator), completely bypassing password validation.
+
+#### 2. How Prepared Statements Save the Day
+
+A **Prepared Statement** (also known as a parameterised query) changes how the web application communicates with the database server:
+
+1. **Pre-compilation (The Blueprint):** The application sends the template query containing parameter placeholders to the database server first:
+
+```sql
+SELECT * FROM users WHERE username = :username
+```
+
+The database server analyses this structure, compiles the query blueprint, and plans the physical lookup execution.
+2. **Parameter Binding (The Passenger):** The application then sends the raw user input parameters separately. The database server treats the incoming parameter as a strictly **literal text value**, placing it directly into the placeholder box.
+
+Even if the user input contains SQL syntax like `' OR '1'='1`, the database server will not run it as an executable command. Instead, it literally searches your database for a user whose exact username matches the literal string `"' OR '1'='1"`.
+
+```
+Secure Prepared Statement:
+SQL Query:   SELECT * FROM users WHERE username = :username
+User Input:  admin@system.io' OR '1'='1
+Result Query: SELECT * FROM users WHERE username = "admin@system.io' OR '1'='1"  <-- INTERPRETED AS PURE STRING!
+```
+
+#### 3. Cryptographic Defences: `password_verify()`
+
+In addition to blocking SQL Injections, secure login scripts must handle password checking correctly:
+
+- **The Danger of Plaintext:** Storing passwords in clear text is a fatal vulnerability.
+- **Salt and Hash:** Our database uses `password_hash()` to convert plaintext passwords into a unique 60-character cryptographic signature using the bcrypt algorithm. This adds a unique salt string automatically to protect against lookup tables or dictionary attacks.
+- **Verification:** The `password_verify($passwordInput, $user['password_hash'])` function takes the incoming user password, applies the same bcrypt algorithm alongside the stored salt, and returns `true` only if the resulting signature matches the database hash fingerprint.
+
+#### 4. Preventing Session Fixation
+
+A session fixation attack occurs when an attacker steals or sets a victim's Session ID before they log in. Once the victim logs in, the attacker can hijack their active session.
+
+Our secure script implements:
+
+```
+session_regenerate_id(true);
+```
+
+This forces PHP to issue a brand-new, randomised Session ID cookie upon successful authentication and deletes the old session file on the server, completely neutralising session hijacking vectors.
 
 ## Create the Logout Script (`logout.php`)
 

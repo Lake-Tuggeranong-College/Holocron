@@ -833,7 +833,7 @@ $_SESSION['access_level']: Used to hide or show "Admin" buttons.
 ```
 
 
-## Update to the second version of the Login Page (`login.php`)
+## Resolve the Security Issues in Login Page (`login.php`)
 
 
 > [!note] Goal: Attempt to resolve the security issue with the existing login script.

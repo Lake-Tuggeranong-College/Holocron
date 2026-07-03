@@ -857,7 +857,7 @@ This guide takes your existing login form (`login.php`) and teaches you how to i
 	1. Open your browser and navigate to your local login page.
 	2. In the **Email Address** field, enter the following payload exactly:
     ```
-    admin@system.io' OR '1'='1
+    admin@admin.com' OR '1'='1
     ```
     3. Type any random letters into the **Password** field (e.g., `invalid_password`) and click **Login**.
     4. **The Result:** The SQL interpreter evaluates the condition `'1'='1'` as `true`. This causes the database to return the administrator account and log you in _without_ requiring a valid cryptographic password match!
@@ -924,7 +924,7 @@ To document your defensive programming evidence:
 1. Open **Docker Desktop** and verify your container stack is active.
 2. Open your website in your browser and click on the "Login" page.
 3. Attempt to run the exact same SQL Injection bypass payload from Step 2:
-    - **Email Address:** `admin@system.io' OR '1'='1`
+    - **Email Address:** `admin@admin.com' OR '1'='1`
     - **Password:** `any_invalid_password`
 4. **Expected Outcome:** The login attempt must fail immediately, redirecting you back to the login screen with the error banner: _"Invalid email/username or password credentials."_
 5. Log into **phpMyAdmin**, browse to your `users` table, and verify that no tables or data rows were exposed, modified, or altered by the attack payload.
@@ -944,10 +944,10 @@ When the server processes your vulnerable `v1` script, it takes whatever string 
 SELECT * FROM users WHERE email_address = '[USER_INPUT]'
 ```
 
-When an attacker inputs the payload `admin@system.io' OR '1'='1`, the raw query processed by the database engine changes structurally to this:
+When an attacker inputs the payload `admin@admin.com' OR '1'='1`, the raw query processed by the database engine changes structurally to this:
 
 ```sql
-SELECT * FROM users WHERE email_address = 'admin@system.io' OR '1'='1'
+SELECT * FROM users WHERE email_address = 'admin@admin.com' OR '1'='1'
 ```
 
 - **The Breakout:** The single quote inside our payload closes the SQL string literal early.
@@ -972,8 +972,8 @@ Even if the user input contains SQL syntax like `' OR '1'='1`, the database serv
 ```
 Secure Prepared Statement:
 SQL Query:   SELECT * FROM users WHERE username = :username
-User Input:  admin@system.io' OR '1'='1
-Result Query: SELECT * FROM users WHERE username = "admin@system.io' OR '1'='1"  <-- INTERPRETED AS PURE STRING!
+User Input:  admin@admin.com' OR '1'='1
+Result Query: SELECT * FROM users WHERE username = "admin@admin.com' OR '1'='1"  <-- INTERPRETED AS PURE STRING!
 ```
 
 #### 3. Cryptographic Defences: `password_verify()`
@@ -2887,7 +2887,7 @@ SET NAMES 'utf8mb4';
 -- (Password: AdminSecure2026!)
 INSERT IGNORE INTO users (username, password_hash, first_name, second_name, phone_number, address, access_level) 
 VALUES (
-    'admin@system.io', 
+    'admin@admin.com', 
     '$2y$10$3p4BWeEshI9P5D5N1u8PdugL7NfMoxM6Z0G8Q7o1O3e2gS8RWeeWe', 
     'System', 
     'Administrator', 

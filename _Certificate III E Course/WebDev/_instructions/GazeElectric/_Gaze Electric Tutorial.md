@@ -809,6 +809,7 @@ if ($user) {
 } else {
 	// Username and/or password is incorrect.
 	$_SESSION['error_message'] = "Invalid email/username or password.";
+	header("Location: index.php");
 }
 ```
 

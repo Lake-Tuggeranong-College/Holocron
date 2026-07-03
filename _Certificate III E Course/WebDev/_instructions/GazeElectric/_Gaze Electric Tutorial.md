@@ -2910,39 +2910,11 @@ Now, we tell Docker to automatically read these files on startup. We will link o
 
 Open your `docker-compose.yml` and add the directory mapping under `volumes`:
 
+![[dbInitScriptsMap.png]]
+
 ```
-services:
-  # Database Service Container
-  db:
-    image: mariadb:10.11
-    container_name: app_database_container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root_security_password_2026
-      MYSQL_DATABASE: web_shop_database
-      MYSQL_USER: local_developer
-      MYSQL_PASSWORD: developer_password_123
-    ports:
-      - "3306:3306"
-    volumes:
-      # Persistent volume (Saves real database data even if container stops)
-      - db_data:/var/lib/mysql
-      # READ-ONLY MOUNT (:ro): Feed our init scripts to Docker's automatic startup folder
-      - ./_init_scripts:/docker-entrypoint-initdb.d:ro
-
-  # PHP Web Server Service Container
-  web:
-    image: php:8.2-apache
-    container_name: app_web_container
-    ports:
-      - "8080:80"
-    volumes:
-      - .:/var/www/html
-    depends_on:
-      - db
-
-volumes:
-  db_data:
+# READ-ONLY MOUNT (:ro): Feed our init scripts to Docker's automatic startup folder
+- ./_init_scripts:/docker-entrypoint-initdb.d:ro
 ```
 
 ### Step 5: Verification & Testing Protocol (Docker Desktop & VS Code)

@@ -304,7 +304,8 @@ Add the following code after the HTML header code.
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-cog me-2"></i>Profile Settings</a></li>
-                            <li><a class="dropdown-item" href="orders.php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                            <li><a class="dropdown-item" href="order_form
+                            .php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item text-danger fw-bold" href="logout.php">
@@ -329,6 +330,32 @@ Add the following code after the HTML header code.
 Add the following code to the **end** of the file.
 
 ```php
+<div class="flash-container">
+    <?php
+    $flashes = [
+        'success_message' => 'alert-success',
+        'error_message'   => 'alert-danger',
+        'info_message'    => 'alert-info',
+        'logout_message'  => 'alert-info'
+    ];
+
+    foreach ($flashes as $key => $class) {
+        if (isset($_SESSION[$key])) {
+            $icon = 'fa-info-circle';
+            if ($class == 'alert-success') $icon = 'fa-check-circle';
+            if ($class == 'alert-danger')  $icon = 'fa-exclamation-triangle';
+
+            echo "<div class='alert $class alert-dismissible fade show shadow-lg flash-msg' role='alert'>
+                    <i class='fas $icon me-2'></i> " . htmlspecialchars($_SESSION[$key]) . "
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                  </div>";
+            
+            // Crucial: Clear the message so it doesn't show on next refresh
+            unset($_SESSION[$key]);
+        }
+    }
+    ?>
+</div>
 <?php
 /**
  * Utility function to clean user input
@@ -778,7 +805,7 @@ if ($user) {
 	$_SESSION['first_name'] = $user['first_name'];
 	$_SESSION['access_level'] = $user['access_level'];
 
-	$_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
+	$_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
 } else {
 	// Username and/or password is incorrect.
 	$_SESSION['error_message'] = "Invalid email/username or password.";
@@ -901,7 +928,7 @@ if (isset($_POST['login'])) {
 				$_SESSION['first_name'] = $user['first_name'];
 				$_SESSION['access_level'] = $user['access_level'];
 
-				$_SESSION['flash_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
+				$_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
 
 			} else {
 				// Username and/or password is incorrect.

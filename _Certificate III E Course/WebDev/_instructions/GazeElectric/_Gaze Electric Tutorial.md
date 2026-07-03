@@ -1387,7 +1387,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
     
 2. **Binding Phase:** The raw strings provided inside the `$_POST` array are sent separately and bound strictly as _data payloads_. Even if an attacker passes a string loaded with SQL commands (like `'; DROP TABLE users;--`), the database treat it purely as text data, neutralizing malicious executions.
 
-## Dynamic Navbar
+# Dynamic Navbar v1
 
 > [!note] Goal: Have the Navigation Bar show only the information relevant to the user, whether the user is logged in or not.
 
@@ -1395,11 +1395,11 @@ Prepared statements completely mitigate this risk by executing the query engine 
 > - Using `$_SESSION["username"]` to determine user authentication status.
 > - Determine which information is needed depending on the user authentication status. 
 
-### How To Guide
+## How To Guide
 
 1. Open `template.php`.
 2. Put a PHP wrapper around the link for user registration.
-![[userMgmtDynamicNavRegistration.png]]
+![[navbarRegistration.png]]
 ```
 <?php if (!isset($_SESSION["username"])) : ?>
 ...
@@ -1412,7 +1412,7 @@ Prepared statements completely mitigate this risk by executing the query engine 
 	1. **If Logged In:** A user icon, with dropdown list of links for Profile and Orders
 	2. **If Not Logged In:** The Login button.
 
-![[userMgmtDynamicNavLoginButton.png]]
+![[navbarLoginButton.png]]
 
 ```
 <?php if (isset($_SESSION["username"])) : ?>
@@ -1427,29 +1427,34 @@ Prepared statements completely mitigate this risk by executing the query engine 
 	1. Access the front page when not logged in. Confirm the Registration & Login links appear.
 	2. Access the front page when logged in. Confirm the Registration & Login links **do not** appear, but the User icon & menu does.
 **Logged in**
-![[userMgmtDynamicNavBarLoggedIn.png]]
+![[navbarLoggedIn.png]]
 
 **Not Logged in**
-![[userMgmtDynamicNavBarNotLoggedIn.png]]
+![[navbarNotLoggedIn.png]]
 
+6. Highlight the logged in user by including their first name as the *heading* of the menu.
+![[navbarUserHeading.png]]
+```php
+<?= htmlspecialchars($_SESSION['first_name']) ?>
+```
 ![[commonBlocks#Commit & Push]]
-### Explanation
+## Explanation
 
 In web applications, the user interface (UI) must adapt dynamically based on the user's authentication state. This ensures a clean User Experience (UX) and prevents logical errors, such as a logged-in user trying to register again.
 
-#### 1. The Role of the Session Superglobal (`$_SESSION`)
+### 1. The Role of the Session Superglobal (`$_SESSION`)
 
 Because HTTP is inherently [[Stateless Protocol (HTTP)|stateless]], the server uses a secure cookie containing a Session ID to link the browser to a temporary storage file on the web server.
 
 - In PHP, this file's contents are populated into the `$_SESSION` associative array when `session_start()` is called.
 - By checking if a key like `$_SESSION['username']` is set, we can determine the client's authentication status before rendering any HTML.
 
-#### 2. Defensive UI vs Server-Side Authorization
+### 2. Defensive UI vs Server-Side Authorization
 
 - **Client-Side/UI Masking:** Hiding navigation links (like removing the "Login" button or the "Registration" link once authenticated) is a core tenet of defensive UX design. It streamlines the interface and limits user confusion.
 - **Important Distinction:** Masking links in the UI does _not_ secure the backend. An unauthorised user can still type `profile.php` directly into their browser's URL bar. Therefore, UI conditional rendering must always be paired with server-side authorization checks (such as the checking logic implemented at the top of your `profile.php` or `admin_users.php` scripts).
 
-#### 3. Dynamic Navigation Control Logic
+### 3. Dynamic Navigation Control Logic
 
 The conditional routing of your navigation bar is governed by two boolean questions:
 
@@ -2579,6 +2584,59 @@ The database contains an `enabled` boolean field (storing `1` for active or `0` 
 - Rather than permanently deleting a product from the database (which would corrupt historic sales records or order invoices linked to that product ID), administrators can simply toggle its visibility.
     
 - Products with `enabled = 0` are dynamically excluded from customer-facing catalog pages while remaining fully preserved inside the admin inventory panel for accounting and auditing purposes.
+# Dynamic Navbar v2 - Administrators
+
+
+> [!note] Goal: To add a dropdown menu that is only accessible for administrators
+
+> [!important] LEARNING OUTCOME/S: TODO
+## How To Guide
+
+1. Open `template.php`.
+2. Find the code that displays links if the user is logged in. 
+![[navbarFindCode.png]]
+
+3. Directly after checking if the user is logged in, add a secondary check to see if the user is an administrator (`access_level` = 2)
+![[navbarAdminCheck.png]]
+
+```php
+<?php if (isset($_SESSION['access_level']) && $_SESSION['access_level'] == 2) : ?>
+
+<?php endif; ?>
+```
+
+4. Add the HTML code to display a dropdown menu, using Bootstrap CSS, to display links to admin pages.
+
+![[navbarAdminDropdown.png]]
+
+```php
+<!-- Exclusive Admin Panel Dropdown -->
+<div class="nav-item dropdown me-3">
+	<a class="nav-link dropdown-toggle text-danger fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="fas fa-user-shield me-1"></i> Admin Panel
+	</a>
+	<ul class="dropdown-menu dropdown-menu-end shadow border-danger" aria-labelledby="adminDropdown">
+		<li>
+			<a class="dropdown-item" href="admin_products.php">
+				<i class="fas fa-boxes me-2 text-danger"></i>Manage Products
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item" href="admin_users.php">
+				<i class="fas fa-users-cog me-2 text-danger"></i>Manage Users
+			</a>
+		</li>
+	</ul>
+</div>
+```
+
+5. Log in as an administrator (or refresh the page) and an Admin menu will appear.
+
+![[navbarAdminLoggedIn.png]]
+
+![[commonBlocks#Commit & Push]]
+## Explanation
+
 # Order Form
 
 

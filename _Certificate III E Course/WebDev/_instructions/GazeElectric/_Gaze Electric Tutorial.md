@@ -3085,17 +3085,507 @@ If the browser tries to fetch the local file and gets a `404 Not Found` error, t
 # Checkout
 
 
-> [!note] Goal: TODO
+> [!note] Goal: Understand, construct, and test the multi-pane layout of `checkout.php` to handle dynamic user profile pre-population, multi-stage input validation, and database transactions.
 
 > [!important] Learning Outcomes:
 > - TODO
 ## How To Guide: 
 
-### Step 1: 
+1. Create a new page at the root directory called `checkout.php`.
+
+![[checkoutInit.png]]
+
+2. Create boilerplate code for the page. Include the template, and check if the shopping cart is empty.
+
+![[checkoutInitCode.png]]
+
+```php
+<?php
+// Start output buffering to allow header redirects
+ob_start();
+include "template.php";
+
+/** @var PDO $db */
+
+// CART GUARD: Redirect visitors if their basket is empty
+if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+    $_SESSION['error_message'] = "Your cart is empty! Please add items before checking out.";
+    header("Location: orderform.php");
+    exit();
+}
+
+// Initialise operational variables
+$errors = [];
+$success = false;
+$order_id = null;
+?>
+```
+
+Because we cannot process an empty order, we must verify that a user actually has items in their shopping basket before compiling any page code. If the cart is empty, we redirect them back to the shop page with an error message.
+
+At the very top of `checkout.php`, add this initialisation block.
+
+3. Collect the user's details from the database using the `user_id` session variable.
+
+![[checkoutUserDetails.png]]
+
+```php
+// --- LOGIC: PRE-POPULATE USER PROFILE DATA ---
+$default_name = "";
+$default_address = "";
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    
+    // Fetch user details safely using a prepared statement
+    $stmt = $db->prepare("SELECT username, address FROM users WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $user_info = $stmt->fetch();
+    
+    if ($user_info) {
+        // Use the account email/username and address as the default form values
+        $default_name = $user_info['username'];
+        $default_address = $user_info['address'] ?? "";
+    }
+}
+```
+
+To provide an excellent user experience, we check if the customer is already logged into our website. If they are, we run an SQL query to retrieve their registered username and delivery address, and pre-populate those values in the checkout form inputs.
+
+Add this pre-population logic below your variable initialisation.
+
+4. Compute the Order Summary and Totals in the initial php block.
+
+![[checkoutCalculateTotals.png]]
+
+```php
+// --- LOGIC: CALCULATE ORDER TOTALS ---
+$cart_items = [];
+$grand_total = 0;
+
+foreach ($_SESSION['cart'] as $id => $qty) {
+    // Lookup product pricing directly from the database (never trust client-side prices!)
+    $stmt = $db->prepare("SELECT product_id, product_name, price FROM products WHERE product_id = ?");
+    $stmt->execute([$id]);
+    $item = $stmt->fetch();
+    
+    if ($item) {
+        $subtotal = $item['price'] * $qty;
+        $grand_total += $subtotal;
+        
+        // Append calculated attributes to our temporary array for UI rendering
+        $item['qty'] = $qty;
+        $item['subtotal'] = $subtotal;
+        $cart_items[] = $item;
+    }
+}
+```
+
+Before we process any form submissions or render the HTML page, we must fetch the current products from our database to compute item subtotals and the grand total of the order. This ensures the pricing data remains accurate and cannot be tampered with by the client.
+
+Add this calculations block below your pre-population script.
+
+5. Validate Customer Inputs (Defensive Coding)
+
+![[checkoutValidateInputs.png]]
+
+```php
+// --- LOGIC: PROCESS ORDER SUBMISSION ---
+if (isset($_POST['process_order'])) {
+    // 1. Trim and sanitise standard inputs
+    $full_name        = sanitiseData($_POST['full_name'] ?? '');
+    $delivery_address = sanitiseData($_POST['delivery_address'] ?? '');
+    $card_number      = trim($_POST['card_number'] ?? '');
+    $cvv              = trim($_POST['cvv'] ?? '');
+
+    // 2. Run validations and gather error messages
+    if (strlen($full_name) < 3) {
+        $errors[] = "Full Name must be at least 3 characters long.";
+    }
+    
+    if (strlen($delivery_address) < 10) {
+        $errors[] = "Delivery Address must be at least 10 characters long to ensure delivery.";
+    }
+    
+    // RegEx check: ensure the card number is exactly 16 digits
+    if (!preg_match('/^\d{16}$/', $card_number)) {
+        $errors[] = "Invalid Credit Card Number. It must contain exactly 16 digits without spaces.";
+    }
+    
+    // RegEx check: ensure CVV is exactly 3 digits
+    if (!preg_match('/^\d{3}$/', $cvv)) {
+        $errors[] = "Invalid CVV. It must contain exactly 3 digits.";
+    }
+    
+    // If no validation errors occur, proceed to Step 5!
+}
+```
+
+When a user submits the checkout form, we must run their inputs through strict validation checks. This prevents empty submissions, enforces card number formats, and blocks cross-site scripting (XSS) vectors.
+
+Add this validation controller code block.
+
+6.  Implement Database Transactions (DDL Mutator)
+
+![[checkoutDatabaseLoad.png]]
+
+```php
+    // If our validation rules pass, run the database transaction
+    if (empty($errors)) {
+        try {
+            // Start the transaction: freeze other queries to our target tables
+            $db->beginTransaction();
+            
+            $user_id = $_SESSION['user_id'] ?? null;
+            
+            // 1. Insert global order record into the main orders table
+            $order_stmt = $db->prepare("INSERT INTO orders (user_id, customer_name, delivery_address, total_price, status) VALUES (?, ?, ?, ?, 'Pending')");
+            $order_stmt->execute([$user_id, $full_name, $delivery_address, $grand_total]);
+            
+            // Retrieve the unique ID generated for this specific order
+            $order_id = $db->lastInsertId();
+            
+            // 2. Insert individual line items into the order_items table
+            $item_stmt = $db->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+            
+            foreach ($cart_items as $item) {
+                $item_stmt->execute([
+                    $order_id,
+                    $item['product_id'],
+                    $item['qty'],
+                    $item['price']
+                ]);
+            }
+            
+            // 3. Commit transaction: permanently write all order rows to disk
+            $db->commit();
+            
+            // Clear the active shopping cart session upon success
+            $_SESSION['cart'] = [];
+            $success = true;
+            
+        } catch (Exception $e) {
+            // If any database write fails, rollback the transaction instantly
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            error_log("Transaction Aborted: " . $e->getMessage());
+            $errors[] = "System Error: Failed to process your order database transaction.";
+        }
+    }
+```
+
+If the form inputs are validated, we write the data to our database. Because this process modifies two different tables (`orders` and `order_items`), we wrap our SQL commands in a **Database Transaction**. This ensures that if any single database write fails, the entire transaction is rolled back, protecting our database from corruption.
+
+Nest this transaction logic directly inside your Step 4 form handler, below the validation error checks.
+
+7. Start building the UI by constructing the Responsive Grid Layout Shell (HTML Grid)
+
+![[checkoutUIInit.png]]
+
+```php
+<div class="container py-5" style="max-width: 1200px;">
+    <!-- Check if the order was completed successfully -->
+    <?php if ($success): ?>
+        <!-- Render Step 7 Success State here! -->
+    <?php else: ?>
+        <div class="row g-5">
+            <!-- Sidebar: Order Summary Column (col-md-5 order-md-last) -->
+            <div class="col-md-5 order-md-last">
+                <!-- Render Step 8 Order Summary Card here! -->
+            </div>
+
+            <!-- Main Area: Form Input Column (col-md-7) -->
+            <div class="col-md-7">
+                <!-- Render Step 9 and Step 10 Elements here! -->
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+```
+
+
+We divide our page space using Bootstrap's responsive 12-column grid system. To build our checkout interface, we divide our row container into a **7/12 main workspace column (billing & payment form)** and a **5/12 side panel column (order summary details)**.
+
+8. Build the Order Success Confirmation Banner
+
+![[checkoutBanner.png]]
+
+
+```php
+<!-- Order Success State Card (Nest inside the container) -->
+<div class="card shadow border-0 p-5 rounded-4 text-center">
+    <div class="card-body">
+        <div class="display-1 text-success mb-4">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="fw-bold mb-3">Thank You for Your Order!</h2>
+        <p class="text-muted mb-4 fs-5">
+            Your transaction was processed successfully. Your unique order ID reference is 
+            <strong class="text-dark">#<?= htmlspecialchars($order_id) ?></strong>.
+        </p>
+        <a href="orderform.php" class="btn btn-primary btn-lg px-4 py-2">
+            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+        </a>
+    </div>
+</div>
+```
+
+
+If the order is processed successfully by our Step 5 database transaction, we hide the input form entirely and display a clean, reassuring order receipt panel to the customer.
+
+9. Build the Sidebar Basket Summary Panel
+
+![[checkoutBasketSummary.png]]
+
+```php
+<!-- Order Summary Panel (Nest inside col-md-5) -->
+<div class="card shadow-sm border-0 rounded-3 p-4">
+    <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-primary fw-bold">Order Summary</span>
+        <span class="badge bg-primary rounded-pill"><?= count($cart_items) ?></span>
+    </h4>
+    
+    <ul class="list-group mb-3 list-group-flush">
+        <?php foreach ($cart_items as $item): ?>
+            <li class="list-group-item d-flex justify-content-between lh-sm px-0">
+                <div>
+                    <h6 class="my-0 fw-semibold"><?= htmlspecialchars($item['product_name']) ?></h6>
+                    <small class="text-muted">Quantity: <?= $item['qty'] ?></small>
+                </div>
+                <span class="text-muted">$<?= number_format($item['subtotal'], 2) ?></span>
+            </li>
+        <?php endforeach; ?>
+        
+        <li class="list-group-item d-flex justify-content-between px-0 fw-bold fs-5">
+            <span>Total (AUD)</span>
+            <strong class="text-primary">$<?= number_format($grand_total, 2) ?></strong>
+        </li>
+    </ul>
+</div>
+```
+
+Within our secondary column (`col-md-5`), we loop through the calculated items gathered in Step 3. This pane displays the shopping basket contents, quantities, item subtotals, and the running grand total as a read-only lists.
+
+10. Build the Dynamic Validation Error Box
+
+
+![[checkoutValidationErrorBox.png]]
+
+```php
+<!-- Dynamic Validation Alerts (Nest inside col-md-7) -->
+<h4 class="mb-3 fw-bold">Billing & Delivery Details</h4>
+
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger shadow-sm mb-4" role="alert">
+        <h6 class="alert-heading fw-bold mb-2">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Please fix the following validation errors:
+        </h6>
+        <ul class="mb-0 small">
+            <?php foreach ($errors as $error): ?>
+                <li><?= htmlspecialchars($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+```
+
+
+Before compiling the main form fields inside our left-aligned column (`col-md-7`), we must loop through any dynamic validation errors raised by our Step 4 input handler. If any issues are found, we render them as a clear list inside a Bootstrap alert box.
+
+11. Build the Billing & Payment Entry Form
+
+
+
+```php
+<!-- Checkout Input Form (Nest inside col-md-7 below the validation alert box) -->
+<form action="checkout.php" method="post" class="needs-validation" novalidate autocomplete="off">
+    <div class="row g-3">
+        <!-- Full Name input field -->
+        <div class="col-12">
+            <label class="form-label fw-bold">Full Name</label>
+            <input type="text" name="full_name" class="form-control" 
+                   placeholder="John Smith" 
+                   value="<?= htmlspecialchars($_POST['full_name'] ?? $default_name) ?>" required>
+        </div>
+
+        <!-- Delivery Address text area -->
+        <div class="col-12">
+            <label class="form-label fw-bold">Delivery Address</label>
+            <textarea name="delivery_address" class="form-control" rows="3" 
+                      placeholder="100 Innovation Circuit, Canberra ACT 2601" required><?= htmlspecialchars($_POST['delivery_address'] ?? $default_address) ?></textarea>
+        </div>
+
+        <h5 class="mb-3 mt-4 fw-bold text-secondary">Payment Information</h5>
+
+        <!-- Credit Card number field -->
+        <div class="col-md-8">
+            <label class="form-label fw-bold">Credit Card Number</label>
+            <input type="text" name="card_number" class="form-control" 
+                   placeholder="1234567812345678" 
+                   value="<?= htmlspecialchars($_POST['card_number'] ?? '') ?>" required>
+            <small class="text-muted d-block mt-1">Must be exactly 16 digits without spaces.</small>
+        </div>
+
+        <!-- CVV security code field -->
+        <div class="col-md-4">
+            <label class="form-label fw-bold">CVV</label>
+            <input type="text" name="cvv" class="form-control" 
+                   placeholder="123" 
+                   value="<?= htmlspecialchars($_POST['cvv'] ?? '') ?>" required>
+            <small class="text-muted d-block mt-1">3 digits on the back of card.</small>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Form Submit Trigger -->
+    <button class="w-100 btn btn-primary btn-lg py-3 fw-bold" name="process_order" type="submit">
+        Complete Purchase ($<?= number_format($grand_total, 2) ?> AUD)
+    </button>
+</form>
+```
+
+Below our error box, we build the form inputs. We use standard HTML form controls and set their value attributes to echo the submitted `$_POST` data (or default user details from Step 2). This ensures that if the form validation fails, the customer does not have to re-type all their delivery information.
+
+### Step 11: Closing Output Buffering
+
+Append this cleanup block at the absolute bottom of `checkout.php` (below your closing HTML tags) to flush out the compiled server data safely to the client.
+
+![[checkoutEndFlush.png]]
+
+```php
+<?php ob_end_flush(); ?>
+```
+
+## Verification and Testing Protocol (Docker Desktop and phpMyAdmin)
+
+To satisfy your Year 11 portfolio testing evidence, run these test procedures using your development containers and administration tools:
+
+| **Test Procedure**                  | **Action to Perform**                                                                                                                     | **Expected Outcome**                                                                                                                                                                                    |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Empty Cart Bypass Guard**      | Log out, empty your active shopping cart, and attempt to load `checkout.php` directly in your browser.                                    | The system block intercepts the request, generates an error flash message, and redirects you back to the product catalog page.                                                                          |
+| **2. Logged-in Pre-population**     | Log in as a customer, verify your account has an address in your database, and load the checkout page.                                    | The checkout page loads successfully and the billing fields (Full Name and Delivery Address) are pre-populated with your registered details.                                                            |
+| **3. Empty Input Validation**       | Clear all pre-populated values from the checkout form fields and click **Complete Purchase**.                                             | The page reloads, processing is aborted, and a red alert box displays error alerts listing name and address validation failures.                                                                        |
+| **4. Payment Regex Validation**     | Type in a valid name and address, but enter `12345` in the Card Number field and `99` in the CVV field. Then click **Complete Purchase**. | The validation engine catches the issues, blocks database insertion, and displays specific error alerts regarding invalid card lengths and CVV formats.                                                 |
+| **5. Database Transaction Success** | Enter valid data in all form fields (including a 16-digit card and 3-digit CVV) and submit the form.                                      | The transaction executes successfully, the active shopping cart is wiped from the session, and a clean Order Success Confirmation card displaying your unique generated Order ID appears on the screen. |
+| **6. phpMyAdmin Data Verification** | Log into **phpMyAdmin**, click on your active shop database, and browse both the `orders` and `order_items` tables.                       | You should see a brand-new row in the `orders` table matching your Order ID, and corresponding individual product rows written cleanly inside the `order_items` table.                                  |
+
 
 ![[commonBlocks#Commit & Push]]
 ## Explanation
 
+Let's dissect the systems engineering and computer science theories that power this checkout application.
+
+### 1. Defensive Coding: Expecting the Unexpected
+
+In computer science, **defensive coding** is a form of defensive design where you write your programs to anticipate and handle errors, unexpected inputs, and potential safety risks before they can cause a system crash. Instead of assuming that users will always enter perfect data, a defensive programmer writes scripts as if the inputs _will_ be incorrect, incomplete, or even malicious.
+
+In Step 4 of our checkout panel, we implement defensive coding through three specific gates:
+
+- **The Staging/Trimming Gate:** We use `trim()` and our custom `sanitiseData()` helper to strip out accidental whitespace or hidden tags. This ensures that accidental spaces do not interfere with our length validation logic.
+    
+- **The Boundary Gate:** We enforce exact length constraints using `strlen()`. Regular text fields must meet a minimum boundary floor (e.g. at least 10 characters for a physical address) to prevent empty or non-functional data fields from reaching database memory.
+    
+- **The Type and Pattern Gate:** We force type casting like `(int)` and verify string shapes using regular expressions (`preg_match()`). This blocks attempts to inject unexpected data types, ensuring we only accept logical formats like a 16-digit numeric card string.
+    
+
+By implementing these multi-tiered checking gates, we create a highly stable system that rejects garbage data at the application boundary, protecting our underlying database and preventing downstream runtime exceptions.
+### 2. Database Transactions (The ACID Principle)
+
+In professional software development, database modifications must be incredibly reliable. To achieve this, we group our database inserts inside a **Transaction** using `beginTransaction()`, `commit()`, and `rollBack()`.
+
+Transactions follow the **ACID** principle:
+
+- **Atomicity (All-or-Nothing):** This is the most critical rule for checkouts. If you are writing an order, you have to write to two different tables: first creating the order record, and then writing each line item. If the server crashes or loses connection halfway through, the database rolls back all partial writes, leaving no corrupted or incomplete data behind.
+    
+- **Consistency:** A transaction can only move the database from one valid state to another, maintaining all schema rules, primary keys, and relations.
+    
+- **Isolation:** Other database users cannot see your transaction's changes until you click **Commit**. This prevents race conditions, where two customers might try to buy the last available item simultaneously.
+    
+- **Durability:** Once a transaction is committed, its changes are permanently written to disk, remaining safe even in the event of a system power failure.
+    
+
+```
+                  +-----------------------------------+
+                  |      Start transaction block      |
+                  +-----------------------------------+
+                                    |
+                                    v
+                  +-----------------------------------+
+                  |  1. Insert into "orders" table    |
+                  +-----------------------------------+
+                                    |
+                   Is write successful? (Yes)
+                                    |
+                                    v
+                  +-----------------------------------+
+                  |  2. Insert into "order_items"     |
+                  +-----------------------------------+
+                                    |
+                    Is write successful? (No!)
+                                    |
+                  +-----------------+-----------------+
+                  |                                   |
+                  v (Yes)                             v (No)
+        +-------------------+               +-------------------------+
+        | Commit to disk    |               |  Rollback transaction   |
+        | (Saves all data)  |               | (Wipes all partial data)|
+        +-------------------+               +-------------------------+
+```
+
+### 3. Regular Expressions (RegEx) for Pattern Matching
+
+To validate payment inputs, we use **Regular Expressions (RegEx)** via PHP's `preg_match()` function. This compares a text string against a specific formatting pattern:
+
+- **Card Number Pattern:** `'/^\d{16}$/'`
+    
+    - `^` means "start matching from the very beginning of the string".
+        
+    - `\d` means "match any numeric digit (0-9)".
+        
+    - `{16}` means "there must be exactly 16 matches of the preceding rule".
+        
+    - `$` means "the string must end here with no extra characters".
+        
+        If a user enters letters, spaces, or only 15 digits, the pattern test fails, and the script throws a validation error.
+        
+
+### 4. Preserving Form Input on Failure (UX Best Practice)
+
+Imagine filling in a long sign-up or billing form, making a tiny typo in the credit card field, and clicking submit—only for the page to reload completely blank, forcing you to type all your information again. This is a frustrating user experience.
+
+To prevent this, our form fields use a clever defensive design pattern:
+
+```
+value="<?= htmlspecialchars($_POST['full_name'] ?? $default_name) ?>"
+```
+
+- When the page loads for the first time, `$_POST['full_name']` is empty, so the null coalescing operator (`??`) falls back to display `$default_name` (the authenticated user's registered name).
+    
+- If the user submits the form and a validation error occurs, the page reloads. The code catches their submitted data still sitting in the `$_POST` array and displays it back inside the input field. This preserves their progress and makes correcting typos quick and easy.
+    
+
+### 5. Cross-Site Scripting (XSS) Mitigation with Output Escaping
+
+Because the checkout form echoes user-submitted values directly back onto the screen, it is a target for **Cross-Site Scripting (XSS)** attacks.
+
+If a malicious user submits a delivery address containing a script tag:
+
+```
+<script>stealCookies();</script>
+```
+
+And your page echoes it directly, the browser will execute the code, compromising the session security of the administrator viewing the order.
+
+To neutralize this threat, we pass all echoed user variables through `htmlspecialchars()` first:
+
+```
+htmlspecialchars($delivery_address)
+```
+
+This converts sensitive HTML characters (like `<` and `>`) into safe, inert HTML entities (like `&lt;` and `&gt;`). The browser renders the raw code harmlessly on screen as plain text, completely neutralising the security threat.
 
 # Invoicing
 

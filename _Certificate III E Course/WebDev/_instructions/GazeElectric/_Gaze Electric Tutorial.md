@@ -3362,6 +3362,7 @@ If the order is processed successfully by our Step 5 database transaction, we hi
             <strong class="text-primary">$<?= number_format($grand_total, 2) ?></strong>
         </li>
     </ul>
+    <a href="orderform.php" class="btn btn-outline-secondary w-100">Edit Cart</a>
 </div>
 ```
 
@@ -3396,7 +3397,7 @@ Before compiling the main form fields inside our left-aligned column (`col-md-7`
 
 11. Build the Billing & Payment Entry Form
 
-
+![[checkoutForm.png]]
 
 ```php
 <!-- Checkout Input Form (Nest inside col-md-7 below the validation alert box) -->

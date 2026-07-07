@@ -8,6 +8,7 @@
     "yearSemester": "multitext",
     "Tutorial Currency Status": "multitext",
     "softwareVersion": "multitext",
-    "For Jacob": "checkbox"
+    "For Jacob": "checkbox",
+    "index": "number"
   }
 }

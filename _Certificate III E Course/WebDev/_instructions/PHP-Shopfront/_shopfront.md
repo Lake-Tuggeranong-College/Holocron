@@ -5,9 +5,9 @@ needsUpdating: false
 These are archived as the project has evolved.
 
 [[Administrator Access]]
-[[Database Configuration]]
+[[_Certificate III E Course/WebDev/_instructions/PHP-Shopfront/Database Configuration]]
 [[Invoices]]
-[[Order Form]]
+[[_Certificate III E Course/WebDev/_instructions/PHP-Shopfront/Order Form]]
 [[Products - Add]]
 [[Products - Edit]]
 [[Products - Remove]]
@@ -16,7 +16,7 @@ These are archived as the project has evolved.
 [[Session Variables]]
 [[Shopping Cart]]
 [[Site Template]]
-[[User Management]]
+[[_Certificate III E Course/WebDev/_instructions/PHP-Shopfront/User Management]]
 [[User Notifications]]
 
 

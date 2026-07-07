@@ -1,0 +1,15 @@
+filters:
+  and:
+    - file.inFolder("_Certificate III E Course/WebDev/_instructions/GazeElectric")
+    - file.ext == "md"
+views:
+  - type: table
+    name: Table
+    order:
+      - file.name
+      - tutorialIndex
+      - needsUpdating
+      - isCurrent
+    sort:
+      - property: tutorialIndex
+        direction: ASC

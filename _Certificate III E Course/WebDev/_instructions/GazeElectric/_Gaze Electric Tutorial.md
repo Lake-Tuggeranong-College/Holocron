@@ -3020,7 +3020,7 @@ As discussed in our lessons, HTTP is a **stateless** protocol. Without session f
        | ---- GET /orderform.php ---------->  |                                          |
        |      Cookie: PHPSESSID=abc1234       |                                          |
        |                                      | ---- Lookup session data "abc1234" ----> |
-       |                                      | <--- Return Array ['cart' => [...]] ---- |
+       |                                      | <--- Return Array ['shopping_cart' => [...]] ---- |
        |                                      |                                          |
        |                                      | (Compiles database values + cart totals) |
        | <--- Renders Dynamic HTML Page ----- |                                          |
@@ -3098,7 +3098,7 @@ If the browser tries to fetch the local file and gets a `404 Not Found` error, t
 
 ![[checkoutInit.png]]
 
-1. **Start output buffering and establish the active cart guard.**
+2. **Start output buffering and establish the active cart guard.**
 
 At the very top of `checkout.php`, you must start output buffering to prevent header redirect errors and include your template shell. We will also query our active session to verify that the customer actually has products in their shopping cart, redirecting empty sessions back to the catalogue:
 
@@ -3115,7 +3115,7 @@ include "template.php";
 /** @var PDO $db */
 
 // CART GUARD: Redirect visitors if their basket is empty
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+if (!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) {
 	$_SESSION['error_message'] = "Your cart is empty! Please add items before checking out.";
 	header("Location: orderform.php");
 	exit();
@@ -3128,7 +3128,7 @@ $order_id = null;
 ?>
 ```
 
-1. **Retrieve and pre-populate authenticated user details.**
+3. **Retrieve and pre-populate authenticated user details.**
 
 To provide an excellent user experience, we check if the customer is already logged into our website. If they are, we run an SQL query to retrieve their registered username and address, and pre-populate those values inside our checkout form fields:
 
@@ -3154,7 +3154,7 @@ if (isset($_SESSION['user_id'])) {
 }
 ```
 
-1. **Compute the order summary and totals dynamically.**
+4. **Compute the order summary and totals dynamically.**
 
 Before we process any form submissions, we must fetch the active products from our database to compute item subtotals and the grand total of the order. This ensures the pricing data remains accurate and cannot be tampered with by client-side modifications:
 
@@ -3164,7 +3164,7 @@ Before we process any form submissions, we must fetch the active products from o
 $cart_items = [];
 $grand_total = 0;
 
-foreach ($_SESSION['cart'] as $id => $qty) {
+foreach ($_SESSION['shopping_cart'] as $id => $qty) {
 	// Defensive design check: query name and price structures from the database
 	$stmt = $db->prepare("SELECT product_id, name AS product_name, price FROM products WHERE product_id = ?");
 	$stmt->execute([$id]);
@@ -3182,7 +3182,7 @@ foreach ($_SESSION['cart'] as $id => $qty) {
 }
 ```
 
-1. **Process the checkout billing form submissions (POST).**
+5. **Process the checkout billing form submissions (POST).**
 
 When a user submits the checkout form, we must run their inputs through strict validation checks. This prevents empty submissions, enforces credit card shapes, and blocks cross-site scripting (XSS) vectors:
 
@@ -3215,7 +3215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['process_order'])) {
 }
 ```
 
-1. **Implement database transactions for atomic execution.**
+6. **Implement database transactions for atomic execution.**
 
 If the form inputs are validated, we write the data to our database. Because this process modifies two different tables (`orders` and `order_items`), we wrap our SQL commands inside a database transaction block:
 
@@ -3246,7 +3246,7 @@ if (empty($errors)) {
 		$db->commit();
 
 		// Clear the shopping cart session upon checkout success
-		$_SESSION['cart'] = [];
+		$_SESSION['shopping_cart'] = [];
 		$success = true;
 	} catch (Exception $e) {
 		// Rollback and wipe out all partial writes if any exception is thrown
@@ -3259,7 +3259,7 @@ if (empty($errors)) {
 }
 ```
 
-1. **Construct the responsive grid layout framework.**
+7. **Construct the responsive grid layout framework.**
 
 We divide our page space using Bootstrap's responsive 12-column grid system. To build our checkout interface, we divide our row container into an **8/12 main workspace column (billing and payment form)** and a **4/12 side panel column (order summary details)**:
 
@@ -3285,7 +3285,7 @@ We divide our page space using Bootstrap's responsive 12-column grid system. To 
 </div>
 ```
 
-1. **Build the sidebar basket summary panel.**
+8. **Build the sidebar basket summary panel.**
 
 Within our sidebar container, we loop through the calculated items compiled in Step 4. This pane displays the shopping basket contents, quantities, subtotals, and the final grand total as a read-only list:
 
@@ -3317,7 +3317,7 @@ Within our sidebar container, we loop through the calculated items compiled in S
 <a href="orderform.php" class="btn btn-outline-secondary w-100">Edit Cart</a>
 ```
 
-1. **Build the payment validation warning alert block.**
+9. **Build the payment validation warning alert block.**
 
 Before compiling our input fields inside our left-aligned column, we must loop through any validation errors raised by our Step 5 input handler. If any issues are found, we render them inside a Bootstrap alert box:
 
@@ -3345,7 +3345,7 @@ Before compiling our input fields inside our left-aligned column, we must loop t
 </div>
 ```
 
-1. **Build the secure billing and payment input form.**
+10. **Build the secure billing and payment input form.**
 
 Below our error box, we build the form inputs. We use standard HTML form controls and set their value attributes to echo the submitted `$_POST` array (or default user details from Step 3). This ensures that if validation fails, the customer does not have to re-type all their information:
 
@@ -3401,7 +3401,7 @@ Below our error box, we build the form inputs. We use standard HTML form control
 </form>
 ```
 
-1. **Build the order success confirmation screen.**
+11. **Build the order success confirmation screen.**
 
 If the order is processed successfully by our Step 6 database transaction, we hide the input form entirely and display a clean, reassuring order receipt panel containing their unique Order ID:
 
@@ -3425,7 +3425,7 @@ If the order is processed successfully by our Step 6 database transaction, we hi
 </div>
 ```
 
-1. **Close output flushing.**
+12. **Close output flushing.**
 
 Append this cleanup block at the absolute bottom of `checkout.php` (below your closing HTML tags) to flush out the compiled server data safely to the client:
 
@@ -3591,7 +3591,7 @@ Create a blank file named `invoice.php` inside your main project root directory.
 
 At the very top of `invoice.php`, you must start output buffering to prevent header redirect errors and include your template shell. We will also query our active session to verify that the visitor is authenticated, and determine whether they possess administrative privileges:
 
-```
+```php
 <?php
 // Start output buffering to handle header redirection
 ob_start();
@@ -3617,7 +3617,7 @@ $is_admin = (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2)
 
 We want administrators to be able to toggle the payment status of an order directly from the invoice details screen. We check if the status toggle form is submitted, verify that the active session belongs to an administrator, and update the database safely:
 
-```
+```php
 // --- ADMIN CONTROLLER: TOGGLE PAID STATUS ---
 if (isset($_POST['toggle_paid']) && $is_admin) {
 	$order_id = (int)$_POST['order_id'];
@@ -3636,7 +3636,7 @@ if (isset($_POST['toggle_paid']) && $is_admin) {
 
 Now, we must structure our page layout. We write a PHP conditional branch that evaluates whether a specific `order_id` is passed via a GET query parameter in the URL. If a target is provided, we load the detailed invoice details; otherwise, we load the list of available orders:
 
-```
+```php
 // --- INTERFACE ROUTER BRANCH ---
 if (isset($_GET['order_id'])):
 	$selected_id = (int)$_GET['order_id'];
@@ -3672,7 +3672,7 @@ if (isset($_GET['order_id'])):
 
 Within our detailed view branch, we design the printable invoice card. We use a high-contrast container, display the unique order ID, and output the customer billing details:
 
-```
+```php
 <!-- Detailed Invoice View (Nest inside the Detailed Invoice template layout condition branch) -->
 <div class="container py-5" style="max-width: 900px;">
 	<div class="mb-4">
@@ -3713,7 +3713,7 @@ Within our detailed view branch, we design the printable invoice card. We use a 
 
 Beneath the billing details, we construct a structured, responsive HTML data table shell to define the boundaries of our transaction receipt. We outline the scrollable card wrapper, establish table grid headings, and leave the table body ready for our dynamic dynamic iteration:
 
-```
+```php
 <!-- Scrollable Table Wrapper (Nest inside the Detailed Invoice card wrapper) -->
 <div class="table-responsive">
 	<table class="table table-hover align-middle">
@@ -3736,7 +3736,7 @@ Beneath the billing details, we construct a structured, responsive HTML data tab
 
 With our structural table shell established, we add the functionality to populate the transaction rows dynamically. We write a `foreach` loop to process each purchased item, outputting the name, quantity, unit price, and calculated subtotal, followed by the calculated order grand total:
 
-```
+```php
 <!-- Dynamic Line-Item Record Generation (Nest inside the Table Body of the Itemised Table Wrapper) -->
 <?php foreach ($order_items as $item): ?>
 	<tr>
@@ -3761,7 +3761,7 @@ With our structural table shell established, we add the functionality to populat
 
 Below the itemised table inside our invoice card wrapper, we implement the interactive payment status toggle controls. This form only compiles if the logged-in user possesses administrative credentials:
 
-```
+```php
 <!-- Administrative Payment Status Actions (Nest inside the Detailed Invoice card footer) -->
 <?php if ($is_admin): ?>
 	<div class="card-footer bg-light border-0 rounded-3 p-4 mt-5">
@@ -3790,7 +3790,7 @@ Below the itemised table inside our invoice card wrapper, we implement the inter
 
 If no specific `order_id` parameter has been passed through the active URL query parameters, our system executes an `else` routing fallback. Within this code block, we execute an SQL query to retrieve relevant historical records. If an administrator is logged in, we fetch all purchases registered in our catalog, whereas regular customers are restricted to querying their own transactions:
 
-```
+```php
 <?php else: 
 	// Load orders list based on active credentials check
 	if ($is_admin) {
@@ -3807,7 +3807,7 @@ If no specific `order_id` parameter has been passed through the active URL query
 
 Beneath our PHP router initialization, we build our visual structural container. We establish a responsive container card, display a dynamic section title depending on the visitor's authentication role, and construct a conditional check that renders a clean empty-state fallback message if no transaction rows are returned:
 
-```
+```php
 <!-- Global Orders Container and Card Framework (Nest inside the Directory View else branch) -->
 <div class="container py-5" style="max-width: 1200px;">
 	<div class="card shadow border-0 rounded-3 p-4">
@@ -3831,7 +3831,7 @@ Beneath our PHP router initialization, we build our visual structural container.
 
 Inside our active conditional framework block, we establish our structured table shell and loop through the compiled records. We dynamically render row indicators for each transaction, apply security output escaping, display color-coded payment badges, and construct an interactive action link to let the user view targeted invoice details:
 
-```
+```php
 <!-- Scrollable Table Wrapper (Nest inside the Orders Directory Card conditional branch) -->
 <div class="table-responsive">
 	<table class="table table-hover align-middle">
@@ -3881,7 +3881,7 @@ Inside our active conditional framework block, we establish our structured table
 
 Append this clean-up command at the absolute bottom of `invoice.php` (below your closing HTML tags) to flush out the compiled server data safely to the client:
 
-```
+```php
 <?php
 ob_end_flush();
 ?>

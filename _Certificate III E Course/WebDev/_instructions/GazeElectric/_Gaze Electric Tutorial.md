@@ -3577,8 +3577,6 @@ When customers purchase products from your online shop, the system must generate
 
 This guide details how to build a secure, database-driven invoice page (`invoice.php`) that restricts order access to authorised users and allows administrators to toggle order payment states.
 ## How To Guide: 
-==
-### Implementing the Checkout Page
 
 
 1. **Create a new file in the root directory called 'invoice.php'.**
@@ -3590,6 +3588,8 @@ Create a blank file named `invoice.php` inside your main project root directory.
 2. **Start output buffering and restrict access to logged-in users.**
 
 At the very top of `invoice.php`, you must start output buffering to prevent header redirect errors and include your template shell. We will also query our active session to verify that the visitor is authenticated, and determine whether they possess administrative privileges:
+
+![[invoiceCodeInit.png]]
 
 ```php
 <?php
@@ -3617,6 +3617,8 @@ $is_admin = (isset($_SESSION['access_level']) && $_SESSION['access_level'] >= 2)
 
 We want administrators to be able to toggle the payment status of an order directly from the invoice details screen. We check if the status toggle form is submitted, verify that the active session belongs to an administrator, and update the database safely:
 
+![[invoicePaidToggle.png]]
+
 ```php
 // --- ADMIN CONTROLLER: TOGGLE PAID STATUS ---
 if (isset($_POST['toggle_paid']) && $is_admin) {
@@ -3635,6 +3637,8 @@ if (isset($_POST['toggle_paid']) && $is_admin) {
 1. **Branch the interface layout logic (Detailed Invoice vs. Order List).**
 
 Now, we must structure our page layout. We write a PHP conditional branch that evaluates whether a specific `order_id` is passed via a GET query parameter in the URL. If a target is provided, we load the detailed invoice details; otherwise, we load the list of available orders:
+
+![[invoiceDetailedOrList.png]]
 
 ```php
 // --- INTERFACE ROUTER BRANCH ---
@@ -3666,11 +3670,15 @@ if (isset($_GET['order_id'])):
 	$order_items = $item_stmt->fetchAll();
 ?>
 	<!-- DETAILED_VIEW_HTML_ELEMENTS_GO_HERE -->
+	
+<?php endif; ?>
 ```
 
 1. **Construct the Detailed Invoice card and header layout.**
 
 Within our detailed view branch, we design the printable invoice card. We use a high-contrast container, display the unique order ID, and output the customer billing details:
+
+![[invoiceDetailedInvoiceCard.png]]
 
 ```php
 <!-- Detailed Invoice View (Nest inside the Detailed Invoice template layout condition branch) -->
@@ -3713,6 +3721,8 @@ Within our detailed view branch, we design the printable invoice card. We use a 
 
 Beneath the billing details, we construct a structured, responsive HTML data table shell to define the boundaries of our transaction receipt. We outline the scrollable card wrapper, establish table grid headings, and leave the table body ready for our dynamic dynamic iteration:
 
+![[invoiceItemTable.png]]
+
 ```php
 <!-- Scrollable Table Wrapper (Nest inside the Detailed Invoice card wrapper) -->
 <div class="table-responsive">
@@ -3736,6 +3746,8 @@ Beneath the billing details, we construct a structured, responsive HTML data tab
 
 With our structural table shell established, we add the functionality to populate the transaction rows dynamically. We write a `foreach` loop to process each purchased item, outputting the name, quantity, unit price, and calculated subtotal, followed by the calculated order grand total:
 
+![[invoiceItemisedList.png]]
+
 ```php
 <!-- Dynamic Line-Item Record Generation (Nest inside the Table Body of the Itemised Table Wrapper) -->
 <?php foreach ($order_items as $item): ?>
@@ -3753,13 +3765,15 @@ With our structural table shell established, we add the functionality to populat
 <tr class="border-top">
 	<td colspan="2"></td>
 	<td class="text-end text-muted fw-bold py-3">Total (AUD)</td>
-	<td class="text-end text-primary fw-bold h4 py-3">$<?= number_format($order['total_amount'] ?? 0, 2) ?></td>
+	<td class="text-end text-primary fw-bold h4 py-3">$<?= number_format($order['total_price'] ?? 0, 2) ?></td>
 </tr>
 ```
 
 1. **Embed the administrative payment toggle form controls.**
 
 Below the itemised table inside our invoice card wrapper, we implement the interactive payment status toggle controls. This form only compiles if the logged-in user possesses administrative credentials:
+
+![[invoiceAdminControls.png]]
 
 ```php
 <!-- Administrative Payment Status Actions (Nest inside the Detailed Invoice card footer) -->
@@ -3790,6 +3804,8 @@ Below the itemised table inside our invoice card wrapper, we implement the inter
 
 If no specific `order_id` parameter has been passed through the active URL query parameters, our system executes an `else` routing fallback. Within this code block, we execute an SQL query to retrieve relevant historical records. If an administrator is logged in, we fetch all purchases registered in our catalog, whereas regular customers are restricted to querying their own transactions:
 
+![[invoiceLoadOrderDetailsForUserOrAdmin.png]]
+
 ```php
 <?php else: 
 	// Load orders list based on active credentials check
@@ -3805,7 +3821,9 @@ If no specific `order_id` parameter has been passed through the active URL query
 
 1. **Construct the global System Orders Directory table layout framework.**
 
-Beneath our PHP router initialization, we build our visual structural container. We establish a responsive container card, display a dynamic section title depending on the visitor's authentication role, and construct a conditional check that renders a clean empty-state fallback message if no transaction rows are returned:
+Beneath our PHP router initialisation, we build our visual structural container. We establish a responsive container card, display a dynamic section title depending on the visitor's authentication role, and construct a conditional check that renders a clean empty-state fallback message if no transaction rows are returned:
+
+![[invoiceUIStructure.png]]
 
 ```php
 <!-- Global Orders Container and Card Framework (Nest inside the Directory View else branch) -->
@@ -3830,6 +3848,8 @@ Beneath our PHP router initialization, we build our visual structural container.
 1. **Implement the PHP loop to populate the orders directory list.**
 
 Inside our active conditional framework block, we establish our structured table shell and loop through the compiled records. We dynamically render row indicators for each transaction, apply security output escaping, display color-coded payment badges, and construct an interactive action link to let the user view targeted invoice details:
+
+![[invoicePopulateTable.png]]
 
 ```php
 <!-- Scrollable Table Wrapper (Nest inside the Orders Directory Card conditional branch) -->
@@ -3856,7 +3876,7 @@ Inside our active conditional framework block, we establish our structured table
 						<?php endif; ?>
 					</td>
 					<td><?= date('d M Y', strtotime($o['order_date'] ?? $o['created_at'] ?? 'now')) ?></td>
-					<td class="fw-bold">$<?= number_format($o['total_amount'] ?? 0, 2) ?></td>
+					<td class="fw-bold">$<?= number_format($o['total_price'] ?? 0, 2) ?></td>
 					<td>
 						<?php if ($o['paid']): ?>
 							<span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">Paid</span>
@@ -3874,7 +3894,6 @@ Inside our active conditional framework block, we establish our structured table
 		</tbody>
 	</table>
 </div>
-<?php endif; ?>
 ```
 
 1. **Close output flushing.**

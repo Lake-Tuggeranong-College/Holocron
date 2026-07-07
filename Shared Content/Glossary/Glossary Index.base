@@ -1,0 +1,7 @@
+filters:
+  and:
+    - file.inFolder("Shared Content/Glossary")
+    - file.ext == "md"
+views:
+  - type: table
+    name: Table

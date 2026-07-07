@@ -20,11 +20,11 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | ---------------------------- | ---------------------------------------------------------------------------------- | --------- | --------------- |
 | 1                            | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]  |           |                 |
 | 2                            | [[Slides - Databases]]                                                             |           |                 |
-| 3                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
-| 4                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
-| 5                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
-| 6                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
-| 7                            | [[_Gaze Electric Tutorial]]                                                        |           |                 |
+| 3                            |                                                                                    |           |                 |
+| 4                            |                                                                                    |           |                 |
+| 5                            |                                                                                    |           |                 |
+| 6                            |                                                                                    |           |                 |
+| 7                            |                                                                                    |           |                 |
 | 8                            |                                                                                    |           |                 |
 | 9                            |                                                                                    |           | Task 2.1 Due    |
 | 10                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]] |           |                 |

@@ -23,7 +23,7 @@ You can read more on CRUD by accessing [this page](https://www.humio.com/glossar
 SQL (Structured Query Language) is a powerful language used to manage and manipulate relational databases. One of the best ways to understand SQL is through the concept of **CRUD**, which stands for **Create, Read, Update, and Delete**—the four basic operations you can perform on data in a database.
 
 
-![[WebDev/_projects/Flask-Ngunnawal/_images/CRUD.jpeg|[https://www.atatus.com/glossary/crud/]]
+![[dbCRUD.jpeg]]
 
 Here’s a breakdown of each CRUD operation with SQL examples:
 

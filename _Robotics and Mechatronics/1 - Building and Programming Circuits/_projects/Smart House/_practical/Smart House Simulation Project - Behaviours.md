@@ -5,7 +5,6 @@ softwareVersion:
 needsUpdating: false
 ---
 
-> [!important] Prerequisite - Before starting this process, you must [[_Robotics and Mechatronics/1 - Building and Programming Circuits/_tasks/2026S1/Accept Assignment|clone the repository]] to your computer.
 
 This project explores the design and programming of an intelligent living space. In this phase, you will use an ESP32 microcontroller, sensors (inputs), and actuators (outputs) to automate a physical model house.
 
@@ -400,7 +399,7 @@ _Information-oriented: Keeping your code professional._
 - [[Algorithm Design - Sequence|Sequences]]
 - [[Algorithm Design - Decisions|Decisions]]
 - [[Algorithm Design - Loops|Loops]]
-- [[_Robotics and Mechatronics/1 - Building and Programming Circuits/_projects/_archived/Smart House-old/_topics/Data Structures|Data Structures]]
+- [[_Robotics and Mechatronics/1 - Building and Programming Circuits/_projects/Smart House/_theory/Data Structures|Data Structures]]
 
 # Level Up: Robotic Behaviours
 

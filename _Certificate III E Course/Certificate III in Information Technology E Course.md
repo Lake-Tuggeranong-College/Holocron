@@ -87,10 +87,6 @@ See [[Course|Course]] for details on the course
 > [!warning] These competencies are only required when completing ICT20120 Certificate II in Applied Digital Technologies. 
 > DO NOT complete if you are completing the Certificate III in Information Technology.
 
-[[Website Development Semester 4|Click here for details on the Project.]]
+[[Certificate II in Applied Digital Technology - Self Paced Assessments|Click here for details]]
 
 ![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.1 - Competencies]]
-
-![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.2 - Competencies]]
-
-![[Certificate II in Applied Digital Technology - Self Paced Assessments#Task 5.3 - Competencies]]

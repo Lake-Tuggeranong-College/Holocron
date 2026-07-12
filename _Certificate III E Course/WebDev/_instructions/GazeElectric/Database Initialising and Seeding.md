@@ -3,20 +3,18 @@ isCurrent: true
 needsUpdating: false
 tutorialIndex: 4
 ---
-
-
 Have you ever broken your local database so badly during testing that you had to delete it entirely? Or have you ever needed a quick, automated way to purge your development data and rebuild your entire database structure and mock assets from scratch in seconds?
 
 This engineering reference guide teaches you how to solve these headaches by building an **automated database initialisation pipeline**.
 
-## 🔑 Core Concepts: Schema vs. Seed
+# Core Concepts: Schema vs. Seed
 
 Before we build our automated pipeline, let's establish the two components we need to initialise:
 
 1. **The Database Schema (The Skeleton):** Think of the schema as the architectural blueprint of a house. It defines where the walls go, how many rooms there are, and what those rooms are called. In database terms, the **schema** defines your tables, columns, data types (like integers or text), primary keys, and relationships. It contains _no actual data_—it is purely the empty structure.
 2. **The Database Seed (The Furniture):** Once your house is built, you need furniture to make it liveable. In database terms, **seeding** is the process of populating your empty schema tables with default or "mock" starter records (such as a default system administrator login, basic products, or settings). This ensures your application is instantly usable and testable on day one.
 
-## 🛠️ Tutorial: Implementing Automatic Database Initialisation
+# How to : Implementing Automatic Database Initialisation
 
 In this tutorial, we will set up our database to configure its own schema and seed data automatically using container-native initialisation in Docker and MariaDB.
 

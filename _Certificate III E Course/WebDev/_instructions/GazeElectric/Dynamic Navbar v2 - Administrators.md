@@ -1,13 +1,16 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 8
 ---
-
+A great user interface should adapt to whoever is using it. In this tutorial, you will enhance your website's main navigation menu to dynamically display administrative tools only when a user with administrator privileges logs in. This ensures your store remains neat and intuitive for regular customers while keeping sensitive management links hidden from public view.
 
 > [!note] Goal: To add a dropdown menu that is only accessible for administrators
 
-> [!important] LEARNING OUTCOME/S: TODO
+> [!important] Learning Outcome/s:
+> - Implement Role-Based Access Control (RBAC): Construct dynamic layout menus that automatically adapt their links based on active user privileges.
+> - Verify Session State Clearance: Use saved session access values to distinguish between standard customer accounts and administrative accounts.
+> - Apply UI Masking Safeguards: Design clean, high-contrast layouts that keep sensitive back-end management portals hidden from general public access.
 ## How To Guide
 
 1. Open `template.php`.
@@ -54,6 +57,3 @@ tutorialIndex: 8
 
 ![[commonBlocks#Commit & Push]]
 
-# Explanation
-
-==TODO==

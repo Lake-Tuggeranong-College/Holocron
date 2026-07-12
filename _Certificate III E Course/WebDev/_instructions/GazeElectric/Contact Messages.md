@@ -3,10 +3,11 @@ isCurrent: true
 needsUpdating: false
 tutorialIndex: 9
 ---
+When users experience issues on your web application, they need a clean, reliable way to send inquiries to your support team. This page serves as a dual-purpose support portal: it acts as a clean, public inquiry form for guests and pre-populated form for logged-in users, while dynamically rendering an inbox dashboard exclusively for authorized administrators to review and manage incoming communications.
 
 > [!note] Goal: Create a responsive, dual-purpose contact page that securely captures public messages and provides an authorised area for administrators to mark messages as read.
 
-> [!important] LEARNING OUTCOME/S: By completing this tutorial, you will be able to:
+> [!important] Learning Outcome/s:
 > - Establish a relational database table using structured schema constraints such as primary keys and auto-increment rules.
 > - Implement backend form validation and defensive sanitisation to handle public user submissions securely.
 > - Construct a split-pane interface that dynamically routes content based on active session authorisation credentials.

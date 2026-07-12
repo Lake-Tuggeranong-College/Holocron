@@ -1,13 +1,16 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 6
 ---
+Now that you have established standard user registration, you will build a central administrative dashboard to manage user accounts. This guide walks you through setting up role-based security gates, editing active profiles, and enforcing defensive deletion controls. You will ensure only authorised administrators can access these controls.
 
 > [!note] Goal: Create a unified management terminal (`admin_users.php`) that allows authorised staff to list, provision, edit, and safely deprecate application user accounts.
 
-> [!important] Learning Outcomes:
-> - TODO
+> [!important] Learning Outcome/s:
+> - Implement Role-Based Access Control (RBAC): Secure sensitive administrative workflows by writing server-side validation gates that verify user access privileges
+> - Develop Integrated CRUD Handlers: Construct robust PHP logic using parameterised prepared statements to execute secure database record insertions, updates, and deletions.
+> - Apply Defensive Programming and UI Design: Design responsive Bootstrap layouts that protect database integrity with input sanitisation, output escaping, and operational constraints such as blocking self-deletion.
 
 This stage of development relies heavily on the `access_level` field in the `users` table in the database.
 

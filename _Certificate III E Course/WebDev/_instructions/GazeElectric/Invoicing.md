@@ -3,14 +3,16 @@ isCurrent: true
 needsUpdating: false
 tutorialIndex: 12
 ---
+After an order is completed, the system must generate a professional, immutable receipt of the transaction. This guide covers how to build a dynamic invoice utility that pulls relational purchase details, protects personal account details through defensive design layout boundaries, and provides administrators with a secure interface to track payment states..
 
 > [!note] Goal: Create a responsive, multi-tier invoice page that lists historic transactions for authenticated users, provides a printable order receipt, and allows administrators to safely manage payment states.
 
+> [!important] Learning Outcome/s:
+> - Compile Relational Order Reports: Design advanced multi-table SQL queries utilising database JOIN commands to combine historical transaction indexes with item details.
+> - Enforce Data Ownership Boundaries: Implement structural session validations inside your query controllers to prevent standard users from guessing or viewing other clients' receipts.
+> - Build State-Toggling Panels: Design targeted SQL updater interfaces that allow authorised administrators to toggle the payment statuses of customer orders safely.
 
 
-When customers purchase products from your online shop, the system must generate a professional, immutable receipt of the transaction. An invoice page must show order details to the customer who placed the order, apply security masking to payment credentials, and provide a secure, administrative interface to manage payment statuses.
-
-This guide details how to build a secure, database-driven invoice page (`invoice.php`) that restricts order access to authorised users and allows administrators to toggle order payment states.
 ## How To Guide: 
 
 

@@ -1,8 +1,9 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 3
 ---
+Being able to identify, authenticate, and manage users is a core pillar of modern systems engineering. In this module, you will transition from designing static web layouts to building a dynamic, state-aware system that can securely recognize and remember its visitors. By implementing user registration, secure session-based login, clear logout scripts, and interactive profile updates, you will establish the foundational identity system of your application, laying the essential groundwork for more advanced database transactions and role-based permissions later on.
 
 > [!note] Goal: To develop the pages and logic required to allow users to register, login, logout and edit their profiles.
 

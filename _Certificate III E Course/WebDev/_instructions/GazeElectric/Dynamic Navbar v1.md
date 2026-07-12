@@ -1,8 +1,9 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 5
 ---
+This guide will demonstrate how to update the navigation bar (navbar) to only show the links and content as determined by the authenticated state of the user.
 
 > [!note] Goal: Have the Navigation Bar show only the information relevant to the user, whether the user is logged in or not.
 

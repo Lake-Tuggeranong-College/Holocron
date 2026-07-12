@@ -1,14 +1,16 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 7
 ---
-
+Now that your user accounts are secure, you will build a dynamic dashboard to manage your product catalogue. This guide walks you through setting up secure file uploads, configuring precise pricing decimals, and toggling product visibility. Utilising Role Based Access Control previously implemented, you will ensure only authorised administrators can access these inventory controls.
 
 > [!note] Goal: Allow administrators to add, edit or delete Products on the system
 
 > [!important] Learning Outcomes:
-> - TODO
+> - Implement Secure Binary File Uploads: Construct server-side validation checks to safely process, rename using collision-free UUID strings, and store uploaded product images on disk.
+> - Design State-Aware Catalog Controls: Execute dynamic routing logic using GET and POST methods to support interactive product modifications, soft-disable visibility toggles, and asset-purging deletions.
+> - Enforce Decimal Precision Boundaries: Build structural database schemas utilising exact decimal formats for currency values to prevent floating-point calculation drift.
 ## How To Guide: 
 
 ### Step 1 - Database Configuration

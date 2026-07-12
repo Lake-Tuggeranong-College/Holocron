@@ -1,14 +1,19 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 13
 ---
-
+A professional web application must handle broken links or missing files without exposing underlying system details or confusing the user. This guide covers how to set up an explicit server-level error responder page and configure the web server's routing rules to redirect broken requests smoothly while preserving search engine optimisation standards.
 ## The PHP page
 
 > [!note] Goal: Create a HTTP 404 error page if the user attempts to access a page that doesn't exist.
 
-> [!important] LEARNING OUTCOME/S: TODO
+> [!important] Learning Outcome/s:
+> - Configure Server-Level Overrides: Edit Apache directory-level configuration rules within an .htaccess file to rewrite server paths and redirect missing URIs.
+> - Manage HTTP Response Handshakes: Execute explicit HTTP response status codes inside PHP to prevent search engines from incorrectly indexing error states as valid pages.
+> - Deploy Containerized Configurations: Modify Docker build processes and Apache configurations to allow local projects to read customised override configurations.
+
+
 ### How To Guide
 
 1. Create a new file in the root directory. Call it `404.php` and include the standard boilerplate code, with a slight change.

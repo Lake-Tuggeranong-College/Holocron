@@ -3,13 +3,15 @@ isCurrent: true
 needsUpdating: false
 tutorialIndex: 10
 ---
-
+To transition your storefront from a static display to an interactive application, you must build state-aware features that recognise customer choices over time. This guide walks you through building a dynamic catalogue interface that tracks items inside a temporary, session-based shopping basket while utilising pagination to load products gracefully without degrading server performance.
 
 > [!note] Goal: Understand, construct, and test the multi-pane layout of `orderform.php` to handle dynamic item selections, session-based storage, and dynamic category filters.
 
 > [!important] Learning Outcomes:
-> - Display all enabled products
-> - [[Pagination]]
+> - Implement Persistent State Management: Utilise server-side PHP Sessions and browser cookie hooks to safely preserve shopping basket choices across stateless page loads.
+> - Apply Database [[Pagination]] Mathematics: Divide dense inventory catalogues into lightweight, paginated directories.
+>   Construct Dynamic Filters: Build relational SQL lookup queries to dynamically generate sidebar categorisations and secure, parameterised filters.
+
 
 ## How To Guide: 
 

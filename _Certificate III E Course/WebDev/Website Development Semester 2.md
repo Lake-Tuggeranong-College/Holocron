@@ -1,41 +1,45 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 # Overview
 
-==TODO==
-In this task, you will develop a static PHP-based website. Throughout the development process, you will learn fundamental programming techniques, including:
+In this project, you are going to bring all your web design and programming skills together to build a fully working online shop! You will develop your web application inside the secure Docker server environment we set up earlier in the programme.
 
-- Decision-making (if/else statements)
-- Repetition (loops)
-- Functions
+Instead of just making flat, static pages, you will learn how the different layers of a web application talk to each other using four core technologies:
+
+- **HTML (The Skeleton):** Creating the structure, forms, and pages of your online shop.
+- **CSS (The Style):** Making your shop look modern, polished, and easy to use on both mobile phones and laptops.
+- **PHP (The Brain):** Writing server-side logic to process user submissions, handle logins, and manage active shopping carts.
+- **SQL (The Memory):** Setting up databases to securely save and load products, customer accounts, and order history.
+
+By the end of this project, you will have designed, built, and tested a secure and interactive e-commerce storefront that you can show off as a complete digital solution!
 
 # Schedule
 
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
 Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
 
-| Weeks                        | Content                                                                            | Resources | Assessments Due |
-| ---------------------------- | ---------------------------------------------------------------------------------- | --------- | --------------- |
-| 1                            | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]  |           |                 |
-| 2                            | [[Slides - Databases]]                                                             |           |                 |
-| 3                            |                                                                                    |           |                 |
-| 4                            |                                                                                    |           |                 |
-| 5                            |                                                                                    |           |                 |
-| 6                            |                                                                                    |           |                 |
-| 7                            |                                                                                    |           |                 |
-| 8                            |                                                                                    |           |                 |
-| 9                            |                                                                                    |           | Task 2.1 Due    |
-| 10                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]] |           |                 |
-| 11                           | Showcase Development                                                               |           | Task 2.2 Due    |
-| 12                           | Slides - [[Slides - Tutorial Writing]]<br>[[Tutorial Writing]]                     |           |                 |
-| 13                           | Tutorial Development                                                               |           |                 |
-| 14                           | Tutorial Development                                                               |           | Task 2.3 Due    |
-| 15                           | Assessment Second Sitting                                                          |           |                 |
-| 16<br>*LTC Cross Line Exams* | Assessment Second Sitting                                                          |           |                 |
-| 17                           | Assessment Second Sitting                                                          |           |                 |
-| 18                           | Assessment Second Sitting                                                          |           |                 |
+| Weeks                        | Content                                                                                                  | Resources                                                                         | Assessments Due              |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------- |
+| 1                            | [[Database Configuration]]                                                                               | [[Slides - Databases]]                                                            |                              |
+| 2                            | [[Connecting the Website to The Database `config.php`]]<br>[[Creating the website template]]             | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]] |                              |
+| 3                            | [[User Management]]<br>[[Custom Error (404) page]]                                                       |                                                                                   |                              |
+| 4                            | [[Database Initialising and Seeding]]<br>[[Dynamic Navbar v1]]<br>[[Administrator Tool - User Accounts]] |                                                                                   |                              |
+| 5                            | [[Administrator Tool - Product Management]]<br>[[Dynamic Navbar v2 - Administrators]]                    |                                                                                   |                              |
+| 6<br>*AST*                   | [[Contact Messages]]                                                                                     |                                                                                   |                              |
+| 7                            | [[Order Form]]<br>[[Checkout]]                                                                           |                                                                                   |                              |
+| 8                            | [[Invoicing]]                                                                                            |                                                                                   |                              |
+| 9<br>*LTC Cross Line Exams*  |                                                                                                          |                                                                                   |                              |
+| 10                           |                                                                                                          |                                                                                   |                              |
+| 11                           |                                                                                                          |                                                                                   |                              |
+| 12                           |                                                                                                          |                                                                                   | Task 2.1 Due                 |
+| 13                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                       |                                                                                   |                              |
+| 14                           | Showcase Development                                                                                     |                                                                                   |                              |
+| 15                           | Showcase Development                                                                                     |                                                                                   |                              |
+| 16<br>*LTC Cross Line Exams* | Post-Launch Technical Interview & Code Review                                                            |                                                                                   | Task 2.2 Due<br>Task 2.3 Due |
+| 17                           | Assessment Second Sitting                                                                                |                                                                                   |                              |
+| 18                           | Assessment Second Sitting                                                                                |                                                                                   |                              |
 
 
 
@@ -55,16 +59,10 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 >- Certificate II in Applied Digital Technologies, or 
 >- Certificate III in Information Technology
 
-| Unit Code                                                                        | Unit Title                                         | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| -------------------------------------------------------------------------------- | -------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques          |              |                  |       ✅       |                   |
-| [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                            |              |        ✅         |               |                   |
-
-
-
-### Assessment Task
-
-==TODO Link to Google Classroom==
+| Unit Code                                                                        | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| -------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
+| [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                   |              |        ✅         |               |                   |
 
 
 ---
@@ -88,12 +86,6 @@ You need to create a video showcasing a website you developed, presenting it as 
 | ------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages |      ✅       |                  |               |         ✅         |
 
-
-
-### Assessment Task
-
-
-==TODO Link to Google Classroom==
 
 ---
 ## Task 2.3 - Post-Launch Technical Interview & Code Review
@@ -119,12 +111,5 @@ In this task, you will identify a critical issue, vulnerability, or area of impr
 | [BSBCRT201](https://training.gov.au/training/details/BSBCRT201/unitdetails) | Develop and apply thinking and problem solving skills |              |        ✅         |               |                   |
 | [BSBTEC203](https://training.gov.au/training/details/BSBTEC203/unitdetails) | Research using the internet                           |              |        ✅         |               |                   |
 | [ICTICT226](https://training.gov.au/training/details/ICTICT226/unitdetails) | Operate simple database applications                  |              |        ✅         |               |                   |
-
-
-
-### Assessment Task
-
-
-==TODO Link to Google Classroom==
 
 

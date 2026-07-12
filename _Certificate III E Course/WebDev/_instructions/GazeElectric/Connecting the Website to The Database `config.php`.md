@@ -1,9 +1,9 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 tutorialIndex: 1
 ---
-
+This guide will introduce you to the core PHP code for the website, connecting the website to the database. This file is a single point of access, ensuring if any changes to the database occur then there is minimal disruption to the website.
 ## How To Guide: Creating the `config.php` File
 
 > [!note] Goal: To build the bridge between the website and the database.

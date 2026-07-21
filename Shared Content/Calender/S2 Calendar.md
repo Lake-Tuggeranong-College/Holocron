@@ -31,15 +31,15 @@ N/A
 N/A
 ### School Events - Week 8
 
-N/A
-
-### School Events - Week 9
-
 **Monday** - Last Day of Q3
 **Tuesday** - Cross Line Exams
 **Wednesday** - Cross Line Exams
 **Thursday** - Cross Line Exams
 **Friday** - First Day of Q4 Classes
+
+### School Events - Week 9
+
+N/A
 
 ### School Events - Week 10
 

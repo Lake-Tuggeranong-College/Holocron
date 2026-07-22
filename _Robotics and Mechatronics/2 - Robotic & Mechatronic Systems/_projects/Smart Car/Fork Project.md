@@ -5,7 +5,7 @@ needsUpdating: false
 
 Click on the link to the main repository for the project.
 
-> [!danger] [https://github.com/Lake-Tuggeranong-College/Scarif-Development](https://github.com/Lake-Tuggeranong-College/Scarif-Development)
+> [!danger] https://github.com/Lake-Tuggeranong-College/Project-SmartCar
 
 Click the fork project by clicking the fork button.
 

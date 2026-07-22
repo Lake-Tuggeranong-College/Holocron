@@ -65,7 +65,134 @@ Each group of 2 divides responsibilities into **Red Team** (Offensive/Testing) a
 
 ### Step 1.2: Student B Deploys Docker Compose
 
-Student B creates the base project repository in VS Code and configures `docker-compose.yml` to expose ports to the network.
+**Student B** creates the base project directory in VS Code on their local machine using the following directory layout:
+
+```
+distributed-lab/
+├── docker-compose.yml       <-- Root orchestration file
+├── producer/
+│   ├── Dockerfile          <-- Non-hardened Producer Dockerfile
+│   ├── main.py
+│   └── requirements.txt
+└── worker/
+    ├── Dockerfile          <-- Non-hardened Worker Dockerfile
+    ├── worker.py
+    └── requirements.txt
+```
+#### Initial Producer Service Files (Phase 1 Baseline)
+
+- **Storage Location:** `producer/requirements.txt`
+    
+    ```
+    flask==3.0.2
+    pika==1.3.2
+    ```
+    
+- **Storage Location:** `producer/main.py`
+    
+    ```
+    from flask import Flask, request, jsonify
+    import pika, json, os
+    
+    app = Flask(__name__)
+    RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+    
+    def get_channel():
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+        channel = connection.channel()
+        channel.queue_declare(queue='task_queue', durable=True)
+        return connection, channel
+    
+    @app.route('/health', methods=['GET'])
+    def health():
+        return jsonify({"status": "healthy"}), 200
+    
+    @app.route('/submit-job', methods=['POST'])
+    def submit_job():
+        data = request.get_json() or {}
+    
+        # Unhardened baseline: Passes raw dictionary directly without validation
+        connection, channel = get_channel()
+        channel.basic_publish(
+            exchange='',
+            routing_key='task_queue',
+            body=json.dumps(data),
+            properties=pika.BasicProperties(delivery_mode=2)
+        )
+        connection.close()
+        return jsonify({"message": f"Job {data.get('job_id', 'unknown')} pushed to queue.", "status": "SUCCESS"}), 200
+    
+    if __name__ == '__main__':
+        app.run(host='0.0.0.0', port=5000)
+    ```
+    
+- **Storage Location:** `producer/Dockerfile`
+    
+    ```
+    FROM python:3.11-slim
+    WORKDIR /app
+    COPY requirements.txt .
+    RUN pip install -r requirements.txt
+    COPY . .
+    EXPOSE 5000
+    CMD ["python", "main.py"]
+    ```
+    
+
+#### Initial Worker Service Files (Phase 1 Baseline)
+
+- **Storage Location:** `worker/requirements.txt`
+    
+    ```
+pika==1.3.2
+    ```
+    
+- **Storage Location:** `worker/worker.py`
+    
+    ```
+import pika, json, os, socket
+
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+WORKER_ID = socket.gethostname()
+
+def callback(ch, method, properties, body):
+	try:
+		data = json.loads(body)
+		job_id = data.get('job_id', 'unknown')
+
+		# Unhardened baseline: Direct print statement vulnerable to log injection (\n)
+		print(f"[WORKER {WORKER_ID}] Processing Job ID: {job_id}", flush=True)
+
+	except Exception as e:
+		print(f"[WORKER {WORKER_ID}] Error processing message: {e}", flush=True)
+
+	ch.basic_ack(delivery_tag=method.delivery_tag)
+
+def main():
+	connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+	channel = connection.channel()
+	channel.queue_declare(queue='task_queue', durable=True)
+	channel.basic_qos(prefetch_count=1)
+	channel.basic_consume(queue='task_queue', on_message_callback=callback)
+
+	print(f"[* WORKER {WORKER_ID}] Waiting for messages...", flush=True)
+	channel.start_consuming()
+
+if __name__ == '__main__':
+	main()
+    ```
+    
+- **Storage Location:** `worker/Dockerfile`
+    
+    ```
+    FROM python:3.11-slim
+    WORKDIR /app
+    COPY requirements.txt .
+    RUN pip install -r requirements.txt
+    COPY . .
+    CMD ["python", "worker.py"]
+    ```
+
 
 `docker-compose.yml`:
 

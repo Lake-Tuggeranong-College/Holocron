@@ -1,6 +1,5 @@
 ---
 isCurrent: true
-publish: false
 needsUpdating: true
 ---
 "Complete" the project!

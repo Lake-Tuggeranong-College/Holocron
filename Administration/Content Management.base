@@ -12,6 +12,8 @@ views:
     order:
       - file.name
       - file.folder
+      - needsUpdating
+      - isCurrent
     sort:
       - property: file.name
         direction: ASC
@@ -171,3 +173,11 @@ views:
     sort:
       - property: file.name
         direction: ASC
+  - type: table
+    name: Tagged not publish
+    filters:
+      and:
+        - publish != false
+    order:
+      - file.name
+      - publish

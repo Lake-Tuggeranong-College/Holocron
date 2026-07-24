@@ -1,6 +1,5 @@
 ---
 isCurrent: false
-publish: true
 needsUpdating: false
 ---
 - In Class examination. Due to this information regarding this assessment will be posted on the day. It will be a written (typed), open book response with evidence. 

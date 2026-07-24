@@ -1,6 +1,0 @@
----
-isCurrent: true
-publish: true
-needsUpdating: true
----
-In this week, you'll perform a critique of the project from the previous semester, and refocus for the semester ahead.

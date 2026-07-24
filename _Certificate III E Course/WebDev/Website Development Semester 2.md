@@ -20,26 +20,26 @@ By the end of this project, you will have designed, built, and tested a secure a
 Classes will run on Tuesday's each week during TRaC-X and lunchtime as workshops, or 'drop-in' class.
 Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due on the Thursday of the week indicated.
 
-| Weeks                        | Content                                                                                                  | Resources                                                                         | Assessments Due              |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------- |
-| 1                            | [[Database Configuration]]                                                                               | [[Slides - Databases]]                                                            |                              |
-| 2                            | [[Connecting the Website to The Database `config.php`]]<br>[[Creating the website template]]             | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]] |                              |
-| 3                            | [[User Management]]<br>[[Custom Error (404) page]]                                                       |                                                                                   |                              |
-| 4                            | [[Database Initialising and Seeding]]<br>[[Dynamic Navbar v1]]<br>[[Administrator Tool - User Accounts]] |                                                                                   |                              |
-| 5                            | [[Administrator Tool - Product Management]]<br>[[Dynamic Navbar v2 - Administrators]]                    |                                                                                   |                              |
-| 6<br>*AST*                   | [[Contact Messages]]                                                                                     |                                                                                   |                              |
-| 7                            | [[Order Form]]<br>[[Checkout]]                                                                           |                                                                                   |                              |
-| 8                            | [[Invoicing]]                                                                                            |                                                                                   |                              |
-| 9<br>*LTC Cross Line Exams*  |                                                                                                          |                                                                                   |                              |
-| 10                           |                                                                                                          |                                                                                   |                              |
-| 11                           |                                                                                                          |                                                                                   |                              |
-| 12                           |                                                                                                          |                                                                                   | Task 2.1 Due                 |
-| 13                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                       |                                                                                   |                              |
-| 14                           | Showcase Development                                                                                     |                                                                                   |                              |
-| 15                           | Showcase Development                                                                                     |                                                                                   |                              |
-| 16<br>*LTC Cross Line Exams* | Post-Launch Technical Interview & Code Review                                                            |                                                                                   | Task 2.2 Due<br>Task 2.3 Due |
-| 17                           | Assessment Second Sitting                                                                                |                                                                                   |                              |
-| 18                           | Assessment Second Sitting                                                                                |                                                                                   |                              |
+| Weeks                        | Content                                                                                                  | Resources                                                                          | Assessments Due              |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------- |
+| 1                            | [[Database Configuration]]                                                                               | [[Slides - Databases]]<br>[Slides - Databases Video](https://youtu.be/Ws9vncuBFyg) |                              |
+| 2                            | [[Connecting the Website to The Database `config.php`]]<br>[[Creating the website template]]             | [[Slides - PHP]]<br>[[Slides - Programming Fundamentals]]<br>[[PHP Introduction]]  |                              |
+| 3                            | [[User Management]]<br>[[Custom Error (404) page]]                                                       |                                                                                    |                              |
+| 4                            | [[Database Initialising and Seeding]]<br>[[Dynamic Navbar v1]]<br>[[Administrator Tool - User Accounts]] |                                                                                    |                              |
+| 5                            | [[Administrator Tool - Product Management]]<br>[[Dynamic Navbar v2 - Administrators]]                    |                                                                                    |                              |
+| 6<br>*AST*                   | [[Contact Messages]]                                                                                     |                                                                                    |                              |
+| 7                            | [[Order Form]]<br>[[Checkout]]                                                                           |                                                                                    |                              |
+| 8                            | [[Invoicing]]                                                                                            |                                                                                    |                              |
+| 9<br>*LTC Cross Line Exams*  |                                                                                                          |                                                                                    |                              |
+| 10                           |                                                                                                          |                                                                                    |                              |
+| 11                           |                                                                                                          |                                                                                    |                              |
+| 12                           |                                                                                                          |                                                                                    | Task 2.1 Due                 |
+| 13                           | Slides - [[Slides - Showcase]]<br>[[Video Production]]<br>[[Showcase Development]]                       |                                                                                    |                              |
+| 14                           | Showcase Development                                                                                     |                                                                                    |                              |
+| 15                           | Showcase Development                                                                                     |                                                                                    |                              |
+| 16<br>*LTC Cross Line Exams* | Post-Launch Technical Interview & Code Review                                                            |                                                                                    | Task 2.2 Due<br>Task 2.3 Due |
+| 17                           | Assessment Second Sitting                                                                                |                                                                                    |                              |
+| 18                           | Assessment Second Sitting                                                                                |                                                                                    |                              |
 
 
 
@@ -64,8 +64,6 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 | [ICTPRG302](https://training.gov.au/Training/Details/ICTPRG302/unitdetails)	<br> | Apply introductory programming techniques |              |                  |       ✅       |                   |
 | [BSBTEC101](https://training.gov.au/Training/Details/BSBTEC101/unitdetails)      | Operate digital devices                   |              |        ✅         |               |                   |
 
-
----
 ## Task 2.2 - Project Showcase
 ### Task Overview
 
@@ -86,8 +84,6 @@ You need to create a video showcasing a website you developed, presenting it as 
 | ------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [ICTICT215](https://training.gov.au/Training/Details/ICTICT215/unitdetails)<br> | Operate digital media technology packages |      ✅       |                  |               |         ✅         |
 
-
----
 ## Task 2.3 - Post-Launch Technical Interview & Code Review
 ### Task Overview
 

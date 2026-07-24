@@ -50,7 +50,7 @@ This task involves you and your group designing, planning and documenting the we
 
 You will be assessed via observation.
 
-> [!important] While the website developed for this project is a group task, this task is **individual**.
+> [!important] While the website developed for this project is a group task, you will be assessed **individually**.
 
 
 ### Deliverable/s
@@ -81,6 +81,8 @@ You will be assessed via observation.
 During the development of the website, you will be assessed on your skills in working in a team, and how you present information to others. 
 
 This interview will be a combination of interview and observational assessment. 
+
+> [!important] While the website developed for this project is a group task, you will be assessed **individually**.
 
 ### Deliverable/s
 

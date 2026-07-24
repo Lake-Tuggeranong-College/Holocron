@@ -75,8 +75,6 @@ https://classroom.google.com/c/NzkyMDMwMjMzMDEy/a/ODQ1NDI4MDg0MDI0/details
 
 Hardware Quiz : https://docs.google.com/forms/d/e/1FAIpQLSdROuBbDqSfSs5Vv_TXLdyMnGG2UfAjavmXHxyZ9-DEB9ar1w/viewform?usp=dialog&authuser=0
 
-
----
 ## Task 1.2 - Report
 ### Task Overview
 

@@ -1,6 +1,6 @@
 ---
 isCurrent: false
-publish: false
+publish: true
 needsUpdating: false
 ---
 ![[S2 - Task 1]]

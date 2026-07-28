@@ -20,7 +20,7 @@ This guide walks you through setting up Rapid Application Development (RAD) comm
 3. Paste the following header code into `src/comms.h`:
     
 
-```
+```arduino
 /*
  * Communications logic for the development module, including MQTT setup, 
  * message handling, and periodic updates.
@@ -38,7 +38,7 @@ PubSubClient client(espClient);
 String topicBuffer;
 
 // MQTT Broker configuration (Default MQTT port is 1883)
-const char* mqttServer = "192.168.68.104";  
+const char* mqttServer = "192.168.1.116";  
 const int mqttPort = 1883;
 
 unsigned long lastUpdate = 0;
@@ -160,7 +160,7 @@ void mqttSetup()
 2. Insert the credentials code below:
     
 
-```
+```arduino
 /*
  * Contains sensitive network parameters.
  * Note: Update these credentials if connecting to a home network or hot-spot.
@@ -179,14 +179,13 @@ const char* password = "CyberRange";  // Network Password
 2. Replace its content with the code below, which handles board initialization, subscription callbacks, and main loop execution:
     
 
-```
-#include <Arduino.h>
-
+```arduino
 // Set a unique identifier for your device before importing comms.h
 const char *mqttClient = "ESP32_StudentName"; // EDIT THIS FIELD
 
 const char *mqttTopic;
 
+#include <Arduino.h>
 #include "comms.h"
 
 void performActionBasedOnPayload(String payload)

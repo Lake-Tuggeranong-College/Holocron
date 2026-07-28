@@ -42,7 +42,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 # Tasks
 
-## Task 3.1 - Brainstorming
+## Task 3.1 Brainstorming
 
 ### Task Overview
 
@@ -61,9 +61,9 @@ You will be assessed via observation.
 
 ### Task 3.1 Competencies
 
-| Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills    |              |                  |       ✅       |                   |
+| Unit Code                                                                   | Unit Title                                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills |              |                  |       ✅       |                   |
 
 
 ### Learning Content
@@ -74,7 +74,7 @@ You will be assessed via observation.
 
 ==TODO Link to Google Classroom==
 
-## Task 3.2 Group Work Interactions
+## Task 3.2 Teamwork Interactions
 
 ### Task Overview
 
@@ -103,7 +103,7 @@ This interview will be a combination of interview and observational assessment.
 ==TODO Link to Google Classroom==
 
 
-## Task 3.3- Team-based Development
+## Task 3.3 Team-based Development
 
 ### Task Overview
 

@@ -41,7 +41,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 # Tasks
 
-## Task 4.1 - PII
+## Task 4.1 PII
 
 ### Task Overview
 
@@ -63,7 +63,7 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 ==TODO Link to Google Classroom==
 
-## Task 4.2 - IP
+## Task 4.2 IP
 
 ### Task Overview
 

@@ -5,7 +5,9 @@ css: css/holocronSlides.css
 isCurrent: true
 needsUpdating: true
 ---
-# 🧠 Introduction to Fundamental Programming Techniques (PHP Edition)
+# Introduction to Programming Techniques
+
+--
 
 We’ll explore:
 
@@ -17,7 +19,7 @@ We’ll explore:
 
 
 ---
-## 🔀 Decisions (Conditionals)
+## Decisions (Conditionals)
 
 Decisions let your code choose between actions.
 
@@ -36,24 +38,32 @@ What's the output?
 
 ---
 
-## ⚖️ Comparison Operators in PHP
+## Comparison Operators in PHP
 
 Comparison operators are used in conditionals to compare values.
 
-|Operator|Meaning|Example|Result|
-|---|---|---|---|
-|`==`|Equal|`5 == "5"`|`true`|
-|`===`|Identical (type + value)|`5 === "5"`|`false`|
-|`!=`|Not equal|`5 != 3`|`true`|
-|`!==`|Not identical|`5 !== "5"`|`true`|
-|`<`|Less than|`3 < 5`|`true`|
-|`>`|Greater than|`5 > 3`|`true`|
-|`<=`|Less than or equal|`5 <= 5`|`true`|
-|`>=`|Greater than or equal|`5 >= 6`|`false`|
+--
+
+| Operator | Meaning                  | Example     | Result  |
+| -------- | ------------------------ | ----------- | ------- |
+| `==`     | Equal                    | `5 == "5"`  | `true`  |
+| `===`    | Identical (type + value) | `5 === "5"` | `false` |
+| `!=`     | Not equal                | `5 != 3`    | `true`  |
+| `!==`    | Not identical            | `5 !== "5"` | `true`  |
+
+
+--
+
+| Operator | Meaning                  | Example     | Result  |
+| -------- | ------------------------ | ----------- | ------- |
+| `<`      | Less than                | `3 < 5`     | `true`  |
+| `>`      | Greater than             | `5 > 3`     | `true`  |
+| `<=`     | Less than or equal       | `5 <= 5`    | `true`  |
+| `>=`     | Greater than or equal    | `5 >= 6`    | `false` |
 
 ---
 
-## 🧪 Comparison Example
+## Comparison Example
 
 ```Php
 $age = 18;
@@ -69,7 +79,7 @@ Use `===` when you need to match both **value and type**.
 
 ---
 
-## 🔁 Loops
+## Loops
 
 Loops repeat code until a condition is met.
 
@@ -94,7 +104,7 @@ while ($count < 5) {
 
 ---
 
-## 🧩 Functions
+## Functions
 
 Functions group code into reusable blocks.
 
@@ -108,7 +118,7 @@ greet("Ryan");
 
 ---
 
-## 💬 Commenting
+## Commenting
 
 Comments help explain your code.
 
@@ -119,17 +129,6 @@ function add($a, $b) {
 }
 ```
 
----
-
-## 🧪 Practice Time!
-
-Write a PHP script that:
-
-1. Accepts a number
-2. Checks if it’s even or odd
-3. Prints numbers from 1 to that number
-4. Uses a function to check even/odd
-5. Includes comments
 
 ---
 

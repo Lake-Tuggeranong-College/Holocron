@@ -74,20 +74,18 @@ Knowing PHP helps you:
 - HTTPS and secure headers
 - Safe file uploads and session management(https://clouddevs.com/php/security-best-practices/)
 
----
+note:
 
-## 📚 Research & Resources
+Research & Resources
 
 Explore these resources to dive deeper:
 
-- [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)(https://link.springer.com/book/10.1007/979-8-8688-0932-3)
-- [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)(https://wpwebinfotech.com/blog/php-and-cybersecurity/)
-- [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)(https://clouddevs.com/php/security-best-practices/)
-- [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)(https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
+- [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
+- [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
+- [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)
+- [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
----
-
-# References
+ References
 
 [1] [What Every PHP Developer Needs to Know About Cyber Security](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
@@ -97,13 +95,12 @@ Explore these resources to dive deeper:
 
 [4] [Building Secure PHP Applications: A Comprehensive Guide to Protecting ...](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
 
+
 ---
 
 # Introduction to PHP Programming
 
 ---
-
-# Welcome to PHP
 
 ## The Engine of the Dynamic Web
 

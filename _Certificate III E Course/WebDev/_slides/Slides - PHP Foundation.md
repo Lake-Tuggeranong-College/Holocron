@@ -6,21 +6,28 @@ isCurrent: true
 needsUpdating: true
 ---
 
-#  What is PHP?
+# Complete Introduction to PHP Programming
+
+Mastering the Engine of the Dynamic Web
+
+---
+
+# What is PHP?
 
 PHP (Hypertext Preprocessor) is a **server-side scripting language** designed for web development but also used as a general-purpose language.
 
 --
+
 ### Key Features:
 
 - Runs on the server
 - Embeds easily in HTML
-- Powers over **79% of websites**, including WordPress, Facebook, and Wikipedia
+- Powers over **75% to 79% of websites**, including WordPress, Facebook, and Wikipedia
 
-```Php
+```php
 <?php
 echo "Hello, world!";
-?>;
+?>
 ```
 
 note:
@@ -41,9 +48,10 @@ PHP is:
 
 # PHP & Cybersecurity
 
-Learning PHP is valuable for cybersecurity because:
+Learning PHP is especially valuable for cybersecurity.
 
 --
+
 ## Understanding Web Vulnerabilities
 
 PHP developers often deal with:
@@ -51,16 +59,17 @@ PHP developers often deal with:
 - SQL Injection
 - Cross-Site Scripting (XSS)
 - Cross-Site Request Forgery (CSRF)
-- File inclusion vulnerabilities(https://clouddevs.com/php/security-best-practices/)
+- File inclusion vulnerabilities
 
 --
+
 ## Securing Web Applications
 
 Knowing PHP helps you:
 
 - Audit and secure PHP-based apps
 - Implement secure coding practices
-- Understand how attackers exploit web apps(https://wpwebinfotech.com/blog/php-and-cybersecurity/)
+- Understand how attackers exploit web apps
 
 --
 
@@ -72,93 +81,62 @@ Knowing PHP helps you:
 - Output encoding (`htmlspecialchars()`)
 - Secure password handling (`password_hash()`)
 - HTTPS and secure headers
-- Safe file uploads and session management(https://clouddevs.com/php/security-best-practices/)
+- Safe file uploads and session management
 
 note:
 
-Research & Resources
-
-Explore these resources to dive deeper:
+Research & Resources:
 
 - [Building Secure PHP Applications (SpringerLink)](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
 - [PHP and Cybersecurity Guide (WPWebInfotech)](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
 - [PHP Security Best Practices (CloudDevs)](https://clouddevs.com/php/security-best-practices/)
 - [Cybersecurity Intelligence Blog](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
 
- References
-
-[1] [What Every PHP Developer Needs to Know About Cyber Security](https://www.cybersecurityintelligence.com/blog/what-every-php-developer-needs-to-know-about-cyber-security-6004.html)
-
-[2] [Understanding PHP Security: Best Practices for Developers - CloudDevs](https://clouddevs.com/php/security-best-practices/)
-
-[3] [PHP And Cybersecurity - Shielding Your Web Applications](https://wpwebinfotech.com/blog/php-and-cybersecurity/)
-
-[4] [Building Secure PHP Applications: A Comprehensive Guide to Protecting ...](https://link.springer.com/book/10.1007/979-8-8688-0932-3)
-
-
 ---
 
-# Introduction to PHP Programming
-
----
-
-## The Engine of the Dynamic Web
-
-- **P**HP: **H**ypertext **P**reprocessor.
-    
-- A server-side scripting language executed entirely on the web server.
-    
-- Generates dynamic HTML content on the fly before delivering it to the client's browser.
-    
-- Powering over 75% of websites with known server-side languages (including WordPress).
-    
----
 # Basic Syntax & Structure
 
 ## How PHP Lives inside Files
 
 - PHP scripts are wrapped inside special tags: `<?php` and `?>`.
-    
 - Every statement must end with a semicolon (`;`).
-    
 - Files containing PHP must have a `.php` extension.
-    
-- Single-line comments use `//` or `#`. Multi-line comments use `/* ... */`.
 
 --
 
-# Practice
+## Commenting Code
 
+Comments help explain your code to humans.
 
-```
+- Single-line comments use `//` or `#`.
+- Multi-line comments use `/* ... */`.
+
+```php
 <?php
 // This is a single-line comment
 echo "Hello, World!"; 
+
 /* This is a 
    multi-line comment */
 ?>
 ```
 
-
-💡 **Try This:** Create a new file called `phpPractice.php`, type the code above, and load it in your browser. 
-
-Change "Hello, World!" to your own name.
+💡 **Try This:** Create a new file called `phpPractice.php`, type the code above, and load it in your browser. Change "Hello, World!" to your own name.
 
 ---
-# PHP meets HTML
+
+# PHP Meets HTML
 
 ## Combining Logic with Presentation
 
 - Unlike static HTML files, `.php` files allow you to weave programming logic right inside HTML elements.
-    
 - When a user requests the page, the server processes the PHP code and replaces it with standard HTML output.
-    
+
 --
 
 # Practice
 
-
-```
+```html
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -171,11 +149,7 @@ Change "Hello, World!" to your own name.
 </html>
 ```
 
-🧠 **Extend Your Thinking:** Look closely at the `date()` function above. 
-
-What happens if you change `'d-m-Y'` to `'l, jS F Y'`? 
-
-Try it out and observe how the output format switches to a classic British date style.
+🧠 **Extend Your Thinking:** Look closely at the `date()` function above. What happens if you change `'d-m-Y'` to `'l, jS F Y'`? Try it out and observe how the output format switches to a classic British date style.
 
 ---
 
@@ -184,18 +158,14 @@ Try it out and observe how the output format switches to a classic British date 
 ## Storing Data for Later Use
 
 - In PHP, all variables must begin with a dollar sign (`$`).
-    
 - Variable names are **case-sensitive** (`$colour` and `$Colour` are completely different!).
-    
-- PHP is _loosely typed_—you do not need to declare what type of data a variable holds before using it.
-
+- PHP is *loosely typed*—you do not need to declare what type of data a variable holds before using it.
 
 --
 
 # Practice
 
-
-```
+```php
 <?php
 $greeting = "Welcome back";
 $userCount = 150;
@@ -204,27 +174,23 @@ $isLoggedIn = true;
 ?>
 ```
 
-
-
 🧠 **Extend Your Thinking:** What happens if you try to create a variable name that starts with a number (e.g. `$1stPlace = "Gold";`)? Test it on your server to see what error message PHP gives you.
 
 ---
+
 # Outputting Variables
 
 ## Putting Variables into Action
 
 - You use the `echo` statement to output data to the screen.
-    
-- **Double quotes (`"`)** process variables inside them (Interpolation/Parsing behaviour).
-    
+- **Double quotes (`"`)** process variables inside them (Interpolation/Parsing behavior).
 - **Single quotes (`'`)** treat everything as a literal string.
-    
 
 --
 
 # Practice
 
-```
+```php
 <?php
 $favouriteColour = "green";
 
@@ -236,24 +202,46 @@ echo 'My favourite colour is $favouriteColour!';
 ?>
 ```
 
-
 💡 **Try This:** Create two variables: `$firstName` and `$lastName`. Use `echo` to print a sentence that combines them into a full name using double quotes and a space.
 
 ---
+
+# Comparison Operators
+
+Comparison operators are used in conditionals to evaluate conditions.
+
+![[comparisonOperatorsPHP.png]]
+
+--
+
+## Comparison Example
+
+```php
+$age = 18;
+
+if ($age >= 18) {
+    echo "You are an adult.";
+} else {
+    echo "You are a minor.";
+}
+```
+
+Use `===` when you need to match both **value and type**.
+
+---
+
 # Decisions: Conditional Statements
 
 ## Controlling the Flow of Your App
 
-- Control the behaviour of your application using `if`, `elseif`, and `else` statements.
-    
-- Uses comparison operators like `==` (equal), `===` (identical in value & type), `>`, `<`, `!=` (not equal).
-    
+- Decisions let your code choose between actions.
+- Control the behavior of your application using `if`, `elseif`, and `else` statements.
 
 --
 
-# Practice
+# Practice: Conditionals
 
-```
+```php
 <?php
 $hour = date('H'); // Gets current 24-hour time
 
@@ -267,24 +255,22 @@ if ($hour < 12) {
 ?>
 ```
 
-
 🧠 **Extend Your Thinking:** Hardcode a new variable `$temperature = 18;`. Write an `if/else` statement that outputs "It's a warm British summer!" if the temperature is 20 or above, and "Bring a jumper!" otherwise.
 
 ---
+
 # Loops: Doing Repeated Work
 
-## Repeating Instructions Automatically
-
-- **`while` loop:** Keeps running _as long as_ a specific condition remains true.
-    
-- **`for` loop:** Runs code a _set number of times_ using a built-in counter.
-    
+Loops repeat code until a condition is met.
 
 --
 
-# Practice
+## Standard Loops: `while` & `for`
 
-```
+- **`while` loop:** Keeps running *as long as* a specific condition remains true.
+- **`for` loop:** Runs code a *set number of times* using a built-in counter.
+
+```php
 <?php
 // While Loop Example
 $counter = 1;
@@ -300,22 +286,122 @@ for ($i = 1; $i <= 3; $i++) {
 ?>
 ```
 
-
 💡 **Try This:** Write a loop that counts down from 10 to 1, followed by outputting the word "Blastoff!" to the screen.
 
+--
+
+## The Post-Test Loop: `do...while`
+
+- The `do...while` loop executes its body *before* it checks the condition.
+- Even if the initial condition is `false`, the code inside the `do{}` block will run at least once.
+- **Use Case:** Perfect for input validation or generating initial setup messages.
+
+```php
+$count = 5;
+
+do {
+    echo "Executing iteration...
+";
+} while ($count-- > 0);
+```
+
+--
+
+## The Array Specialist: `foreach`
+
+When working with PHP arrays or objects, `foreach` is the cleanest and most memory-efficient loop structure.
+
+- **Value Only:** Used when you only need the value.
+- **Key & Value:** Used when you need both the index/key and the content.
+
+```php
+// Value Only Example
+$colors = ['Red', 'Blue', 'Green'];
+foreach ($colors as $color) {
+    echo "Color: " . $color . "
+";
+}
+
+// Key & Value Example
+$user = ['name' => 'Alice', 'age' => 30];
+foreach ($user as $key => $value) {
+    echo "$key is " . $value . "
+";
+}
+```
+
+note:
+PHP's preferred way to iterate over arrays/objects.
+
 ---
-# Putting it Together: Dynamic Content
+
+# Functions
+
+Functions group code into reusable blocks designed to perform one specific task.
+
+```php
+function greet($name) {
+    echo "Hello, $name!";
+}
+
+greet("Ryan");
+```
+
+note:
+Remember the **DRY Principle**: Don't Repeat Yourself.
+
+--
+
+# Parameters vs. Arguments
+
+## Parameter (The Definition)
+- A placeholder variable listed inside the function definition parentheses.
+- Tells PHP what type of data the function expects.
+- Example: `function greet($name)` $\rightarrow$ `$name` is a **parameter**.
+
+## Argument (The Usage)
+- The actual value passed into the function when called.
+- Example: `greet("Ryan")` $\rightarrow$ `"Ryan"` is an **argument**.
+
+--
+
+# Return Values vs. `echo`
+
+## Why Use `return` Instead of `echo`?
+
+- Using `echo` displays text directly to the browser, which cannot be saved or used later in complex applications.
+- A returned value allows your function to *calculate* a result that can be saved to a variable or passed elsewhere.
+
+```php
+// BAD (Echoes directly, cannot save result)
+function calculateArea($length, $width) {
+    echo "The area is: ", $length * $width; 
+}
+
+// GOOD (Returns value to be used later)
+function calculateArea($length, $width) {
+    return $length * $width; 
+}
+
+$area = calculateArea(10, 5); // $area holds 50
+```
+
+note:
+🔑 Key Takeaway: If you want to use the result after the function finishes, you must `return` it.
+
+---
+
+# Putting It Together: Dynamic Content
 
 ## Building Tables with PHP Loops
 
-- You can embed complex loop logic right inside HTML layouts to build dynamic visual structures.
-    
+Embed complex loop logic right inside HTML layouts to build dynamic structures.
 
 --
 
 # Practice
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en-GB">
 <body>
@@ -332,8 +418,19 @@ for ($i = 1; $i <= 3; $i++) {
 </html>
 ```
 
+🚀 **Grand Challenge:** Modify this structure to build a dynamic HTML unordered list (`<ul>`) that prints out the square values of numbers 1 through 12 (e.g., "1 squared is 1", "2 squared is 4", etc.). Organize your code neatly!
 
-🚀 **Grand Challenge:** Modify this structure to build a dynamic HTML unordered list (`<ul>`) that prints out the square values of numbers 1 through 12 (e.g. "1 squared is 1", "2 squared is 4", etc.). Organize your code neatly!
+---
+
+# Summary
+
+| Concept | Purpose |
+| --- | --- |
+| **Decisions** | Choose between actions |
+| **Comparison Operators** | Evaluate conditions |
+| **Loops** | Repeat actions (`while`, `for`, `do...while`, `foreach`) |
+| **Functions** | Organize and reuse code |
+| **Commenting** | Explain code to humans |
 
 ---
 
@@ -342,4 +439,3 @@ for ($i = 1; $i <= 3; $i++) {
 If you have any questions, please ask!
 
 ![[contactDetails.png]]
-

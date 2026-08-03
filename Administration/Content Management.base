@@ -174,10 +174,23 @@ views:
       - property: file.name
         direction: ASC
   - type: table
-    name: Tagged not publish
+    name: "! publish=false"
     filters:
       and:
         - publish != false
     order:
       - file.name
       - publish
+  - type: table
+    name: publish=false
+    filters:
+      and:
+        - publish == false
+    order:
+      - file.name
+      - publish
+  - type: table
+    name: Excalidraw
+    filters:
+      and:
+        - note["excalidraw-plugin"] == "parsed"

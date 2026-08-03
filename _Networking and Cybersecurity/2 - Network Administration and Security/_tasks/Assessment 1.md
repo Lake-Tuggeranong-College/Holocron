@@ -28,4 +28,9 @@ http://drawings.google.com/
 
 ![[Data Flow Example.png]]
 
+## Project Features
+
+*Notes from lesson - 3/8/2026*
+![[projectFeatures11Networking.jpg]]
+
 ![[S2 - Task 1]]

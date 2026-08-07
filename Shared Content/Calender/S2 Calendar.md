@@ -53,7 +53,8 @@ N/A
 
 ### School Events - Week 12
 
-N/A
+**Tuesday** - AST Second Sitting.
+**Wednesday** - AST Second Sitting.
 
 ### School Events - Week 13
 

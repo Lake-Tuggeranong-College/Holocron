@@ -199,7 +199,7 @@ Create a `/images` directory in the root directory of the project.
 
 ![[templateImagesDirectory.png]]
 
-Find a logo online (make sure it's licsenced as Creative Commons), generate one, or use this provided logo.
+Find a logo online (make sure it's licensed as Creative Commons), generate one, or use this provided logo.
 
 ![[_Certificate III E Course/WebDev/_instructions/GazeElectric/_images/logo.png]]
 

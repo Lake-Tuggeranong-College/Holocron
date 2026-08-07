@@ -1,7 +1,0 @@
-filters:
-  and:
-    - file.inFolder("Shared Content/Glossary")
-    - file.ext != ".base"
-views:
-  - type: table
-    name: Table

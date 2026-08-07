@@ -10,6 +10,15 @@ needsUpdating: true
 
 Mastering the Engine of the Dynamic Web
 
+
+---
+
+# Front End vs Back End Development
+
+
+
+![[fullStackDevelopment.png]]
+
 ---
 
 # What is PHP?

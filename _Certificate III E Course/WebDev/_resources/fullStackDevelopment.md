@@ -19,15 +19,15 @@ Client / Browser ^kG38ZaaH
 Server ^uTMQE0vf
 
 ## Embedded Files
-948791f755fc9a052731fcc2b810aea022fe3a91: [[Pasted Image 20260807202017_693.png]]
+948791f755fc9a052731fcc2b810aea022fe3a91: [[logoHTML.png]]
 
-ee618e6c449ec8d04e34ccc5f6701bc709c42517: [[Pasted Image 20260807202034_861.png]]
+ee618e6c449ec8d04e34ccc5f6701bc709c42517: [[logoCSS.png]]
 
-c598013a58f32e2c4e3db3d912b54ec6e3632c36: [[Pasted Image 20260807202059_249.png]]
+c598013a58f32e2c4e3db3d912b54ec6e3632c36: [[logoJS.png]]
 
-95e9ca1903b9590103c140a1b4faa2b18bafac15: [[Pasted Image 20260807202231_557.png]]
+95e9ca1903b9590103c140a1b4faa2b18bafac15: [[logoPHP.png]]
 
-3ef0e63424b2242a89aa15c96671bf6a820e681e: [[Pasted Image 20260807202308_130.png]]
+3ef0e63424b2242a89aa15c96671bf6a820e681e: [[logoSQL.png]]
 
 %%
 ## Drawing

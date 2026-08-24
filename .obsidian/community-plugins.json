@@ -11,5 +11,6 @@
   "local-gpt",
   "ai-providers",
   "slides-extended",
-  "obsidian-excalidraw-plugin"
+  "obsidian-excalidraw-plugin",
+  "vault-graph"
 ]

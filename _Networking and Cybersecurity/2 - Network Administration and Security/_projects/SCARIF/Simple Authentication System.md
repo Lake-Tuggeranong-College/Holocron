@@ -197,7 +197,7 @@ ob_end_flush();
 # Brute Force
 
 
-use Hydra.
+Use a Command Line tool called Hydra. You may need to install it.
 
 Save the passwords below into a file called `rockyou.txt` in your respository.
 

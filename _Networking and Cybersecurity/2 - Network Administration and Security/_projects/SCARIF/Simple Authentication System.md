@@ -15,7 +15,7 @@ Find their passwords. How?
 
 The passwords have been encrypted in the standard PHP `bcrypt` algorithm
 
-One of the passwords has the hash (encrypted text) as `$2y$10$4y9pQ803aEFA2s2Q.wJ2ye9T7mE5W9T5W3n4Y9k.wJ2ye9T7mE5W9`
+One of the passwords has the hash (encrypted text) as `$2y$12$593hrpvP8cNbQkdNJj53X.31I1Sd/V5HIyPQypVan4oa4NrF/Kxd.`
 
 
 

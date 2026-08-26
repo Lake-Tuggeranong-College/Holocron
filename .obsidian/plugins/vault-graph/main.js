@@ -6443,7 +6443,7 @@ function mountVaultGraph(root, data, deps) {
   var RENDERING = deps.rendering || {};
   var LOGO_MASK = deps.logoMask || "";
   var WIN = deps.win || window;
-  var DOC = root.ownerDocument;
+  var DOC = deps.doc || root && root.ownerDocument || WIN && WIN.document || null;
   var API = null;
   var ID = "vg-";
   var $ = function(id) {
@@ -6563,6 +6563,8 @@ function mountVaultGraph(root, data, deps) {
     return out;
   }
   var folderColors = cleanFolderColors(deps.folderColors);
+  var panEnabled = deps.panEnabled === false ? false : true;
+  var onPanEnabled = typeof deps.onPanEnabled === "function" ? deps.onPanEnabled : null;
   function isArchiveGroup2(g) {
     return String(g).charAt(0) === "_";
   }
@@ -6632,15 +6634,34 @@ function mountVaultGraph(root, data, deps) {
     selected: null,
     hovered: null,
     // Days marked on the heatmap: one picked by clicking, one under the pointer.
-    // Both halo their notes without moving them (see isPushed), and both are
-    // independent of markToday -- any combination can be on at once, and none of
-    // them is a visibility filter.
+    // Both halo their notes without moving them (see isPushed), and neither is a
+    // visibility filter.
+    //
+    // markDay IS THE WHOLE OF "MARK TODAY" NOW. There used to be a separate `markToday`
+    // flag behind a sidebar button, and clicking the band's today column already did the
+    // same job by the same predicate -- `created === the key`, which for that column IS
+    // today. Two controls answering one question, one of which had to be found in the
+    // sidebar while the answer was drawn in the band. The button went; the band is the
+    // control, so the fill treatment the button owned moved onto the picked day -- see
+    // nodeStyle.
     markDay: null,
     hoverDay: null,
+    // The year label under the pointer, if any. Same shape as hoverDay and read the same
+    // way -- a transient halo answering "where did this year go", with no push.
+    hoverYear: null,
     query: "",
     until: null,
     // timeline: reveal the oldest N notes, or null for all
-    markToday: false,
+    // DATE RANGE CAP. Two ends, either of which may be null for "no bound", in ms UTC at
+    // midnight. Separate from `until` on purpose: that one reveals the oldest N notes and
+    // is a growth animation, this one is a filter. They compose -- see timeFactor.
+    from: null,
+    to: null,
+    // The RIGHT EDGE of the heatmap's 52-week window, or null for "the last 52 weeks".
+    // The band was a fixed sliding window onto today, which is what made everything before
+    // it unreachable: on the 10-year fixture that is nine years of the vault with no way to
+    // point at it. Concepts that move the window write this.
+    heatEnd: null,
     // Bow links away from the hub instead of chording across it. 91% of links cross
     // the disc, so straight is the case that would need the excuse. No longer a
     // control: these two are fixed, and the code paths for false are kept only
@@ -6671,15 +6692,44 @@ function mountVaultGraph(root, data, deps) {
       ghost: !!n.ghost
     });
   });
-  DATA.edges.forEach(function(e) {
-    if (!graph.hasEdge(String(e.s), String(e.t))) {
-      graph.addUndirectedEdge(String(e.s), String(e.t), { weight: e.w, size: Math.min(1.6, 0.35 + e.w * 0.25) });
+  var EDGE_RAMP_START = 2e3, EDGE_RAMP_END = 1e4, EDGE_FLOOR = 0.1;
+  var adj = /* @__PURE__ */ Object.create(null);
+  var EDGE_TOTAL = 0;
+  var edgeAttrsOf = function(w) {
+    return { weight: w, size: Math.min(1.6, 0.35 + w * 0.25) };
+  };
+  var EDGE_SHOWN = 0;
+  var lazyEdges = false;
+  (function() {
+    var seen = /* @__PURE__ */ Object.create(null), list = [];
+    DATA.edges.forEach(function(e) {
+      var a = String(e.s), b = String(e.t);
+      var k = a < b ? a + "\0" + b : b + "\0" + a;
+      if (seen[k]) return;
+      seen[k] = 1;
+      EDGE_TOTAL++;
+      list.push({ a, b, w: e.w, k });
+      (adj[a] || (adj[a] = [])).push({ o: b, w: e.w });
+      if (b !== a) (adj[b] || (adj[b] = [])).push({ o: a, w: e.w });
+    });
+    var share = EDGE_TOTAL <= EDGE_RAMP_START ? 1 : EDGE_TOTAL >= EDGE_RAMP_END ? EDGE_FLOOR : 1 - (1 - EDGE_FLOOR) * (EDGE_TOTAL - EDGE_RAMP_START) / (EDGE_RAMP_END - EDGE_RAMP_START);
+    EDGE_SHOWN = Math.round(EDGE_TOTAL * share);
+    lazyEdges = EDGE_SHOWN < EDGE_TOTAL;
+    if (lazyEdges) {
+      list.sort(function(p, q) {
+        return q.w - p.w || (p.k < q.k ? -1 : 1);
+      });
+      list.length = EDGE_SHOWN;
     }
-  });
+    list.forEach(function(e) {
+      if (!graph.hasEdge(e.a, e.b)) graph.addUndirectedEdge(e.a, e.b, edgeAttrsOf(e.w));
+    });
+  })();
   var NODE_MIN = 2.6, NODE_MAX = 11, NODE_ORPHAN = 6;
   graph.forEachNode(function(id, a) {
     graph.setNodeAttribute(id, "size", a.deg === 0 ? NODE_ORPHAN : Math.min(NODE_MAX, NODE_MIN + 1.55 * Math.sqrt(a.deg)));
   });
+  measureDotTyp();
   var hubRank = /* @__PURE__ */ Object.create(null);
   (function() {
     graph.nodes().slice().sort(function(a, b) {
@@ -6706,7 +6756,7 @@ function mountVaultGraph(root, data, deps) {
   var UNIT = 160;
   var UNLINKED = "(unlinked)";
   function groupOf(id) {
-    if (graph.degree(id) === 0) return UNLINKED;
+    if (!adj[id]) return UNLINKED;
     return graph.getNodeAttribute(id, "folder");
   }
   var SLOT_COUNT = 12;
@@ -6788,8 +6838,28 @@ function mountVaultGraph(root, data, deps) {
   var EDGE_PAD_ARC = 0;
   var EDGE_PAD_MAX = 0;
   var INNER_SCALE = 0.8;
+  var INNER_FILL = 0.8;
+  var GAP_BAND = { i: 0.5, o: 1 };
+  var CLEAR_OF_ROOM = 0.12;
   var MIN_SPAN = 6 * Math.PI / 180;
   var HL_PUSH = 0.9;
+  var DENSITY_MAX = 2.6;
+  var BAND = null;
+  function bandOf(k) {
+    if (!BAND) {
+      BAND = {
+        i: { key: "i", sp: 1, rows: 0, room: 0, ramp: { m: 1, b: 0, lo: 0 }, gapDeg: 0, nG: 0 },
+        o: { key: "o", sp: 1, rows: 0, room: 0, ramp: { m: 1, b: 0, lo: 0 }, gapDeg: 0, nG: 0 }
+      };
+    }
+    return k === "i" ? BAND.i : BAND.o;
+  }
+  function bandScale(k) {
+    return k === "i" ? INNER_SCALE : 1;
+  }
+  function pitchUnits(band) {
+    return UNIT * (bandOf(band).sp || 1) * bandScale(band);
+  }
   var NEST_MIN = 2;
   var SMALL_GROUP = 0;
   var SUB_SLOTS = 4;
@@ -6845,6 +6915,7 @@ function mountVaultGraph(root, data, deps) {
   function nodeColor(id) {
     var a = graph.getNodeAttributes(id);
     if (state.dim !== "folder") return colorOf(groupOf(id));
+    if (groupOf(id) === UNLINKED) return colorOf(UNLINKED);
     return subShade[a.folder + "/" + (a.sub || "")] || colorOf(a.folder);
   }
   function isHidden(group) {
@@ -6853,6 +6924,9 @@ function mountVaultGraph(root, data, deps) {
   }
   var bandLock = null;
   var geomLock = null;
+  var DBG = { on: false, cells: null, canvas: null };
+  var SEAM_YELLOW = "rgb(255,196,0)";
+  var SEAM_YELLOW_45 = "rgba(255,196,0,0.45)";
   var bandRefLock = null;
   var ringsMerged = /* @__PURE__ */ Object.create(null);
   var MERGED = "merged";
@@ -6864,8 +6938,12 @@ function mountVaultGraph(root, data, deps) {
     return t < 0 ? t + 2 * Math.PI : t;
   }
   function isOrphan(id) {
-    return graph.degree(id) === 0;
+    return !adj[id];
   }
+  var SEAM_ROWS = 0.3;
+  var SEAM_MAX_ROWS = 0.16;
+  var REF_ROWS = 5;
+  var SEAM_FALL = 1.5;
   var GAP_FULL_TO = 1e3;
   var GAP_ZERO_AT = 1e4;
   function gapScale() {
@@ -6874,25 +6952,78 @@ function mountVaultGraph(root, data, deps) {
     if (n >= GAP_ZERO_AT) return 0;
     return 1 - (n - GAP_FULL_TO) / (GAP_ZERO_AT - GAP_FULL_TO);
   }
-  function gapFor(nGroups) {
-    var g = SLICE_GAP * Math.PI / 180 * gapScale();
+  function seamFall(band) {
+    var k = band === "i" ? "i" : "o";
+    var rows = bandOf(k).rows || REF_ROWS;
+    return Math.pow(REF_ROWS / Math.max(1, rows), SEAM_FALL);
+  }
+  function seamAngle(band, frac) {
+    var k = band === "i" ? "i" : "o";
+    var r = geomLock && geomLock.bandR ? geomLock.bandR[k] : 0;
+    if (!r) return SLICE_GAP * Math.PI / 180 * gapScale() * frac;
+    var w = SEAM_ROWS * seamFall(band) * pitchUnits(band) * (GAP_BAND[k] || 1);
+    var cap = SEAM_MAX_ROWS * UNIT;
+    if (w > cap) w = cap;
+    return w * frac / r;
+  }
+  function gapFor(nGroups, band) {
+    var g = seamAngle(band, 1);
     return g * nGroups > Math.PI ? Math.PI / Math.max(1, nGroups) : g;
   }
-  function allocateBand(list, weightOf, seatsOf, opts) {
+  var SEAM_CAP = 0.45;
+  var MARGIN_ROWS = 0.5;
+  var EXCESS_KEEP = 0.35;
+  var DOT_TYP_I = 0, DOT_TYP_O = 0;
+  var dotTyp = function(band) {
+    return band === "i" ? DOT_TYP_I : DOT_TYP_O;
+  };
+  function measureDotTyp() {
+    var sizes = [];
+    graph.forEachNode(function(id, a) {
+      sizes.push(a.size || 4);
+    });
+    sizes.sort(function(x, y) {
+      return x - y;
+    });
+    var mid = sizes.length ? sizes[Math.floor(sizes.length / 2)] : 4;
+    DOT_TYP_I = dotUnits(mid, "i");
+    DOT_TYP_O = dotUnits(mid, "o");
+  }
+  function dotUnits(size, band) {
+    var z = size || 4;
+    if (z > NODE_MAX) z = NODE_MAX;
+    return DOT_OF_PITCH * pitchUnits(band) / bandScale(band) * (z / NODE_MAX);
+  }
+  function edgeSweep(c, which, rGraph) {
+    var sm = seamAt(rGraph, c.nB, c.bandKey);
+    return which === "lead" ? c.pLead + sm.gap / 2 : c.pTrail - sm.gap / 2;
+  }
+  function seamAt(r, nBoundaries, band) {
+    var g = r > 1e-6 ? SEAM_ROWS * pitchUnits(band) / r : 0;
+    var tot = g * nBoundaries;
+    var cap = 2 * Math.PI * SEAM_CAP;
+    if (tot > cap) {
+      g *= cap / tot;
+      tot = cap;
+    }
+    return { gap: g, avail: 2 * Math.PI - tot };
+  }
+  function allocateBand(list, weightOf, opts) {
     var TWO = 2 * Math.PI;
     var tot = 0, gw = /* @__PURE__ */ Object.create(null);
     list.forEach(function(c) {
       tot += weightOf(c);
-      var g = gw[c.g] || (gw[c.g] = { w: 0, seats: 0 });
+      var g = gw[c.g] || (gw[c.g] = { w: 0 });
       g.w += weightOf(c);
-      g.seats += seatsOf(c);
     });
     var presOf = function(c) {
-      return Math.min(1, weightOf(c) / Math.max(1, seatsOf(c)));
+      return Math.min(1, weightOf(c));
     };
+    var given = opts.groupPres || null;
     var groupPres = /* @__PURE__ */ Object.create(null), nG = 0;
     Object.keys(gw).forEach(function(k2) {
-      groupPres[k2] = Math.min(1, gw[k2].w / Math.max(1, gw[k2].seats));
+      var p = given && given[k2] !== void 0 ? given[k2] : gw[k2].w;
+      groupPres[k2] = p < 0 ? 0 : p > 1 ? 1 : p;
       nG += groupPres[k2];
     });
     var nSub = 0;
@@ -6906,8 +7037,8 @@ function mountVaultGraph(root, data, deps) {
         nSub += presOf(c);
       });
     }
-    var gap = gapFor(nG);
-    var subGap = (opts.subGaps ? SUB_GAP : 0) * Math.PI / 180 * gapScale();
+    var gap = gapFor(nG, opts.band);
+    var subGap = opts.subGaps ? gap : 0;
     var gapTotal = gap * nG + subGap * nSub;
     if (opts.clamp && gapTotal > TWO * opts.clamp) {
       var k = TWO * opts.clamp / gapTotal;
@@ -6916,6 +7047,40 @@ function mountVaultGraph(root, data, deps) {
       gapTotal *= k;
     }
     var avail = TWO - gapTotal;
+    var floorAng = 0;
+    if (opts.band && geomLock && geomLock.bandR) {
+      var rRef = geomLock.bandR[opts.band === "i" ? "i" : "o"] || 0;
+      if (rRef > 1e-6) floorAng = 0.8 * pitchUnits(opts.band) / rRef;
+    }
+    var shareMap = null;
+    if (floorAng > 0 && tot > opts.totFloor) {
+      shareMap = /* @__PURE__ */ Object.create(null);
+      var floorFor = function(w, c0) {
+        if (colWalk && c0 && colWalk[c0.g] !== void 0) return floorAng * colWalk[c0.g].f;
+        return floorAng * (w > 1 ? 1 : w < 0 ? 0 : w);
+      };
+      var over = 0, under2 = 0, live = [];
+      list.forEach(function(c) {
+        var w = weightOf(c);
+        var raw = w > 1e-4 ? avail * (w / Math.max(opts.totFloor, tot)) : 0;
+        shareMap[c.k] = raw;
+        if (raw <= 0) return;
+        live.push(c);
+        var fl = floorFor(w, c);
+        if (raw < fl) under2 += fl - raw;
+        else over += raw - fl;
+      });
+      var lift = under2 > 0 && over > 0 ? Math.min(1, over / under2) : 0;
+      if (lift > 0) {
+        var take = under2 * lift / over;
+        live.forEach(function(c) {
+          var raw = shareMap[c.k], fl = floorFor(weightOf(c), c);
+          shareMap[c.k] = raw < fl ? raw + (fl - raw) * lift : raw - (raw - fl) * take;
+        });
+      } else {
+        shareMap = null;
+      }
+    }
     return {
       tot,
       nG,
@@ -6923,14 +7088,29 @@ function mountVaultGraph(root, data, deps) {
       gap,
       subGap,
       avail,
+      /** The angular floor actually applied, or 0. For the probe. */
+      minArc: function() {
+        lastMinArc = shareMap ? floorAng : 0;
+        return lastMinArc;
+      }(),
       groupPres,
       presOf,
       shareOf: function(c) {
+        if (shareMap && shareMap[c.k] !== void 0) return shareMap[c.k];
         return avail * (weightOf(c) / Math.max(opts.totFloor, tot));
+      },
+      // The share as a plain FRACTION of whatever arc is going. The rendered placement needs
+      // this rather than shareOf, because the arc going depends on the radius and so cannot be
+      // baked in here.
+      fracOf: function(c) {
+        if (shareMap && shareMap[c.k] !== void 0) {
+          return avail > 1e-9 ? shareMap[c.k] / avail : 0;
+        }
+        return weightOf(c) / Math.max(opts.totFloor, tot);
       }
     };
   }
-  function buildWedgePlan(onlyVisible, weightOf, rowsOf) {
+  function buildWedgePlan(onlyVisible, weightOf, rowsOf, spIn) {
     var W = weightOf || function() {
       return 1;
     };
@@ -6938,10 +7118,46 @@ function mountVaultGraph(root, data, deps) {
     var nested = state.dim === "folder";
     var SEP = "\0";
     var byCell = {}, cellsOf = {}, planTotal = 0;
+    var presMax = /* @__PURE__ */ Object.create(null);
+    var liveG = /* @__PURE__ */ Object.create(null);
+    var liveN = /* @__PURE__ */ Object.create(null);
     graph.forEachNode(function(id) {
-      if (onlyVisible && !(planKeep || visible)(id)) return;
+      if (onlyVisible && !(planKeep || willShow)(id)) return;
+      var g0 = groupOf(id);
+      var wv = W(id);
+      liveG[g0] = (liveG[g0] || 0) + (wv > 1 ? 1 : wv < 0 ? 0 : wv);
+      liveN[g0] = (liveN[g0] || 0) + 1;
+    });
+    var bandLive = { i: 0, o: 0 };
+    Object.keys(liveG).forEach(function(g) {
+      bandLive[bandLock && bandLock[g] ? "i" : "o"] += liveG[g];
+    });
+    var depthOfBand = function(isInner) {
+      if (!geomLock) return REF_ROWS;
+      var n = bandLive[isInner ? "i" : "o"];
+      var thick = isInner ? (geomLock.rOuter - geomLock.r0) * INNER_FILL : geomLock.maxR - geomLock.rOuter;
+      var scale = isInner ? INNER_SCALE : 1;
+      var base2 = isInner ? geomLock.r0 : geomLock.rOuter;
+      if (!(thick > 0) || !(n > 0.5)) return REF_ROWS;
+      var T = thick * scale, R = (base2 + thick / 2) * scale;
+      var rw = Math.round(T / Math.sqrt(2 * Math.PI * R * T / n));
+      return rw < 1 ? 1 : rw > 200 ? 200 : rw;
+    };
+    var bandDepth = { i: 0, o: 0 };
+    var splitOf = /* @__PURE__ */ Object.create(null);
+    var splitFor = function(g) {
+      if (splitOf[g] === void 0) {
+        var bk = bandLock && bandLock[g] ? "i" : "o";
+        if (!bandDepth[bk]) bandDepth[bk] = depthOfBand(bk === "i");
+        var nSubs = (subOrder[g] || []).length;
+        splitOf[g] = nested && nSubs > 1 && (liveN[g] || 0) >= Math.max(NEST_MIN, nSubs * bandDepth[bk]);
+      }
+      return splitOf[g];
+    };
+    graph.forEachNode(function(id) {
+      if (onlyVisible && !(planKeep || willShow)(id)) return;
       var g = groupOf(id), a = graph.getNodeAttributes(id);
-      var split = nested && (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN;
+      var split = splitFor(g);
       var key = split ? g + SEP + subTintIndex(g, a.sub) : g;
       if (!byCell[key]) {
         byCell[key] = [];
@@ -6949,6 +7165,9 @@ function mountVaultGraph(root, data, deps) {
       }
       byCell[key].push(id);
       planTotal += W(id);
+      var pw = W(id);
+      if (colWalk && colWalk[g] !== void 0) pw = colWalk[g].f;
+      if (!(presMax[g] >= pw)) presMax[g] = pw;
     });
     ringsMerged = /* @__PURE__ */ Object.create(null);
     var big = [], smallIds = [];
@@ -7021,10 +7240,7 @@ function mountVaultGraph(root, data, deps) {
         function(c) {
           return c.wsum;
         },
-        function(c) {
-          return c.list.length;
-        },
-        { subGaps: false, clamp: null, totFloor: 1e-4 }
+        { subGaps: false, clamp: null, totFloor: 1e-4, band }
       );
       lastGapN[band] = Math.round(a.nG * 1e3) / 1e3;
       list.forEach(function(c) {
@@ -7036,18 +7252,37 @@ function mountVaultGraph(root, data, deps) {
     cells.forEach(function(c) {
       c.bandRef = c.band;
     });
-    var SP = 1, HOLE = 0.3;
+    var HOLE = 0.3;
+    var fullTotal = geomLock && geomLock.total > 0 ? geomLock.total : planTotal;
+    var density = spIn && typeof spIn === "object" ? spIn.o || 1 : spIn > 0 ? spIn : planTotal > 1e-4 ? Math.min(DENSITY_MAX, Math.sqrt(fullTotal / planTotal)) : 1;
+    var SP = density;
+    var given = spIn && typeof spIn === "object" ? spIn : null;
+    var givenRoom = given && given.room ? given.room : null;
+    var SP_I = given && given.i > 0 ? given.i : SP;
+    var SP_O = given && given.o > 0 ? given.o : SP;
+    var bandDensity = function(cells2, key) {
+      if (!geomLock || !geomLock.bandTotal) return SP;
+      var full = geomLock.bandTotal[key] || 0, now = 0;
+      cells2.forEach(function(c) {
+        now += c.wsum;
+      });
+      if (!(full > 1e-4) || !(now > 1e-4)) return SP;
+      return Math.min(DENSITY_MAX, Math.sqrt(full / now));
+    };
     var r0 = geomLock ? geomLock.r0 : Math.max(1.5, HOLE * Math.sqrt(
       Math.max(1, TOTAL) / (Math.PI * (1 - HOLE * HOLE))
     ));
-    function rowsNeeded(span, n, st) {
+    function rowsNeeded(span, n, st, sp) {
+      if (!(n > 0)) return 0;
+      var p = sp > 0 ? sp : SP;
       var i = 0, r = st, k = 0;
       while (i < n && k < 500) {
-        i += Math.max(0.05, span * r / SP);
-        r += SP;
+        i += Math.max(0.05, span * r / p);
+        r += p;
         k++;
       }
-      return Math.max(1, k);
+      var cap = Math.ceil(n - 1e-9);
+      return Math.max(1, cap > 0 && k > cap ? cap : k);
     }
     function padFor(base2, ref) {
       var refArc = base2 * (ref || 0) * UNIT;
@@ -7057,7 +7292,7 @@ function mountVaultGraph(root, data, deps) {
       c.pad = padFor(base2, c.bandRef);
       return c.bandRef * (1 - 2 * c.pad);
     }
-    var GUTTER = 1.6;
+    var GUTTER = 1.6 * SP;
     var BAND_RATIO = 0.55;
     if (!bandLock) (function balanceBands() {
       var names = [];
@@ -7195,56 +7430,124 @@ function mountVaultGraph(root, data, deps) {
       });
       r0 = evaluate(assign).r0;
     })();
-    var innerRows = 0;
-    inner.forEach(function(c) {
-      c.rows = rowsNeeded(usableRef(c, r0), c.wsum, r0);
-      if (c.rows > innerRows) innerRows = c.rows;
-    });
-    var rOuter = geomLock ? geomLock.rOuter : inner.length ? r0 + innerRows * SP + GUTTER : r0;
-    var maxR = rOuter;
-    outer.forEach(function(c) {
-      c.rows = rowsNeeded(usableRef(c, rOuter), c.wsum, rOuter);
-      var r = rOuter + c.rows * SP;
-      if (r > maxR) maxR = r;
-    });
-    function placeCell(c, rows, base2) {
-      var live = [], dead = [];
-      c.list.forEach(function(id) {
-        (W(id) > 1e-4 ? live : dead).push(id);
+    if (!given) {
+      SP_I = bandDensity(inner, "i");
+      SP_O = bandDensity(outer, "o");
+    }
+    var solveBand = function(list, base2, thick, scale, sp) {
+      if (!list.length) return { sp, rows: 0 };
+      var n = 0;
+      list.forEach(function(c) {
+        n += c.wsum;
       });
-      var seq = live.concat(dead);
+      if (!(n > 1e-4)) return { sp, rows: 0 };
+      if (given || !(thick > 0) || !(n > 0.5)) {
+        var rk = Math.round(thick > 0 && sp > 0 ? thick / sp : 1);
+        return { sp, rows: rk > 0 ? rk : 1 };
+      }
+      var T = thick * scale, R = (base2 + thick / 2) * scale;
+      var s = Math.sqrt(2 * Math.PI * R * T / n);
+      var rw = Math.round(T / s);
+      if (rw < 1) rw = 1;
+      if (rw > 200) rw = 200;
+      return { sp: thick / rw, rows: rw };
+    };
+    var thickI = geomLock ? (geomLock.rOuter - geomLock.r0) * INNER_FILL : 0;
+    var innerRows = 0;
+    if (geomLock && thickI > 0) {
+      var si = solveBand(inner, r0, thickI, INNER_SCALE, SP_I);
+      SP_I = si.sp;
+      innerRows = si.rows;
+      inner.forEach(function(c) {
+        c.rows = c.wsum > 1e-4 ? innerRows : 0;
+      });
+    } else {
+      inner.forEach(function(c) {
+        c.rows = rowsNeeded(usableRef(c, r0), c.wsum, r0, SP_I);
+        if (c.rows > innerRows) innerRows = c.rows;
+      });
+    }
+    var rOuter = geomLock ? geomLock.rOuter : inner.length ? r0 + innerRows * SP_I + 1.6 * SP_I : r0;
+    var thickO = geomLock ? geomLock.maxR - geomLock.rOuter : 0;
+    var maxR = rOuter, outerRows = 0;
+    if (geomLock && thickO > 0) {
+      var so = solveBand(outer, rOuter, thickO, 1, SP_O);
+      SP_O = so.sp;
+      outerRows = so.rows;
+      outer.forEach(function(c) {
+        c.rows = c.wsum > 1e-4 ? outerRows : 0;
+      });
+      maxR = rOuter + outerRows * SP_O;
+    } else {
+      outer.forEach(function(c) {
+        c.rows = rowsNeeded(usableRef(c, rOuter), c.wsum, rOuter, SP_O);
+        if (c.rows > outerRows) outerRows = c.rows;
+        var r = rOuter + c.rows * SP_O;
+        if (r > maxR) maxR = r;
+      });
+    }
+    function placeCell(c, rows, base2, bandRows) {
+      var SP2 = c.inner ? SP_I : SP_O;
+      var seq = c.list;
       var wTot = 0;
-      live.forEach(function(id) {
+      seq.forEach(function(id) {
         wTot += W(id);
       });
-      var total = base2 * rows + SP * rows * rows / 2;
+      var nEff = wTot;
+      var total = base2 * rows + SP2 * rows * rows / 2;
       var pad = typeof c.pad === "number" ? c.pad : padFor(base2, c.bandRef);
       var span = 1 - 2 * pad;
+      var centred = bandRows > 0 && nEff > 1e-4 && nEff < bandRows - 1e-4;
+      var cStart = centred ? Math.round((bandRows - nEff) / 2) : 0;
       var recs = [], acc = 0;
-      seq.forEach(function(id) {
+      seq.forEach(function(id, idx) {
         var w = W(id);
         var s = wTot > 1e-4 ? (acc + w / 2) / wTot : 0.5;
         acc += w;
         s = s < 0 ? 0 : s > 1 ? 1 : s;
         var target = s * total;
-        var pp = SP > 1e-9 ? (-base2 + Math.sqrt(Math.max(0, base2 * base2 + 2 * SP * target))) / SP : target / Math.max(1e-9, base2);
+        var pp = SP2 > 1e-9 ? (-base2 + Math.sqrt(Math.max(0, base2 * base2 + 2 * SP2 * target))) / SP2 : target / Math.max(1e-9, base2);
         if (pp < 0) pp = 0;
         if (pp > rows - 1e-9) pp = Math.max(0, rows - 1e-9);
-        recs.push({ id, w, row: Math.floor(pp) });
+        var cRow = 0;
+        if (centred) {
+          var top = Math.max(0, Math.ceil(nEff - 1e-4) - 1);
+          cRow = cStart + Math.min(Math.floor(s * nEff), top);
+        }
+        recs.push({ id, w, row: centred ? cRow : Math.floor(pp) });
       });
-      var rowW = /* @__PURE__ */ Object.create(null);
+      var rowW = /* @__PURE__ */ Object.create(null), rowFirst = /* @__PURE__ */ Object.create(null), rowLast = /* @__PURE__ */ Object.create(null);
+      var edgeA = /* @__PURE__ */ Object.create(null), edgeB = /* @__PURE__ */ Object.create(null);
       recs.forEach(function(r) {
         rowW[r.row] = (rowW[r.row] || 0) + r.w;
+        if (rowFirst[r.row] === void 0) rowFirst[r.row] = r.w;
+        rowLast[r.row] = r.w;
+        var dz = graph.getNodeAttribute(r.id, "size") || 4;
+        if (edgeA[r.row] === void 0) edgeA[r.row] = dz;
+        edgeB[r.row] = dz;
       });
       var rowAcc = /* @__PURE__ */ Object.create(null);
       var out = [];
       recs.forEach(function(r) {
         var before = rowAcc[r.row] || 0, tot = rowW[r.row] || 0;
         var t = tot > 1e-9 ? (before + r.w / 2) / tot : 0.5;
+        var hA = tot > 1e-9 ? (rowFirst[r.row] || 0) / (2 * tot) : 0;
+        var hB = tot > 1e-9 ? (rowLast[r.row] || 0) / (2 * tot) : 0;
+        var keep = 1 - hA - hB;
+        if (keep > 1e-9) t = (t - hA) / keep;
+        if (t < 0) t = 0;
+        else if (t > 1) t = 1;
         rowAcc[r.row] = before + r.w;
-        var rr = (base2 + r.row * SP) * (c.inner ? INNER_SCALE : 1);
+        var rr = (base2 + r.row * SP2) * (c.inner ? INNER_SCALE : 1);
         var u0 = r.row % 2 === 1 ? 1 - t : t;
-        out.push({ id: r.id, r: rr, u: pad + u0 * span });
+        var eA = edgeA[r.row] || 0, eB = edgeB[r.row] || 0;
+        out.push({
+          id: r.id,
+          r: rr,
+          u: pad + u0 * span,
+          eA: r.row % 2 === 1 ? eB : eA,
+          eB: r.row % 2 === 1 ? eA : eB
+        });
       });
       return out;
     }
@@ -7252,12 +7555,61 @@ function mountVaultGraph(root, data, deps) {
       var base2 = c.inner ? r0 : rOuter;
       var rf = rowsOf ? rowsOf(c) : c.rows;
       if (!rf) rf = c.rows;
-      c.slots = placeCell(c, rf, base2);
+      c.slots = placeCell(c, rf, base2, c.inner ? innerRows : outerRows);
     });
-    return { cells, maxR, total: planTotal, r0, rOuter };
+    var roomOf = function(list) {
+      var v = [];
+      list.forEach(function(c) {
+        if (!c.slots || !c.slots.length) return;
+        var rn = /* @__PURE__ */ Object.create(null);
+        c.slots.forEach(function(sl) {
+          rn[sl.r] = (rn[sl.r] || 0) + 1;
+        });
+        c.slots.forEach(function(sl) {
+          var n = rn[sl.r] || 1;
+          var step = (c.band || 0) * sl.r * UNIT / n;
+          if (step > 1) v.push(step);
+        });
+      });
+      if (!v.length) return 0;
+      v.sort(function(x, y) {
+        return x - y;
+      });
+      return v[Math.floor(v.length * 0.1)];
+    };
+    var roomPlan = givenRoom || { i: roomOf(inner), o: roomOf(outer) };
+    var depthOf = function(list, fallback, band) {
+      var given2 = spIn && typeof spIn === "object" && spIn.depth ? spIn.depth[band] : 0;
+      if (given2 > 0) return given2;
+      return fallback;
+    };
+    return {
+      cells,
+      maxR,
+      total: planTotal,
+      r0,
+      rOuter,
+      sp: SP_O,
+      spInner: SP_I,
+      density,
+      room: roomPlan,
+      // The sub-split gate's inputs, so a probe can see WHY a group did or did not
+      // split rather than inferring it from the cell count.
+      dbgLive: liveG,
+      dbgSplit: splitOf,
+      presMax,
+      rows: {
+        i: depthOf(inner, innerRows, "i"),
+        o: depthOf(outer, outerRows || REF_ROWS, "o")
+      }
+    };
   }
   var REPACK_BELOW = 0.55;
   function ringsLayout(planIn, strict) {
+    if (roomNow) {
+      if (roomNow.i > 1) bandOf("i").room = roomNow.i;
+      if (roomNow.o > 1) bandOf("o").room = roomNow.o;
+    }
     var shownCount = 0;
     graph.forEachNode(function(id) {
       if (visible(id)) shownCount++;
@@ -7275,7 +7627,15 @@ function mountVaultGraph(root, data, deps) {
       c.live = 0;
       c.slots.forEach(function(sl) {
         var al = alpha[sl.id] || 0;
-        c.geom += fullRing || !visible(sl.id) ? al : 1;
+        var will = willShow(sl.id);
+        if (colWalk) {
+          var cw = colWalk[groupOf(sl.id)];
+          if (cw !== void 0) {
+            c.geom = c.live = cw.n * cw.f;
+            return;
+          }
+        }
+        c.geom += fullRing || !will ? al : 1;
         c.live += al;
       });
       live += c.geom;
@@ -7284,8 +7644,27 @@ function mountVaultGraph(root, data, deps) {
       return c.geom > 1e-4;
     });
     if (!shown.length || !live) return null;
+    lastMaxR = plan.maxR || lastMaxR;
+    if (plan.sp > 0) bandOf("o").sp = plan.sp;
+    if (plan.spInner > 0) bandOf("i").sp = plan.spInner;
+    if (plan.rows) {
+      bandOf("i").rows = plan.rows.i;
+      bandOf("o").rows = plan.rows.o;
+    }
     var TWO = 2 * Math.PI;
     var pos = {};
+    var fit2 = /* @__PURE__ */ Object.create(null);
+    var lastAt = null, firstAt = null;
+    var roomPool = { i: [], o: [] };
+    var cellRoomNext = /* @__PURE__ */ Object.create(null);
+    var cellMin = /* @__PURE__ */ Object.create(null), cellOf = /* @__PURE__ */ Object.create(null);
+    var edgeCapNext = /* @__PURE__ */ Object.create(null);
+    var dbgCells = DBG.on ? [] : null;
+    if (probe) {
+      lastStart = /* @__PURE__ */ Object.create(null);
+      lastArc = /* @__PURE__ */ Object.create(null);
+      lastBand = /* @__PURE__ */ Object.create(null);
+    }
     [true, false].forEach(function(isInner) {
       var band = shown.filter(function(c) {
         return !!c.inner === isInner;
@@ -7300,29 +7679,223 @@ function mountVaultGraph(root, data, deps) {
         function(c) {
           return c.geom;
         },
-        function(c) {
-          return c.slots.length;
-        },
-        { subGaps: true, clamp: 0.45, totFloor: 1e-6 }
+        {
+          subGaps: true,
+          clamp: 0.45,
+          totFloor: 1e-6,
+          // FROM THE PLAN, on the same clock as everything else it packs.
+          //
+          // This used to be gapPres, walked 1 -> 0 across the whole cascade
+          // on the cascade's own clock. A note's opacity runs on a per-note
+          // fade clock that finishes far sooner: measured on a vault where
+          // 07 - Yearly Reviews holds a single note, the note reached
+          // present()'s 0.004 floor at 32% of the span and its cell was
+          // correctly culled -- while the walked reservation still stood at
+          // 0.767. Three quarters of a gap released in one frame, and every
+          // wedge boundary in the band shifted to absorb it: 10.66 degrees
+          // on 06 - Monthly Reviews, in a toggle where no note moved more
+          // than 162 units. The wedge and its seams have to shrink on the
+          // clock of the notes they belong to, and now they do.
+          groupPres: plan.presMax || null,
+          band: isInner ? "i" : "o"
+        }
       );
-      var gap = a.gap, subGap = a.subGap;
+      var gap = a.gap;
+      bandOf(isInner ? "i" : "o").gapDeg = Math.round(gap * 180 / Math.PI * 1e3) / 1e3;
+      bandOf(isInner ? "i" : "o").nG = Math.round(a.nG * 1e3) / 1e3;
+      bandOf(isInner ? "i" : "o").nSub = Math.round(a.nSub * 1e3) / 1e3;
       band.forEach(function(c) {
         c.span = a.shareOf(c);
+        if (probe && lastArc) {
+          lastArc[c.g] = (lastArc[c.g] || 0) + c.span * 180 / Math.PI;
+          lastBand[c.g] = isInner ? "i" : "o";
+        }
       });
-      var theta = gap * a.groupPres[band[0].g], prevG = null;
-      band.forEach(function(c) {
-        if (prevG !== null) theta += c.g !== prevG ? gap * a.groupPres[c.g] : subGap * a.presOf(c);
+      lastAt = /* @__PURE__ */ Object.create(null);
+      firstAt = /* @__PURE__ */ Object.create(null);
+      var nB = a.nG + a.nSub;
+      var refR = geomLock && geomLock.bandR ? geomLock.bandR[isInner ? "i" : "o"] : 0;
+      var sBand = refR > 0 ? seamAt(refR, nB, isInner ? "i" : "o") : null;
+      var rowShare = null;
+      if (rowArcOn()) {
+        rowShare = /* @__PURE__ */ Object.create(null);
+        var presIn = /* @__PURE__ */ Object.create(null);
+        band.forEach(function(c0, ci) {
+          c0.slots.forEach(function(sl0) {
+            var w0 = alpha[sl0.id] || 0;
+            if (!(w0 > 4e-3)) return;
+            if (w0 > 1) w0 = 1;
+            var rk0 = Math.round(sl0.r * 1e3);
+            var arr0 = presIn[rk0] || (presIn[rk0] = []);
+            if (!(arr0[ci] >= w0)) arr0[ci] = w0;
+          });
+        });
+        Object.keys(presIn).forEach(function(rk0) {
+          var arr0 = presIn[rk0], tot0 = 0;
+          band.forEach(function(c0, ci) {
+            tot0 += a.fracOf(c0) * (arr0[ci] || 0);
+          });
+          if (!(tot0 > 1e-9)) return;
+          var acc0 = 0, sb0 = 0, seams0 = [], before0 = [], frac0 = [];
+          band.forEach(function(c0, ci) {
+            var p0 = arr0[ci] || 0;
+            sb0 += p0;
+            seams0[ci] = sb0;
+            before0[ci] = acc0;
+            frac0[ci] = a.fracOf(c0) * p0 / tot0;
+            acc0 += frac0[ci];
+          });
+          rowShare[rk0] = { seams: seams0, before: before0, frac: frac0, nB: sb0 };
+        });
+      }
+      var seamsBefore = a.groupPres[band[0].g], fracBefore = 0, prevG = null;
+      band.forEach(function(c, cIdx) {
+        if (prevG !== null) seamsBefore += c.g !== prevG ? a.groupPres[c.g] : a.presOf(c);
         prevG = c.g;
-        var base2 = theta, open = c.geom > 1e-6 ? c.live / c.geom : 0;
-        var a0 = base2;
-        var a1 = a0 + c.span * open;
+        var frac = a.fracOf(c);
+        if (probe && lastStart && lastStart[c.g] === void 0) {
+          var sProbe = seamAt(refR, nB, isInner ? "i" : "o");
+          lastStart[c.g] = Math.round((sProbe.gap * seamsBefore + sProbe.avail * fracBefore) * 180 / Math.PI * 1e3) / 1e3;
+        }
+        var open = c.geom > 1e-6 ? c.live / c.geom : 0;
+        c.bandKey = isInner ? "i" : "o";
+        c.nB = nB;
+        if (sBand) {
+          var A0c = sBand.gap * seamsBefore + sBand.avail * fracBefore;
+          c.pLead = A0c - sBand.gap;
+          c.pTrail = A0c + sBand.avail * frac * open;
+        } else {
+          c.pLead = void 0;
+          c.pTrail = void 0;
+        }
+        if (dbgCells) {
+          dbgCells.push({
+            g: c.g,
+            k: c.k,
+            inner: !!c.inner,
+            nB,
+            bandKey: c.bandKey,
+            seams: seamsBefore,
+            f0: fracBefore,
+            f1: fracBefore + frac * open,
+            pLead: c.pLead,
+            pTrail: c.pTrail,
+            ids: c.slots.map(function(sl) {
+              return sl.id;
+            })
+          });
+        }
+        var rowN = /* @__PURE__ */ Object.create(null);
+        c.slots.forEach(function(sl) {
+          var w = alpha[sl.id] || 0;
+          if (w > 0) rowN[sl.r] = (rowN[sl.r] || 0) + w;
+        });
+        var rowsUsed = 0;
+        Object.keys(rowN).forEach(function(rk) {
+          rowsUsed += rowN[rk] > 1 ? 1 : rowN[rk];
+        });
+        if (!(rowsUsed > 0)) rowsUsed = 1;
+        var maxRowR = -1;
+        Object.keys(rowN).forEach(function(rk) {
+          if (+rk > maxRowR) maxRowR = +rk;
+        });
         c.slots.forEach(function(sl) {
           if (!present(sl.id)) return;
-          var t = sweepAngle(a0 + (a1 - a0) * sl.u - gap / 2);
+          var rs = rowShare ? rowShare[Math.round(sl.r * 1e3)] : null;
+          var sm = seamAt(sl.r * UNIT, rs ? rs.nB : nB, isInner ? "i" : "o");
+          var a0, a1;
+          if (c.pLead !== void 0) {
+            a0 = edgeSweep(c, "lead", sl.r * UNIT);
+            a1 = edgeSweep(c, "trail", sl.r * UNIT);
+          } else if (rs && rs.frac[cIdx] > 0) {
+            a0 = sm.gap * rs.seams[cIdx] + sm.avail * rs.before[cIdx] - sm.gap / 2;
+            a1 = a0 + sm.avail * rs.frac[cIdx] * open;
+          } else {
+            a0 = sm.gap * seamsBefore + sm.avail * fracBefore - sm.gap / 2;
+            a1 = a0 + sm.avail * frac * open;
+          }
+          if (probe && probe.watch === sl.id) {
+            probe.watched = {
+              k: c.k,
+              g: c.g,
+              u: Math.round(sl.u * 1e5) / 1e5,
+              slotR: Math.round(sl.r),
+              slots: c.slots.length,
+              a0: Math.round(a0 * 1e4) / 1e4,
+              a1: Math.round(a1 * 1e4) / 1e4,
+              span: Math.round(c.span * 1e4) / 1e4,
+              open: Math.round((c.geom > 1e-6 ? c.live / c.geom : 0) * 1e4) / 1e4,
+              geom: Math.round(c.geom * 1e3) / 1e3,
+              live: Math.round(c.live * 1e3) / 1e3,
+              inner: !!c.inner
+            };
+          }
+          var arc = a1 - a0;
+          var rGraph = Math.max(1e-6, sl.r * UNIT);
+          var bk = isInner ? "i" : "o";
+          var room = bandOf(bk).room > 1 ? bandOf(bk).room : pitchUnits(bk);
+          var clear = CLEAR_OF_ROOM * room * (GAP_BAND[bk] || 1);
+          var radOf = function(z) {
+            return DOT_OF_PITCH * room * (Math.min(z || 4, NODE_MAX) / NODE_MAX);
+          };
+          var nRow = rowN[sl.r] > 1e-3 ? rowN[sl.r] : 1;
+          if (nRow > 1.5) {
+            var ownStep = arc * rGraph / nRow;
+            roomPool[isInner ? "i" : "o"].push(ownStep);
+            if (cellMin[c.k] === void 0 || ownStep < cellMin[c.k]) cellMin[c.k] = ownStep;
+          }
+          cellOf[sl.id] = c.k;
+          var seamArc = sm.gap * rGraph / 2;
+          var keep = EXCESS_KEEP * seamFall(isInner ? "i" : "o");
+          var typ = dotTyp(isInner ? "i" : "o");
+          var side = function(z) {
+            var f = (z || NODE_MAX) / NODE_MAX;
+            if (f > 1) f = 1;
+            else if (f < 0.15) f = 0.15;
+            return (clear + DOT_OF_PITCH * room * f) / rGraph;
+          };
+          var mgA = side(sl.eA), mgB = side(sl.eB);
+          var arcCap = arc * 0.66;
+          if (mgA + mgB > arcCap) {
+            var k = arcCap / (mgA + mgB);
+            mgA *= k;
+            mgB *= k;
+          }
+          var t = sweepAngle(a0 + mgA + (arc - mgA - mgB) * sl.u);
+          var spanArc = arc - mgA - mgB;
+          var dEdge = Math.min(mgA + spanArc * sl.u, mgB + spanArc * (1 - sl.u)) * rGraph;
+          if (dEdge > 0) edgeCapNext[sl.id] = dEdge;
+          var dLo = (mgA + spanArc * sl.u) * rGraph;
+          var dHi = (mgB + spanArc * (1 - sl.u)) * rGraph;
+          var edgeRoom = 2 * Math.min(dLo, dHi);
+          if (edgeRoom > 1 && (fit2[sl.id] === void 0 || edgeRoom < fit2[sl.id])) {
+            fit2[sl.id] = edgeRoom;
+          }
+          var prev = lastAt[sl.r];
+          if (prev) {
+            var step = Math.abs(t - prev.t) * rGraph;
+            if (step > 1) {
+              if (fit2[sl.id] === void 0 || step < fit2[sl.id]) fit2[sl.id] = step;
+              if (fit2[prev.id] === void 0 || step < fit2[prev.id]) fit2[prev.id] = step;
+            }
+          }
+          lastAt[sl.r] = { t, id: sl.id };
+          if (firstAt[sl.r] === void 0) firstAt[sl.r] = { t, id: sl.id };
           var rr = sl.r + (isPushed(sl.id) ? HL_PUSH : 0);
           pos[sl.id] = { x: rr * Math.cos(t), y: rr * Math.sin(t) };
         });
-        theta = a1;
+        fracBefore += frac * open;
+      });
+      Object.keys(firstAt).forEach(function(rk) {
+        var fst = firstAt[rk], lst = lastAt[rk];
+        if (!fst || !lst || fst.id === lst.id) return;
+        var d = fst.t - lst.t;
+        while (d < 0) d += TWO;
+        var step = d * Math.max(1e-6, +rk * UNIT);
+        if (step > 1) {
+          if (fit2[fst.id] === void 0 || step < fit2[fst.id]) fit2[fst.id] = step;
+          if (fit2[lst.id] === void 0 || step < fit2[lst.id]) fit2[lst.id] = step;
+        }
       });
     });
     var scale = UNIT;
@@ -7335,9 +7908,35 @@ function mountVaultGraph(root, data, deps) {
         y: graph.getNodeAttribute(id, "y")
       };
     });
+    var pool = roomPool;
+    var planRoom = plan.room || null;
+    var pick = function(v) {
+      if (!v.length) return 0;
+      v.sort(function(x, y) {
+        return x - y;
+      });
+      return v[Math.floor(v.length * 0.1)];
+    };
+    if (!roomNow) {
+      bandOf("i").room = pick(pool.i);
+      bandOf("o").room = pick(pool.o);
+    }
+    Object.keys(cellOf).forEach(function(id) {
+      var m = cellMin[cellOf[id]];
+      if (m > 1) cellRoomNext[id] = m;
+    });
+    cellRoom = cellNow || cellRoomNext;
+    edgeCap = edgeNow || edgeCapNext;
+    if (planRoom) {
+    }
+    dotFit = fit2;
+    if (dbgCells) DBG.cells = dbgCells;
     return out;
   }
   var tlRank = /* @__PURE__ */ Object.create(null), tlDate = [], tlMax = 0;
+  var tlDateMs = [];
+  var tlMs = /* @__PURE__ */ Object.create(null);
+  var dateSpan = null;
   function buildTimeline() {
     var dated = [];
     graph.forEachNode(function(id, a) {
@@ -7348,11 +7947,119 @@ function mountVaultGraph(root, data, deps) {
     });
     tlRank = /* @__PURE__ */ Object.create(null);
     tlDate = [];
+    tlDateMs = [];
+    tlMs = /* @__PURE__ */ Object.create(null);
     dated.forEach(function(pair, i) {
       tlRank[pair[0]] = i + 1;
       tlDate.push(pair[1]);
+      var ms = heatParse(pair[1]);
+      if (!Number.isNaN(ms)) tlMs[pair[0]] = ms;
+      tlDateMs.push(ms);
     });
     tlMax = dated.length;
+    buildDateSpan(dated);
+  }
+  function buildDateSpan(dated) {
+    dateSpan = null;
+    if (!dated.length) return;
+    var lo = heatParse(dated[0][1]), hi = heatParse(dated[dated.length - 1][1]);
+    if (Number.isNaN(lo) || Number.isNaN(hi)) return;
+    var d0 = new Date(lo), d1 = new Date(hi);
+    var y0 = d0.getUTCFullYear(), m0 = d0.getUTCMonth();
+    var y1 = d1.getUTCFullYear(), m1 = d1.getUTCMonth();
+    var months = [], index = /* @__PURE__ */ Object.create(null);
+    for (var y = y0, m = m0; y < y1 || y === y1 && m <= m1; ) {
+      var key = y + "-" + (m < 9 ? "0" : "") + (m + 1);
+      index[key] = months.length;
+      months.push({ key, y, m, ms: Date.UTC(y, m, 1), n: 0 });
+      if (++m > 11) {
+        m = 0;
+        y++;
+      }
+    }
+    var years = /* @__PURE__ */ Object.create(null);
+    for (var i = 0; i < dated.length; i++) {
+      var s = dated[i][1], k = s.slice(0, 7), ix = index[k];
+      if (ix !== void 0) months[ix].n++;
+      var yy = s.slice(0, 4);
+      years[yy] = (years[yy] || 0) + 1;
+    }
+    var ylist = [];
+    for (var yk = y0; yk <= y1; yk++) ylist.push({ y: yk, n: years[String(yk)] || 0 });
+    var nMax = 1, tot = 0;
+    months.forEach(function(mm) {
+      if (mm.n > nMax) nMax = mm.n;
+      tot += mm.n;
+    });
+    var sorted = months.map(function(mm) {
+      return mm.n;
+    }).sort(function(x, y2) {
+      return x - y2;
+    });
+    var p90 = sorted.length ? sorted[Math.floor(sorted.length * 0.9)] : 1;
+    var nRef = Math.max(1, p90, nMax * 0.35);
+    var yMax = 1;
+    ylist.forEach(function(yy2) {
+      if (yy2.n > yMax) yMax = yy2.n;
+    });
+    dateSpan = {
+      months,
+      years: ylist,
+      index,
+      lo: months[0].ms,
+      hi: Date.UTC(y1, m1 + 1, 0),
+      // last day of the last month
+      nMax,
+      nRef,
+      yMax,
+      dated: tot,
+      undated: graph.order - tot
+    };
+  }
+  function rangeLabel() {
+    if (!dateSpan) return "";
+    var f = state.from === null ? dateSpan.lo : state.from;
+    var t = state.to === null ? dateSpan.hi : state.to;
+    var iso = function(ms) {
+      return new Date(ms).toISOString().slice(0, 10);
+    };
+    return iso(f) + "  \u2192  " + iso(t);
+  }
+  function setRangeMs(from, to) {
+    if (!dateSpan) return;
+    if (from !== null && to !== null && from > to) {
+      var sw = from;
+      from = to;
+      to = sw;
+    }
+    state.from = from === null || from <= dateSpan.lo ? null : from;
+    state.to = to === null || to >= dateSpan.hi ? null : to;
+    applyRange();
+  }
+  function rangeChrome() {
+    var el = $("rangenote");
+    if (el) el.textContent = rangeLabel();
+    if (dateSpan) {
+      var lo = isoDay(dateSpan.lo), hi = isoDay(dateSpan.hi);
+      var f = $("from"), t = $("to");
+      if (f) {
+        f.min = lo;
+        f.max = hi;
+        f.value = isoDay(state.from === null ? dateSpan.lo : state.from);
+      }
+      if (t) {
+        t.min = lo;
+        t.max = hi;
+        t.value = isoDay(state.to === null ? dateSpan.hi : state.to);
+      }
+    }
+    var btn = $("rangeall");
+    if (btn) btn.disabled = state.from === null && state.to === null;
+    drawDateUI();
+  }
+  function applyRange() {
+    rangeChrome();
+    cascade();
   }
   var TODAY = function() {
     var d = /* @__PURE__ */ new Date(), p = function(n) {
@@ -7360,16 +8067,13 @@ function mountVaultGraph(root, data, deps) {
     };
     return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
   }();
-  function isToday(id) {
-    return graph.getNodeAttributes(id).created === TODAY;
-  }
   function isMarkedDay(id) {
-    if (!state.markDay && !state.hoverDay) return false;
+    if (!state.markDay && !state.hoverDay && state.hoverYear === null) return false;
     var c = graph.getNodeAttribute(id, "created");
-    return c === state.markDay || c === state.hoverDay;
+    if (c === state.markDay || c === state.hoverDay) return true;
+    return state.hoverYear !== null && !!c && c.slice(0, 4) === state.hoverYear;
   }
   function isHighlighted(id) {
-    if (state.markToday && isToday(id)) return true;
     if (isMarkedDay(id)) return true;
     var g = groupOf(id);
     if (state.highlight[g]) return true;
@@ -7381,6 +8085,392 @@ function mountVaultGraph(root, data, deps) {
       if (state.hoverSub[pk]) return true;
     }
     return false;
+  }
+  function cellNoteFrac(c) {
+    if (!renderer || !c || !c.ids || !c.ids.length) return null;
+    var q0 = renderer.graphToViewport({ x: 0, y: 0 });
+    var q1 = renderer.graphToViewport({ x: UNIT, y: 0 });
+    var d0 = Math.hypot(q1.x - q0.x, q1.y - q0.y);
+    var perPx = d0 > 1e-3 ? UNIT / d0 : 0;
+    var lo = Infinity, hi = -Infinity;
+    c.ids.forEach(function(id) {
+      if ((alpha[id] || 0) < 0.5) return;
+      var at = graph.getNodeAttributes(id);
+      var rl = Math.hypot(at.x, at.y) / UNIT;
+      if (!(rl > 1e-6)) return;
+      var dd = renderer.getNodeDisplayData(id);
+      if (!dd || dd.hidden) return;
+      var sn = seamAt(rl * UNIT, c.nB, c.inner ? "i" : "o");
+      if (!(sn.avail > 1e-9)) return;
+      var f = (angleSweep(Math.atan2(at.y, at.x)) + sn.gap / 2 - sn.gap * c.seams) / sn.avail;
+      var half = renderer.scaleSize(dd.size) * perPx / (rl * UNIT) / sn.avail;
+      if (f - half < lo) lo = f - half;
+      if (f + half > hi) hi = f + half;
+    });
+    return lo < hi ? { lo, hi } : null;
+  }
+  function wedgeEdges(rLattice) {
+    var cells = DBG.cells;
+    if (!cells || !cells.length) return [];
+    var out = [];
+    ["i", "o"].forEach(function(bk) {
+      var band = cells.filter(function(c) {
+        return (c.inner ? "i" : "o") === bk;
+      });
+      if (!band.length) return;
+      var r = rLattice || (geomLock ? bk === "i" ? geomLock.r0 + (geomLock.rOuter - geomLock.r0) * INNER_FILL * 0.5 : (geomLock.rOuter + geomLock.maxR) / 2 : 1);
+      var sm = seamAt(r * UNIT, band[0].nB, bk);
+      var sw = function(c, which) {
+        if (c.pLead !== void 0) return edgeSweep(c, which === "f0" ? "lead" : "trail", r * UNIT);
+        return sm.gap * c.seams + sm.avail * c[which] - sm.gap / 2;
+      };
+      var runs = [];
+      band.slice().sort(function(x, y) {
+        return x.f0 - y.f0;
+      }).forEach(function(c) {
+        var last = runs[runs.length - 1];
+        if (last && last.g === c.g) {
+          last.b = c;
+          return;
+        }
+        runs.push({ g: c.g, band: bk, a: c, b: c });
+      });
+      var noteFrac = function(run) {
+        var lo = Infinity, hi = -Infinity;
+        band.filter(function(c) {
+          return c.g === run.g && c.f0 >= run.a.f0 && c.f1 <= run.b.f1;
+        }).forEach(function(c) {
+          var e = cellNoteFrac(c);
+          if (!e) return;
+          if (e.lo < lo) lo = e.lo;
+          if (e.hi > hi) hi = e.hi;
+        });
+        return lo < hi ? { lo, hi } : null;
+      };
+      runs.forEach(function(run, i) {
+        var prev = runs[(i - 1 + runs.length) % runs.length];
+        var next = runs[(i + 1) % runs.length];
+        var lo = sw(prev.b, "f1"), hi = sw(next.a, "f0");
+        if (runs.length < 2) {
+          lo = sw(run.a, "f0") - sm.gap;
+          hi = sw(run.b, "f1") + sm.gap;
+        } else {
+          while (hi < lo) hi += 2 * Math.PI;
+        }
+        var deg = function(x) {
+          return sweepAngle(x) * 180 / Math.PI;
+        };
+        var nf = noteFrac(run);
+        out.push({
+          g: run.g,
+          band: bk,
+          r,
+          // The note-hugging edges, in the same fraction space as f0/f1 so the
+          // drawing can put its curve through them. Null when nothing is drawn.
+          nf0: nf ? nf.lo : null,
+          nf1: nf ? nf.hi : null,
+          nStart: nf ? deg(sw({ seams: run.a.seams, f0: nf.lo }, "f0")) : null,
+          nEnd: nf ? deg(sw({ seams: run.a.seams, f0: nf.hi }, "f0")) : null,
+          // The raw terms too: a swing in `start` is either the seam count or the
+          // fraction before it, and the sum alone cannot say which.
+          seams: run.a.seams,
+          f0: run.a.f0,
+          f1: run.b.f1,
+          gap: sm.gap * 180 / Math.PI,
+          avail: sm.avail * 180 / Math.PI,
+          start: deg(sw(run.a, "f0")),
+          end: deg(sw(run.b, "f1")),
+          arc: (sw(run.b, "f1") - sw(run.a, "f0")) * 180 / Math.PI,
+          centre: deg((lo + hi) / 2)
+        });
+      });
+    });
+    return out;
+  }
+  function drawWedgeDebug() {
+    var cv = DBG.canvas;
+    if (!cv) return;
+    if (!DBG.on || !renderer || !geomLock) {
+      cv.hidden = true;
+      return;
+    }
+    cv.hidden = false;
+    var host = $("graph");
+    var w = host.clientWidth, h = host.clientHeight, dpr = WIN.devicePixelRatio || 1;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      cv.style.width = w + "px";
+      cv.style.height = h + "px";
+    }
+    var g2 = cv.getContext("2d");
+    g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g2.clearRect(0, 0, w, h);
+    var perPx = function() {
+      var a0 = renderer.graphToViewport({ x: 0, y: 0 });
+      var b0 = renderer.graphToViewport({ x: UNIT, y: 0 });
+      var d0 = Math.hypot(b0.x - a0.x, b0.y - a0.y);
+      return d0 > 1e-3 ? UNIT / d0 : 0;
+    }();
+    var seen = { i: null, o: null };
+    graph.forEachNode(function(id, a) {
+      if ((alpha[id] || 0) < 0.5 || isOrphan(id)) return;
+      var dd = renderer.getNodeDisplayData(id);
+      if (!dd || dd.hidden) return;
+      var rl = Math.hypot(a.x, a.y) / UNIT;
+      var dot = renderer.scaleSize(dd.size) * perPx / UNIT;
+      var k = bandLock && bandLock[groupOf(id)] ? "i" : "o";
+      var bb = seen[k] || (seen[k] = { lo: Infinity, hi: -Infinity });
+      if (rl - dot < bb.lo) bb.lo = rl - dot;
+      if (rl + dot > bb.hi) bb.hi = rl + dot;
+    });
+    var thickI = (geomLock.rOuter - geomLock.r0) * INNER_FILL;
+    var bandR = { i: [geomLock.r0, geomLock.r0 + thickI], o: [geomLock.rOuter, geomLock.maxR] };
+    ["i", "o"].forEach(function(k) {
+      if (seen[k] && seen[k].lo < seen[k].hi) bandR[k] = [seen[k].lo, seen[k].hi];
+    });
+    var vp = function(rl, ang) {
+      return renderer.graphToViewport({ x: rl * UNIT * Math.cos(ang), y: rl * UNIT * Math.sin(ang) });
+    };
+    var tint = function(g0, a) {
+      return { c: colorOf(g0), a };
+    };
+    g2.lineWidth = 1;
+    g2.strokeStyle = SEAM_YELLOW_45;
+    g2.lineWidth = 2;
+    g2.setLineDash([4, 4]);
+    [bandR.i[0], bandR.i[1], bandR.o[0], bandR.o[1]].forEach(function(rl) {
+      g2.beginPath();
+      for (var i = 0; i <= 96; i++) {
+        var q = vp(rl, i / 96 * 2 * Math.PI);
+        if (i) g2.lineTo(q.x, q.y);
+        else g2.moveTo(q.x, q.y);
+      }
+      g2.stroke();
+    });
+    g2.setLineDash([]);
+    var cells = DBG.cells || [];
+    ["i", "o"].forEach(function(bk) {
+      var band = cells.filter(function(c) {
+        return (c.inner ? "i" : "o") === bk;
+      });
+      if (!band.length) return;
+      var lo = bandR[bk][0], hi = bandR[bk][1];
+      var rMid = (lo + hi) / 2, loG = lo * UNIT, hiG = hi * UNIT;
+      var fracOf = function(c, which) {
+        var e = cellNoteFrac(c);
+        return e ? which === "f0" ? e.lo : e.hi : c[which];
+      };
+      var angAt = function(c, which, rl) {
+        var sm = seamAt(rl * UNIT, c.nB, c.inner ? "i" : "o");
+        return sweepAngle(sm.gap * c.seams + sm.avail * fracOf(c, which) - sm.gap / 2);
+      };
+      var inkOf = function(c) {
+        var out = [];
+        var q0 = renderer.graphToViewport({ x: 0, y: 0 });
+        var q1 = renderer.graphToViewport({ x: UNIT, y: 0 });
+        var d0 = Math.hypot(q1.x - q0.x, q1.y - q0.y);
+        var perPx2 = d0 > 1e-3 ? UNIT / d0 : 0;
+        (c.ids || []).forEach(function(id) {
+          if ((alpha[id] || 0) < 0.5) return;
+          var dd = renderer.getNodeDisplayData(id);
+          if (!dd || dd.hidden) return;
+          var at = graph.getNodeAttributes(id);
+          out.push({ x: at.x, y: at.y, rad: renderer.scaleSize(dd.size) * perPx2 });
+        });
+        return out;
+      };
+      (function() {
+        var runs = [];
+        band.slice().sort(function(x, y) {
+          return x.f0 - y.f0;
+        }).forEach(function(c0) {
+          var last = runs[runs.length - 1];
+          if (last && last.g === c0.g) {
+            last.cells.push(c0);
+            return;
+          }
+          runs.push({ g: c0.g, cells: [c0] });
+        });
+        runs.forEach(function(run) {
+          var a0c = run.cells[0], b0c = run.cells[run.cells.length - 1];
+          var fMid = (a0c.f0 + b0c.f1) / 2;
+          var host0 = a0c;
+          run.cells.forEach(function(c0) {
+            if (c0.f0 <= fMid && fMid <= c0.f1) host0 = c0;
+          });
+          var mid = function(rl) {
+            if (a0c.pLead !== void 0) {
+              return sweepAngle((edgeSweep(a0c, "lead", rl * UNIT) + edgeSweep(b0c, "trail", rl * UNIT)) / 2);
+            }
+            var sm0 = seamAt(rl * UNIT, host0.nB, host0.inner ? "i" : "o");
+            return sweepAngle(sm0.gap * host0.seams + sm0.avail * fMid - sm0.gap / 2);
+          };
+          var pts = [];
+          for (var qq = 0; qq <= 24; qq++) {
+            var rq = lo + (hi - lo) * qq / 24;
+            pts.push(vp(rq, mid(rq)));
+          }
+          g2.strokeStyle = "#fff";
+          g2.globalAlpha = 0.6;
+          g2.lineWidth = 2;
+          g2.setLineDash([5, 5]);
+          g2.beginPath();
+          pts.forEach(function(pt, qq2) {
+            if (qq2) g2.lineTo(pt.x, pt.y);
+            else g2.moveTo(pt.x, pt.y);
+          });
+          g2.stroke();
+          g2.setLineDash([]);
+          g2.globalAlpha = 1;
+        });
+      })();
+      var sorted = band.slice().sort(function(x, y) {
+        return x.f0 - y.f0;
+      });
+      sorted.forEach(function(c, i) {
+        var next = sorted[(i + 1) % sorted.length];
+        if (next === c) return;
+        var angOf = function(cell, which, rl) {
+          if (cell.pLead !== void 0) {
+            return edgeSweep(cell, which === "f0" ? "lead" : "trail", rl * UNIT);
+          }
+          var sm0 = seamAt(rl * UNIT, cell.nB, cell.inner ? "i" : "o");
+          return sm0.gap * cell.seams + sm0.avail * cell[which] - sm0.gap / 2;
+        };
+        var chord = function(fn, style, width, dash, tag, rFrom) {
+          if (DBG.trace) DBG.trace.push({
+            tag: tag || "?",
+            c: c.k,
+            next: next.k,
+            deg: sweepAngle(fn(DBG.traceR)) * 180 / Math.PI
+          });
+          g2.strokeStyle = style.c;
+          g2.globalAlpha = style.a;
+          g2.lineWidth = width;
+          if (dash) g2.setLineDash(dash);
+          var r0c = rFrom !== void 0 ? rFrom : lo;
+          g2.beginPath();
+          for (var q = 0; q <= 48; q++) {
+            var rl = r0c + (hi - r0c) * q / 48;
+            var pt = vp(rl, sweepAngle(fn(rl)));
+            if (q) g2.lineTo(pt.x, pt.y);
+            else g2.moveTo(pt.x, pt.y);
+          }
+          g2.stroke();
+          if (dash) g2.setLineDash([]);
+          g2.globalAlpha = 1;
+        };
+        var sweepA = function(rl) {
+          return angOf(c, "f1", rl);
+        };
+        var sweepB = function(rl) {
+          var a = angOf(next, "f0", rl), b = sweepA(rl);
+          while (a < b) a += 2 * Math.PI;
+          while (a - b > Math.PI) a -= 2 * Math.PI;
+          return a;
+        };
+        var groupBoundary = c.g !== next.g;
+        (function() {
+          var mid = function(rl) {
+            return sweepAngle((sweepA(rl) + sweepB(rl)) / 2);
+          };
+          var pOut = { x: hi * UNIT * Math.cos(mid(hi)), y: hi * UNIT * Math.sin(mid(hi)) };
+          var pIn = { x: lo * UNIT * Math.cos(mid(lo)), y: lo * UNIT * Math.sin(mid(lo)) };
+          var dx = pIn.x - pOut.x, dy = pIn.y - pOut.y, L = Math.hypot(dx, dy);
+          if (!(L > 1e-6)) return;
+          var reach = Math.hypot(pIn.x, pIn.y);
+          var pEnd = { x: pIn.x + dx / L * reach, y: pIn.y + dy / L * reach };
+          var q0 = renderer.graphToViewport(pOut), q1 = renderer.graphToViewport(pEnd);
+          g2.strokeStyle = SEAM_YELLOW;
+          g2.globalAlpha = groupBoundary ? 0.75 : 0.45;
+          g2.lineWidth = 2;
+          g2.setLineDash([3, 4]);
+          g2.beginPath();
+          g2.moveTo(q0.x, q0.y);
+          g2.lineTo(q1.x, q1.y);
+          g2.stroke();
+          g2.setLineDash([]);
+          g2.globalAlpha = 1;
+        })();
+        chord(
+          sweepA,
+          tint(c.g, groupBoundary ? 0.9 : 0.35),
+          groupBoundary ? 3 : 2,
+          null,
+          c.g + " trailing"
+        );
+        chord(
+          sweepB,
+          tint(next.g, groupBoundary ? 0.9 : 0.35),
+          groupBoundary ? 3 : 2,
+          null,
+          next.g + " leading"
+        );
+      });
+    });
+    drawWedgeLegend(g2);
+  }
+  function drawWedgeLegend(g2) {
+    var rows = [
+      ["solid, folder colour", "wedge edge"],
+      ["dashed white", "wedge centre"],
+      ["dotted yellow", "seam centre"],
+      ["dashed yellow", "band radius"]
+    ];
+    var pad = 8, lh = 16, sw = 34, x = 12, y = 12;
+    g2.font = "11px ui-monospace, monospace";
+    g2.textBaseline = "middle";
+    var wide = 0;
+    rows.forEach(function(r) {
+      wide = Math.max(wide, g2.measureText(r[1]).width);
+    });
+    var w = sw + 8 + wide + pad * 2, h = lh * (rows.length + 1) + pad * 2;
+    g2.globalAlpha = 0.72;
+    g2.fillStyle = "#000";
+    g2.fillRect(x, y, w, h);
+    g2.globalAlpha = 1;
+    rows.forEach(function(r, i) {
+      var yy = y + pad + lh * i + lh / 2;
+      g2.strokeStyle = i === 0 ? "#e66767" : i === 1 ? "#fff" : SEAM_YELLOW;
+      g2.globalAlpha = i === 0 ? 0.9 : i === 1 ? 0.5 : i === 2 ? 0.75 : 0.45;
+      g2.lineWidth = i === 0 ? 1.5 : 1;
+      g2.setLineDash(i === 0 ? [] : i === 1 ? [5, 5] : i === 2 ? [3, 4] : [4, 4]);
+      g2.beginPath();
+      g2.moveTo(x + pad, yy);
+      g2.lineTo(x + pad + sw, yy);
+      g2.stroke();
+      g2.setLineDash([]);
+      g2.globalAlpha = 0.85;
+      g2.fillStyle = "#fff";
+      g2.fillText(r[1], x + pad + sw + 8, yy);
+    });
+    g2.globalAlpha = 0.55;
+    g2.fillStyle = "#fff";
+    g2.fillText(
+      "built " + (DATA && DATA.generated ? DATA.generated : "?"),
+      x + pad,
+      y + pad + lh * rows.length + lh / 2
+    );
+    g2.globalAlpha = 1;
+  }
+  function wedgeDebug(v) {
+    DBG.on = !!v;
+    if (DBG.on && !DBG.canvas) {
+      var host = $("graph");
+      if (host) {
+        var cv = DOC.createElement("canvas");
+        cv.className = "vg-wedge-debug";
+        host.appendChild(cv);
+        DBG.canvas = cv;
+      }
+    }
+    if (!DBG.on) {
+      DBG.cells = null;
+      if (DBG.canvas) DBG.canvas.hidden = true;
+    }
+    if (renderer) renderer.refresh({ skipIndexation: true });
+    return DBG.on;
   }
   function hoverHighlight(group, keys) {
     group = group || null;
@@ -7405,8 +8495,18 @@ function mountVaultGraph(root, data, deps) {
     var a = graph.getNodeAttributes(id);
     return !!state.highlightSub[pathKey(a, 1)] && ownsWedge(a.folder, a.sub || "");
   }
+  function willShow(id) {
+    return visible(id) && timeFactor(id) > 4e-3;
+  }
   var TL_FADE = 8;
   function timeFactor(id) {
+    if (state.from !== null || state.to !== null) {
+      var ms = tlMs[id];
+      if (ms !== void 0) {
+        if (state.from !== null && ms < state.from) return 0;
+        if (state.to !== null && ms > state.to) return 0;
+      }
+    }
     if (state.until === null) return 1;
     var rk = tlRank[id];
     if (!rk) return 1;
@@ -7464,6 +8564,20 @@ function mountVaultGraph(root, data, deps) {
   var pinnedPlan = null;
   var planMs = 0;
   var lastGapN = { i: 0, o: 0 };
+  var lastStart = null;
+  var lastArc = null;
+  var lastBand = null;
+  var lastMaxR = 0;
+  var dotFit = /* @__PURE__ */ Object.create(null);
+  var lastMinArc = 0;
+  var roomNow = null;
+  var colWalk = null;
+  var posSrc = null, posDst = null;
+  var cellRoom = /* @__PURE__ */ Object.create(null);
+  var cellNow = null;
+  var edgeNow = null;
+  var edgeCap = /* @__PURE__ */ Object.create(null);
+  var lastCascade = { ins: 0, outs: 0, span: 0, path: "none", frames: 0, ms: 0 };
   function pinPlan() {
     var t0 = (window.performance || Date).now();
     var keep = planKeep || visible;
@@ -7475,7 +8589,8 @@ function mountVaultGraph(root, data, deps) {
     planMs = (window.performance || Date).now() - t0;
     return pinnedPlan;
   }
-  function cascade(done) {
+  function cascade(done, opts) {
+    opts = opts || {};
     stopPlay();
     if (anim) {
       WIN.cancelAnimationFrame(anim);
@@ -7494,16 +8609,29 @@ function mountVaultGraph(root, data, deps) {
     graph.forEachNode(function(id) {
       if (present(id)) fullRing = true;
     });
+    if (opts.fullRing !== void 0) fullRing = !!opts.fullRing;
     planKeep = function(id) {
-      return visible(id) || present(id);
+      return willShow(id) || present(id);
     };
     var plan = pinPlan();
+    colWalk = null;
     var keep = /* @__PURE__ */ Object.create(null);
     graph.forEachNode(function(id) {
       keep[id] = alpha[id] || 0;
-      alpha[id] = visible(id) ? 1 : 0;
+      alpha[id] = visible(id) ? timeFactor(id) : 0;
     });
+    var pinWas = pinnedPlan, keepWas = planKeep, roomWas = roomNow;
+    pinnedPlan = null;
+    planKeep = null;
+    roomNow = null;
+    cellNow = null;
+    edgeNow = null;
+    colWalk = null;
+    ringsLayout();
     var finalPos = ringsLayout() || {};
+    pinnedPlan = pinWas;
+    planKeep = keepWas;
+    roomNow = roomWas;
     graph.forEachNode(function(id) {
       alpha[id] = keep[id];
     });
@@ -7514,7 +8642,7 @@ function mountVaultGraph(root, data, deps) {
     });
     var ins = [], outs = [], to = /* @__PURE__ */ Object.create(null), from = /* @__PURE__ */ Object.create(null);
     graph.forEachNode(function(id) {
-      var want = visible(id) ? 1 : 0;
+      var want = visible(id) ? timeFactor(id) : 0;
       var now = alpha[id] || 0;
       if (Math.abs(now - want) <= 4e-3) return;
       to[id] = want;
@@ -7522,16 +8650,26 @@ function mountVaultGraph(root, data, deps) {
       (want ? ins : outs).push(id);
     });
     if (!ins.length && !outs.length) {
+      lastCascade = { ins: 0, outs: 0, span: 0, path: "instant: nothing to move", frames: 0, ms: 0 };
       pinnedPlan = null;
+      roomNow = null;
+      cellNow = null;
+      edgeNow = null;
+      posSrc = posDst = null;
       applyLayout(true);
       return;
     }
     var clockwise = function(a, b) {
       return sweepOf[a] - sweepOf[b];
     };
-    ins.sort(clockwise);
-    outs.sort(clockwise);
+    var rank = typeof opts.order === "function" ? opts.order : null;
+    var arrival = rank ? function(a, b) {
+      return rank(a) - rank(b);
+    } : clockwise;
+    ins.sort(arrival);
+    outs.sort(arrival);
     var windowFor = function(n) {
+      if (opts.spread > 0) return opts.spread;
       return Math.max(SPREAD_MIN, Math.min(SPREAD_MAX, n * SPREAD_PER)) * TIME_SCALE;
     };
     var delay = /* @__PURE__ */ Object.create(null);
@@ -7542,19 +8680,67 @@ function mountVaultGraph(root, data, deps) {
       });
     });
     var span = Math.max(windowFor(ins.length), windowFor(outs.length)) + FADE_FRAMES * TIME_SCALE;
+    var tglDir = /* @__PURE__ */ Object.create(null), tglN = /* @__PURE__ */ Object.create(null);
+    if (opts.colToggle) (function() {
+      var startN = /* @__PURE__ */ Object.create(null), outN = /* @__PURE__ */ Object.create(null), inN = /* @__PURE__ */ Object.create(null);
+      graph.forEachNode(function(id) {
+        if ((alpha[id] || 0) > 4e-3) {
+          var g0 = groupOf(id);
+          startN[g0] = (startN[g0] || 0) + 1;
+        }
+      });
+      outs.forEach(function(id) {
+        var g0 = groupOf(id);
+        outN[g0] = (outN[g0] || 0) + 1;
+      });
+      ins.forEach(function(id) {
+        var g0 = groupOf(id);
+        inN[g0] = (inN[g0] || 0) + 1;
+      });
+      Object.keys(outN).forEach(function(g0) {
+        if (!inN[g0] && outN[g0] === (startN[g0] || 0)) {
+          tglDir[g0] = "out";
+          tglN[g0] = outN[g0];
+        }
+      });
+      Object.keys(inN).forEach(function(g0) {
+        if (!outN[g0] && !(startN[g0] || 0)) {
+          tglDir[g0] = "in";
+          tglN[g0] = inN[g0];
+        }
+      });
+    })();
     var moving = ins.concat(outs);
+    lastCascade = {
+      ins: ins.length,
+      outs: outs.length,
+      span: Math.round(span * 100) / 100,
+      path: "animated",
+      frames: 0,
+      ms: 0,
+      t0: NOW()
+    };
     var settle = function() {
+      if (!lastCascade.exit) lastCascade.exit = "settle() called from outside the loop";
       if (cascadeRun) {
         WIN.cancelAnimationFrame(cascadeRun.raf);
         WIN.clearTimeout(cascadeRun.guard);
         cascadeRun = null;
       }
+      probeSample("pre-settle");
       moving.forEach(function(id) {
         alpha[id] = to[id];
       });
       pinnedPlan = null;
       planKeep = null;
-      applyLayout(false);
+      roomNow = null;
+      cellNow = null;
+      edgeNow = null;
+      posSrc = posDst = null;
+      colWalk = null;
+      assignPositions(finalPos);
+      renderer.refresh({ skipIndexation: false });
+      probeSample("settled");
       if (done) done();
     };
     var weightOf = function(id) {
@@ -7566,9 +8752,14 @@ function mountVaultGraph(root, data, deps) {
     });
     var shownAfter = 0;
     graph.forEachNode(function(id) {
-      if (visible(id)) shownAfter++;
+      if (willShow(id)) shownAfter++;
     });
     var ovAfter = true;
+    var spSrc = 1, spDst = 1;
+    var spSrcB = { i: 1, o: 1 }, spDstB = { i: 1, o: 1 };
+    var roomSrcB = { i: 0, o: 0 }, roomDstB = { i: 0, o: 0 };
+    var cellSrc = null, cellDst = null;
+    var edgeSrc = null, edgeDst = null;
     var rowsSrc = /* @__PURE__ */ Object.create(null), rowsDst = /* @__PURE__ */ Object.create(null);
     var bandSrc = /* @__PURE__ */ Object.create(null), bandDst = /* @__PURE__ */ Object.create(null);
     var staticPlan = function(presentFn) {
@@ -7591,8 +8782,20 @@ function mountVaultGraph(root, data, deps) {
       var a = staticPlan(function(id) {
         return wasPresent[id];
       });
+      var cellsOfG = function(p0) {
+        var m = /* @__PURE__ */ Object.create(null);
+        if (p0) p0.cells.forEach(function(c) {
+          m[c.g] = (m[c.g] || 0) + 1;
+        });
+        return m;
+      };
       var b = staticPlan(function(id) {
-        return visible(id);
+        return willShow(id);
+      });
+      var aCells = cellsOfG(a), bCells = cellsOfG(b);
+      Object.keys(tglDir).forEach(function(g0) {
+        var n0 = tglDir[g0] === "out" ? aCells[g0] : bCells[g0];
+        if (n0 !== 1) delete tglDir[g0];
       });
       var deepen = function(m, c) {
         var k = c.inner ? "i" : "o";
@@ -7607,6 +8810,74 @@ function mountVaultGraph(root, data, deps) {
       };
       if (a) a.cells.forEach(record(rowsSrc, bandSrc));
       if (b) b.cells.forEach(record(rowsDst, bandDst));
+      ["i", "o"].forEach(function(k) {
+        if (bandSrc[k] === void 0 && bandDst[k] !== void 0) bandSrc[k] = 1;
+      });
+      if (a && a.sp > 0) spSrc = a.sp;
+      if (b && b.sp > 0) spDst = b.sp;
+      if (a) {
+        spSrcB = { i: a.spInner || a.sp || 1, o: a.sp || 1 };
+      }
+      if (b) {
+        spDstB = { i: b.spInner || b.sp || 1, o: b.sp || 1 };
+      }
+      var roomOf = function(pl, alphaFn) {
+        if (!pl) return null;
+        var outPos = null;
+        var keepAlpha = null;
+        if (alphaFn) {
+          keepAlpha = /* @__PURE__ */ Object.create(null);
+          graph.forEachNode(function(id) {
+            keepAlpha[id] = alpha[id];
+            alpha[id] = alphaFn(id);
+          });
+        }
+        var keepI = bandOf("i").room, keepO = bandOf("o").room;
+        var keepFit = dotFit, keepCell = cellRoom, keepEdge = edgeCap;
+        var keepPin = pinnedPlan, keepKeep = planKeep;
+        var saved = roomNow, savedCell = cellNow, savedEdge = edgeNow;
+        roomNow = null;
+        cellNow = null;
+        edgeNow = null;
+        edgeNow = null;
+        outPos = ringsLayout(pl, true);
+        var got = {
+          i: bandOf("i").room,
+          o: bandOf("o").room,
+          pos: outPos,
+          cells: cellRoom,
+          edges: edgeCap
+        };
+        roomNow = saved;
+        cellNow = savedCell;
+        edgeNow = savedEdge;
+        bandOf("i").room = keepI;
+        bandOf("o").room = keepO;
+        dotFit = keepFit;
+        cellRoom = keepCell;
+        edgeCap = keepEdge;
+        pinnedPlan = keepPin;
+        planKeep = keepKeep;
+        if (keepAlpha) graph.forEachNode(function(id) {
+          alpha[id] = keepAlpha[id];
+        });
+        return got;
+      };
+      var rA = roomOf(a, null);
+      var rB = roomOf(b, function(id) {
+        return willShow(id) ? timeFactor(id) : 0;
+      });
+      if (rA) roomSrcB = { i: rA.i || 0, o: rA.o || 0 };
+      if (rB) roomDstB = { i: rB.i || 0, o: rB.o || 0 };
+      cellSrc = rA && rA.cells || null;
+      cellDst = rB && rB.cells || null;
+      edgeSrc = rA && rA.edges || null;
+      edgeDst = rB && rB.edges || null;
+      posSrc = /* @__PURE__ */ Object.create(null);
+      graph.forEachNode(function(id) {
+        posSrc[id] = { x: graph.getNodeAttribute(id, "x"), y: graph.getNodeAttribute(id, "y") };
+      });
+      posDst = finalPos;
     })();
     var STALL_MS = 400;
     var watchdog = function() {
@@ -7616,7 +8887,7 @@ function mountVaultGraph(root, data, deps) {
       }
       settle();
     };
-    var msPerFrame = CASCADE_MS * TIME_SCALE / Math.max(1, span);
+    var msPerFrame = (opts.totalMs > 0 ? opts.totalMs : CASCADE_MS * TIME_SCALE) / Math.max(1, span);
     var MIN_FRAMES = 20;
     var maxAdv = Math.max(1, span) / MIN_FRAMES;
     var frame = 0, tPrev = NOW(), tailFrames = 0;
@@ -7638,6 +8909,35 @@ function mountVaultGraph(root, data, deps) {
       }
       var pr = Math.min(1, frame / Math.max(1, span));
       var ease = pr * pr * (3 - 2 * pr);
+      if (opts.onFrame) opts.onFrame(pr);
+      (function() {
+        var stretch = Math.max(1, span - FADE_FRAMES * TIME_SCALE);
+        Object.keys(tglDir).forEach(function(g0) {
+          var set = (tglDir[g0] === "out" ? outs : ins).filter(function(id2) {
+            return groupOf(id2) === g0;
+          });
+          if (!set.length) return;
+          set.sort(function(p, q2) {
+            var ap = graph.getNodeAttributes(p), aq = graph.getNodeAttributes(q2);
+            var d = Math.hypot(ap.x, ap.y) - Math.hypot(aq.x, aq.y);
+            return tglDir[g0] === "out" ? d : -d;
+          });
+          if (tglDir[g0] === "out") {
+            set.forEach(function(id2, i2) {
+              delay[id2] = set.length < 2 ? stretch : stretch * i2 / (set.length - 1);
+            });
+          } else {
+            var base0 = set.map(function(id2) {
+              return delay[id2] || 0;
+            }).sort(function(x, y) {
+              return x - y;
+            });
+            set.forEach(function(id2, i2) {
+              delay[id2] = base0[i2];
+            });
+          }
+        });
+      })();
       var rowsAt = function(c) {
         var s = rowsSrc[c.k], d = rowsDst[c.k];
         if (s === void 0 && d === void 0) return 0;
@@ -7646,7 +8946,58 @@ function mountVaultGraph(root, data, deps) {
         if (d === void 0) d = bandDst[bk] !== void 0 ? bandDst[bk] : s;
         return s + (d - s) * ease;
       };
-      var plan2 = buildWedgePlan(ovAfter, weightOf, rowsAt);
+      var roomWalk = function(k) {
+        var sv = roomSrcB[k], dv = roomDstB[k];
+        if (!(sv > 1)) return dv;
+        if (!(dv > 1)) return sv;
+        return sv + (dv - sv) * ease;
+      };
+      var depthWalk = function(k) {
+        var a2 = bandSrc[k], b2 = bandDst[k];
+        if (a2 === void 0 && b2 === void 0) return 0;
+        if (a2 === void 0) a2 = b2;
+        if (b2 === void 0) b2 = a2;
+        return a2 + (b2 - a2) * ease;
+      };
+      var spNow = {
+        i: spSrcB.i + (spDstB.i - spSrcB.i) * ease,
+        o: spSrcB.o + (spDstB.o - spSrcB.o) * ease,
+        depth: { i: depthWalk("i"), o: depthWalk("o") }
+      };
+      roomNow = { i: roomWalk("i"), o: roomWalk("o") };
+      colWalk = /* @__PURE__ */ Object.create(null);
+      Object.keys(tglDir).forEach(function(g0) {
+        colWalk[g0] = { f: tglDir[g0] === "out" ? 1 - pr : pr, n: tglN[g0] || 1 };
+      });
+      if (cellSrc || cellDst) {
+        var cn = /* @__PURE__ */ Object.create(null);
+        var put = function(id2) {
+          if (cn[id2] !== void 0) return;
+          var a0 = cellSrc ? cellSrc[id2] : void 0, b0 = cellDst ? cellDst[id2] : void 0;
+          if (a0 === void 0 && b0 === void 0) return;
+          if (a0 === void 0) a0 = b0;
+          if (b0 === void 0) b0 = a0;
+          cn[id2] = a0 + (b0 - a0) * ease;
+        };
+        if (cellSrc) Object.keys(cellSrc).forEach(put);
+        if (cellDst) Object.keys(cellDst).forEach(put);
+        cellNow = cn;
+      }
+      if (edgeSrc || edgeDst) {
+        var en = /* @__PURE__ */ Object.create(null);
+        var putE = function(id2) {
+          if (en[id2] !== void 0) return;
+          var a1 = edgeSrc ? edgeSrc[id2] : void 0, b1 = edgeDst ? edgeDst[id2] : void 0;
+          if (a1 === void 0 && b1 === void 0) return;
+          if (a1 === void 0) a1 = b1;
+          if (b1 === void 0) b1 = a1;
+          en[id2] = a1 + (b1 - a1) * ease;
+        };
+        if (edgeSrc) Object.keys(edgeSrc).forEach(putE);
+        if (edgeDst) Object.keys(edgeDst).forEach(putE);
+        edgeNow = en;
+      }
+      var plan2 = buildWedgePlan(ovAfter, weightOf, rowsAt, spNow);
       var targets = plan2 ? ringsLayout(plan2, true) : null;
       var ez = pr < 1 ? RADIAL_EASE : Math.min(1, RADIAL_EASE + tailFrames * 0.15);
       var resid = 0;
@@ -7663,17 +9014,65 @@ function mountVaultGraph(root, data, deps) {
       });
       if (pr >= 1) tailFrames++;
       probeSample("cascade");
+      lastCascade.frames++;
+      lastCascade.ms = Math.round(NOW() - lastCascade.t0);
       renderer.refresh({ skipIndexation: true });
+      if (probe) lastCascade.last = {
+        adv: Math.round(adv * 1e3) / 1e3,
+        frame: Math.round(frame * 100) / 100,
+        span: Math.round(span * 100) / 100,
+        pr: Math.round(pr * 1e3) / 1e3,
+        busy,
+        resid: Math.round(resid * 100) / 100,
+        msPerFrame: Math.round(msPerFrame * 1e3) / 1e3,
+        moving: moving.length,
+        run: !!cascadeRun
+      };
       if (busy || pr < 1 || resid > 0.5) cascadeRun.raf = WIN.requestAnimationFrame(step);
-      else settle();
+      else {
+        lastCascade.exit = "converged";
+        settle();
+      }
     })();
   }
   var probe = null;
   function probeSample(tag) {
     if (!probe) return;
     var iMin = Infinity, iMax = 0, oMin = Infinity, oMax = 0, iN = 0, oN = 0;
+    var prev = probe.prevAng, now = /* @__PURE__ */ Object.create(null);
+    var prevR = probe.prevR, nowR = /* @__PURE__ */ Object.create(null);
+    var tanStep = 0, tanId = null, tanOver = 0, tanSum = 0, tanN = 0;
+    var radStep = 0, radId = null, radSum = 0, radN = 0;
     graph.forEachNode(function(id, a) {
       var r = Math.hypot(a.x, a.y);
+      if (present(id)) {
+        var th = Math.atan2(a.y, a.x);
+        now[id] = th;
+        nowR[id] = r;
+        if (prevR && prevR[id] !== void 0) {
+          var dr = Math.abs(r - prevR[id]);
+          if (dr > radStep) {
+            radStep = dr;
+            radId = id;
+          }
+          radSum += dr;
+          radN++;
+        }
+        if (prev && prev[id] !== void 0) {
+          var d = th - prev[id];
+          while (d > Math.PI) d -= 2 * Math.PI;
+          while (d < -Math.PI) d += 2 * Math.PI;
+          var moved = Math.abs(d) * r;
+          if (moved > tanStep) {
+            tanStep = moved;
+            tanId = id;
+          }
+          if (moved > 160) tanOver++;
+          tanSum += moved;
+          tanN++;
+        }
+      }
+      if (probe.set && !probe.set[id]) return;
       if (bandLock && bandLock[groupOf(id)]) {
         iN++;
         if (r < iMin) iMin = r;
@@ -7684,11 +9083,31 @@ function mountVaultGraph(root, data, deps) {
         if (r > oMax) oMax = r;
       }
     });
+    probe.prevAng = now;
+    probe.prevR = nowR;
+    if (probe.watch) probe.watchSeries.push(probe.watched || null);
     probe.samples.push({
       tag,
       ms: Math.round(NOW() - probe.t0),
       gapI: lastGapN.i,
       gapO: lastGapN.o,
+      ngI: bandOf("i").nG,
+      ngO: bandOf("o").nG,
+      gapDegI: bandOf("i").gapDeg,
+      gapDegO: bandOf("o").gapDeg,
+      radStep: Math.round(radStep),
+      radId,
+      radMean: Math.round(radN ? radSum / radN : 0),
+      tanStep: Math.round(tanStep),
+      tanId,
+      tanOver,
+      tanMean: Math.round(tanN ? tanSum / tanN : 0),
+      // Where each group's wedge STARTS. "The gap jumped" is precisely this series
+      // moving in a step rather than a ramp, and it is what a person sees: every
+      // wedge boundary shifting round the disc at once.
+      starts: lastStart,
+      arcs: lastArc,
+      bands: lastBand,
       innerN: iN,
       innerMin: Math.round(iMin === Infinity ? 0 : iMin),
       innerMax: Math.round(iMax),
@@ -7793,8 +9212,29 @@ function mountVaultGraph(root, data, deps) {
   var renderer, neighbourCache = null;
   function neighboursOf(id) {
     if (!neighbourCache) neighbourCache = {};
-    if (!neighbourCache[id]) neighbourCache[id] = graph.neighbors(id);
+    if (!neighbourCache[id]) {
+      neighbourCache[id] = (adj[id] || []).map(function(e) {
+        return e.o;
+      });
+    }
     return neighbourCache[id];
+  }
+  var lazyShown = null, lazyAdded = [];
+  function syncLazyEdges() {
+    if (!lazyEdges) return;
+    var want = state.hovered || state.selected || null;
+    if (want === lazyShown) return;
+    lazyAdded.forEach(function(pr) {
+      if (graph.hasEdge(pr[0], pr[1])) graph.dropEdge(pr[0], pr[1]);
+    });
+    lazyAdded = [];
+    if (want) (adj[want] || []).forEach(function(e) {
+      if (!graph.hasEdge(want, e.o)) {
+        graph.addUndirectedEdge(want, e.o, edgeAttrsOf(e.w));
+        lazyAdded.push([want, e.o]);
+      }
+    });
+    lazyShown = want;
   }
   function pathKey(a, k) {
     return a.folder + "/" + (a.dirs || []).slice(0, k).join("/");
@@ -7841,7 +9281,10 @@ function mountVaultGraph(root, data, deps) {
       if (hoverT > 1) hoverT = 1;
       if (hoverT < 0) hoverT = 0;
       var landed = hoverT === hoverAim;
-      if (landed && hoverT === 0) state.hovered = null;
+      if (landed && hoverT === 0) {
+        state.hovered = null;
+        syncLazyEdges();
+      }
       renderer.refresh({ skipIndexation: true });
       if (landed) {
         hoverRaf = 0;
@@ -7854,10 +9297,12 @@ function mountVaultGraph(root, data, deps) {
   var hlRaf = 0, hlPrev = 0, hlSig = "";
   var HL_GROW = 0.2;
   function hlSignature() {
-    return Object.keys(state.highlight).join(",") + "|" + Object.keys(state.highlightSub).join(",") + "|" + (state.markToday ? "T" : "") + "|" + (state.markDay || "") + "|" + (state.hoverDay || "") + "|" + // Both hover sources belong here for the same reason everything else does:
+    return Object.keys(state.highlight).join(",") + "|" + Object.keys(state.highlightSub).join(",") + "|" + (state.markDay || "") + "|" + (state.hoverDay || "") + "|" + // Both hover sources belong here for the same reason everything else does:
     // this is what decides whether the per-note sweep runs at all, so a source
     // missing from it is a source whose highlight silently never ramps.
-    (state.hoverGroup || "") + "|" + Object.keys(state.hoverSub).join(",");
+    (state.hoverGroup || "") + "|" + Object.keys(state.hoverSub).join(",") + "|" + // The hovered YEAR, for exactly that reason: it haloes notes, so it has to be
+    // able to change the signature or the ramp never starts.
+    (state.hoverYear || "");
   }
   function hlWalk() {
     if (hlRaf) return;
@@ -7930,7 +9375,7 @@ function mountVaultGraph(root, data, deps) {
     var r = Object.assign({}, a);
     r.color = nodeColor(id);
     var hv = hl[id] || 0;
-    if (state.markToday && isToday(id)) {
+    if (state.markDay && graph.getNodeAttribute(id, "created") === state.markDay) {
       r.color = mixHex(r.color, THEME.today, hv);
       r.zIndex = 3;
     }
@@ -8126,16 +9571,75 @@ function mountVaultGraph(root, data, deps) {
     }
   }
   var REF_PITCH = 28;
-  var SIZE_FLOOR = 0.45;
+  var DOT_OF_PITCH = 11 / 28;
+  var DOT_MIN_PX = 1.5;
+  var DOT_MAX_SPREAD = DENSITY_MAX;
+  var DOT_ROOM_MAX = DENSITY_MAX;
   var sizeScale = 1;
   var haloOn = !!RENDERING.createNodeBorderProgram;
   function measureSizeScale() {
-    if (!renderer) return 1;
+    if (!renderer) return sizeScale;
     var a = renderer.graphToViewport({ x: 0, y: 0 });
-    var b = renderer.graphToViewport({ x: UNIT, y: 0 });
+    var b = renderer.graphToViewport({ x: UNIT * (bandOf("o").sp || 1), y: 0 });
     var pitch = Math.hypot(b.x - a.x, b.y - a.y);
     if (!(pitch > 0)) return sizeScale;
-    return Math.max(SIZE_FLOOR, Math.min(1, pitch / REF_PITCH));
+    var cam = renderer.getCamera().getState().ratio || 1;
+    pitch *= cam;
+    var rampFor = function(units) {
+      var bb = renderer.graphToViewport({ x: units, y: 0 });
+      var pit = Math.hypot(bb.x - a.x, bb.y - a.y) * cam;
+      var hi = DOT_OF_PITCH * pit;
+      var hiCap = DOT_OF_PITCH * UNIT * DOT_MAX_SPREAD * cam;
+      if (hi > hiCap) hi = hiCap;
+      var lo = Math.min(hi, DOT_MIN_PX * cam);
+      return {
+        m: (hi - lo) / Math.max(1e-6, NODE_MAX - NODE_MIN),
+        b: lo - (hi - lo) / Math.max(1e-6, NODE_MAX - NODE_MIN) * NODE_MIN,
+        lo,
+        hi
+      };
+    };
+    var ro = rampFor(UNIT * (bandOf("o").sp || 1) * bandScale("o"));
+    var ri = rampFor(UNIT * (bandOf("i").sp || 1) * bandScale("i"));
+    bandOf("o").ramp = ro;
+    bandOf("i").ramp = ri;
+    return ro.hi / NODE_MAX;
+  }
+  function dotPx(size, id) {
+    var isIn = id !== void 0 && bandLock && !!bandLock[groupOf(id)];
+    var rp = bandOf(isIn ? "i" : "o").ramp;
+    var v = rp.m * (size || 4) + rp.b;
+    var scale = 1;
+    if (id !== void 0) {
+      var room = bandOf(isIn ? "i" : "o").room;
+      var mine = cellRoom[id];
+      if (colWalk) {
+        var cwd = colWalk[groupOf(id)];
+        if (cwd !== void 0) mine = (mine === void 0 ? room : mine) * cwd.f;
+      }
+      if (mine !== void 0 && mine > 1 && (!(room > 1) || mine < room)) room = mine;
+      room *= 0.92;
+      var pit = pitchUnits(isIn ? "i" : "o");
+      if (room !== void 0 && pit > 1e-9) {
+        var f = room / pit;
+        if (f > DOT_ROOM_MAX) f = DOT_ROOM_MAX;
+        v *= f;
+        scale = f;
+      }
+    }
+    var lo = (rp.lo || DOT_MIN_PX) * scale;
+    if (v < lo) v = lo;
+    var capU = edgeCap[id];
+    if (capU !== void 0 && capU > 0) {
+      var pitU = pitchUnits(isIn ? "i" : "o");
+      var hiU = DOT_OF_PITCH * pitU;
+      if (hiU > 1e-6) {
+        var capV = rp.m * NODE_MAX + rp.b;
+        var vMax = capV * (capU / hiU);
+        if (v > vMax) v = vMax;
+      }
+    }
+    return v;
   }
   function syncSizeScale() {
     var next = measureSizeScale();
@@ -8175,17 +9679,50 @@ function mountVaultGraph(root, data, deps) {
       labelColor: { color: THEME.text },
       defaultDrawNodeHover: drawHover,
       zIndex: true,
+      // SIZES SCALE WITH THE LATTICE, NOT WITH ITS SQUARE ROOT.
+      //
+      // Sigma's default zoomToSizeRatioFunction is Math.sqrt, so a node's drawn radius goes as
+      // 1/sqrt(ratio) while its POSITION goes as 1/ratio. The two therefore diverge on every
+      // zoom, and no choice of size can hold a dot at a fixed fraction of the gap to its
+      // neighbour. Measured, drawn diameter over row pitch: 0.76 at rest, 1.44 three notches
+      // in, 3.51 at the far end -- dots that end up swallowing their neighbours, which is
+      // exactly what "they still touch when zooming in" was.
+      //
+      // Identity makes the multiplier 1/ratio, the same law the positions follow, so the
+      // relationship between a dot and the space it has is the one thing that does NOT change
+      // as the camera moves. The sizes fed in are then pinned to the lattice once (see
+      // measureSizeScale) rather than re-derived per frame.
+      zoomToSizeRatioFunction: function(x) {
+        return x;
+      },
       minCameraRatio: 0.02,
       maxCameraRatio: 12,
-      // The disc is the whole point of this view, so it stays centred: panning and
-      // rotation are off, zoom stays. With the normalisation box pinned symmetric
-      // about the origin, the camera's (0.5, 0.5) IS the centre of the disc, so
-      // holding the camera there keeps the ring centred in the stage whatever is
-      // filtered. Zoom still moves the camera toward the pointer, so it is pulled
-      // back on every camera update -- see the centre lock below.
-      enableCameraPanning: false,
+      // PANNING IS ON, and the centre lock that used to fight it is gone.
+      //
+      // The disc was pinned to the middle of the stage on the reasoning that it is the whole
+      // point of the view, with a camera listener that put x and y back to 0.5 after every
+      // update. That is defensible while the only camera gesture is zoom -- but it also
+      // makes zoom-toward-pointer a lie, since the camera is dragged back the moment it
+      // moves, so zooming in on one wedge walks it off the far edge instead. Panning plus a
+      // reset is the ordinary answer, and it costs nothing that a reset does not give back.
+      //
+      // Rotation stays off: the wedge labels and the heatmap's day rows both assume up is up.
+      //
+      // The initial value is the SETTING rather than a literal: the host may have persisted
+      // it off, and starting on and correcting afterwards would let one drag through before
+      // the lock arrived.
+      enableCameraPanning: panEnabled,
       enableCameraRotation: false,
       enableCameraZooming: true,
+      // ONE WHEEL NOTCH WAS 70%. Sigma's default zoomingRatio is 1.7, so every notch
+      // multiplied or divided the ratio by that -- three notches and the disc has gone from
+      // filling the stage to a sixth of it. 1.2 is about 32 notches across the whole
+      // 0.02..12 range, which is a scroll rather than a teleport.
+      //
+      // The animation is shortened with it. 250ms per notch is fine at 70% and lags visibly
+      // at 20%, because the next notch arrives before the last one has landed.
+      zoomingRatio: 1.2,
+      zoomDuration: 120,
       defaultEdgeType: "line",
       // Both programs are registered up front so the toggle is a per-edge `type`
       // in the reducer rather than a renderer rebuild. Sigma merges these with its
@@ -8226,7 +9763,14 @@ function mountVaultGraph(root, data, deps) {
             r.highlighted = false;
           }
         }
-        if (sizeScale !== 1) r.size = (r.size || a.size) * sizeScale;
+        if (colWalk) {
+          var cwr = colWalk[groupOf(id)];
+          if (cwr !== void 0) {
+            r.size = Math.max(0.05, (r.size === void 0 ? base2 : r.size) * cwr.f);
+          }
+        }
+        var base2 = a.size || 4;
+        r.size = dotPx(base2, id) * ((r.size === void 0 ? base2 : r.size) / base2);
         return r;
       },
       edgeReducer: function(id, a) {
@@ -8266,14 +9810,7 @@ function mountVaultGraph(root, data, deps) {
       }
     });
     (function() {
-      var cam = renderer.getCamera(), fixing = false;
-      cam.on("updated", function(st) {
-        if (fixing) return;
-        if (Math.abs(st.x - 0.5) < 1e-9 && Math.abs(st.y - 0.5) < 1e-9) return;
-        fixing = true;
-        cam.setState({ x: 0.5, y: 0.5, ratio: st.ratio, angle: 0 });
-        fixing = false;
-      });
+      var cam = renderer.getCamera();
       cam.on("updated", function() {
         placeLogo();
         refreshSizeScale();
@@ -8291,6 +9828,7 @@ function mountVaultGraph(root, data, deps) {
     if (window.ResizeObserver) new ResizeObserver(onResize).observe(root);
     else window.addEventListener("resize", onResize);
     renderer.on("afterRender", function() {
+      if (DBG.on) drawWedgeDebug();
       placeLogo();
       refreshSizeScale();
       heatDraw();
@@ -8298,6 +9836,7 @@ function mountVaultGraph(root, data, deps) {
     });
     renderer.on("enterNode", function(e) {
       state.hovered = e.node;
+      syncLazyEdges();
       showTip(e.node);
       hoverTo(1);
     });
@@ -8311,6 +9850,13 @@ function mountVaultGraph(root, data, deps) {
     renderer.on("clickStage", function() {
       select(null);
     });
+    var onDoubleClick = function(e) {
+      if (e && e.preventSigmaDefault) e.preventSigmaDefault();
+      fit();
+    };
+    renderer.on("doubleClickStage", onDoubleClick);
+    renderer.on("doubleClickNode", onDoubleClick);
+    if (wantWedgeDebug()) wedgeDebug(true);
   }
   function showTip(id) {
     var a = graph.getNodeAttributes(id), t = $("tip");
@@ -8328,6 +9874,7 @@ function mountVaultGraph(root, data, deps) {
   }
   function select(id) {
     state.selected = id;
+    syncLazyEdges();
     var d = $("detail");
     if (!id) {
       d.hidden = true;
@@ -8409,7 +9956,7 @@ function mountVaultGraph(root, data, deps) {
       var hasSubs = state.dim === "folder" && (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN;
       var open = hasSubs && !state.collapsed[g];
       var hl2 = !!state.highlight[g];
-      var row = '<div class="lgr">' + twBtn(hasSubs ? 'data-tw="' + esc(g) + '"' : null, open) + eyeBtn('data-eye="' + esc(g) + '"', vis, g) + '<button class="lg" data-g="' + esc(g) + '" data-hl="' + (hl2 ? "on" : "off") + '" aria-pressed="' + vis + '" title="Highlight ' + esc(g) + '"><span class="sw" style="background:' + colorOf(g) + '"></span><span class="nm" title="' + esc(g) + '">' + esc(g) + '</span><span class="only" data-only="1" title="Show only ' + esc(g) + '">only</span><span class="ct">' + counts[g] + "</span></button></div>";
+      var row = '<div class="lgr">' + twBtn(hasSubs ? 'data-tw="' + esc(g) + '"' : null, open) + eyeBtn('data-eye="' + esc(g) + '"', vis, g) + '<button class="lg" data-g="' + esc(g) + '" data-hl="' + (hl2 ? "on" : "off") + '" aria-pressed="' + vis + '" title="Highlight ' + esc(g) + '"><span class="sw' + (bandLock && bandLock[g] ? " sw-in" : "") + '" title="' + (bandLock && bandLock[g] ? "Inner ring" : "Outer ring") + '" style="background:' + colorOf(g) + '"></span><span class="nm" title="' + esc(g) + '">' + esc(g) + '</span><span class="only" data-only="1" title="Show only ' + esc(g) + '">only</span><span class="ct">' + counts[g] + "</span></button></div>";
       if (open && vis) {
         var subs = subOrder[g];
         var srow = function(col, nm, ct, idx, depth, twAttrs, twOpen) {
@@ -8499,8 +10046,14 @@ function mountVaultGraph(root, data, deps) {
       });
     };
     each("[data-tw]", function(b) {
+      var g = b.getAttribute("data-tw");
+      b.onmouseenter = function() {
+        hoverHighlight(g, null);
+      };
+      b.onmouseleave = function() {
+        hoverHighlight(null, null);
+      };
       b.onclick = function() {
-        var g = b.getAttribute("data-tw");
         if (state.collapsed[g]) delete state.collapsed[g];
         else state.collapsed[g] = true;
         buildLegend();
@@ -8520,7 +10073,7 @@ function mountVaultGraph(root, data, deps) {
         if (state.hiddenSub[p]) delete state.hiddenSub[p];
         else state.hiddenSub[p] = true;
         buildLegend();
-        cascade();
+        cascade(null, { colToggle: true });
       };
     });
     each("[data-hpath]", function(b) {
@@ -8536,7 +10089,7 @@ function mountVaultGraph(root, data, deps) {
         if (ev && ev.target && ev.target.getAttribute("data-only")) {
           onlyUnder(p.slice(0, p.indexOf("/")), p);
           buildLegend();
-          cascade();
+          cascade(null, { colToggle: true });
           return;
         }
         if (state.highlightSub[p]) delete state.highlightSub[p];
@@ -8555,12 +10108,12 @@ function mountVaultGraph(root, data, deps) {
       };
     });
     each("[data-eye]", function(b) {
+      var g = b.getAttribute("data-eye");
       b.onclick = function() {
-        var g = b.getAttribute("data-eye");
         var h = state.hidden[state.dim] || (state.hidden[state.dim] = /* @__PURE__ */ Object.create(null));
         h[g] = !h[g];
         buildLegend();
-        cascade();
+        cascade(null, { colToggle: true });
       };
     });
     each("[data-esub]", function(b) {
@@ -8574,7 +10127,7 @@ function mountVaultGraph(root, data, deps) {
           else delete state.hiddenSub[key];
         });
         buildLegend();
-        cascade();
+        cascade(null, { colToggle: true });
       };
     });
     each("[data-hsub]", function(b) {
@@ -8600,7 +10153,7 @@ function mountVaultGraph(root, data, deps) {
             return subs[+i];
           }));
           buildLegend();
-          cascade();
+          cascade(null, { colToggle: true });
           return;
         }
         var allOn = idx.every(function(i) {
@@ -8631,7 +10184,7 @@ function mountVaultGraph(root, data, deps) {
             h[n] = n !== g;
           });
           buildLegend();
-          cascade();
+          cascade(null, { colToggle: true });
           return;
         }
         if (state.highlight[g]) delete state.highlight[g];
@@ -8670,7 +10223,38 @@ function mountVaultGraph(root, data, deps) {
         base2.cells.forEach(function(c) {
           bandLock[c.g] = c.inner;
         });
-        geomLock = { r0: base2.r0, rOuter: base2.rOuter, maxR: base2.maxR };
+        var bandTotal = { i: 0, o: 0 };
+        base2.cells.forEach(function(c) {
+          bandTotal[c.inner ? "i" : "o"] += c.wsum;
+        });
+        var bandR = { i: 0, o: 0 }, bandRows = { i: 0, o: 0 };
+        base2.cells.forEach(function(c) {
+          var k = c.inner ? "i" : "o";
+          if (c.rows > bandRows[k]) bandRows[k] = c.rows;
+          (c.slots || []).forEach(function(sl) {
+            var rr = sl.r * UNIT;
+            if (rr > bandR[k]) bandR[k] = rr;
+          });
+        });
+        geomLock = {
+          r0: base2.r0,
+          rOuter: base2.rOuter,
+          maxR: base2.maxR,
+          total: base2.total,
+          bandTotal,
+          bandR,
+          rows: bandRows
+        };
+        var again = buildWedgePlan(false);
+        if (again) geomLock = {
+          r0: again.r0,
+          rOuter: again.rOuter,
+          maxR: again.maxR,
+          total: again.total,
+          bandTotal,
+          bandR,
+          rows: bandRows
+        };
         if (renderer) {
           var span = base2.maxR * UNIT * 1.02;
           renderer.setCustomBBox({ x: [-span, span], y: [-span, span] });
@@ -8724,12 +10308,67 @@ function mountVaultGraph(root, data, deps) {
     };
   }
   var play = null;
+  var introOwed = false;
+  if (DOC && typeof DOC.addEventListener === "function") {
+    DOC.addEventListener("visibilitychange", function() {
+      var away = typeof DOC.visibilityState === "string" ? DOC.visibilityState === "hidden" : !!DOC.hidden;
+      if (!away) {
+        if (introOwed) {
+          introOwed = false;
+          playTimeline();
+        }
+        return;
+      }
+      if (!play && !cascadeRun && !anim) return;
+      var wasPlaying = !!play;
+      stopPlay();
+      if (cascadeRun) {
+        WIN.cancelAnimationFrame(cascadeRun.raf);
+        WIN.clearTimeout(cascadeRun.guard);
+        cascadeRun = null;
+      }
+      if (anim) {
+        WIN.cancelAnimationFrame(anim);
+        anim = null;
+      }
+      if (animGuard) {
+        WIN.clearTimeout(animGuard);
+        animGuard = null;
+      }
+      pinnedPlan = null;
+      planKeep = null;
+      roomNow = null;
+      cellNow = null;
+      edgeNow = null;
+      colWalk = null;
+      posSrc = posDst = null;
+      state.until = null;
+      timelineFrame(true);
+      if (wasPlaying) introOwed = true;
+    });
+  }
   function stopPlay() {
     if (!play) return;
+    var viaCascade = play.viaCascade;
     WIN.cancelAnimationFrame(play.raf);
     if (play.guard) WIN.clearTimeout(play.guard);
     play = null;
-    $("tlplay").textContent = "Play";
+    endSweep();
+    if (!viaCascade) return;
+    if (cascadeRun) {
+      WIN.cancelAnimationFrame(cascadeRun.raf);
+      WIN.clearTimeout(cascadeRun.guard);
+      cascadeRun = null;
+    }
+    pinnedPlan = null;
+    planKeep = null;
+    roomNow = null;
+    cellNow = null;
+    edgeNow = null;
+    posSrc = posDst = null;
+    colWalk = null;
+    state.until = null;
+    timelineFrame(true);
   }
   function timelineFrame(full) {
     fullRing = true;
@@ -8737,17 +10376,8 @@ function mountVaultGraph(root, data, deps) {
     var targets = ringsLayout();
     if (targets) assignPositions(targets);
     renderer.refresh({ skipIndexation: !full });
-    var el = $("tlv");
-    if (state.until === null || state.until >= tlMax) {
-      el.textContent = "All";
-      return;
-    }
-    var i = Math.round(state.until) - 1;
-    var d = tlDate[i < 0 ? 0 : i > tlDate.length - 1 ? tlDate.length - 1 : i] || "";
-    el.textContent = d + "  \xB7  " + Math.round(state.until);
   }
   function playTimeline() {
-    var tl = $("tl");
     stopPlay();
     if (cascadeRun) {
       WIN.cancelAnimationFrame(cascadeRun.raf);
@@ -8764,77 +10394,59 @@ function mountVaultGraph(root, data, deps) {
     }
     pinnedPlan = null;
     planKeep = null;
+    roomNow = null;
+    cellNow = null;
+    edgeNow = null;
+    colWalk = null;
+    posSrc = posDst = null;
     var dur = TIMELINE_MS * TIME_SCALE;
-    state.until = 0;
-    tl.value = "0";
-    timelineFrame();
-    $("tlplay").textContent = "Stop";
-    var land = function() {
-      stopPlay();
-      state.until = null;
-      tl.value = String(tlMax);
-      timelineFrame(true);
-    };
-    var lastFrame = NOW();
-    var PLAY_STALL = 500;
-    var playDog = function() {
-      if (play && NOW() - lastFrame < PLAY_STALL) {
-        play.guard = WIN.setTimeout(playDog, PLAY_STALL);
-        return;
+    state.until = null;
+    state.from = null;
+    state.to = null;
+    rangeChrome();
+    clearAlpha();
+    cascade(function() {
+      if (play) play = null;
+      endSweep();
+    }, {
+      fullRing: true,
+      order: function(id) {
+        return tlRank[id] || 0;
+      },
+      // NO spread override: the stagger is windowFor(n), the same expression a folder toggle
+      // uses, so a note's own fade is the same fraction of the animation in both. Overriding it
+      // (240 frames against windowFor's ~74) made the timeline a visibly different animation
+      // rather than the same one over a longer clock, which is the whole point of it going
+      // through cascade().
+      totalMs: dur,
+      onFrame: function(pr) {
+        sweepTo(pr);
       }
-      land();
-    };
-    var MIN_FRAMES = 20;
-    var p = 0, tPrev = NOW();
-    play = { raf: 0, guard: WIN.setTimeout(playDog, PLAY_STALL) };
-    (function step() {
-      if (!play) return;
-      var tn = NOW();
-      lastFrame = tn;
-      var adv = (tn - tPrev) / dur;
-      tPrev = tn;
-      if (adv > 1 / MIN_FRAMES) adv = 1 / MIN_FRAMES;
-      p = Math.min(1, p + adv);
-      var k = tlMax * p;
-      state.until = p >= 1 ? null : k;
-      tl.value = String(Math.round(Math.min(tlMax, k)));
-      timelineFrame();
-      if (p < 1) play.raf = WIN.requestAnimationFrame(step);
-      else land();
-    })();
+    });
+    play = { raf: 0, guard: 0, viaCascade: true };
   }
-  function buildTimelineUI() {
-    var tl = $("tl");
-    tl.max = String(tlMax);
-    tl.value = String(tlMax);
-    tl.oninput = function() {
-      stopPlay();
-      var n = +this.value;
-      state.until = n >= tlMax ? null : n;
-      timelineFrame();
-    };
-    tl.onchange = function() {
-      timelineFrame(true);
-    };
-    $("tlall").onclick = function() {
-      stopPlay();
-      state.until = null;
-      tl.value = String(tlMax);
-      timelineFrame(true);
-    };
-    $("tlplay").onclick = function() {
-      if (play) {
-        stopPlay();
-        return;
-      }
-      playTimeline();
-    };
-    $("today").onclick = function() {
-      state.markToday = !state.markToday;
-      this.setAttribute("aria-pressed", state.markToday ? "true" : "false");
-      applyLayout(true);
-      renderer.refresh();
-    };
+  function sweepTo(pr) {
+    if (!dateSpan || !tlMax) return;
+    var k = Math.max(0, Math.min(1, pr)) * tlMax;
+    var i = Math.round(k) - 1;
+    if (i < 0) i = 0;
+    if (i > tlDateMs.length - 1) i = tlDateMs.length - 1;
+    var ms = tlDateMs[i];
+    if (!(ms >= dateSpan.lo)) ms = dateSpan.lo;
+    if (ms > dateSpan.hi) ms = dateSpan.hi;
+    brushSweep = pr >= 1 ? dateSpan.hi : ms;
+    drawRibbon();
+    if (pr >= 1) {
+      hideRTip();
+      return;
+    }
+    showRTip(ribbonX(brushSweep, ribbonW()), isoDay(brushSweep));
+  }
+  function endSweep() {
+    if (brushSweep === null) return;
+    brushSweep = null;
+    hideRTip();
+    drawDateUI();
   }
   function resetView() {
     stopPlay();
@@ -8845,7 +10457,6 @@ function mountVaultGraph(root, data, deps) {
     collapseAll();
     state.tailOpen = /* @__PURE__ */ Object.create(null);
     state.pathOpen = /* @__PURE__ */ Object.create(null);
-    state.markToday = false;
     state.markDay = null;
     state.hoverDay = null;
     state.until = null;
@@ -8855,9 +10466,10 @@ function mountVaultGraph(root, data, deps) {
     hideTip();
     $("q").value = "";
     $("hits").replaceChildren();
-    $("tl").value = String(tlMax);
-    $("tlv").textContent = "All";
-    $("today").setAttribute("aria-pressed", "false");
+    state.from = null;
+    state.to = null;
+    state.heatEnd = null;
+    rangeChrome();
     buildLegend();
   }
   function buildTools() {
@@ -8865,7 +10477,7 @@ function mountVaultGraph(root, data, deps) {
       state.hidden[state.dim] = /* @__PURE__ */ Object.create(null);
       state.hiddenSub = /* @__PURE__ */ Object.create(null);
       buildLegend();
-      cascade();
+      cascade(null, { colToggle: true });
     };
     $("alloff").onclick = function() {
       var h = state.hidden[state.dim] = /* @__PURE__ */ Object.create(null);
@@ -8873,7 +10485,7 @@ function mountVaultGraph(root, data, deps) {
         h[g] = true;
       });
       buildLegend();
-      cascade();
+      cascade(null, { colToggle: true });
     };
     var onRefresh = typeof deps.onRefresh === "function" ? deps.onRefresh : null;
     if (onRefresh) {
@@ -8888,8 +10500,46 @@ function mountVaultGraph(root, data, deps) {
       fit();
       playTimeline();
     };
-    $("fit").onclick = fit;
+    if ($("reset")) $("reset").onclick = fit;
+    if ($("zin")) $("zin").onclick = function() {
+      zoomBy(1);
+    };
+    if ($("zout")) $("zout").onclick = function() {
+      zoomBy(-1);
+    };
+    if ($("pan")) $("pan").onclick = function() {
+      setPan(!panEnabled, true);
+    };
+    setPan(panEnabled, false);
     $("png").onclick = savePng;
+    if ($("dbg")) $("dbg").onclick = function() {
+      var txt = JSON.stringify(API.debugDump(), null, 2);
+      var done = function(how) {
+        var b = $("dbg");
+        b.textContent = how;
+        WIN.setTimeout(function() {
+          b.textContent = "Debug";
+        }, 1600);
+      };
+      var save = function() {
+        try {
+          var a = DOC.createElement("a");
+          a.href = "data:application/json;charset=utf-8," + encodeURIComponent(txt);
+          a.download = "vault-graph-debug.json";
+          a.click();
+          done("Saved");
+        } catch (e2) {
+          done("Failed");
+        }
+      };
+      try {
+        WIN.navigator.clipboard.writeText(txt).then(function() {
+          done("Copied");
+        }, save);
+      } catch (e) {
+        save();
+      }
+    };
     if (openHostSettings) {
       $("gear").hidden = false;
       $("gear").removeAttribute("aria-expanded");
@@ -8945,7 +10595,7 @@ function mountVaultGraph(root, data, deps) {
       if (hiddenByDefault(folder)) h[folder] = true;
       else delete h[folder];
       buildLegend();
-      cascade();
+      cascade(null, { colToggle: true });
       buildSettings();
     }
     function buildSettings() {
@@ -8963,8 +10613,46 @@ function mountVaultGraph(root, data, deps) {
       setHTML($("setbody"), rows);
     }
   }
+  var FIT_RATIO = 1.08;
+  function fitRatio() {
+    var locked = geomLock && geomLock.maxR ? geomLock.maxR : 0;
+    var live = lastMaxR;
+    if (!locked || !live) return FIT_RATIO;
+    var k = live / locked;
+    if (k > 1.35) k = 1.35;
+    if (k < 0.12) k = 0.12;
+    return FIT_RATIO * k;
+  }
   function fit() {
-    renderer.getCamera().animate({ x: 0.5, y: 0.5, ratio: 1.08, angle: 0 }, { duration: 380 });
+    var to = { x: 0.5, y: 0.5, ratio: fitRatio(), angle: 0 };
+    if (!panEnabled) {
+      renderer.setSetting("enableCameraPanning", true);
+      renderer.getCamera().animate(to, { duration: 380 }, function() {
+        renderer.setSetting("enableCameraPanning", false);
+      });
+      return;
+    }
+    renderer.getCamera().animate(to, { duration: 380 });
+  }
+  function zoomBy(dir) {
+    var cam = renderer.getCamera();
+    var step = renderer.getSetting("zoomingRatio") || 1.2;
+    var r = cam.getState().ratio * (dir > 0 ? 1 / step : step);
+    var lo = renderer.getSetting("minCameraRatio"), hi = renderer.getSetting("maxCameraRatio");
+    if (typeof lo === "number" && r < lo) r = lo;
+    if (typeof hi === "number" && r > hi) r = hi;
+    cam.animate({ ratio: r }, { duration: renderer.getSetting("zoomDuration") || 120 });
+  }
+  function setPan(on, persist) {
+    panEnabled = !!on;
+    var btn = $("pan");
+    if (btn) btn.setAttribute("aria-pressed", panEnabled ? "true" : "false");
+    if (renderer) {
+      if (panEnabled) renderer.setSetting("enableCameraPanning", true);
+      else fit();
+    }
+    if (persist && onPanEnabled) onPanEnabled(panEnabled);
+    return panEnabled;
   }
   function savePng() {
     var canvases = renderer.getCanvases();
@@ -9106,8 +10794,9 @@ function mountVaultGraph(root, data, deps) {
     var wrap = $("heatwrap");
     var avail = (wrap && wrap.clientWidth || $("stage").clientWidth || 900) - HEAT_GUTTER;
     avail -= HEAT_ARROW_W;
-    var fits = Math.floor((avail + HEAT_GAP) / (HEAT_CELL_MIN + HEAT_GAP));
-    var cols = Math.max(HEAT_WEEKS_MIN, Math.min(HEAT_WEEKS, fits));
+    var want = Math.floor((avail + HEAT_GAP) / (HEAT_CELL_MAX + HEAT_GAP));
+    var span = dateSpan ? Math.ceil((dateSpan.hi - dateSpan.lo) / WEEK_MS) + 1 : HEAT_WEEKS;
+    var cols = Math.max(HEAT_WEEKS_MIN, Math.min(HEAT_WEEKS, span, want));
     var cell = Math.floor((avail - (cols - 1) * HEAT_GAP) / cols);
     return { cols, cell: Math.max(HEAT_CELL_MIN, Math.min(HEAT_CELL_MAX, cell)) };
   }
@@ -9117,7 +10806,8 @@ function mountVaultGraph(root, data, deps) {
     var g = heatGeom();
     var cols = g.cols, cell = g.cell;
     var pitch = cell + HEAT_GAP;
-    var start = heatMonday(heatParse(TODAY)) - (cols - 1) * WEEK_MS;
+    var endMs = state.heatEnd === null ? heatParse(TODAY) : state.heatEnd;
+    var start = heatMonday(endMs) - (cols - 1) * WEEK_MS;
     var days = /* @__PURE__ */ Object.create(null), keys = [];
     for (var c = 0; c < cols; c++) {
       for (var r = 0; r < 7; r++) {
@@ -9167,7 +10857,6 @@ function mountVaultGraph(root, data, deps) {
       after,
       undated,
       dated: counts2.length,
-      mean: null,
       w: HEAT_GUTTER + cols * pitch - HEAT_GAP + HEAT_ARROW_W,
       h: HEAT_MONTH_H + 7 * pitch - HEAT_GAP
     };
@@ -9237,7 +10926,7 @@ function mountVaultGraph(root, data, deps) {
     for (var i = 0; i < heat.keys.length; i++) {
       sig.push(Math.round(heat.days[heat.keys[i]].n * 4));
     }
-    sig.push(state.markDay || "", state.hoverDay || "", state.markToday ? 1 : 0, heat.cell);
+    sig.push(state.markDay || "", state.hoverDay || "", heat.cell);
     sig = sig.join(",");
     if (sig === heatSig) return;
     heatSig = sig;
@@ -9296,7 +10985,7 @@ function mountVaultGraph(root, data, deps) {
         heatTile(ctx, x2, y2, cell, d.parts);
         ctx.restore();
       }
-      if (d.key === state.markDay || state.markToday && d.key === TODAY) {
+      if (d.key === state.markDay) {
         ctx.strokeStyle = THEME.today;
         ctx.lineWidth = 1.5;
         heatRect(ctx, x2 - 1, y2 - 1, cell + 2, cell + 2, R + 1);
@@ -9434,6 +11123,415 @@ function mountVaultGraph(root, data, deps) {
     else window.addEventListener("resize", reflow);
   }
   var DEMO_DONE_TITLE = "vault-graph demo complete";
+  var RIBBON_BARS = 26;
+  var RIBBON_TRACK = 14;
+  var RIBBON_H = RIBBON_BARS + RIBBON_TRACK;
+  var GRAB_PX = 6;
+  var DRAG_MIN = 3;
+  var brushDrag = null;
+  var brushSweep = null;
+  function drawDateUI() {
+    ribW = measureRibbon() || ribW;
+    drawRibbon();
+    buildYears();
+  }
+  function buildYears() {
+    var host = $("years");
+    if (!host) return;
+    if (!dateSpan || !dateSpan.years.length) {
+      host.textContent = "";
+      return;
+    }
+    var w = ribbonW();
+    var span = dateSpan.hi - dateSpan.lo;
+    var pitchY = span > 0 ? w * (365.25 * 864e5) / span : w;
+    var every = pitchY < 20 ? 2 : 1;
+    var cur = null;
+    var cf = state.from === null ? dateSpan.lo : state.from;
+    var ct = state.to === null ? dateSpan.hi : state.to;
+    var ca = new Date(cf), cb = new Date(ct);
+    if (ca.getUTCFullYear() === cb.getUTCFullYear() && ca.getUTCMonth() === 0 && ca.getUTCDate() === 1 && (cb.getUTCMonth() === 11 && cb.getUTCDate() === 31 || ct >= dateSpan.hi)) cur = ca.getUTCFullYear();
+    var made = [];
+    dateSpan.years.forEach(function(yy) {
+      if (yy.y % every !== 0) return;
+      var at = Math.max(0, Math.min(w, ribbonX(Date.UTC(yy.y, 0, 1), w)));
+      var b = DOC.createElement("button");
+      b.type = "button";
+      b.setAttribute("data-yr", String(yy.y));
+      b.setAttribute("aria-pressed", cur === yy.y ? "true" : "false");
+      b.title = yy.y + " -- " + yy.n + " note" + (yy.n === 1 ? "" : "s");
+      b.style.setProperty("left", Math.round(at) + "px");
+      b.textContent = "'" + String(yy.y).slice(2);
+      made.push(b);
+    });
+    host.replaceChildren.apply(host, made);
+  }
+  function fitCanvas(cv, w, h) {
+    var dpr = Math.min(2, WIN.devicePixelRatio || 1);
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    cv.style.width = w + "px";
+    cv.style.height = h + "px";
+    var cx = cv.getContext("2d");
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx.clearRect(0, 0, w, h);
+    return cx;
+  }
+  function dateRamp(t) {
+    return t <= 0 ? css("--dim") : mixHex(css("--surface-2"), css("--accent"), 0.25 + 0.75 * Math.min(1, t));
+  }
+  function scrubColor() {
+    return mixHex(css("--accent"), css("--text-1"), 0.3);
+  }
+  function rgbaHex(hex, a) {
+    var c = toRgb(hex);
+    return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")";
+  }
+  var ribW = 0;
+  function measureRibbon() {
+    var cv = $("ribbon");
+    if (!cv) return 0;
+    var keep = cv.style.width;
+    cv.style.removeProperty("width");
+    var w = cv.getBoundingClientRect().width;
+    if (keep) cv.style.setProperty("width", keep);
+    return w;
+  }
+  function ribbonW() {
+    if (!ribW) ribW = measureRibbon();
+    return ribW || 600;
+  }
+  function ribbonX(ms, w) {
+    var span = dateSpan.hi - dateSpan.lo;
+    return span > 0 ? (ms - dateSpan.lo) / span * w : 0;
+  }
+  function ribbonMs(x, w) {
+    return dateSpan.lo + Math.max(0, Math.min(w, x)) / w * (dateSpan.hi - dateSpan.lo);
+  }
+  function brushEnds() {
+    if (brushDrag && brushDrag.pFrom !== void 0) return [brushDrag.pFrom, brushDrag.pTo];
+    if (brushSweep !== null) return [dateSpan.lo, brushSweep];
+    return [
+      state.from === null ? dateSpan.lo : state.from,
+      state.to === null ? dateSpan.hi : state.to
+    ];
+  }
+  function winEndNow() {
+    if (state.heatEnd !== null) return state.heatEnd;
+    return heat ? heat.start + heat.cols * WEEK_MS : heatParse(TODAY);
+  }
+  function drawRibbon() {
+    var cv = $("ribbon");
+    if (!cv || !dateSpan) return;
+    var w = Math.max(200, ribbonW());
+    var cx = fitCanvas(cv, w, RIBBON_H);
+    var top = RIBBON_BARS;
+    var ms = dateSpan.months, n = ms.length;
+    var pitch = w / n;
+    for (var i = 0; i < n; i++) {
+      var m = ms[i];
+      var t = Math.min(1, m.n / dateSpan.nRef);
+      var bh = m.n ? Math.max(1.5, (top - 2) * t) : 0;
+      cx.fillStyle = m.n ? dateRamp(t) : css("--dim");
+      cx.fillRect(i * pitch, top - bh, Math.max(1, pitch - 0.6), bh || 1);
+    }
+    for (var j = 0; j < n; j++) {
+      if (ms[j].m !== 0) continue;
+      cx.fillStyle = rgbaHex(css("--text-3"), 0.28);
+      cx.fillRect(j * pitch, 0, 1, top);
+    }
+    var tw = winTrack(w);
+    cx.fillStyle = rgbaHex(css("--text-3"), 0.16);
+    heatRect(cx, 0, tw.y + tw.h / 2 - 1, w, 2, 1);
+    cx.fill();
+    var pillW = Math.max(10, tw.x1 - tw.x0);
+    cx.fillStyle = scrubColor();
+    cx.globalAlpha = brushDrag && brushDrag.mode === "win" ? 1 : 0.86;
+    heatRect(cx, tw.x0, tw.y, pillW, tw.h, tw.h / 2);
+    cx.fill();
+    cx.globalAlpha = 1;
+    cx.strokeStyle = rgbaHex(css("--surface-0"), 0.9);
+    cx.lineWidth = 1;
+    heatRect(cx, tw.x0, tw.y, pillW, tw.h, tw.h / 2);
+    cx.stroke();
+    var e = brushEnds(), x0 = ribbonX(e[0], w), x1 = ribbonX(e[1], w);
+    cx.fillStyle = rgbaHex(css("--surface-0"), 0.72);
+    cx.fillRect(0, 0, x0, top);
+    cx.fillRect(x1, 0, w - x1, top);
+    var col = scrubColor(), rim = rgbaHex(css("--surface-0"), 0.92);
+    var gw = 9, gh = Math.max(12, top - 8), gy = (top - gh) / 2;
+    [x0, x1].forEach(function(x) {
+      var gx = Math.max(0, Math.min(w - gw, x - gw / 2));
+      cx.fillStyle = rim;
+      cx.fillRect(x - 2.5, 0, 5, top);
+      cx.fillStyle = col;
+      cx.fillRect(x - 1.5, 0, 3, top);
+      heatRect(cx, gx, gy, gw, gh, 3);
+      cx.fill();
+      cx.strokeStyle = rim;
+      cx.lineWidth = 1;
+      heatRect(cx, gx, gy, gw, gh, 3);
+      cx.stroke();
+      cx.fillStyle = rim;
+      cx.fillRect(gx + gw / 2 - 2, gy + gh / 2 - 3, 1, 6);
+      cx.fillRect(gx + gw / 2 + 1, gy + gh / 2 - 3, 1, 6);
+    });
+  }
+  function rebuildBand() {
+    var endMs = state.heatEnd === null ? heatParse(TODAY) : state.heatEnd;
+    var wantStart = heatMonday(endMs) - ((heat ? heat.cols : HEAT_WEEKS) - 1) * WEEK_MS;
+    var moved = !heat || heat.start !== wantStart;
+    if (moved) heatBuild();
+    drawDateUI();
+    if (moved) heatDraw();
+  }
+  function winTrack(w) {
+    var span = (heat ? heat.cols : HEAT_WEEKS) * WEEK_MS;
+    var end = winEndNow();
+    return {
+      x0: ribbonX(end - span, w),
+      x1: ribbonX(end, w),
+      y: RIBBON_BARS + 2,
+      h: RIBBON_TRACK - 5
+    };
+  }
+  function inWinTrack(y) {
+    return y >= RIBBON_BARS && y < RIBBON_BARS + RIBBON_TRACK;
+  }
+  function winSpan() {
+    return (heat ? heat.cols : HEAT_WEEKS) * WEEK_MS;
+  }
+  function clampWinEnd(ms) {
+    var todayMs = heatParse(TODAY);
+    var lo = dateSpan.lo + winSpan();
+    return Math.max(Math.min(ms, todayMs), Math.min(lo, todayMs));
+  }
+  function winEndCentred(ms) {
+    return clampWinEnd(ms + winSpan() / 2);
+  }
+  function brushHit(x, w, y) {
+    if (y !== void 0 && inWinTrack(y)) return "win";
+    var e = brushEnds(), x0 = ribbonX(e[0], w), x1 = ribbonX(e[1], w);
+    var d0 = Math.abs(x - x0), d1 = Math.abs(x - x1);
+    if (d0 <= GRAB_PX || d1 <= GRAB_PX) return d0 <= d1 ? "from" : "to";
+    if (x > x0 && x < x1) {
+      return state.from === null && state.to === null ? "new" : "body";
+    }
+    return "new";
+  }
+  function showRTip(x, text) {
+    var t = $("rtip"), rib = $("ribbon"), band = $("heat");
+    if (!t || !rib || !band) return;
+    setHTML(t, esc(text));
+    t.hidden = false;
+    var bb = band.getBoundingClientRect(), rb = rib.getBoundingClientRect();
+    var tb = t.getBoundingClientRect();
+    var left = Math.max(4, Math.min(bb.width - tb.width - 4, rb.left - bb.left + x - tb.width / 2));
+    t.style.left = left + "px";
+    t.style.top = rb.top - bb.top - tb.height - 3 + "px";
+  }
+  function hideRTip() {
+    var t = $("rtip");
+    if (t) t.hidden = true;
+  }
+  function isoDay(ms) {
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+  function winLabel() {
+    if (!heat) return "";
+    return isoDay(heat.start) + "  \u2192  " + isoDay(heat.start + heat.cols * WEEK_MS - DAY_MS);
+  }
+  function buildDateUI() {
+    var rib = $("ribbon");
+    if (!rib) return;
+    var pend = null, pendRaf = 0;
+    var flush = function() {
+      pendRaf = 0;
+      var f = pend;
+      pend = null;
+      if (f) f();
+    };
+    var onFrame = function(fn) {
+      pend = fn;
+      if (!pendRaf) pendRaf = WIN.requestAnimationFrame(flush);
+    };
+    $("rangeall").onclick = function() {
+      state.from = null;
+      state.to = null;
+      state.heatEnd = null;
+      heatBuild();
+      applyRange();
+      heatDraw();
+    };
+    var fieldMs = function(el) {
+      var v = el && el.value;
+      if (!v) return null;
+      var t = heatParse(v);
+      return isFinite(t) ? t : null;
+    };
+    ["from", "to"].forEach(function(which) {
+      var el = $(which);
+      if (!el) return;
+      el.onchange = function() {
+        setRangeMs(fieldMs($("from")), fieldMs($("to")));
+      };
+    });
+    var xOf = function(ev) {
+      return ev.clientX - rib.getBoundingClientRect().left;
+    };
+    var yOf = function(ev) {
+      return ev.clientY - rib.getBoundingClientRect().top;
+    };
+    rib.addEventListener("pointerdown", function(ev) {
+      if (!dateSpan) return;
+      var w = ribbonW(), x = xOf(ev), mode = brushHit(x, w, yOf(ev)), e = brushEnds();
+      brushDrag = {
+        mode,
+        x0: ev.clientX,
+        moved: false,
+        // For an edge drag the OTHER end is the anchor and does not move. For a
+        // body drag both ends move together, so both originals are kept.
+        anchor: mode === "from" ? e[1] : e[0],
+        from0: e[0],
+        to0: e[1],
+        grab: ribbonMs(x, w),
+        winEnd0: heat ? heat.start + heat.cols * WEEK_MS : 0
+      };
+      try {
+        rib.setPointerCapture(ev.pointerId);
+      } catch {
+      }
+      rib.setAttribute("data-grab", mode === "win" ? "moving" : mode === "body" ? "moving" : "edge");
+      if (mode === "win") {
+        state.heatEnd = winEndCentred(ribbonMs(x, w));
+        rebuildBand();
+        showRTip(x, winLabel());
+      }
+    });
+    rib.addEventListener("pointermove", function(ev) {
+      if (!brushDrag) {
+        if (dateSpan) {
+          var x = xOf(ev), w2 = ribbonW(), m = brushHit(x, w2, yOf(ev));
+          if (m === "win") rib.setAttribute("data-grab", "body");
+          else if (m === "from" || m === "to") rib.setAttribute("data-grab", "edge");
+          else if (m === "body") rib.setAttribute("data-grab", "body");
+          else rib.removeAttribute("data-grab");
+          showRTip(x, m === "win" ? winLabel() : isoDay(ribbonMs(x, w2)));
+        }
+        return;
+      }
+      if (Math.abs(ev.clientX - brushDrag.x0) > DRAG_MIN) brushDrag.moved = true;
+      if (!brushDrag.moved) return;
+      var w = ribbonW(), here = ribbonMs(xOf(ev), w), lo, hi, follow;
+      if (brushDrag.mode === "win") {
+        var wx = xOf(ev);
+        onFrame(function() {
+          if (!brushDrag) return;
+          state.heatEnd = winEndCentred(here);
+          rebuildBand();
+          showRTip(wx, winLabel());
+        });
+        return;
+      }
+      if (brushDrag.mode === "body") {
+        var d = here - brushDrag.grab;
+        var width = brushDrag.to0 - brushDrag.from0;
+        lo = Math.max(dateSpan.lo, Math.min(dateSpan.hi - width, brushDrag.from0 + d));
+        hi = lo + width;
+        follow = hi;
+      } else if (brushDrag.mode === "from" || brushDrag.mode === "to") {
+        lo = Math.min(brushDrag.anchor, here);
+        hi = Math.max(brushDrag.anchor, here);
+        follow = here;
+      } else {
+        lo = Math.min(brushDrag.grab, here);
+        hi = Math.max(brushDrag.grab, here);
+        follow = here;
+      }
+      var mode = brushDrag.mode;
+      brushDrag.pFrom = lo;
+      brushDrag.pTo = hi;
+      onFrame(function() {
+        if (!brushDrag) return;
+        showRTip(
+          ribbonX(follow, w),
+          mode === "body" ? isoDay(lo) + "  \u2192  " + isoDay(hi) : isoDay(follow)
+        );
+        drawDateUI();
+        var el = $("rangenote");
+        if (el) el.textContent = isoDay(lo) + "  \u2192  " + isoDay(hi);
+      });
+    });
+    var endDrag = function(ev) {
+      if (!brushDrag) return;
+      var d = brushDrag;
+      brushDrag = null;
+      rib.removeAttribute("data-grab");
+      hideRTip();
+      try {
+        rib.releasePointerCapture(ev.pointerId);
+      } catch {
+      }
+      if (d.mode === "win") return;
+      if (d.moved && d.pFrom !== void 0) {
+        state.from = d.pFrom <= dateSpan.lo ? null : d.pFrom;
+        state.to = d.pTo >= dateSpan.hi ? null : d.pTo;
+        applyRange();
+      } else {
+        rangeChrome();
+      }
+    };
+    rib.addEventListener("pointerup", endDrag);
+    rib.addEventListener("pointercancel", endDrag);
+    rib.addEventListener("pointerleave", function() {
+      if (!brushDrag) hideRTip();
+    });
+    var yrHost = $("years");
+    var hoverYear = function(yr) {
+      if (state.hoverYear === yr) return;
+      state.hoverYear = yr;
+      if (renderer) renderer.refresh();
+    };
+    if (yrHost) {
+      var yrOf = function(ev) {
+        var b = ev.target && ev.target.closest && ev.target.closest("button[data-yr]");
+        return b ? b.getAttribute("data-yr") : null;
+      };
+      yrHost.addEventListener("click", function(ev) {
+        var yr = yrOf(ev);
+        if (yr === null) return;
+        state.hoverYear = null;
+        setRangeMs(Date.UTC(+yr, 0, 1), Date.UTC(+yr, 11, 31));
+      });
+      yrHost.addEventListener("pointerover", function(ev) {
+        hoverYear(yrOf(ev));
+      });
+      yrHost.addEventListener("pointerout", function(ev) {
+        if (!ev.relatedTarget || !yrHost.contains(ev.relatedTarget)) hoverYear(null);
+      });
+    }
+    var onSlot = function() {
+      var w = measureRibbon();
+      if (w && Math.abs(w - ribW) < 0.5) return;
+      ribW = w;
+      drawDateUI();
+    };
+    if (WIN.ResizeObserver) new WIN.ResizeObserver(onSlot).observe($("heat"));
+    else WIN.addEventListener("resize", onSlot);
+    applyRange();
+  }
+  function wantWedgeDebug() {
+    var q = String(WIN.location ? WIN.location.search : "") + " " + String(WIN.location ? WIN.location.hash : "");
+    if (/(^|[?&#])nowedges\b/.test(q)) return false;
+    if (/(^|[?&#])wedges\b/.test(q)) return true;
+    return !!(DATA && DATA.dev);
+  }
+  function restOn() {
+    return /(^|[?&#])rest\b/.test(String(location.search) + " " + String(location.hash));
+  }
+  function rowArcOn() {
+    return /(^|[?&#])rowarc/.test(String(location.search) + " " + String(location.hash));
+  }
   function demoOn() {
     return /(^|[?&#])demo\b/.test(String(location.search) + " " + String(location.hash));
   }
@@ -9454,6 +11552,20 @@ function mountVaultGraph(root, data, deps) {
   }
   function demoFind(kind, arg) {
     if (kind === "id") return $(arg);
+    if (kind === "stage") {
+      var stageEl = $("graph");
+      if (!stageEl) return null;
+      var sb = stageEl.getBoundingClientRect();
+      var f = arg === "centre" || !arg ? [0.5, 0.5] : String(arg).split(",").map(Number);
+      return demoPoint(
+        sb.left + sb.width * f[0],
+        sb.top + sb.height * f[1],
+        2,
+        2,
+        "stage " + (arg || "centre")
+      );
+    }
+    if (kind === "brush") return demoRibbonPoint(arg);
     if (kind === "eye" || kind === "group") {
       var g = demoGroup(arg);
       if (!g) return null;
@@ -9503,6 +11615,32 @@ function mountVaultGraph(root, data, deps) {
       }
       return null;
     }
+    if (kind === "year") {
+      var yh = $("years");
+      if (!yh || !dateSpan) return null;
+      var chips = [].slice.call(yh.querySelectorAll("button[data-yr]"));
+      if (!chips.length) return null;
+      var have = /* @__PURE__ */ Object.create(null);
+      dateSpan.years.forEach(function(yy) {
+        have[String(yy.y)] = yy.n;
+      });
+      var pickY = null, bestN = -1;
+      chips.forEach(function(c) {
+        var y = c.getAttribute("data-yr");
+        if (arg && /^\d{4}$/.test(arg)) {
+          if (y === arg) pickY = c;
+          return;
+        }
+        var n = have[y] || 0;
+        if (n > bestN) {
+          bestN = n;
+          pickY = c;
+        }
+      });
+      if (!pickY || !arg && bestN <= 0) return null;
+      pickY.demoLabel = "year " + pickY.getAttribute("data-yr") + " (" + (have[pickY.getAttribute("data-yr")] || 0) + " notes)";
+      return pickY;
+    }
     if (kind === "note") return demoNoteRect(arg);
     if (kind === "day") return demoCellRect(heat && heat.days[arg]);
     if (kind === "busiest") {
@@ -9525,7 +11663,7 @@ function mountVaultGraph(root, data, deps) {
       if ((alpha[id] || 0) < 0.5) return;
       var v = renderer.graphToViewport({ x: a.x, y: a.y });
       v = { x: v.x + org.left, y: v.y + org.top };
-      var r = (a.size || 4) * sizeScale;
+      var r = renderer.scaleSize ? renderer.scaleSize(dotPx(a.size, id)) : dotPx(a.size, id);
       if (r > maxR) maxR = r;
       pts.push({ id, x: v.x, y: v.y, r, mine: a.folder === g, label: a.label });
     });
@@ -9570,6 +11708,34 @@ function mountVaultGraph(root, data, deps) {
       demoLabel: "heatmap " + d.key + " (" + Math.round(d.n) + " notes)"
     };
   }
+  function demoPoint(cx, cy, w, h, label) {
+    return {
+      getBoundingClientRect: function() {
+        return { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
+      },
+      demoLabel: label
+    };
+  }
+  function demoRibbonPoint(which) {
+    var rib = $("ribbon");
+    if (!rib || !dateSpan) return null;
+    var b = rib.getBoundingClientRect();
+    var w = b.width;
+    if (which === "window") {
+      var t = winTrack(w);
+      return demoPoint(b.left + (t.x0 + t.x1) / 2, b.top + t.y + t.h / 2, 8, 8, "band window");
+    }
+    var e = brushEnds();
+    var x = ribbonX(which === "to" ? e[1] : e[0], w);
+    x = Math.max(2, Math.min(w - 2, x));
+    return demoPoint(
+      b.left + x,
+      b.top + RIBBON_BARS / 2,
+      8,
+      8,
+      which === "to" ? "range end" : "range start"
+    );
+  }
   function demoWhere(kind, arg) {
     var el = demoFind(kind, arg);
     if (!el) return null;
@@ -9593,40 +11759,102 @@ function mountVaultGraph(root, data, deps) {
   }
   function demoMode() {
     return [
+      /* --- 1. the vault, growing --------------------------------------- */
       // The intro is a BEAT, not the page's own boot animation -- see the `?demo` branch
       // at the bottom of this file. Refresh is the real control for "replay it", so the
       // demo presses it rather than calling playTimeline() behind the scenes.
+      //
+      // It also shows the STRIP now: the intro sweeps the range end from one end of the
+      // ribbon to the other, with the date under the handle, so this one beat says both
+      // "here is the vault" and "here is the control that scrubs it". Which is why the act
+      // that picks that handle up by hand comes next but one.
       { settle: true, why: "start from a disc at rest" },
       { click: true, target: ["id", "refresh"], why: "replay the intro on camera" },
-      { settle: true, why: "let the vault grow from its first note to now" },
+      { settle: true, why: "the vault grows from its first note to now, and the range end sweeps with it" },
+      /* --- 2. one note -------------------------------------------------- */
       // Hovering a note names it, lifts it, and lights its links while the rest of the
       // disc recedes. The FOLDERS here are chosen, not incidental: daily notes and
       // weekly reviews are titled by date, so the label that appears on camera carries
-      // no personal information -- unlike a note in 03 - Resources / People. Both are
-      // hovered before 04 is hidden below, or the first target would not be on screen.
+      // no personal information -- unlike a note in 03 - Resources / People.
       // "04"/"05" resolve by prefix on a PARA-ish vault and fall back to the largest
       // group elsewhere. Both are date-titled folders on the vaults this is recorded
-      // against, which is why the label that appears on camera carries no personal
-      // information -- see the note on demoNoteRect.
+      // against -- see the note on demoNoteRect.
+      //
+      // BEFORE ANY FILTER RUNS, which is why this act moved up past the legend as well as
+      // past the ribbon: demoNoteRect picks the most ISOLATED visible note, and the more
+      // the disc has been thinned the further that aim drifts from a typical note.
       { hover: true, target: ["note", "04"], why: "hover a daily note" },
       { hover: true, target: ["note", "05"], why: "hover a meeting note" },
+      /* --- 3. the timeline ---------------------------------------------- */
+      // The strip under the band carries every month of the vault, and it is the timeline:
+      // two handles that are the filter, a pill below them for the 52 weeks the grid above
+      // is drawing, and a chip per year. Moved up from LAST -- the sidebar's rank slider is
+      // gone and this is the only timeline now, so it belongs beside the intro that has
+      // just swept it rather than after the preference panel.
+      //
+      // The `to` handle first, and deliberately the same one the intro moved: the intro
+      // showed it travelling, this shows a hand doing it. The disc waits for the release on
+      // each of these, by design -- a drag repaints one small canvas and the filter lands
+      // once, when the button comes up.
+      { drag: [-320, 0], target: ["brush", "to"], why: "pull the range end back by hand -- the handle the intro just swept" },
+      { settle: true, why: "let the disc thin out" },
+      { drag: [200, 0], target: ["brush", "from"], why: "...and bring the range start forward" },
+      { settle: true, why: "let it thin further" },
+      // THE YEAR CHIPS, which have never been in the demo. Hover haloes that year's notes
+      // wherever they landed; clicking sets the range to that calendar year, and the chip
+      // reads pressed. "busiest" picks the fullest year that has a chip, so the hover
+      // always lights something -- see demoFind.
+      { hover: true, target: ["year", "busiest"], why: "hover a year to find it on the disc" },
+      { click: true, target: ["year", "busiest"], why: "...and click it to filter to that year" },
+      { settle: true, why: "let the year land" },
+      // The band's window, moved on its own. The range above stays exactly where it was --
+      // which is most of what this act is for: they are two instruments, not one.
+      { drag: [-260, 0], target: ["brush", "window"], why: "slide the heatmap window back on its own" },
+      { settle: true, why: "let the band redraw" },
+      { drag: [170, 0], target: ["brush", "window"], why: "...and forward again" },
+      { settle: true, why: "let the band redraw" },
+      // Clear it, so everything after this runs on the whole vault. Also puts the window
+      // back, which is what makes the `busiest` targets in the next act land on cells that
+      // are actually on screen.
+      { click: true, target: ["id", "rangeall"], why: "clear the date range" },
+      { settle: true, why: "let the whole vault come back" },
+      /* --- 4. the heatmap ----------------------------------------------- */
+      // Hovering a day haloes the notes added that day, wherever they landed on the disc.
+      // Ranked by what is VISIBLE rather than by date, so this works on any vault.
+      { hover: true, target: ["busiest", "1"], why: "hover the busiest day" },
+      { hover: true, target: ["busiest", "2"], why: "...and the next" },
+      { hover: true, target: ["busiest", "3"], why: "...and the next" },
+      // AND CLICKING KEEPS IT. This is what replaced the sidebar's "Mark today" in 1.7.0:
+      // a picked day's notes are recoloured to the neutral extreme as well as haloed, and
+      // it stays when the pointer leaves. Clicking today's square -- the last cell of the
+      // grid -- is the whole of what that button did.
+      //
+      // The busiest day rather than today, because today is allowed to hold no notes and a
+      // beat that marks nothing reads as a mis-click. Clicked twice, so nothing is left
+      // marked for the acts below.
+      { click: true, target: ["busiest", "1"], why: "click a day to keep it marked -- recoloured, haloed, nothing moved" },
+      { settle: true, why: "let the mark ramp in" },
+      { click: true, target: ["busiest", "1"], why: "...and click again to let it go" },
+      { settle: true, why: "let it ramp back" },
+      /* --- 5. folders --------------------------------------------------- */
       // Hiding: the wedges reallocate and the disc stays a full circle.
-      { click: true, target: ["eye", "04"], why: "hide a folder \u2014 the wedges reallocate" },
+      { click: true, target: ["eye", "04"], why: "hide a folder -- the wedges reallocate" },
       { settle: true, why: "let the wedges reallocate" },
-      // The tree starts folded, so getting to a subfolder means opening its folder
-      // first. That is the honest sequence and it is worth showing: the disc already
-      // draws 03's sub-wedges, and this is where the legend admits they are there.
-      // It is also load-bearing -- the row the next beat clicks does not exist until
-      // this one has run.
+      // And `only`, which is the fastest way to answer "where does one folder live".
+      // SAFE HERE because nothing has been unfolded yet: see the note at the top about the
+      // 97px row shift that soloing an unfolded legend causes.
+      { click: true, target: ["only", "08"], why: "solo a single folder" },
+      { settle: true, why: "let everything else recede" },
+      { click: true, target: ["id", "allon"], why: "show everything again" },
+      { settle: true, why: "let the whole disc come back" },
+      /* --- 6. subfolders ------------------------------------------------ */
+      // The tree starts folded, so getting to a subfolder means opening its folder first.
+      // That is the honest sequence and it is worth showing: the disc already draws 03's
+      // sub-wedges, and this is where the legend admits they are there. It is also
+      // load-bearing -- the row the next beats aim at does not exist until this has run.
       { click: true, target: ["twisty", "03"], why: "unfold a folder to reach its subfolders" },
       // HOVER FIRST, and at both levels. It is the cheaper question and the one you would
-      // try first: a halo, with nothing hidden and no wedge moved. A whole folder, then
-      // one subfolder inside the folder just unfolded -- both rows do it, so both are
-      // worth showing, and the second is only reachable because the twisty above ran.
-      //
-      // These two used to sit AFTER the heatmap, on the way to the gear, which sent the
-      // pointer back up to the legend between two things that had nothing to do with it.
-      // The legend work belongs together, and the trip to the gear should be one trip.
+      // try first: a halo, with nothing hidden and no wedge moved.
       { hover: true, target: ["group", "01"], why: "hover a folder to find it on the disc" },
       { hover: true, target: ["sub", "03/People"], why: "...and one subfolder inside it" },
       // Then the click, which is the same question answered permanently: highlighting is
@@ -9638,18 +11866,33 @@ function mountVaultGraph(root, data, deps) {
       { settle: true, why: "let the sub-wedge push out" },
       { click: true, target: ["sub", "03/People"], why: "...and let it back down" },
       { settle: true, why: "let it settle back" },
-      // The heatmap: hovering a day haloes the notes added that day, wherever they
-      // landed on the disc. Ranked rather than dated, so this works on any vault and
-      // never lands on a cell emptied by the hide above.
-      { hover: true, target: ["busiest", "1"], why: "hover the busiest day" },
-      { hover: true, target: ["busiest", "2"], why: "...and the next" },
-      { hover: true, target: ["busiest", "3"], why: "...and the next" },
-      // THE COLOUR PICKER. The gear has to come first -- the panel's swatches do not
-      // exist in the DOM until buildSettings has run, so the `swatch` targets below
-      // resolve to nothing without this beat. Two folders are recoloured rather than
-      // one, because one swatch click looks like a highlight and two look like a
-      // choice; and the second is a grey, which is the answer to "can a folder recede
-      // on purpose" that the archives rule only implies.
+      { click: true, target: ["twisty", "03"], why: "fold the subfolders away again" },
+      /* --- 7. the camera ------------------------------------------------ */
+      // Zoom in a few notches rather than one. One notch is a fifth now, which is the point
+      // -- it is a scroll and not a teleport -- and a single notch on camera looks like
+      // nothing happened.
+      { wheel: 4, target: ["stage", "0.42,0.40"], why: "zoom in, a fifth per notch" },
+      { settle: true, why: "let the last notch land" },
+      // Then pan, which is only possible now that the disc is not pinned to the middle. Held
+      // button the whole way, or the page sees a click and a release with nothing between.
+      { drag: [190, 110], target: ["stage", "0.55,0.45"], why: "drag the disc around" },
+      { settle: true, why: "let the pan settle" },
+      // Two ways back, both shown, because the button is discoverable and the double-click is
+      // faster once you know it.
+      { dblclick: true, target: ["stage", "centre"], why: "double-click anywhere to reset" },
+      { settle: true, why: "let the view come back" },
+      { wheel: 3, target: ["stage", "0.60,0.55"], why: "zoom in again, to have something to reset" },
+      { settle: true, why: "let it land" },
+      { click: true, target: ["id", "reset"], why: "...and the reset button in the corner" },
+      { settle: true, why: "let the view come back" },
+      /* --- 8. colours --------------------------------------------------- */
+      // LAST on purpose. It is a preference panel, and it was landing before the timeline.
+      // The gear has to come first regardless -- the panel's swatches do not exist in the
+      // DOM until buildSettings has run, so the `swatch` targets below resolve to nothing
+      // without this beat. Two folders are recoloured rather than one, because one swatch
+      // click looks like a highlight and two look like a choice; and the second is a grey,
+      // which is the answer to "can a folder recede on purpose" that the archives rule
+      // only implies.
       { click: true, target: ["id", "gear"], why: "open the settings panel" },
       { click: true, target: ["swatch", "01/g8"], why: "give a folder a colour of its own" },
       { settle: true, why: "the disc repaints -- no relayout, nothing moves" },
@@ -9658,18 +11901,6 @@ function mountVaultGraph(root, data, deps) {
       { click: true, target: ["id", "fcreset"], why: "put every folder back to automatic" },
       { settle: true, why: "let the palette snap back" },
       { click: true, target: ["id", "gear"], why: "close the panel" },
-      // FOLD 03 BACK UP before soloing, and this is not tidiness.
-      //
-      // `only` hides every other group, and a hidden group stops rendering its subfolder
-      // rows -- so soloing while 03 is unfolded deletes those rows and pulls everything
-      // below them UP, by 97px measured. The pointer does not move, so it ends up over a
-      // row three below the one it clicked, whose `only` chip then lights up with its own
-      // tooltip. The take ended on a tooltip for the wrong folder, which reads exactly
-      // like the demo having mis-clicked.
-      { click: true, target: ["twisty", "03"], why: "fold the subfolders away again" },
-      // And `only`, which is the fastest way to answer "where does one folder live".
-      { click: true, target: ["only", "08"], why: "solo a single folder" },
-      { settle: true, why: "let everything else recede" },
       // Pointer out of the way, so the last frame is the disc rather than a hover state
       // left behind by the last click.
       { park: true, why: "leave the final frame clean" }
@@ -9680,6 +11911,23 @@ function mountVaultGraph(root, data, deps) {
     doneTitle: DEMO_DONE_TITLE,
     storyboard: demoMode,
     busy: demoBusy,
+    /**
+     * WHICH of the five things busy() ors together is still running.
+     *
+     * busy() answers "is anything moving", which is the right question for a driver deciding
+     * whether to act. It is the wrong question for a driver that has GIVEN UP waiting: then
+     * the only useful thing to know is what it was waiting for, and a boolean cannot say.
+     * Every "settle timed out" before this was a guess between five candidates.
+     */
+    busyWhy: function() {
+      return {
+        play: !!play,
+        cascade: !!cascadeRun,
+        anim: !!anim,
+        hover: !!hoverRaf,
+        highlight: !!hlRaf
+      };
+    },
     where: demoWhere,
     // What is hovered right now. The driver compares this against a target's `expect`
     // after a hover beat: aiming at a dot is only as good as the hit-test agreeing, and
@@ -9714,6 +11962,63 @@ function mountVaultGraph(root, data, deps) {
       alpha,
       cascade,
       syncAlpha,
+      // The lazy-edge seam, exposed for the probes: a test that wants to know
+      // whether hover materialisation works should drive the same function the
+      // pointer does, not re-implement it.
+      syncLazyEdges,
+      get lazyEdges() {
+        return lazyEdges;
+      },
+      // The page's own definition of unlinked. A check that re-derives it from
+      // graph.degree gets a different answer in a budgeted vault, where a note
+      // whose links were all trimmed has degree 0 and is not unlinked at all.
+      isOrphan,
+      // The wedge overlay, and the numbers it draws. wedgeEdges() is the honest
+      // answer to "where is this wedge", in the same screen-angle convention as
+      // a node's atan2 -- a probe that re-derives it from lastStart is working in
+      // sweep space and off by the half-gap rotation.
+      wedgeDebug,
+      wedgeEdges,
+      // The locked band radii, in graph units -- what the boundary rays are
+      // pinned at, and the number a unit slip in it silently disables.
+      bandRef: function() {
+        return geomLock ? geomLock.bandR : null;
+      },
+      // Every line the overlay draws, with its angle at one radius: the only way
+      // to tell a line that is misplaced from a line that is missing.
+      wedgeTrace: function(rLattice) {
+        DBG.trace = [];
+        DBG.traceR = rLattice;
+        drawWedgeDebug();
+        var out = DBG.trace;
+        DBG.trace = null;
+        return out;
+      },
+      // The raw captured cells, for diagnosing what the overlay drew: one entry
+      // per CELL, which is one per sub-wedge, not one per folder.
+      wedgeCells: function() {
+        return (DBG.cells || []).map(function(c) {
+          return {
+            g: c.g,
+            k: c.k,
+            band: c.inner ? "i" : "o",
+            seams: c.seams,
+            f0: c.f0,
+            f1: c.f1,
+            pLead: c.pLead,
+            pTrail: c.pTrail,
+            n: (c.ids || []).length
+          };
+        });
+      },
+      // The two terms a wedge edge is made of, so a probe can decompose a
+      // measured swing instead of guessing which one moved.
+      seamDeg: function(bk) {
+        return bandOf(bk).gapDeg || 0;
+      },
+      seamNB: function(bk) {
+        return (bandOf(bk).nG || 0) + (bandOf(bk).nSub || 0);
+      },
       clearAlpha,
       buildWedgePlan,
       // Both added after wanting them from a test page: applyLayout to
@@ -9722,7 +12027,6 @@ function mountVaultGraph(root, data, deps) {
       // isHighlighted to check the predicate directly.
       applyLayout,
       isHighlighted,
-      isToday,
       // Logo internals: placeLogo has to be callable directly, because
       // refresh() only schedules a render and a tab that is not being
       // composited never runs one -- so testing the mark through the
@@ -9758,6 +12062,14 @@ function mountVaultGraph(root, data, deps) {
         return Object.assign(/* @__PURE__ */ Object.create(null), folderShown);
       },
       setFolderShown: applyFolderShown,
+      // The saved default, applied live. Mirrors setFolderShown: the host owns
+      // the store and this owns the camera.
+      setPanEnabled: function(v) {
+        return setPan(v !== false, false);
+      },
+      get panEnabled() {
+        return panEnabled;
+      },
       hiddenByDefault,
       // Push the defaults into the live filter and repaint. This is the
       // "and now show it" half, kept separate so loading saved settings at
@@ -9765,7 +12077,7 @@ function mountVaultGraph(root, data, deps) {
       applyHiddenDefaults: function() {
         seedHidden();
         buildLegend();
-        cascade();
+        cascade(null, { colToggle: true });
       },
       // The band, for the same reason placeLogo is exposed: it paints
       // from afterRender, so a tab that is not being composited never
@@ -9910,8 +12222,10 @@ function mountVaultGraph(root, data, deps) {
           return m;
         };
         var a = rows(lean), b = rows(padded), diffs = {};
-        Object.keys(a).forEach(function(k) {
-          if (a[k] !== b[k]) diffs[k] = { withoutZeros: a[k], withZeros: b[k] };
+        Object.keys(a).concat(Object.keys(b)).forEach(function(k) {
+          if ((a[k] || 0) !== (b[k] || 0)) {
+            diffs[k] = { withoutZeros: a[k] || 0, withZeros: b[k] || 0 };
+          }
         });
         var out = {
           leanMaxR: Math.round(lean.maxR),
@@ -9923,6 +12237,103 @@ function mountVaultGraph(root, data, deps) {
           invariantOK: Object.keys(diffs).length === 0 && Math.round(lean.maxR) === Math.round(padded.maxR)
         };
         return out;
+      },
+      // DENSITY. The question github#13 is about: does the disc that is on
+      // screen depend on how many notes are on screen, or on how many the
+      // vault happens to hold? Everything here is measured, not planned --
+      // the plan is what the layout intends, and after a cascade the two
+      // agree while during one they do not.
+      //
+      // pitchPx is the whole point. It is one lattice row in SCREEN pixels,
+      // which is what decides whether two notes in a column touch, and with
+      // the normalisation box pinned and the camera still it is invariant to
+      // note count by construction -- so it reads the same at 1500 notes and
+      // at 500, which is the bug.
+      //
+      // pitchRoot is that made scale-free: if a filtered disc were to refill
+      // its box, area per note would scale as 1/n and pitch as its root, so
+      // pitchPx * sqrt(shown) would hold still across every filter state.
+      // That product is the invariant, and it does not need a second vault to
+      // compare against.
+      densityReport: function() {
+        var shown = 0, lit = 0, shownI = 0, shownO = 0;
+        graph.forEachNode(function(id) {
+          if (visible(id)) {
+            shown++;
+            if (bandLock && bandLock[groupOf(id)]) shownI++;
+            else shownO++;
+          }
+          if ((alpha[id] || 0) > 4e-3) lit++;
+        });
+        var pitchPx = null, pitchPxI = null, unitPx = null, discPx = null;
+        if (renderer) {
+          var a = renderer.graphToViewport({ x: 0, y: 0 });
+          var u = renderer.graphToViewport({ x: UNIT, y: 0 });
+          unitPx = Math.hypot(u.x - a.x, u.y - a.y);
+          var b = renderer.graphToViewport({ x: UNIT * (bandOf("o").sp || 1), y: 0 });
+          pitchPx = Math.hypot(b.x - a.x, b.y - a.y);
+          var bi = renderer.graphToViewport({
+            x: UNIT * (bandOf("i").sp || 1) * bandScale("i"),
+            y: 0
+          });
+          pitchPxI = Math.hypot(bi.x - a.x, bi.y - a.y);
+          var e = renderer.graphToViewport({ x: (lastMaxR || 0) * UNIT, y: 0 });
+          discPx = Math.hypot(e.x - a.x, e.y - a.y);
+        }
+        var sizes = [];
+        if (renderer) {
+          graph.forEachNode(function(id) {
+            if (!visible(id)) return;
+            var d = renderer.getNodeDisplayData(id);
+            if (d && d.size > 0) sizes.push(d.size);
+          });
+          sizes.sort(function(x, y) {
+            return x - y;
+          });
+        }
+        var med = sizes.length ? sizes[Math.floor(sizes.length / 2)] : null;
+        var r3 = function(v) {
+          return v === null ? null : Math.round(v * 1e3) / 1e3;
+        };
+        return {
+          shown,
+          lit,
+          total: graph.order,
+          // The locked geometry, and how much of it the notes reach.
+          lockedMaxR: geomLock ? Math.round(geomLock.maxR) : null,
+          liveMaxR: Math.round(lastMaxR || 0),
+          reach: geomLock && geomLock.maxR ? r3((lastMaxR || 0) / geomLock.maxR) : null,
+          r0: geomLock ? r3(geomLock.r0) : null,
+          // The hole as a SHARE of what is drawn. The r0 formula exists to hold
+          // this constant; pinning r0 while the disc shrinks is what breaks it.
+          holeShare: lastMaxR ? r3((geomLock ? geomLock.r0 : 0) / lastMaxR) : null,
+          sp: r3(bandOf("o").sp),
+          unitPx: r3(unitPx),
+          pitchPx: r3(pitchPx),
+          // PITCH TIMES THE ROOT OF THE NOTE COUNT, and both PER BAND.
+          //
+          // The quantity that is conserved is sqrt(area): a band of fixed area
+          // holding n notes on a square lattice has pitch sqrt(area/n), so
+          // pitch * sqrt(n) is the band's own constant. Multiplying the OUTER
+          // band's pitch by the WHOLE disc's note count -- which this reported,
+          // and which was right when one spacing served both rings -- mixes two
+          // bands, so hiding folders from one of them moves it for a reason that
+          // is not a density change. The bands were made independent because a
+          // single spacing made each ring answer for the other's filtering, which
+          // was a reported bug; this is the same correction applied to its
+          // measurement.
+          shownInner: shownI,
+          shownOuter: shownO,
+          pitchPxInner: r3(pitchPxI),
+          pitchRoot: pitchPx ? r3(pitchPx * Math.sqrt(Math.max(1, shown))) : null,
+          pitchRootOuter: pitchPx ? r3(pitchPx * Math.sqrt(Math.max(1, shownO))) : null,
+          pitchRootInner: pitchPxI ? r3(pitchPxI * Math.sqrt(Math.max(1, shownI))) : null,
+          sizeScale: r3(sizeScale),
+          sizeMedian: r3(med),
+          sizeMin: r3(sizes.length ? sizes[0] : null),
+          sizeMax: r3(sizes.length ? sizes[sizes.length - 1] : null),
+          cameraRatio: r3(renderer ? renderer.getCamera().ratio : null)
+        };
       },
       // PLAN PARITY. The cascade must animate between the static
       // planner's own outputs, or it walks between packings nothing else
@@ -9974,12 +12385,29 @@ function mountVaultGraph(root, data, deps) {
       // then toggle, then probeReport() -- it names the biggest single
       // frame step per band, which is what "a jump" actually is.
       probe: function(on) {
-        probe = on === false ? null : { t0: NOW(), samples: [] };
+        probe = on === false ? null : {
+          t0: NOW(),
+          samples: [],
+          prevAng: null,
+          prevR: null,
+          set: function() {
+            var m = /* @__PURE__ */ Object.create(null);
+            graph.forEachNode(function(id) {
+              if ((alpha[id] || 0) >= 0.999) m[id] = 1;
+            });
+            return m;
+          }(),
+          watch: arguments.length > 1 ? String(arguments[1]) : null,
+          watched: null,
+          watchSeries: []
+        };
         return probe ? "recording" : "off";
       },
       probeReport: function() {
         if (!probe || !probe.samples.length) return "nothing recorded -- call __vg.probe(true) first";
         var s = probe.samples, worst = { inner: 0, outer: 0 }, at = { inner: 0, outer: 0 };
+        var tanWorst = 0, tanAt = 0, tanWho = null, ngWorst = 0, ngAt = 0;
+        var startWorst = 0, startAt = 0, startG = null, overWorst = 0;
         for (var i = 1; i < s.length; i++) {
           var di = Math.abs(s[i].innerMax - s[i - 1].innerMax);
           var doo = Math.abs(s[i].outerMax - s[i - 1].outerMax);
@@ -9991,17 +12419,132 @@ function mountVaultGraph(root, data, deps) {
             worst.outer = doo;
             at.outer = s[i].ms;
           }
+          if (s[i].tanStep > tanWorst) {
+            tanWorst = s[i].tanStep;
+            tanAt = s[i].ms;
+            tanWho = s[i].tanId;
+          }
+          var ds = 0, dsG = null;
+          Object.keys(s[i].starts || {}).forEach(function(g) {
+            var was = (s[i - 1].starts || {})[g];
+            if (was === void 0) return;
+            var dd = Math.abs(s[i].starts[g] - was);
+            if (dd > 180) dd = 360 - dd;
+            if (dd > ds) {
+              ds = dd;
+              dsG = g;
+            }
+          });
+          if (ds > startWorst) {
+            startWorst = ds;
+            startAt = s[i].ms;
+            startG = dsG;
+          }
+          var dng = Math.max(Math.abs(s[i].ngO - s[i - 1].ngO), Math.abs(s[i].ngI - s[i - 1].ngI));
+          if (dng > ngWorst) {
+            ngWorst = dng;
+            ngAt = s[i].ms;
+          }
         }
         var out = {
           frames: s.length,
           spanMs: s[s.length - 1].ms,
+          // The per-note radial worst, and the mean note's move. This is the
+          // radial counterpart of tanMaxStep and the number to judge a jump by;
+          // the band extents below are kept for context but are a max over a
+          // churning set, so their step is not a step in the disc.
+          radMaxStep: function() {
+            var w = 0, who = null, when = 0;
+            for (var j = 0; j < s.length; j++) {
+              if (s[j].radStep > w) {
+                w = s[j].radStep;
+                who = s[j].radId;
+                when = s[j].ms;
+              }
+            }
+            return { step: w, node: who, atMs: when };
+          }(),
+          radMeanStep: function() {
+            var t = 0, k = 0;
+            for (var j = 0; j < s.length; j++) {
+              t += s[j].radMean || 0;
+              k++;
+            }
+            return Math.round(k ? t / k : 0);
+          }(),
           innerMaxStep: worst.inner,
           innerStepAtMs: at.inner,
           outerMaxStep: worst.outer,
           outerStepAtMs: at.outer,
+          // HOW FAR EACH BAND WENT IN TOTAL. A per-frame step means nothing
+          // on its own: a smooth animation over a long distance and a snap
+          // over a short one produce the same number. Reported so a caller
+          // can ask the only question that scales -- is this frame's move a
+          // reasonable multiple of the average frame's share of the trip.
+          // Needed once the lattice spacing began following the visible count
+          // (github#13), which made a range cascade travel much further.
+          innerTravel: Math.abs(s[s.length - 1].innerMax - s[0].innerMax),
+          outerTravel: Math.abs(s[s.length - 1].outerMax - s[0].outerMax),
+          // AND THE PATH, which is the honest denominator. Travel is net, so a
+          // band that moves out and part-way back reports less than it went --
+          // and comparing a frame's step against a net figure then flags a
+          // smooth animation whose target was moving. The path is the sum of
+          // the steps, so path / frames is the mean frame, and a frame can be
+          // judged as a multiple of that.
+          innerPath: function() {
+            var t = 0;
+            for (var j = 1; j < s.length; j++) t += Math.abs(s[j].innerMax - s[j - 1].innerMax);
+            return Math.round(t);
+          }(),
+          outerPath: function() {
+            var t = 0;
+            for (var j = 1; j < s.length; j++) t += Math.abs(s[j].outerMax - s[j - 1].outerMax);
+            return Math.round(t);
+          }(),
+          // The tangential jump, and the gap reservation behind it.
+          tanMaxStep: tanWorst,
+          tanStepAtMs: tanAt,
+          tanStepNode: tanWho,
+          // The handover frame, called out on its own: settle() replacing
+          // the interpolation with a fresh rest computation.
+          settleStep: function() {
+            for (var j = 1; j < s.length; j++) {
+              if (s[j].tag === "settled") {
+                return {
+                  tan: s[j].tanStep,
+                  over: s[j].tanOver,
+                  mean: s[j].tanMean,
+                  ngBefore: s[j - 1].ngO,
+                  ngAfter: s[j].ngO,
+                  startsMoved: function() {
+                    var m = 0, g = null, a = s[j].starts || {}, b = s[j - 1].starts || {};
+                    Object.keys(a).forEach(function(k) {
+                      if (b[k] === void 0) return;
+                      var d = Math.abs(a[k] - b[k]);
+                      if (d > 180) d = 360 - d;
+                      if (d > m) {
+                        m = d;
+                        g = k;
+                      }
+                    });
+                    return { deg: Math.round(m * 1e3) / 1e3, group: g };
+                  }()
+                };
+              }
+            }
+            return null;
+          }(),
+          // A wedge boundary moving in one step IS the gap jumping.
+          startMaxStep: Math.round(startWorst * 1e3) / 1e3,
+          startStepAtMs: startAt,
+          startStepGroup: startG,
+          ngMaxStep: Math.round(ngWorst * 1e3) / 1e3,
+          ngStepAtMs: ngAt,
           first: s[0],
           last: s[s.length - 1],
-          samples: s
+          samples: s,
+          watch: probe.watch,
+          watchSeries: probe.watchSeries
         };
         return out;
       },
@@ -10059,6 +12602,254 @@ function mountVaultGraph(root, data, deps) {
       },
       // Re-derive the locked geometry, then settle. Needed after any of
       // the above, because r0/rOuter/band membership are locked at load.
+      // The date range, for the suite and the shooter.
+      get dateSpan() {
+        return dateSpan;
+      },
+      setRange: function(fromISO, toISO) {
+        state.from = fromISO ? heatParse(fromISO) : null;
+        state.to = toISO ? heatParse(toISO) : null;
+        applyRange();
+        heatDraw();
+      },
+      setHeatEnd: function(iso) {
+        state.heatEnd = iso ? heatParse(iso) : null;
+        heatBuild();
+        drawDateUI();
+        heatDraw();
+      },
+      lastCascade: function() {
+        return lastCascade;
+      },
+      // The gap the LAST layout pass actually spent, per band. The probe
+      // reports this per frame during an animation; a resting disc has no
+      // frames, and "do two rest states agree about the gap" is the whole
+      // question behind a jump at the end of one.
+      // Where the strip puts a date, for checking the year buttons line up.
+      ribbonXOf: function(ms) {
+        return ribbonX(ms, ribbonW());
+      },
+      /**
+       * The two ends the strip is DRAWING, and where they are on it.
+       *
+       * Not state.from/state.to: a drag and the intro's sweep are both previews
+       * that deliberately leave state alone, so state cannot answer "where is
+       * the handle". This is brushEnds() -- the one thing drawRibbon reads --
+       * so a check of the sweep is a check of the pixels rather than of a
+       * variable that happens to be nearby.
+       */
+      brushNow: function() {
+        if (!dateSpan) return null;
+        var w = ribbonW(), e = brushEnds();
+        return {
+          from: e[0],
+          to: e[1],
+          fromISO: isoDay(e[0]),
+          toISO: isoDay(e[1]),
+          x0: ribbonX(e[0], w),
+          x1: ribbonX(e[1], w),
+          w,
+          sweeping: brushSweep !== null
+        };
+      },
+      /**
+       * EVERYTHING NEEDED TO REPRODUCE WHAT IS ON SCREEN, as one object.
+       *
+       * Reporting a layout problem by describing it costs a round trip per
+       * unknown -- which folders were hidden, what the range was, how deep each
+       * band was, what the spacing came out as. Most of this session's
+       * measurements were a probe written to answer one of those and then thrown
+       * away. This is those probes, kept, behind a button.
+       *
+       * Measured off the LIVE state, not the plan: what matters is the disc a
+       * person is looking at, and the two have disagreed more than once.
+       */
+      debugDump: function() {
+        var a0 = renderer ? renderer.graphToViewport({ x: 0, y: 0 }) : null;
+        var b0 = renderer ? renderer.graphToViewport({ x: UNIT, y: 0 }) : null;
+        var pxPerRow = a0 && b0 ? Math.hypot(b0.x - a0.x, b0.y - a0.y) : 0;
+        var perPx = pxPerRow > 0 ? UNIT / pxPerRow : 0;
+        var pts = [];
+        graph.forEachNode(function(id, a) {
+          if ((alpha[id] || 0) <= 4e-3) return;
+          var d = renderer && renderer.getNodeDisplayData(id);
+          pts.push({
+            r: Math.hypot(a.x, a.y),
+            th: Math.atan2(a.y, a.x),
+            rad: (d && renderer ? renderer.scaleSize(d.size) : 4) * perPx,
+            g: a.folder
+          });
+        });
+        pts.sort(function(x, y) {
+          return x.r - y.r;
+        });
+        var gi = 0, gap = 0;
+        for (var i = 1; i < pts.length; i++) {
+          var gg = pts[i].r - pts[i - 1].r;
+          if (gg > gap) {
+            gap = gg;
+            gi = i;
+          }
+        }
+        var r3 = function(v) {
+          return Math.round(v * 1e3) / 1e3;
+        };
+        var bandStat = function(arr) {
+          if (!arr.length) return null;
+          var rows = {}, steps = [], clears = [], worst = 1e9;
+          arr.forEach(function(q2) {
+            var k = Math.round(q2.r / 8) * 8;
+            (rows[k] || (rows[k] = [])).push(q2);
+          });
+          Object.keys(rows).forEach(function(k) {
+            var row = rows[k].slice().sort(function(x, y) {
+              return x.th - y.th;
+            });
+            for (var i2 = 1; i2 < row.length; i2++) {
+              var arc = (row[i2].th - row[i2 - 1].th) * +k;
+              if (!(arc > 1 && arc < 3e3)) continue;
+              steps.push(arc);
+              var cl = arc - row[i2].rad - row[i2 - 1].rad;
+              clears.push(cl);
+              if (cl < worst) worst = cl;
+            }
+          });
+          steps.sort(function(x, y) {
+            return x - y;
+          });
+          var q = function(f) {
+            return steps.length ? Math.round(steps[Math.floor(steps.length * f)]) : 0;
+          };
+          var radii = arr.map(function(x) {
+            return x.rad;
+          }).sort(function(x, y) {
+            return x - y;
+          });
+          return {
+            notes: arr.length,
+            rows: Object.keys(rows).length,
+            inner: Math.round(arr[0].r),
+            outer: Math.round(arr[arr.length - 1].r),
+            step35: q(0.35),
+            step95: q(0.95),
+            channelRatio: q(0.35) ? r3(q(0.95) / q(0.35)) : 0,
+            dotRadius: {
+              min: Math.round(radii[0]),
+              med: Math.round(radii[Math.floor(radii.length / 2)]),
+              max: Math.round(radii[radii.length - 1])
+            },
+            worstPairClearance: worst === 1e9 ? null : Math.round(worst),
+            overlappingPairs: clears.filter(function(c) {
+              return c < 0;
+            }).length
+          };
+        };
+        var cam = renderer ? renderer.getCamera().getState() : null;
+        var hidden2 = Object.keys(state.hidden[state.dim] || {}).filter(function(k) {
+          return (state.hidden[state.dim] || {})[k];
+        });
+        return {
+          note: "vault-graph debug dump -- paste this back verbatim",
+          vault: {
+            name: DATA.vault || "",
+            notes: graph.order,
+            // EDGE_TOTAL, not graph.size: in a budgeted vault the graph
+            // holds only the resting share, and a dump that said
+            // "links: 8027" about a 37k-link vault would send whoever
+            // reads it in the wrong direction. linksShown is the budget.
+            links: EDGE_TOTAL,
+            linksShown: EDGE_SHOWN,
+            lazyEdges,
+            generated: DATA.generated || ""
+          },
+          screen: {
+            win: WIN.innerWidth + "x" + WIN.innerHeight,
+            dpr: WIN.devicePixelRatio || 1,
+            stage: $("canvas") ? Math.round($("canvas").clientWidth) + "x" + Math.round($("canvas").clientHeight) : "",
+            pxPerRow: r3(pxPerRow)
+          },
+          camera: cam ? { x: r3(cam.x), y: r3(cam.y), ratio: r3(cam.ratio) } : null,
+          filters: {
+            hiddenFolders: hidden2,
+            hiddenSub: Object.keys(state.hiddenSub || {}),
+            range: rangeLabel(),
+            from: state.from,
+            to: state.to,
+            heatEnd: state.heatEnd,
+            timelineUntil: state.until,
+            markDay: state.markDay,
+            shown: pts.length
+          },
+          // The room each band reports and the arc floor in force -- both feed
+          // POSITIONS now, so a jump investigation needs to see them per frame.
+          room: { i: r3(bandOf("i").room), o: r3(bandOf("o").room) },
+          minArcDeg: r3(lastMinArc * 180 / Math.PI),
+          spacing: {
+            spOuter: r3(bandOf("o").sp),
+            spInner: r3(bandOf("i").sp),
+            rowsOuter: bandOf("o").rows,
+            rowsInner: bandOf("i").rows,
+            pitchOuterUnits: r3(pitchUnits("o")),
+            pitchInnerUnits: r3(pitchUnits("i"))
+          },
+          seam: {
+            outerDeg: bandOf("o").gapDeg,
+            innerDeg: bandOf("i").gapDeg,
+            nGOuter: bandOf("o").nG,
+            nGInner: bandOf("i").nG,
+            nSubOuter: bandOf("o").nSub,
+            nSubInner: bandOf("i").nSub,
+            fallOuter: r3(seamFall("o")),
+            fallInner: r3(seamFall("i"))
+          },
+          locked: geomLock ? {
+            r0: r3(geomLock.r0),
+            rOuter: r3(geomLock.rOuter),
+            maxR: r3(geomLock.maxR),
+            rows: geomLock.rows,
+            bandTotal: geomLock.bandTotal
+          } : null,
+          bands: { inner: bandStat(pts.slice(0, gi)), outer: bandStat(pts.slice(gi)) },
+          dots: {
+            ofPitch: r3(DOT_OF_PITCH),
+            minPx: DOT_MIN_PX,
+            maxSpread: DOT_MAX_SPREAD,
+            m: r3(bandOf("o").ramp.m),
+            b: r3(bandOf("o").ramp.b),
+            lo: r3(bandOf("o").ramp.lo)
+          }
+        };
+      },
+      lastGap: function() {
+        return {
+          ngI: bandOf("i").nG,
+          ngO: bandOf("o").nG,
+          gapDegI: bandOf("i").gapDeg,
+          gapDegO: bandOf("o").gapDeg
+        };
+      },
+      rangeReport: function() {
+        var lit = 0, dated = 0;
+        var byYear = /* @__PURE__ */ Object.create(null);
+        graph.forEachNode(function(id) {
+          if ((alpha[id] || 0) > 4e-3) lit++;
+          if (tlMs[id] !== void 0) {
+            dated++;
+            var y = new Date(tlMs[id]).getUTCFullYear();
+            byYear[y] = (byYear[y] || 0) + 1;
+          }
+        });
+        return {
+          byYear,
+          from: state.from,
+          to: state.to,
+          heatEnd: state.heatEnd,
+          lit,
+          dated,
+          total: graph.order,
+          label: rangeLabel()
+        };
+      },
       relayout: function() {
         bandLock = null;
         geomLock = null;
@@ -10068,7 +12859,6 @@ function mountVaultGraph(root, data, deps) {
       }
     };
     buildTimeline();
-    buildTimelineUI();
     buildSearch();
     buildTools();
     buildStats();
@@ -10087,9 +12877,12 @@ function mountVaultGraph(root, data, deps) {
     regroup();
     buildHeatmapUI();
     heatBuild();
+    buildDateUI();
     fit();
     syncSizeScale();
-    if (demoOn()) {
+    var hidden = DOC ? typeof DOC.visibilityState === "string" ? DOC.visibilityState === "hidden" : !!DOC.hidden : false;
+    if (hidden && !demoOn() && !restOn()) introOwed = true;
+    if (demoOn() || restOn() || hidden) {
       timelineFrame(true);
     } else {
       playTimeline();
@@ -10152,9 +12945,20 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
   <aside id="vg-sidebar">
     <div class="brand">
       <h1 id="vg-vname">Vault Graph</h1>
-      <!-- Hidden until a host opts in with settingsUI. The PLUGIN does not: Obsidian
-           gives it a settings tab, and the same setting behind two different UIs in the
-           same product is how the two drift apart. -->
+      <!-- Hidden until a host opts in, and TWO different deps opt in -- which is worth
+           saying plainly here, because this comment used to name only one and was read
+           (by its own author, out loud, wrongly) as "the plugin has no gear". Both hosts
+           show it; they differ in what it OPENS.
+
+             settingsUI      the gear opens the panel below, #vg-settings. The STANDALONE
+                             sets this, because nothing else there can hold a setting.
+             openSettings()  the gear hands its click to the host. The PLUGIN sets this,
+                             and Obsidian's own settings tab opens -- the same setting
+                             behind two UIs in one product is how the two drift apart.
+
+           So the swatch panel below is standalone-only, which is also why the demo
+           storyboard can click through it: the demo records the standalone page. See the
+           deps table at the top of page.js, which had this right. -->
       <button id="vg-gear" class="gear" hidden aria-expanded="false"
               aria-controls="vg-settings" title="Settings">
         <span aria-hidden="true">&#9881;</span><span class="sr">Settings</span>
@@ -10181,17 +12985,6 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
     </div>
 
     <div class="block">
-      <div class="row"><div class="lbl" style="margin:0">Timeline</div><span class="val" id="vg-tlv">All</span></div>
-      <input type="range" id="vg-tl" min="0" max="100" value="100"
-             title="Reveal notes oldest-first. The slider is linear in NOTE COUNT, not in time: nearly every note is from the last few months, so a time axis would spend most of its travel on empty years.">
-      <div class="mini" style="margin-top:7px">
-        <button id="vg-tlplay" title="Grow the vault from its first note to now">Play</button>
-        <button id="vg-tlall">All</button>
-        <button id="vg-today" aria-pressed="false" title="Colour, push out and halo every note created or edited today">Mark today</button>
-      </div>
-    </div>
-
-    <div class="block">
       <div class="row" style="margin-bottom:7px">
         <div class="lbl" style="margin:0">Groups <span id="vg-gcount" class="val"></span></div>
         <div class="mini"><button id="vg-allon">All</button><button id="vg-alloff">None</button></div>
@@ -10202,9 +12995,11 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
     <div class="block">
       <div class="lbl">View</div>
       <div class="tools">
-        <button id="vg-refresh" title="Back to the defaults, and replay the intro. Clears highlights and the timeline, and returns each folder to the visibility set in the gear -- so archives go back to hidden. This page is a snapshot -- its data was baked in when it was built -- so to pick up notes written since, rebuild it with refresh-graph.ps1 (or build-graph.mjs). The Obsidian plugin rebuilds in place instead.">Refresh</button>
-        <button id="vg-fit">Fit</button>
+        <button id="vg-refresh" title="Back to the defaults, and replay the intro. Clears highlights and the date range, and returns each folder to the visibility set in the gear -- so archives go back to hidden. This page is a snapshot -- its data was baked in when it was built -- so to pick up notes written since, rebuild it with refresh-graph.ps1 (or build-graph.mjs). The Obsidian plugin rebuilds in place instead.">Refresh</button>
         <button id="vg-png">Save PNG</button>
+        <!-- Dumps the exact state to the clipboard: filters, spacing, seam, per-band
+             geometry and dot sizes. For pasting into a bug report rather than describing it. -->
+        <button id="vg-dbg" title="Copy the exact layout state, for a bug report">Debug</button>
       </div>
     </div>
 
@@ -10221,8 +13016,36 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
         <div id="vg-heatscale" aria-hidden="true">
           <span>fewer</span><canvas id="vg-heatkey"></canvas><span>more</span>
         </div>
+        <!-- THE RANGE LIVES UP HERE, beside the counts it qualifies, so the strip below is
+             nothing but the strip: a row of its own under the ribbon cost 22px of the disc
+             for two things nobody looks at except when they are already looking here.
+
+             AT THE END OF THE ROW, and as one group. It was loose in the middle, between the
+             prose and the legend, where it read as a third unrelated thing rather than as
+             the control it is. Three items that act on one filter belong together, and the
+             end of the row is the one place a group can grow without pushing anything about.
+
+             REAL DATE FIELDS, not a readout. They were text, so the only way to set a range
+             was to find and drag a handle -- fine for browsing, useless for "just show me
+             2024". A native picker also brings a calendar, keyboard entry and the locale's
+             own date order for free, none of which is worth reimplementing on a canvas. -->
+        <div id="vg-rangebox">
+          <input id="vg-from" class="dt" type="date" aria-label="Range start">
+          <span class="arw" aria-hidden="true">&rarr;</span>
+          <input id="vg-to" class="dt" type="date" aria-label="Range end">
+          <button id="vg-rangeall" class="btn" title="Clear the date range">All dates</button>
+        </div>
       </div>
       <div id="vg-heatwrap"><canvas id="vg-heatc"></canvas></div>
+      <!-- The whole history, brushable. The band above is a 52-week window onto whatever
+           this selects. -->
+      <canvas id="vg-ribbon"></canvas>
+      <!-- THE YEARS ARE BUTTONS, not text painted on the strip above. They were canvas, which
+           meant hit-testing a pixel band by hand, no keyboard, no focus ring, no hover state
+           the browser could give us -- and a control that only a mouse can reach is half a
+           control. Positioned per year against the same scale the strip uses. -->
+      <div id="vg-years"></div>
+      <div id="vg-rtip" hidden></div>
       <div id="vg-htip" hidden></div>
     </div>
 
@@ -10237,6 +13060,54 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
            with a radial fade. -->
       <div id="vg-logoInner" aria-hidden="true" hidden></div>
       <div id="vg-graph"></div>
+      <!-- CAMERA CONTROLS, in the corner of the STAGE rather than in the sidebar, because
+           they answer questions you have while looking at the graph -- "closer", "how do I
+           get back" -- and the sidebar is not where you are looking when you have them.
+           github#4 asked for the cluster, and it REPLACES the Fit button in View: one
+           place to look rather than two doing the same job.
+
+           BOTTOM right, not top: the detail card owns the top-right corner, and a control
+           that moves out of a panel's way is a moving target. The card yields instead --
+           see --controls-h in page.css.
+
+           Order is deliberate. Zoom is the pair reached for most, so it sits furthest from
+           the corner and is easiest to hit twice; pan is a MODE rather than an action, so
+           it sits apart at the bottom, where a mode switch belongs. -->
+      <div id="vg-cam" role="group" aria-label="View controls">
+        <button id="vg-zin" type="button" title="Zoom in" aria-label="Zoom in">
+          <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" focusable="false">
+            <path d="M8 3.5v9M3.5 8h9" fill="none" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="vg-zout" type="button" title="Zoom out" aria-label="Zoom out">
+          <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" focusable="false">
+            <path d="M3.5 8h9" fill="none" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="vg-reset" type="button" title="Fit the disc (or double-click the graph)"
+                aria-label="Fit the disc">
+          <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" focusable="false">
+            <path d="M1.5 5.5V2.5a1 1 0 0 1 1-1h3M14.5 5.5V2.5a1 1 0 0 0-1-1h-3M1.5 10.5v3a1 1 0 0 0 1 1h3M14.5 10.5v3a1 1 0 0 1-1 1h-3"
+                  fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="8" cy="8" r="1.6" fill="currentColor"/>
+          </svg>
+        </button>
+        <!-- A MODE, so it carries aria-pressed and fills when on. On by default; the gear
+             holds that default, so a vault where dragging gets in the way can start with
+             it off. -->
+        <button id="vg-pan" type="button" aria-pressed="true"
+                title="Drag to pan. Off pins the disc to the centre."
+                aria-label="Drag to pan">
+          <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" focusable="false">
+            <path d="M8 2v12M2 8h12M8 2 6.4 4M8 2l1.6 2M8 14l-1.6-2M8 14l1.6-2M2 8l2-1.6M2 8l2 1.6M14 8l-2-1.6M14 8l-2 1.6"
+                  fill="none" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
       <div id="vg-tip" hidden></div>
       <div id="vg-detail" hidden></div>
     </div>
@@ -10561,6 +13432,13 @@ var VaultGraphView = class extends import_obsidian.ItemView {
       // onFolderShown: in Obsidian the settings tab owns writing both.
       folderColors: this.plugin.settings.folderColors,
       folderShown: this.plugin.settings.folderShown,
+      // Pan DOES get a writer, unlike the two maps above: the control that flips it is in
+      // the view rather than in the settings tab, so the view is what has to persist it.
+      panEnabled: this.plugin.settings.panEnabled,
+      onPanEnabled: async (v) => {
+        this.plugin.settings.panEnabled = !!v;
+        await this.plugin.saveSettings();
+      },
       // The gear IS shown here -- it is where somebody looking at the disc goes to look
       // for the colours -- but it opens Obsidian's settings tab rather than a second
       // panel inside the view saying the same things. `settingsUI` is deliberately not
@@ -10619,7 +13497,11 @@ var DEFAULTS = {
   // folder name -> true (shown) / false (hidden), as a DEFAULT. Absent means the `_` rule
   // decides: a folder whose name starts with an underscore is an archive, so it is out of
   // the colour rotation, grey, and hidden until somebody says otherwise.
-  folderShown: {}
+  folderShown: {},
+  // Drag-to-pan in the view. ON by default: the rim of a big vault is unreachable without
+  // it, and the corner control is a cheaper way to discover that than a settings tab is.
+  // Held here so a vault where dragging gets in the way can start locked.
+  panEnabled: true
 };
 var BUILD_SETTINGS = [
   {
@@ -10684,6 +13566,14 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.rebuildViews();
       }));
     }
+    new import_obsidian.Setting(containerEl).setName("View").setHeading();
+    new import_obsidian.Setting(containerEl).setName("Drag to pan").setDesc("Drag the graph to move it, and zoom toward the pointer. Off pins the disc to the centre of the view. The control in the graph's bottom-right corner flips it too, and lands back here.").addToggle((t) => t.setValue(this.plugin.settings.panEnabled !== false).onChange(async (v) => {
+      this.plugin.settings.panEnabled = v;
+      await this.plugin.saveSettings();
+      const view = await this.plugin.currentView();
+      const api = view && view.handle && view.handle.api;
+      if (api && api.setPanEnabled) api.setPanEnabled(v);
+    }));
     new import_obsidian.Setting(containerEl).setName("Folder colours").setHeading();
     new import_obsidian.Setting(containerEl).setDesc("Twelve slots, handed out in folder order and round again. Setting one folder never moves another, and two folders may share a colour.").addButton((b) => b.setButtonText("Reset all").onClick(async () => {
       this.plugin.settings.folderColors = {};
@@ -10893,6 +13783,7 @@ var VaultGraphPlugin = class extends import_obsidian.Plugin {
     const api = view && view.handle && view.handle.api;
     if (!api || !api.setFolderShown) return;
     api.setFolderShown(this.settings.folderShown);
+    if (api.setPanEnabled) api.setPanEnabled(this.settings.panEnabled !== false);
     if (api.applyHiddenDefaults) api.applyHiddenDefaults();
   }
   // The four build settings DO change the data, so they get the full path.

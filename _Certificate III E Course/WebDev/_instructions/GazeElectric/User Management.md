@@ -348,8 +348,8 @@ ob_end_flush();
 		$v_input_user = $_POST['username'];
 		$v_input_pass = $_POST['password'];
 		
-		$sql = "SELECT * FROM users WHERE email_address = '$v_input_user' AND password = '$v_input_pass'";
-		$stmt = $pdo->query($sql);
+		$sql = "SELECT * FROM users WHERE username = '$v_input_user' AND password = '$v_input_pass'";
+		$stmt = $db->query($sql);
 		$user = $stmt->fetch();
 	}
 ?>
@@ -388,7 +388,7 @@ if ($user) {
 ![[userMgmtLoginPasswordHashV1.png]]
 
 ```php
-  $sql = "SELECT * FROM users WHERE email_address = '$v_input_user'";
+  $sql = "SELECT * FROM users WHERE username = '$v_input_user'";
 ```
 
 and
@@ -532,13 +532,13 @@ Let's break down the system security architecture of how an SQL Injection attack
 When the server processes your vulnerable `v1` script, it takes whatever string the user inputs and glues it directly inside the single quotes of your query:
 
 ```sql
-SELECT * FROM users WHERE email_address = '[USER_INPUT]'
+SELECT * FROM users WHERE username = '[USER_INPUT]'
 ```
 
 When an attacker inputs the payload `admin@admin.com' OR '1'='1`, the raw query processed by the database engine changes structurally to this:
 
 ```sql
-SELECT * FROM users WHERE email_address = 'admin@admin.com' OR '1'='1'
+SELECT * FROM users WHERE username = 'admin@admin.com' OR '1'='1'
 ```
 
 - **The Breakout:** The single quote inside our payload closes the SQL string literal early.

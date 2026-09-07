@@ -26,9 +26,9 @@ Telemetry ^hnIq6vGJ
 Payload ^qeqRMeKM
 
 ## Embedded Files
-881a687264f838a83efcae54befa93142dcd03af: [[Pasted Image 20260907223716_973.png]]
+881a687264f838a83efcae54befa93142dcd03af: [[logoPython.png]]
 
-eb0429d9db60e390b7f613a40063c001bd6d00d5: [[Pasted Image 20260907223740_204.png]]
+eb0429d9db60e390b7f613a40063c001bd6d00d5: [[logoArduino.png]]
 
 %%
 ## Drawing

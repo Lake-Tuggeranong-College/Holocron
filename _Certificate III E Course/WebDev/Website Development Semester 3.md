@@ -61,9 +61,9 @@ You will be assessed via observation.
 
 ### Task 3.1 Competencies
 
-| Unit Code                                                                   | Unit Title                                            | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------------------------------------------------------------------------- | ----------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and apply thinking and problem solving skills |              |                  |       ✅       |                   |
+| Unit Code                                                                   | Unit Title                                               | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | -------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBCRT301](https://training.gov.au/Training/Details/BSBCRT301/unitdetails) | Develop and extend critical and creative thinking skills |              |                  |       ✅       |                   |
 
 
 ### Learning Content

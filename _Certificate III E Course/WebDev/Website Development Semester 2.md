@@ -78,7 +78,9 @@ You need to create a video showcasing a website you developed, presenting it as 
 
 ### Task 2.2 Competencies
 
->[!warning] This is for students completing the **both** the Certificate II in Applied Digital Technologies ONLY and the Certificate III in Information Technology
+>[!warning] This is for students completing either the;
+>- Certificate II in Applied Digital Technologies, or 
+>- Certificate III in Information Technology
 
 | Unit Code                                                                       | Unit Title                                | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | ------------------------------------------------------------------------------- | ----------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |

@@ -1,14 +1,13 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 # Overview
 
-==TODO==
 
 > [!important] Only required to complete the Certificate III in Information Technology
 
-This unit is a series of **self-paced tasks** that can be completed at any time before the end of the course. The competencies covered are **core** competencies for the ICT30120 Certificate III in Information Technology - therefore they are required to gain the qualification.
+This unit is a **self-paced task** that can be completed at any time before the end of the course. The competencies covered are **core** competencies for the ICT30120 Certificate III in Information Technology - therefore they are required to gain the qualification.
 
 
 # Schedule
@@ -41,50 +40,21 @@ Classes on Thursday's (2-4pm) will cover the topics below. Assessments are due o
 
 # Tasks
 
-## Task 4.1 PII
+## Task 4.1 Personally Identifiable Information & Intellectual Property
 
 ### Task Overview
 
 
 ### Deliverable/s
 
-| Deliverables   | Submitted via                |
-| -------------- | ---------------------------- |
-| Interview      | In-person or via video call. |
-| Written Report | Google Classroom             |
+| Deliverables                     | Submitted via    |
+| -------------------------------- | ---------------- |
+| Exported Results from Simulation | Google Classroom |
+
 
 ### Task 4.1 Competencies
 
 | Unit Code                                                                       | Unit Title                                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
 | ------------------------------------------------------------------------------- | ----------------------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
 | [BSBXCS303](https://training.gov.au/Training/Details/BSBXCS303/unitdetails)<br> | Securely manage personally identifiable information and workplace |              |        ✅         |       ✅       |                   |
-
-### Assessment Task
-
-==TODO Link to Google Classroom==
-
-## Task 4.2 IP
-
-### Task Overview
-
-
-### Deliverable/s
-
-| Deliverables   | Submitted via                |
-| -------------- | ---------------------------- |
-| Interview      | In-person or via video call. |
-| Written Report | Google Classroom             |
-
-### Task 4.2 Competencies
-
-| Unit Code                                                                   | Unit Title                                                   | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------ | :----------: | :--------------: | :-----------: | :---------------: |
-| [ICTICT313](https://training.gov.au/Training/Details/ICTICT313/unitdetails) | Identify IP, ethics and privacy policies in ICT environments |              |                  |       ✅       |                   |
-
-
-### Learning Content
-
-
-### Assessment Task
-
-==TODO Link to Google Classroom==
+| [ICTICT313](https://training.gov.au/Training/Details/ICTICT313/unitdetails)     | Identify IP, ethics and privacy policies in ICT environments      |              |                  |       ✅       |                   |

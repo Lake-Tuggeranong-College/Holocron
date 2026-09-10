@@ -409,6 +409,8 @@ The form uses `method="post"`.
 - **Security:** Unlike `GET` (which puts your password in the URL bar), `POST` sends the data inside the body of the HTTP request, keeping sensitive information hidden from browser history.
 - **The `name` Attribute:** This is the most important part of your HTML. When you write `<input name="username">`, PHP creates a key in the `$_POST` array called `['username']`. Without the `name` attribute, PHP cannot "see" what the user typed.
 
+![https://www.youtube.com/watch?v=tkfVQK6UxDI](https://www.youtube.com/watch?v=tkfVQK6UxDI)
+
 ##### 2. The Logic Flow: Fetch, then Verify
 
 The PHP logic follows a specific "if-then" architecture:

@@ -41,12 +41,13 @@ Instead of writing your SQL structure by hand, you can design your tables visual
 
 Follow these steps to extract your structure securely:
 
-1. Open **phpMyAdmin** in your browser and select your development database from the sidebar.
+1. Open **phpMyAdmin** in your browser and select your database from the sidebar.
 2. Click on the **Export** tab in the top navigation menu.
 3. Under **Export method**, select **Custom - display all possible options**. This is crucial because the default quick export will bundle your live data and structure together.
 4. In the **Tables** section, ensure all of your structural tables (like `users` and `products`) are selected.
 5. Scroll down to **Format-specific options** and find the **Dump table** controls:
     - **Select Structure only.** (Do _not_ check "Data", as our mock data belongs in our seeding script in Step 3).
+![[dbStructure.png]]
 6. Under the **Object creation options**, check the box for **Add CREATE TABLE / IF NOT EXISTS**. This is a critical security step that prevents your script from crashing if the tables already exist on startup.
 7. Scroll to the bottom and click **Export** (or **Go**).
 8. Move the downloaded `.sql` file into your local `_init_scripts/` folder, rename it to `01_schema.sql`, and ensure its structure looks similar to this:
@@ -138,7 +139,7 @@ Open your `docker-compose.yml` and add the directory mapping under `volumes`:
 - ./_init_scripts:/docker-entrypoint-initdb.d:ro
 ```
 
-### Step 5: Verification & Testing Protocol (Docker Desktop & VS Code)
+#### Step 5: Verification & Testing Protocol (Docker Desktop & VS Code)
 
 Testing is a core component of Software Engineering. Follow these steps to verify your automated pipeline works perfectly using your graphical desktop development tools:
 

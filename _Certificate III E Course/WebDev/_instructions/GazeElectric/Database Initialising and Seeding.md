@@ -47,7 +47,7 @@ Follow these steps to extract your structure securely:
 4. In the **Tables** section, ensure all of your structural tables (like `users` and `products`) are selected.
 5. Scroll down to **Format-specific options** and find the **Dump table** controls:
     - **Select Structure only.** (Do _not_ check "Data", as our mock data belongs in our seeding script in Step 3).
-![[dbStructure.png]]
+![[dbExportOnlyStructure.png]]
 6. Under the **Object creation options**, check the box for **Add CREATE TABLE / IF NOT EXISTS**. This is a critical security step that prevents your script from crashing if the tables already exist on startup.
 7. Scroll to the bottom and click **Export** (or **Go**).
 8. Move the downloaded `.sql` file into your local `_init_scripts/` folder, rename it to `01_schema.sql`, and ensure its structure looks similar to this:
@@ -96,6 +96,7 @@ To export your seed data cleanly and prevent duplicate errors when the database 
 3. In the **Tables** section, ensure the tables you want to seed (e.g., `users` and `products`) are selected.
 4. Scroll down to **Format-specific options** and find the **Dump table** controls:
     - **Select Data only.** (Do _not_ check "Structure", as your table designs are already handled by `01_schema.sql` in the previous step).
+![[dbExportOnlyData.png]]
 5. Scroll down to the **Data creation options** section. To make your seed script **idempotent** (so it does not crash or create duplicate records if run more than once), update these settings:
     - Under **Function to use when dumping data**, select **INSERT IGNORE** or **REPLACE**. This tells the database server to safely skip or update rows if they already exist, rather than throwing a fatal primary key error.
 6. Scroll to the bottom and click **Export** (or **Go**).

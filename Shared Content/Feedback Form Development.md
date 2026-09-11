@@ -2,88 +2,123 @@
 isCurrent: true
 needsUpdating: false
 ---
-# Guide to Creating Your Feedback Form
 
-This form is a critical tool for gathering data for your profile. The data collected must allow you to effectively evaluate your project's goals, design, and user experience.
 
-## Part 1: Setup and Stating Project Goals (The Mandatory Start)
+# How to Create an IT Project Feedback Form for BSSS Assessment
 
-To provide effective feedback, the audience needs to understand what your project was **intended** to achieve.
+This guide walks you through building a user feedback form to gather quantitative (numerical) and qualitative (written) data for your BSSS Task 3 project evaluation.
 
-1. **Choose Your Platform:**    
-    - **Recommended: Google Forms** (Digital Collection)
-        - **Pros:** Automatically collates all quantitative (number) data into a spreadsheet, making analysis and graphing for Task 3 much easier.
-        - **Cons:** Requires reviewers to use a mobile device or computer to fill it out.
-    - **Alternative: Google Docs** (Printable Collection)
-        - **Pros:** Easy to print, quick for reviewers to fill out by hand.
-        - **Cons:** You must manually input all data into a spreadsheet for analysis in Task 3.
-2. **Form Title:** Name your form clearly (e.g., "IT Expo Project Feedback: 'Your Project Name' ").
-3. **Mandatory Section: Project Goals:** Your very first section **must** clearly state the original goals of your project. This provides context for the reviewers.
-    - **Google Forms:** Use a **Paragraph** text field (not a question) at the top of the form.
-    - **Google Docs:** Use a clear heading and simple text box or bulleted list directly below the form title.
-    - **Content:** Write a short, clear paragraph or a bulleted list summarising the 2–3 main objectives of your project (e.g., "The goal of this project was to provide a secure system for tracking inventory using NFC tags and a mobile app.").
+## Prerequisites
 
-## Part 2: Designing Closed (Quantitative) Questions
+Before starting, make sure you have:
 
-Closed questions generate measurable data that is easy to quantify and graph in your final report. Use these to evaluate specific criteria.
+- A written summary of your project’s core goals (2–3 bullet points).
+    
+- Access to your Google Drive account (for **Google Forms** or **Google Docs**).
+    
 
-| **Evaluation Goal**       | **Question Type (Google Forms)** | **Google Docs Equivalent**                        | **Example Question**                                                                                                  |
-| ------------------------- | -------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Usability/Clarity**     | Linear Scale (1-5)               | Create a row of five empty circles/squares.       | "How easy was it to understand the purpose of this project?" (1=Very Difficult, 5=Very Easy)                          |
-| **Engagement/Interest**   | Linear Scale (1-5)               | Create a row of five empty circles/squares.       | "How engaging or interesting did you find the project's display/concept?" (1=Not Engaging, 5=Extremely Engaging)      |
-| **Aesthetic/Design**      | Multiple Choice                  | Use check boxes or empty squares next to options. | "Which aspect of the project's design did you like best?" (Options: Visual Layout, Colour Scheme, Ease of Navigation) |
-| **Overall Effectiveness** | Linear Scale (1-5)               | Create a row of five empty circles/squares.       | "Overall, how effective was this project at meeting its stated goals?" (1=Not Effective, 5=Highly Effective)          |
+## Step 1: Add Your Title and Stated Project Goals
 
-**Tip:** Stick to a **5-point Likert scale (1-5)** for satisfaction questions, as it is the most effective for generating clear quantitative data for your evaluation.
+Your evaluators (Year 9/10 students, peers, or teachers) must know what your project was designed to achieve before they can rate it.
 
-## Part 3: Designing Open (Qualitative) Questions
+1. Open a new **Google Form** (recommended) or **Google Doc**.
+    
+2. Set your title using this format: `IT Expo Feedback: [Your Project Name]`.
+    
+3. Create an introductory text block at the top of the page titled **Project Overview & Goals**.
+    
+4. Write 2–3 brief bullet points explaining what your application or product is built to do.
+    
 
-Open questions allow users to provide detailed, specific, and unstructured feedback that helps you understand _why_ they gave a particular rating.
-1. **Focus on Specific Improvement:** Ask reviewers to suggest one clear action you could take to improve the project.
-    - **Example:** "If you were to take this project to the next level, what single feature or change would you recommend?"
-2. **Focus on Positive Aspects:** Ask what worked well. This validates your efforts and identifies key strengths.
-    - **Example:** "What was the most successful or impressive component of the project?"
-3. **General Feedback:** A catch-all for any thoughts you missed.
-    - **Example:** "Do you have any other comments or suggestions for the project creator?"
+> **Example:**
+> 
+> _"The goal of this project is to create a mobile-friendly web application that allows high school students to track daily study hours and view weekly progress charts."_
 
-**Implementation in Platforms:**
-- **Google Forms:** Use the **Paragraph** answer type for these questions.
-- **Google Docs:** Use a simple **line** or a clear box labeled "Please write your answer here" to provide enough space for detailed responses.
+## Step 2: Write Quantitative (Rating) Questions
 
-### Form Checklist:
+Quantitative questions give you numerical scores (1–5) that you can easily turn into graphs and other reportable data for review (or assessments).
 
-- [ ] Does the form start with the **Project Goals**?
-- [ ] Do you have a balanced mix of **quantitative (closed)** and **qualitative (open)** questions?
-- [ ] Are all questions clear, easy to understand, and relevant to a Year 9/10 audience?
-- [ ] Have you set appropriate questions as **"Required"** (for Forms) or clearly indicated they are mandatory (for Docs)?
+### Instructions:
 
-**Action:** Once drafted, share the form link or the draft document with your teacher for feedback.
+1. Write 4 to 6 rating questions targeting key criteria: **Usability**, **Design**, **Functionality**, and **Goal Achievement**.
+    
+2. For Google Forms, select the **Linear Scale** question type.
+    
+3. Set the scale from **1 to 5**.
+    
+4. Define clear anchor labels for both ends (e.g., `1 = Very Difficult`, `5 = Very Easy`).
+    
+5. Ensure each question tests **only one variable** at a time.
+    
 
-# Example Feedback Questions for IT Projects
+### Quantitative Question Reference Guide
 
-This document provides examples of effective and ineffective questions for your IT Expo Feedback Form. When designing questions, remember that the key goal is to get **measurable** data (ratings) and **actionable** data (specific suggestions) from your Year 9 and 10 reviewers.
+Use these examples to check your rating questions before publishing:
 
-## Quantitative (Closed) Questions
+| **Category**            | **❌ Bad Example**                                                      | **Why It Fails**                                                                                                 | **✅ Good Example**                                                                                                     | **Why It Works**                                                                         |
+| ----------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Usability**           | "Was the app easy to navigate and did the buttons look nice?" _(1–5)_  | **Double-barreled:** Asks about navigation and appearance at once. A low score won't tell you which part failed. | "How easy was it to find the main menu from any screen?" _(1 = Very Difficult, 5 = Very Easy)_                         | **Single variable:** Isolates one navigation action for precise evaluation.              |
+| **Design**              | "Was the interface good?" _(Yes / No)_                                 | **Lacks depth:** A Yes/No answer gives shallow data that cannot be averaged or graphed effectively.              | "How clear and readable was the screen text across all pages?" _(1 = Unreadable, 5 = Very Clear)_                      | **Measurable scale:** Uses a standard 5-point scale to assess text legibility.           |
+| **Innovation**          | "Don't you think this project idea is clever and useful?" _(Yes / No)_ | **Leading question:** Pressures the user to agree, biasing your research data.                                   | "How original did you find this project concept compared to existing tools?" _(1 = Not Original, 5 = Highly Original)_ | **Neutral tone:** Allows users to give honest, unbiased feedback.                        |
+| **Target Audience Fit** | "Select what you liked: Fun, Fast, Red, Cool."                         | **Inconsistent options:** Mixes speed, color, and feelings without a measurable metric.                          | "How suitable is this application for high school study tracking?" _(1 = Not Suitable, 5 = Highly Suitable)_           | **Goal-aligned:** Measures effectiveness directly against your intended target audience. |
 
-Closed questions are used to generate numerical data. They must be easy to read, focus on a single variable, and use a clear rating scale.
+## Step 3: Write Qualitative (Written) Questions
 
-| **Category**   | **Good Example (5-Point Scale)**                                                                                                                | **Why It's Good**                                                             | **Bad Example**                                                                                                                       | **Why It's Bad**                                                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **Clarity**    | **Linear Scale (1-5):** "How easy was it to understand the purpose of this project?" _(1=Difficult, 5=Easy)_                                    | Focuses on a single concept (clarity) and uses simple, opposite anchors.      | **Linear Scale (1-5):** "Did you find the documentation and presentation slides both helpful and visually appealing?" _(1=No, 5=Yes)_ | **Double-Barreled.** It asks about four different things at once. The user can't answer if the slides were appealing but not helpful. |
-| **Design/UX**  | **Linear Scale (1-5):** "How professional did the overall visual design look?" _(1=Not professional, 5=Highly professional)_                    | Isolates the visual quality, which is a key evaluation criterion.             | **Yes/No:** "Was the user interface good?"                                                                                            | **Not Measurable.** "Good" is subjective. A simple Yes/No answer provides no depth of data for Task 3.                                |
-| **Innovation** | **Linear Scale (1-5):** "To what extent did you find the project concept original or innovative?" _(1=Low, 5=High)_                             | Directly measures the perceived level of innovation using an intensity scale. | **Checkboxes:** "Check all that apply: Interesting, Fun, Helpful."                                                                    | **Too Subjective.** These are adjectives, not measurable criteria. They don't help you assess effectiveness against a project goal.   |
-| **Engagement** | **Linear Scale (1-5):** "I would be interested in seeing the final, working version of this product." _(1=Strongly Disagree, 5=Strongly Agree)_ | Uses agreement language to measure future intent and interest in the project. | **Multiple Choice:** "Was it cool or fast?" _(A. Cool, B. Fast, C. Both)_                                                             | **Confusing.** This forces a choice between two unrelated characteristics and doesn't use a scale for quantification.                 |
+Qualitative questions collect written comments. Use these to explain _why_ users gave certain ratings.
 
-## Qualitative (Open) Questions
+### Instructions:
 
-Open questions are used to gather specific, detailed text feedback. They must prompt a helpful response that explains _why_ a reviewer gave a certain rating.
+1. Write 2 to 3 open-ended questions encouraging constructive feedback.
+    
+2. For Google Forms, select the **Paragraph** question type.
+    
+3. For Google Docs, leave 2–3 empty lined rows or a visible text box.
+    
+4. Frame questions to request **specific, actionable ideas** rather than general opinions.
+    
 
-| **Good Example**         | **Why It's Good**                                                                                                       | **Bad Example**                                                                                                      | **Why It's Bad**                     |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **Focus on Improvement** | "What is the single most important thing the project team should focus on improving next?"                              | It prompts a **specific, actionable idea**, forcing the reviewer to prioritize their suggestion.                     | "What did you think of the project?" |
-| **Focus on Strengths**   | "Identify one specific feature or part of the project that you thought was implemented successfully and explain _why_." | Forces the user to validate a specific effort, providing valuable qualitative data on what worked and why.           | "Do you have any ideas?"             |
-| **Idea Generation**      | "If you had to change one element of the project's interface or design, what would it be and why?"                      | Directs the reviewer to offer **constructive criticism** on a practical component of the project (interface/design). | "Tell me about your experience."     |
+### Qualitative Question Reference Guide
 
-### Key Takeaway: Quality over Quantity
+Use these examples to refine your written prompts:
 
-It is always better to have **ten good, focused responses** than fifty vague ones. Use these examples to refine your own questions so that every answer you receive is directly useful for your evaluation report.
+| **Focus**         | **❌ Bad Example**                    | **Why It Fails**                                                                                        | **✅ Good Example**                                                                                | **Why It Works**                                                                                |
+| ----------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Improvements**  | "What did you think of the project?" | **Too broad:** Results in vague, unhelpful answers like "It was fine" or "Cool".                        | "What is the single most important feature or layout change we should make to improve usability?" | **Prioritized action:** Forces the reviewer to point out one concrete area for development.     |
+| **Strengths**     | "Did you like anything about it?"    | **Closed prompt:** Encourages a simple "Yes" without explanation.                                       | "Which feature worked most effectively during your test, and why?"                                | **Requires evidence:** Asks the reviewer to identify a specific success and explain the reason. |
+| **Bug Reporting** | "List all the bugs."                 | **Vague & discouraging:** Users may not know what counts as a technical error versus a missing feature. | "If you encountered any errors or confusing steps while testing, please describe what happened."  | **Clear guidance:** Helps testers describe specific issues they experienced.                    |
+
+## Step 4: Final Platform Configuration
+
+### Google Forms Setup
+
+1. Click on each question and toggle the **Required** switch ON for all quantitative questions.
+    
+2. Click **Settings** $\rightarrow$ **Responses** and ensure "Collect email addresses" is set according to your teacher's privacy instructions.
+    
+3. Click **Preview** (eye icon) to test the form flow from a respondent's perspective.
+    
+
+### Google Docs (Printable) Setup
+
+1. Use clear, bold headings for each section.
+    
+2. Format rating questions with a row of five empty check-boxes labeled `1` through `5`.
+    
+3. Provide designated text boxes for written answers so paper submissions remain neat.
+    
+
+## Verification Checklist
+
+Before sharing your form with evaluators, confirm that:
+
+- [ ] Project goals are stated clearly at the top.
+    
+- [ ] You have included 4–6 quantitative (1–5 scale) questions.
+    
+- [ ] You have included 2–3 qualitative (written paragraph) questions.
+    
+- [ ] Every rating question focuses on a single variable.
+    
+- [ ] No questions use leading language (e.g., "Don't you agree that...").
+    
+- [ ] Your teacher has reviewed and approved the draft.

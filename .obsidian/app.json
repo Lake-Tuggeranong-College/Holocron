@@ -12,5 +12,6 @@
   "useMarkdownLinks": false,
   "newLinkFormat": "shortest",
   "showInlineTitle": true,
-  "showUnsupportedFiles": false
+  "showUnsupportedFiles": false,
+  "autoConvertHtml": true
 }

@@ -58,7 +58,7 @@ N/A
 
 ### School Events - Week 13
 
-N/A
+**Wednesday** - IT Expo Day!
 
 ### School Events - Week 14
 

@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > ![[Project Overview - Phase 2]]

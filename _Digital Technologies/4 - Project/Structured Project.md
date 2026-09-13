@@ -1,6 +1,6 @@
 ---
 isCurrent: true
-needsUpdating: true
+needsUpdating: false
 ---
 > [!note]- Project Overview
 > The project will be explained in due time...

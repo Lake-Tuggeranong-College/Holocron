@@ -19,6 +19,8 @@ views:
         direction: ASC
     columnSize:
       file.name: 485
+      file.folder: 655
+      note.isCurrent: 204
   - type: table
     name: Needs Updating & !Current- Ryan
     filters:

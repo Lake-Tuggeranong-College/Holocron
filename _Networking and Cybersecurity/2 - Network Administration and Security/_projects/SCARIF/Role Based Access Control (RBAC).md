@@ -2,146 +2,838 @@
 isCurrent: true
 needsUpdating: true
 ---
-
-To standardise the Role Based Access Control (RBAC) across the whole site, we're updating the database and implementing a function in `template.php` to manage the granting permission or disallowing access.
-
-## Database Tables
-
-Run the following SQL on the users table:
-
-```sql
-ALTER TABLE users 
-    ADD COLUMN isPatient BOOLEAN;
-ALTER TABLE users 
-    ADD COLUMN isStaff BOOLEAN;
-```
-
-## Test Accounts
-
-Register three new accounts on the system, through the register page:
+> [!important] Prerequisites: The Registration and Login functionality needs to be fully implemented prior to attempting this.
+> 
 
 
-| Account Role | Email address                 | Password     |
-| ------------ | ----------------------------- | ------------ |
-| Staff        | staff@staff.com               | staff        |
-| Patient      | patient@patient.com           | patient      |
-| StaffPatient | staffpatient@staffpatient.com | staffpatient |
+**The Issue:** Currently there is no security on the system at all. Anyone can load the index page, see all the data that is being published, and update a devices payload. There are a number of attack vectors that a bad actor could exploit to impact the system.
+
+**A solution:** The 'close' one of these attack vectors, user authentication will be used to lock down access to the data on the website. This is an implementaiton of [[Role Based Access Control]].
 
 
-As there is no method to change a users role at this stage, you will then need to go into the `users` table and manually set the values for the three accounts. Make sure you save the changes back to the database!
+# Refactor site
 
-![[rbacNewUserAccounts.png]]
+Initially, all the data is accessible through `index.php` with no intermediary or landing page. To enable the implementation of the security, renamed `index.php` to `data.php`. Create a new file called `index.php`.
 
-## Template function
+![[rbacRenameFiles.gif]]
 
-Open `template.php` and add this function to the top of the code:
+## index.php
+
+Add this code into the newly created `index.php`.
 
 ```php
-function authorisedAccess(bool $allow_unauth, bool $allow_staff, bool $allow_patients){
-    if (!isset($_SESSION['email_address'])) {
-        header('Location: login.php');
-        exit;
-    }
+<?php
+// src/index.php - System Landing Page & Navigation Hub
+session_start();
 
-    if (!$allow_unauth && !isset($_SESSION['email_address'])) {
-        header('Location: login.php');
-        exit;
-    }
-
-    if ($allow_staff && isset($_SESSION['isStaff'])) {
-        return true;
-    }
-
-    if ($allow_patients && isset($_SESSION['isPatient'])) {
-        return true;
-    }
-
-    // If we reach this point, the user is not authorized
-    header('Location: login.php');
-    exit;
-}
-```
-
-![[templateAuthorisedAccess.png]]
-
-# Update Permissions
-
-Using `register_patients.php` as the test page, add the following check at the top of the page:
-
-```php
-if (!authorisedAccess(false,true,false)) {
-    // If the user is not authorized, redirect to login
-     header('Location: login.php');
-        exit;
-}
-```
-
-![[registerPatientsAuthorisationCheck.png]]
-
-
-## Test Security Access
-
-After implementing the RBAC system, it's now time to test it. Before testing it, you need to decide what is the *intended* vs *actual* behaviour.
-
-Before rolling it out to the whole site, let's focus on `register_patients.php` and decide what the behaviour is for each role (if not already defined):
-
-| Role                           | Intended Behaviour      | Actual Behaviour |
-| ------------------------------ | ----------------------- | ---------------- |
-| Unauthorised (unauth)          | Redirect to `login.php` | ?                |
-| Patient (patient)              | Redirect to `login.php  | ?                |
-| Staff & Patient (staffpatient) | Allow access            | ?                |
-| Staff (staff)                  | Allow access            | ?                |
-Test the behaviour under each role and as an unauthorised user: http://localhost:8000/register_patient.php
-
-
-
-# Debugging
-
-If you're unsure what data is being stored in the `$_SESSION` variables, you can add this code to `template.php` to show all data:
-
-```php
- <?php 
-echo '<pre>';
-var_dump($_SESSION);
-echo '</pre>';
+$isLoggedIn = isset($_SESSION['user_id']);
+$firstName  = $isLoggedIn ? ($_SESSION['first_name'] ?? 'User') : '';
 ?>
+<!DOCTYPE html>
+<html lang="en-AU">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Central System - Overview</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+            border-left: 6px solid #0056b3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            margin: 0 0 0.5rem 0;
+            color: #1a252f;
+            font-size: 2rem;
+        }
+
+        .header-title .lead {
+            font-size: 1.1rem;
+            color: #555;
+            margin: 0;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .welcome-text {
+            font-weight: 600;
+            color: #1a252f;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin: 0 0 0.75rem 0;
+            font-size: 1.3rem;
+            color: #0056b3;
+        }
+
+        .card p {
+            margin: 0 0 1.25rem 0;
+            color: #666;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #0056b3;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #004085;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #0056b3;
+            border: 2px solid #0056b3;
+        }
+
+        .btn-outline:hover {
+            background: #0056b3;
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background: #8b0000;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background: #a00000;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .info-panel {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .info-panel h3 {
+            margin-top: 0;
+            color: #1a252f;
+        }
+
+        .info-panel ul {
+            margin: 0;
+            padding-left: 1.2rem;
+            color: #555;
+        }
+
+        .info-panel li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: #eef2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #0056b3;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>IoT Central System Hub</h1>
+                <p class="lead">Central management and monitoring platform for student ESP32 microcontroller telemetry.</p>
+            </div>
+
+            <!-- Conditional Header Navigation -->
+            <?php if ($isLoggedIn): ?>
+                <div class="user-greeting">
+                    <span class="welcome-text">Welcome, <?= htmlspecialchars($firstName) ?></span>
+                    <a href="logout.php" class="btn btn-secondary">Log Out</a>
+                </div>
+            <?php else: ?>
+                <div class="auth-buttons">
+                    <a href="login.php" class="btn btn-outline">Log In</a>
+                    <a href="register.php" class="btn">Register</a>
+                </div>
+            <?php endif; ?>
+        </header>
+
+        <div class="grid">
+            <!-- Telemetry Data Link Card -->
+            <div class="card">
+                <div>
+                    <h2>Telemetry & Device Controller</h2>
+                    <p>View real-time sensor readings, event logs, device activity filters, and update active state values (0 or 1).</p>
+                </div>
+                <a href="data.php" class="btn">View Telemetry Data &rarr;</a>
+            </div>
+
+            <!-- User Account Card (Dynamic State) -->
+            <div class="card">
+                <div>
+                    <h2>Account Access</h2>
+                    <?php if ($isLoggedIn): ?>
+                        <p>You are logged in as <strong><?= htmlspecialchars($firstName) ?></strong>. Manage your account settings or log out when finished.</p>
+                    <?php else: ?>
+                        <p>Log in to access administrative privileges or create a new user account to get started with device tracking.</p>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ($isLoggedIn): ?>
+                    <a href="logout.php" class="btn btn-secondary">Log Out</a>
+                <?php else: ?>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="login.php" class="btn btn-outline" style="flex: 1;">Log In</a>
+                        <a href="register.php" class="btn" style="flex: 1;">Register</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Error Logs Card -->
+            <div class="card">
+                <div>
+                    <h2>System Error Logs</h2>
+                    <p>Inspect captured system exceptions, database connection errors, and telemetry transport logs stored in <code>error_log</code>.</p>
+                </div>
+                <a href="errorlog.php" class="btn btn-danger">View Error Logs &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Infrastructure Architecture Summary -->
+        <div class="info-panel">
+            <h3>System Architecture Overview</h3>
+            <ul>
+                <li><strong>Scarif Development:</strong> Houses edge IoT hardware (ESP32) and the client Web Portal interface.</li>
+                <li><strong>Scarif Production Server:</strong> Hosts the MQTT Broker, <code>bridge.py</code> sync daemon, and MySQL Database.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+
+</html>
 ```
 
-![[rbacVarDump.png]]
+## errorlog.php
 
-This outputs data similar to the output shown below, and you can use this to confirm if `isPatient` and `isStaff` are set correctly. If the roles are set correctly, it will appear as `int(1)`. In the example below the **patient** account has the role **isPatient** set, but **isStaff** is not set.
-
-![[rbacVarDumpOutput.png]]
-
-# `authorisedAccess()` Version 2
-
-In `template.php` update the authorised access function for the new logic.
+Create another new file - `errorlog.php`. This file will display the details of the error_log table in the database. Add the following contents
 
 ```php
+<?php
+// src/errorlog.php - Displays all records from the error_log table
+$host = getenv('DB_HOST') ?: '10.0.0.100';
+$port = getenv('DB_PORT') ?: '3306';
+$db   = getenv('DB_NAME') ?: 'iot_telemetry';
+$user = getenv('DB_USER') ?: 'iot_user';
+$pass = getenv('DB_PASSWORD') ?: 'iot_password';
+$charset = 'utf8mb4';
 
-function authorisedAccess(bool $allow_unauth, bool $allow_staff, bool $allow_patients){
-    if (!isset($_SESSION['email_address'])) {
-        // If the user's not logged in send them to the log in page.
-        // Do we need this????????
-        header('Location: login.php');
-        exit;
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+];
+
+// Pagination Settings
+$itemsPerPage = 15;
+$currentPage  = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($currentPage < 1) $currentPage = 1;
+$offset = ($currentPage - 1) * $itemsPerPage;
+
+$flashMessage = '';
+$flashType = 'success';
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+
+    // Optional: Action to clear all error logs from error_log
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'clear_logs') {
+        $pdo->exec("TRUNCATE TABLE error_log");
+        $flashMessage = "All records in error_log have been cleared successfully.";
+        $flashType = "success";
+        $currentPage = 1;
+        $offset = 0;
     }
 
-    if (!$allow_unauth && !isset($_SESSION['email_address'])) {
-        header('Location: login.php');
-        exit;
+    // Get Total Error Count for Pagination from error_log
+    $countStmt = $pdo->query("SELECT COUNT(*) FROM `error_log`");
+    $totalErrors = (int)$countStmt->fetchColumn();
+
+    // Fetch Paginated Records using explicit schema columns
+    $stmt = $pdo->prepare("SELECT `id`, `topic`, `raw_payload`, `error_message`, `logged_at` FROM `error_log` ORDER BY `logged_at` DESC LIMIT :limit OFFSET :offset");
+    $stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $errorLogs = $stmt->fetchAll();
+
+    $totalPages = ceil($totalErrors / $itemsPerPage) ?: 1;
+} catch (\PDOException $e) {
+    die("Database Connection Error: " . htmlspecialchars($e->getMessage()));
+}
+
+// Helper function to keep pagination parameters intact
+function buildPageUrl($page)
+{
+    $params = $_GET;
+    $params['page'] = $page;
+    return 'errorlog.php?' . http_build_query($params);
+}
+?>
+<!DOCTYPE html>
+<html lang="en-AU">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Error Logs - IoT Central</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            margin: 0;
+            color: #8b0000;
+            font-size: 1.8rem;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            background: #0056b3;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #004085;
+        }
+
+        /* Flash Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Card Frame */
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        /* Buttons */
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-clear:hover {
+            background: #bd2130;
+        }
+
+        /* Table Styling */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+        }
+
+        th {
+            background: #8b0000;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 24px;
+        }
+
+        code.topic-tag {
+            background: #eef2f7;
+            color: #0056b3;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        code.payload-tag {
+            background: #f8f9fa;
+            color: #333;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85em;
+            display: block;
+            max-height: 100px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .error-text {
+            color: #721c24;
+            font-weight: 500;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .pagination a:hover {
+            background: #eee;
+        }
+
+        .pagination .active {
+            background: #8b0000;
+            color: white;
+            border-color: #8b0000;
+            font-weight: bold;
+        }
+
+        .pagination .disabled {
+            color: #aaa;
+            pointer-events: none;
+            background: #f0f0f0;
+        }
+
+        .page-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header-container">
+            <div>
+                <h1>System Error Logs</h1>
+                <p style="color: #666; margin: 0.25rem 0 0 0;">Audit trail from table <code>error_log</code></p>
+            </div>
+            <a href="index.php" class="nav-btn">&larr; Return to System Overview</a>
+        </div>
+
+        <?php if (!empty($flashMessage)): ?>
+            <div class="alert alert-<?= $flashType ?>">
+                <?= $flashMessage ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Recorded Exceptions (Total: <?= $totalErrors ?>)</h2>
+                <?php if ($totalErrors > 0): ?>
+                    <form method="POST" action="errorlog.php" onsubmit="return confirm('Are you sure you want to permanently clear all error logs?');">
+                        <input type="hidden" name="action" value="clear_logs">
+                        <button type="submit" class="btn-clear">Clear All Logs</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 6%;">ID</th>
+                        <th style="width: 22%;">MQTT Topic</th>
+                        <th style="width: 28%;">Raw Payload</th>
+                        <th style="width: 26%;">Error Message</th>
+                        <th style="width: 18%;">Logged At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($errorLogs)): ?>
+                        <tr>
+                            <td colspan="5" class="empty-row">No records found in error_log table.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($errorLogs as $log): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($log['id']) ?></td>
+                                <td><code class="topic-tag"><?= htmlspecialchars($log['topic'] ?? 'N/A') ?></code></td>
+                                <td>
+                                    <?php if (!empty($log['raw_payload'])): ?>
+                                        <code class="payload-tag"><?= htmlspecialchars($log['raw_payload']) ?></code>
+                                    <?php else: ?>
+                                        <span style="color: #999; font-style: italic;">None</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="error-text"><?= htmlspecialchars($log['error_message'] ?? 'No message specified') ?></td>
+                                <td><?= htmlspecialchars($log['logged_at']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <!-- Pagination Bar -->
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
+                    <span class="page-meta">Showing <?= min($offset + 1, $totalErrors) ?>–<?= min($offset + $itemsPerPage, $totalErrors) ?> of <?= $totalErrors ?></span>
+
+                    <?php if ($currentPage > 1): ?>
+                        <a href="<?= buildPageUrl($currentPage - 1) ?>">&laquo; Prev</a>
+                    <?php else: ?>
+                        <span class="disabled">&laquo; Prev</span>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <?php if ($i == $currentPage): ?>
+                            <span class="active"><?= $i ?></span>
+                        <?php elseif ($i == 1 || $i == $totalPages || ($i >= $currentPage - 2 && $i <= $currentPage + 2)): ?>
+                            <a href="<?= buildPageUrl($i) ?>"><?= $i ?></a>
+                        <?php elseif ($i == 2 || $i == $totalPages - 1): ?>
+                            <span>...</span>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+
+                    <?php if ($currentPage < $totalPages): ?>
+                        <a href="<?= buildPageUrl($currentPage + 1) ?>">Next &raquo;</a>
+                    <?php else: ?>
+                        <span class="disabled">Next &raquo;</span>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</body>
+
+</html>
+```
+
+
+# Defined Roles
+
+In the database, there are a number of predefined roles for users. They are:
+
+|**Name**|**Email Address**|**Role**|
+|---|---|---|
+|Alice (Admin)|admin@school.com|admin|
+|Bob (Teacher)|teacher@school.com|staff|
+|Charlie|student1@school.com|student|
+|Diana|student2@school.com|student|
+|Eve|guest@school.com|guest|
+
+With a focus on security, you need to decide which roles get access to what data.
+
+
+| Data/Page        | Role/s |
+| ---------------- | ------ |
+| index.php        | ?      |
+| login.php        | ?      |
+| registration.php | ?      |
+| errorlog.php     | ?      |
+| data.php         | ?      |
+
+# Implementing RBAC
+
+Create a new file called `auth.php` which will host the code to provide authorisation to particular roles. This file will not be accessed directly, however will be included by all the other files. If the user is authorised, then the page will be loaded. If the user is not authorised, then `auth.php` will display an error message.
+
+![[rbacForbidden.png]]
+
+```php
+<?php
+// src/auth.php - Session Management & Role-Based Access Control (RBAC)
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+/**
+ * Enforces access control based on user authentication status and allowed roles.
+ *
+ * @param array $allowedRoles List of roles permitted to view the page (e.g., ['admin', 'staff'])
+ * @return void
+ */
+function authorise(array $allowedRoles = []): void 
+{
+    // 1. Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php?error=unauthenticated');
+        exit();
     }
 
-    if ($allow_staff && $_SESSION['isStaff'] == 1) {
-        return true;
-    }
+    // 2. Fetch current user role from session (default to 'guest' if not set)
+    $userRole = $_SESSION['user_role'] ?? 'guest';
 
-    if ($allow_patients && $_SESSION['isPatient'] == 1) {
-        return true;
+    // 3. If allowedRoles is specified, verify user has access
+    if (!empty($allowedRoles) && !in_array($userRole, $allowedRoles, true)) {
+        renderUnauthorisedPage($userRole);
+        exit();
     }
+}
 
-    // If we reach this point, the user is not authorized
-    header('Location: login.php');
-    exit;
+/**
+ * Helper function to output an HTTP 403 response and display an unauthorised error page.
+ *
+ * @param string $userRole The role of the currently logged-in user
+ * @return void
+ */
+function renderUnauthorisedPage(string $userRole): void 
+{
+    http_response_code(403);
+    ?>
+    <!DOCTYPE html>
+    <html lang="en-AU">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>403 Access Forbidden</title>
+        <style>
+            body {
+                font-family: system-ui, -apple-system, sans-serif;
+                background: #f4f6f9;
+                color: #2c3e50;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+            }
+            .error-card {
+                background: #ffffff;
+                padding: 2.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                border-top: 6px solid #dc3545;
+            }
+            h1 { color: #dc3545; margin-top: 0; font-size: 2rem; }
+            p { font-size: 1rem; color: #555; line-height: 1.5; }
+            .role-badge {
+                display: inline-block;
+                background: #eef2f7;
+                color: #0056b3;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-family: monospace;
+                font-weight: bold;
+            }
+            .btn {
+                display: inline-block;
+                margin-top: 1.5rem;
+                background: #0056b3;
+                color: #fff;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-weight: 600;
+            }
+            .btn:hover { background: #004085; }
+        </style>
+    </head>
+    <body>
+        <div class="error-card">
+            <h1>403 - Access Forbidden</h1>
+            <p>You do not have permission to access this page.</p>
+            <p>Your current role is <span class="role-badge"><?= htmlspecialchars($userRole) ?></span>.</p>
+            <a href="index.php" class="btn">&larr; Return to Central Hub</a>
+        </div>
+    </body>
+    </html>
+    <?php
 }
 ```
+
+
+## Updating pages
+
+On each of the page - `index.php`, `login.php` etc, add the following lines of code **at the very top** of the code.
+
+```php
+<?php
+require_once 'auth.php';
+
+// Enforce admin-only access
+authorise(['admin']);
+?>
+
+// Page code continues below...
+```
+
+You can implement a page that can be accessed by multiple roles:
+
+```php
+<?php
+require_once 'auth.php';
+
+// Pass an array of all roles allowed to view this page
+authorise(['admin', 'staff']);
+?>
+
+// Page code continues below...
+```
+
+
+Continue to define the roles that can access each of the pages. **TEST** each page after implementation.

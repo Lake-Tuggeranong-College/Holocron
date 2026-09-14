@@ -27,12 +27,6 @@
       "id": "d2e1e108-7bf9-4ac6-9565-e4c5f2eebc14"
     },
     {
-      "name": "separator",
-      "prompt": "",
-      "separator": true,
-      "id": "b2785927-79e0-4fb4-a74c-a27939851027"
-    },
-    {
       "name": "🪄 General help",
       "prompt": "",
       "system": "You are an assistant helping a user write more content in a document based on a prompt. Output in markdown format. Do not use links. Do not include literal content from the original document.",

@@ -155,6 +155,35 @@ function mountVaultGraph(root, data, deps) {
     "Grey",
     "Slate"
   ];
+  var SLOT_VARS = [
+    "--g1",
+    "--g2",
+    "--g3",
+    "--g4",
+    "--g5",
+    "--g6",
+    "--g7",
+    "--g8",
+    "--g9",
+    "--g10",
+    "--g11",
+    "--g12"
+  ];
+  function readPalette(suffix) {
+    var slots2 = SLOT_VARS.map(function(v) {
+      return css(v + "-" + suffix);
+    });
+    var byKey = dict();
+    slots2.forEach(function(hex, i) {
+      byKey["g" + (i + 1)] = hex;
+    });
+    return {
+      dark: suffix === "d",
+      surface: css("--surface-1-" + suffix),
+      slots: slots2,
+      byKey
+    };
+  }
   var THEME = (
     /** @type {Theme} */
     {}
@@ -171,27 +200,22 @@ function mountVaultGraph(root, data, deps) {
       surface: surf,
       hoverBg: css("--surface-2"),
       hoverBorder: css("--border-strong"),
-      slots: [
-        "--g1",
-        "--g2",
-        "--g3",
-        "--g4",
-        "--g5",
-        "--g6",
-        "--g7",
-        "--g8",
-        "--g9",
-        "--g10",
-        "--g11",
-        "--g12"
-      ].map(css),
-      neutrals: ["--n1", "--n2", "--n3"].map(css)
+      slots: SLOT_VARS.map(css),
+      neutrals: ["--n1", "--n2", "--n3"].map(css),
+      // github#77
+      pal: { l: readPalette("l"), d: readPalette("d") }
     };
     THEME.byKey = dict();
     THEME.slots.forEach(function(hex, i) {
       THEME.byKey["g" + (i + 1)] = hex;
     });
+    clearPreviewCache();
+    ovSig = "";
     if (renderer) renderer.setSetting("labelColor", THEME.text);
+    if (renderer) {
+      buildColors();
+      attempt2(buildLegend);
+    }
   }
   readTheme();
   function cleanSlotMap(raw) {
@@ -203,8 +227,14 @@ function mountVaultGraph(root, data, deps) {
     });
     return out;
   }
-  var folderColors = cleanSlotMap(deps.folderColors);
-  var subfolderColors = cleanSlotMap(deps.subfolderColors);
+  var dimColors = { folder: cleanSlotMap(deps.folderColors), tag: cleanSlotMap(deps.tagColors) };
+  var dimSubColors = { folder: cleanSlotMap(deps.subfolderColors), tag: cleanSlotMap(deps.subtagColors) };
+  function colorsFor(dim) {
+    return dimColors[dim || state.dim] || dimColors.folder;
+  }
+  function subColorsFor(dim) {
+    return dimSubColors[dim || state.dim] || dimSubColors.folder;
+  }
   var panEnabled = deps.panEnabled === false ? false : true;
   var onPanEnabled = typeof deps.onPanEnabled === "function" ? deps.onPanEnabled : null;
   var compactAxis = deps.compactAxis === false ? false : true;
@@ -221,6 +251,19 @@ function mountVaultGraph(root, data, deps) {
   var onUnlinkedByFolder = typeof deps.onUnlinkedByFolder === "function" ? deps.onUnlinkedByFolder : null;
   var unlinkedTintByFolder = deps.unlinkedTintByFolder === true ? true : false;
   var onUnlinkedTintByFolder = typeof deps.onUnlinkedTintByFolder === "function" ? deps.onUnlinkedTintByFolder : null;
+  var countBars = deps.countBars === false ? false : true;
+  var onCountBars = typeof deps.onCountBars === "function" ? deps.onCountBars : null;
+  var DIMS = ["folder", "tag"];
+  var settingsDim = "folder";
+  var dimStart = DIMS.indexOf(
+    /** @type {"folder" | "tag"} */
+    deps.dim
+  ) >= 0 ? (
+    /** @type {"folder" | "tag"} */
+    deps.dim
+  ) : "folder";
+  settingsDim = dimStart;
+  var onDim = typeof deps.onDim === "function" ? deps.onDim : null;
   function isArchiveGroup2(g) {
     return String(g).charAt(0) === "_";
   }
@@ -248,19 +291,38 @@ function mountVaultGraph(root, data, deps) {
     });
     return out;
   }
-  var folderShown = cleanFolderShown(deps.folderShown);
+  var dimShown = { folder: cleanFolderShown(deps.folderShown), tag: cleanFolderShown(deps.tagShown) };
+  function shownFor(dim) {
+    return dimShown[dim || state.dim] || dimShown.folder;
+  }
   function hiddenByDefault(g) {
-    if (typeof folderShown[g] === "boolean") return !folderShown[g];
+    var m = shownFor()[g];
+    if (typeof m === "boolean") return !m;
     return isArchiveGroup2(g);
   }
   var SETTINGS_UI = !!deps.settingsUI;
   var openHostSettings = typeof deps.openSettings === "function" ? deps.openSettings : null;
   var saveFolderColors = typeof deps.onFolderColors === "function" ? deps.onFolderColors : null;
   var saveSubfolderColors = typeof deps.onSubfolderColors === "function" ? deps.onSubfolderColors : null;
+  var saveTagColors = typeof deps.onTagColors === "function" ? deps.onTagColors : null;
+  var saveSubtagColors = typeof deps.onSubtagColors === "function" ? deps.onSubtagColors : null;
+  var saveTagShown = typeof deps.onTagShown === "function" ? deps.onTagShown : null;
+  function saveColorsFor(dim, map) {
+    var fn = dim === "tag" ? saveTagColors : saveFolderColors;
+    if (fn) fn(map);
+  }
+  function saveSubColorsFor(dim, map) {
+    var fn = dim === "tag" ? saveSubtagColors : saveSubfolderColors;
+    if (fn) fn(map);
+  }
+  function saveShownFor(dim, map) {
+    var fn = dim === "tag" ? saveTagShown : saveFolderShown;
+    if (fn) fn(map);
+  }
   var saveFolderShown = typeof deps.onFolderShown === "function" ? deps.onFolderShown : null;
   var savePinned = typeof deps.onPinned === "function" ? deps.onPinned : null;
   var state = {
-    dim: "folder",
+    dim: dimStart,
     layout: "rings",
     hiddenSub: dict(),
     hidden: dict(),
@@ -285,26 +347,11 @@ function mountVaultGraph(root, data, deps) {
     logoTwoRing: true,
     pinned: []
   };
+  var onData = [];
+  function invalidatesOnData(name, fn) {
+    onData.push({ name, fn });
+  }
   var graph = new Graph();
-  DATA.nodes.forEach(function(n, i) {
-    graph.addNode(String(i), {
-      label: n.label,
-      x: 0,
-      y: 0,
-      size: 4,
-      folder: n.folder,
-      sub: n.sub || "",
-      dirs: n.dirs || [],
-      ntype: n.type || "note",
-      tags: n.tags || [],
-      path: n.id,
-      deg: n.deg,
-      created: n.created || "",
-      touched: n.touched || "",
-      words: n.words || 0,
-      ghost: !!n.ghost
-    });
-  });
   var EDGE_RAMP_START = 2e3, EDGE_RAMP_END = 1e4, EDGE_FLOOR = 0.1;
   var adj = dict();
   var EDGE_TOTAL = 0;
@@ -316,50 +363,89 @@ function mountVaultGraph(root, data, deps) {
   };
   var EDGE_SHOWN = 0;
   var lazyEdges = false;
-  (function() {
-    var seen = dict();
-    var list = [];
-    DATA.edges.forEach(function(e) {
-      var a = String(e.s), b = String(e.t);
-      var k = a < b ? a + "\0" + b : b + "\0" + a;
-      if (seen[k]) return;
-      seen[k] = 1;
-      EDGE_TOTAL++;
-      list.push({ a, b, w: e.w, k });
-      (adj[a] || (adj[a] = [])).push({ o: b, w: e.w });
-      if (b !== a) (adj[b] || (adj[b] = [])).push({ o: a, w: e.w });
-    });
-    var share = EDGE_TOTAL <= EDGE_RAMP_START ? 1 : EDGE_TOTAL >= EDGE_RAMP_END ? EDGE_FLOOR : 1 - (1 - EDGE_FLOOR) * (EDGE_TOTAL - EDGE_RAMP_START) / (EDGE_RAMP_END - EDGE_RAMP_START);
-    EDGE_SHOWN = Math.round(EDGE_TOTAL * share);
-    lazyEdges = EDGE_SHOWN < EDGE_TOTAL;
-    if (lazyEdges) {
-      list.sort(function(p, q) {
-        return q.w - p.w || (p.k < q.k ? -1 : 1);
-      });
-      list.length = EDGE_SHOWN;
-    }
-    list.forEach(function(e) {
-      if (!graph.hasEdge(e.a, e.b)) graph.addUndirectedEdge(e.a, e.b, edgeAttrsOf(e.w));
-    });
-  })();
   var NODE_MIN = 2.6, NODE_MAX = 11, NODE_ORPHAN = 6;
-  graph.forEachNode(function(id, a) {
-    graph.setNodeAttribute(id, "size", a.deg === 0 ? NODE_ORPHAN : Math.min(NODE_MAX, NODE_MIN + 1.55 * Math.sqrt(a.deg)));
-  });
   var hubRank = dict();
-  (function() {
+  var subOrder = dict();
+  var subCount = dict();
+  var idOfPath = dict();
+  var nextId = 0;
+  function ingest(src, keepId) {
+    graph.clear();
+    adj = dict();
+    hubRank = dict();
+    subOrder = dict();
+    subCount = dict();
+    idOfPath = dict();
+    EDGE_TOTAL = 0;
+    EDGE_SHOWN = 0;
+    lazyEdges = false;
+    var idAt = [];
+    src.nodes.forEach(function(n, i) {
+      var held = keepId ? keepId(n.id) : void 0;
+      var id = held === void 0 ? String(nextId++) : held;
+      idAt[i] = id;
+      idOfPath[n.id] = id;
+      graph.addNode(id, {
+        label: n.label,
+        x: 0,
+        y: 0,
+        size: 4,
+        folder: n.folder,
+        sub: n.sub || "",
+        dirs: n.dirs || [],
+        ntype: n.type || "note",
+        tags: n.tags || [],
+        path: n.id,
+        deg: n.deg,
+        created: n.created || "",
+        touched: n.touched || "",
+        words: n.words || 0,
+        ghost: !!n.ghost
+      });
+    });
+    (function() {
+      var seen = dict();
+      var list = [];
+      src.edges.forEach(function(e) {
+        var a = idAt[e.s], b = idAt[e.t];
+        if (a === void 0 || b === void 0) return;
+        var k = a < b ? a + "\0" + b : b + "\0" + a;
+        if (seen[k]) return;
+        seen[k] = 1;
+        EDGE_TOTAL++;
+        list.push({ a, b, w: e.w, k });
+        (adj[a] || (adj[a] = [])).push({ o: b, w: e.w });
+        if (b !== a) (adj[b] || (adj[b] = [])).push({ o: a, w: e.w });
+      });
+      var share = EDGE_TOTAL <= EDGE_RAMP_START ? 1 : EDGE_TOTAL >= EDGE_RAMP_END ? EDGE_FLOOR : 1 - (1 - EDGE_FLOOR) * (EDGE_TOTAL - EDGE_RAMP_START) / (EDGE_RAMP_END - EDGE_RAMP_START);
+      EDGE_SHOWN = Math.round(EDGE_TOTAL * share);
+      lazyEdges = EDGE_SHOWN < EDGE_TOTAL;
+      if (lazyEdges) {
+        list.sort(function(p, q) {
+          return q.w - p.w || (p.k < q.k ? -1 : 1);
+        });
+        list.length = EDGE_SHOWN;
+      }
+      list.forEach(function(e) {
+        if (!graph.hasEdge(e.a, e.b)) graph.addUndirectedEdge(e.a, e.b, edgeAttrsOf(e.w));
+      });
+    })();
+    graph.forEachNode(function(id, a) {
+      graph.setNodeAttribute(id, "size", a.deg === 0 ? NODE_ORPHAN : Math.min(NODE_MAX, NODE_MIN + 1.55 * Math.sqrt(a.deg)));
+    });
     graph.nodes().slice().sort(function(a, b) {
       return graph.getNodeAttribute(b, "deg") - graph.getNodeAttribute(a, "deg") || String(graph.getNodeAttribute(a, "label")).localeCompare(String(graph.getNodeAttribute(b, "label")));
     }).forEach(function(id, i) {
       hubRank[id] = i;
     });
-  })();
-  var subOrder = dict();
-  var subCount = dict();
-  (function() {
+  }
+  ingest(DATA, null);
+  function buildSubOrder() {
+    subOrder = dict();
+    subCount = dict();
     var tally = dict();
-    graph.forEachNode(function(_id, a) {
-      var f = a.folder, sb = a.sub || "";
+    graph.forEachNode(function(id, a) {
+      var f = fileGroup(id, a), sb = fileSub(id, a);
       if (!tally[f]) tally[f] = dict();
       tally[f][sb] = (tally[f][sb] || 0) + 1;
     });
@@ -371,60 +457,239 @@ function mountVaultGraph(root, data, deps) {
         subCount[f + "/" + sb] = tally[f][sb];
       });
     });
-  })();
+  }
   var UNIT = 160;
   var UNLINKED = "(unlinked)";
+  var UNTAGGED = "(untagged)";
+  var tagFiling = dict();
+  var tagCarried = dict();
+  var tagFilingBuilt = false;
+  function fileTags(tags) {
+    var t = tags && tags.length ? String(tags[0]) : "";
+    if (!t) return { g: UNTAGGED, sub: "", dirs: [] };
+    var seg = t.split("/").filter(Boolean);
+    if (!seg.length) return { g: UNTAGGED, sub: "", dirs: [] };
+    return { g: seg[0], sub: seg[1] || "", dirs: seg.slice(1) };
+  }
+  function buildTagFiling() {
+    if (tagFilingBuilt) return;
+    tagFilingBuilt = true;
+    tagFiling = dict();
+    tagCarried = dict();
+    graph.forEachNode(function(id, a) {
+      if (a.dupOf) return;
+      tagFiling[id] = fileTags(a.tags);
+      var once = dict();
+      (a.tags || []).forEach(function(t) {
+        var g = String(t).split("/").filter(Boolean)[0];
+        if (!g || once[g]) return;
+        once[g] = true;
+        tagCarried[g] = (tagCarried[g] || 0) + 1;
+      });
+    });
+  }
+  function fileGroup(id, a) {
+    if (state.dim === "folder") return (a || graph.getNodeAttributes(id)).folder;
+    var f = tagFiling[id];
+    return f ? f.g : UNTAGGED;
+  }
+  function fileSub(id, a) {
+    if (state.dim === "folder") return (a || graph.getNodeAttributes(id)).sub || "";
+    var f = tagFiling[id];
+    return f ? f.sub : "";
+  }
+  function fileDirs(id, a) {
+    if (state.dim === "folder") return (a || graph.getNodeAttributes(id)).dirs || [];
+    var f = tagFiling[id];
+    return f ? f.dirs : [];
+  }
   var moveFrom = null;
+  var leftColor = null;
+  var leaving = dict();
+  var leftGroup = dict();
+  var standIns = [];
+  var oldWorld = false;
+  var legendSwitch = null;
   function groupOf(id) {
     if (moveFrom) {
       var mf = moveFrom[id];
       if (mf !== void 0) return mf;
     }
-    if (!adj[id]) return unlinkedByFolder ? graph.getNodeAttribute(id, "folder") : UNLINKED;
-    return graph.getNodeAttribute(id, "folder");
+    if (leftGroup[id] !== void 0) return leftGroup[id];
+    if (!adj[id]) return unlinkedByFolder ? fileGroup(id) : UNLINKED;
+    return fileGroup(id);
   }
+  var SAT_SEP = "\0";
+  function noteOf(id) {
+    if (!standIns.length) return id;
+    var d = graph.hasNode(id) ? graph.getNodeAttribute(id, "dupOf") : "";
+    return d ? String(d) : id;
+  }
+  function addStandIns() {
+    Object.keys(leaving).forEach(function(id) {
+      var a = graph.getNodeAttributes(id);
+      var sid = id + SAT_SEP + "s";
+      if (graph.hasNode(sid)) return;
+      graph.addNode(sid, {
+        label: a.label,
+        x: a.x,
+        y: a.y,
+        size: a.size,
+        folder: a.folder,
+        sub: a.sub,
+        dirs: a.dirs,
+        ntype: a.ntype,
+        tags: a.tags,
+        path: a.path,
+        deg: a.deg,
+        created: a.created,
+        touched: a.touched,
+        words: a.words,
+        ghost: a.ghost,
+        dupOf: id,
+        standIn: id
+      });
+      if (tagFiling[id]) tagFiling[sid] = tagFiling[id];
+      if (adj[id]) adj[sid] = adj[id];
+      hubRank[sid] = hubRank[id];
+      if (tlRank[id] !== void 0) tlRank[sid] = tlRank[id];
+      if (tlMs[id] !== void 0) tlMs[sid] = tlMs[id];
+      alpha[sid] = 0;
+      standIns.push(sid);
+    });
+    var seat = function(id) {
+      return leaving[id] ? id + SAT_SEP + "s" : id;
+    };
+    var mirror = [];
+    graph.forEachEdge(function(e, attrs, a0, b0) {
+      if (!leaving[a0] && !leaving[b0]) return;
+      mirror.push([seat(a0), seat(b0), attrs]);
+    });
+    mirror.forEach(function(m) {
+      if (!graph.hasEdge(m[0], m[1])) graph.addUndirectedEdge(m[0], m[1], m[2]);
+    });
+  }
+  function dropStandIns() {
+    if (!standIns.length && !Object.keys(leaving).length) return;
+    standIns.forEach(function(sid) {
+      var id = graph.getNodeAttribute(sid, "standIn");
+      if (graph.hasNode(id)) {
+        graph.mergeNodeAttributes(id, { x: graph.getNodeAttribute(sid, "x"), y: graph.getNodeAttribute(sid, "y") });
+        alpha[id] = alpha[sid] || 0;
+      }
+      if (state.hovered === sid) state.hovered = id;
+      if (state.selected === sid) state.selected = id;
+      graph.dropNode(sid);
+      delete tagFiling[sid];
+      delete adj[sid];
+      delete hubRank[sid];
+      delete tlRank[sid];
+      delete tlMs[sid];
+      delete alpha[sid];
+    });
+    standIns = [];
+    leaving = dict();
+    leftGroup = dict();
+    lazyAdded = [];
+    lazyShown = null;
+    neighbourCache = null;
+    focusSetCache = { key: void 0, set: null };
+    legendSwitch = null;
+    if (renderer) {
+      attempt2(buildLegend);
+      heatSig = "";
+      attempt2(heatBuild);
+      attempt2(heatDraw);
+    }
+  }
+  function liveByGroup() {
+    var old = dict();
+    var now = dict();
+    graph.forEachNode(function(id) {
+      var w = alpha[id] || 0;
+      if (w <= 4e-3) return;
+      if (leaving[id]) old[leftGroup[id]] = (old[leftGroup[id]] || 0) + w;
+      else now[groupOf(id)] = (now[groupOf(id)] || 0) + w;
+    });
+    return { old, now };
+  }
+  function legendSwitchTick() {
+    var ls = legendSwitch;
+    if (!ls) return;
+    var live = liveByGroup();
+    var nowBasis = barBasis().max;
+    var rows = $("legend").querySelectorAll(".lgr[data-row]");
+    for (var i = 0; i < rows.length; i++) {
+      var row = (
+        /** @type {HTMLElement} */
+        rows[i]
+      );
+      var g = row.getAttribute("data-row") || "";
+      var isOld = row.hasAttribute("data-old");
+      var v = isOld ? live.old[g] || 0 : live.now[g] || 0;
+      var basis = isOld ? ls.basis : nowBasis;
+      var gone = v <= 4e-3;
+      if (row.classList.contains("lgr-gone") !== gone) row.classList.toggle("lgr-gone", gone);
+      var b = (
+        /** @type {HTMLElement | null} */
+        row.querySelector(".lg")
+      );
+      if (b) b.style.setProperty("--vg-share", (basis > 0 ? v / basis * 100 : 0).toFixed(3) + "%");
+    }
+  }
+  if (state.dim === "tag") buildTagFiling();
+  buildSubOrder();
+  invalidatesOnData("tag filing and sub order", function() {
+    tagFilingBuilt = false;
+    if (state.dim === "tag") buildTagFiling();
+    buildSubOrder();
+  });
   var SLOT_COUNT = 12;
   var groupColor = dict();
   var groupSlot = dict();
   var groupAutoSlot = dict();
   var order = {};
+  function groupRank(s) {
+    if (s === UNTAGGED) return 3;
+    if (s === UNLINKED) return 4;
+    var c = s.charAt(0);
+    return c === "_" ? 0 : c === "(" ? 1 : 2;
+  }
+  function byGroupName(a, b) {
+    return groupRank(a) - groupRank(b) || a.localeCompare(b, void 0, { numeric: true });
+  }
   function computeOrder() {
-    var count = {};
+    var count = dict();
     var filed = dict();
     graph.forEachNode(function(id, a) {
-      var g = groupOf(id);
+      if (a.standIn) return;
+      var g = leaving[id] ? !adj[id] && !unlinkedByFolder ? UNLINKED : fileGroup(id, a) : groupOf(id);
       count[g] = (count[g] || 0) + 1;
-      if (state.dim === "folder") filed[a.folder] = (filed[a.folder] || 0) + 1;
+      var f = fileGroup(id, a);
+      filed[f] = (filed[f] || 0) + 1;
     });
     folderCount = filed;
     Object.keys(filed).forEach(function(f) {
       if (count[f] === void 0) count[f] = 0;
     });
     if (count[UNLINKED] === void 0) count[UNLINKED] = 0;
-    var names = Object.keys(count).sort(function(a, b) {
-      var rank = function(s) {
-        if (s === UNLINKED) return 3;
-        var c = s.charAt(0);
-        return c === "_" ? 0 : c === "(" ? 1 : 2;
-      };
-      return rank(a) - rank(b) || a.localeCompare(b, void 0, { numeric: true });
-    });
+    var names = Object.keys(count).sort(byGroupName);
     order[state.dim] = names;
     return count;
   }
-  var counts = {};
+  var counts = dict();
   var folderCount = dict();
   function buildColors() {
     groupColor = dict();
     var names = order[state.dim] || [];
-    var byFolder = state.dim === "folder" ? folderColors : dict();
+    var byFolder = colorsFor();
     groupSlot = dict();
     groupAutoSlot = dict();
     var auto = 0;
     names.forEach(function(g) {
       var k = byFolder[g];
       var picked = k && THEME.byKey[k] ? k : "";
-      if (isArchiveGroup2(g) || g === UNLINKED) {
+      if (isArchiveGroup2(g) || g === UNLINKED || g === UNTAGGED) {
         var akey = picked || ARCHIVE_SLOT2;
         groupColor[g] = THEME.byKey[akey];
         groupSlot[g] = akey;
@@ -445,31 +710,82 @@ function mountVaultGraph(root, data, deps) {
       return { key: "g" + (i + 1), name, hex: THEME.slots[i] };
     });
   }
-  function applyFolderShown(map) {
-    folderShown = cleanFolderShown(map);
-    return folderShown;
+  var CONTRAST_FLOOR = 3;
+  function contrastOf(a, b) {
+    var x = relLum(a), y = relLum(b);
+    var hi = Math.max(x, y), lo = Math.min(x, y);
+    return (hi + 0.05) / (lo + 0.05);
   }
-  function applyFolderColors(map) {
-    folderColors = cleanSlotMap(map);
+  function slotContrast(key) {
+    return {
+      light: contrastOf(THEME.pal.l.byKey[key], THEME.pal.l.surface),
+      dark: contrastOf(THEME.pal.d.byKey[key], THEME.pal.d.surface)
+    };
+  }
+  function slotTitle(key, name) {
+    var c = slotContrast(key);
+    var say = function(v) {
+      return v.toFixed(2) + (v < CONTRAST_FLOOR ? " (under 3:1)" : "");
+    };
+    return name + " \xB7 solid-area contrast: light " + say(c.light) + ", dark " + say(c.dark) + " \xB7 a sub-pixel dot reads lower";
+  }
+  function applyFolderShown(map, dim) {
+    var d = dim === "tag" ? "tag" : "folder";
+    dimShown[d] = cleanFolderShown(map);
+    return dimShown[d];
+  }
+  function applyFolderColors(map, dim) {
+    var d = dim === "tag" ? "tag" : "folder";
+    dimColors[d] = cleanSlotMap(map);
     buildColors();
     if (renderer) renderer.refresh();
     attempt2(placeLogo);
     attempt2(heatBuild);
     attempt2(buildLegend);
-    return folderColors;
+    return dimColors[d];
   }
-  function applySubfolderColors(map) {
-    subfolderColors = cleanSlotMap(map);
+  function applySubfolderColors(map, dim) {
+    var d = dim === "tag" ? "tag" : "folder";
+    dimSubColors[d] = cleanSlotMap(map);
     buildSubShades();
     if (renderer) renderer.refresh();
     attempt2(placeLogo);
     attempt2(heatBuild);
     attempt2(buildLegend);
-    return subfolderColors;
+    return dimSubColors[d];
+  }
+  function subPin(pk) {
+    return subColorsFor()[pk] || "";
+  }
+  function inDim(dim, fn) {
+    if (dim === state.dim || DIMS.indexOf(dim) < 0) return fn();
+    var sDim = state.dim, sCounts = counts, sFolderCount = folderCount, sColor = groupColor, sSlot = groupSlot, sAuto = groupAutoSlot, sShade = subShade, sSubSlot = subSlot, sTint = unlinkedTintColors, sSubOrder = subOrder, sSubCount = subCount;
+    state.dim = /** @type {"folder" | "tag"} */
+    dim;
+    try {
+      if (dim === "tag") buildTagFiling();
+      computeOrder();
+      buildColors();
+      buildSubOrder();
+      return fn();
+    } finally {
+      state.dim = /** @type {"folder" | "tag"} */
+      sDim;
+      counts = sCounts;
+      folderCount = sFolderCount;
+      groupColor = sColor;
+      groupSlot = sSlot;
+      groupAutoSlot = sAuto;
+      subShade = sShade;
+      subSlot = sSubSlot;
+      unlinkedTintColors = sTint;
+      subOrder = sSubOrder;
+      subCount = sSubCount;
+    }
   }
   function groupHasPinnedSub(g) {
     return (subOrder[g] || []).some(function(sb) {
-      return !!subfolderColors[g + "/" + sb];
+      return !!subPin(g + "/" + sb);
     });
   }
   var colorShown = null;
@@ -529,6 +845,7 @@ function mountVaultGraph(root, data, deps) {
   var INNER_FILL = 0.8;
   var GAP_BAND = { i: 0.5, o: 1 };
   var CLEAR_OF_ROOM = 0.12;
+  var ROOM_PCTL = 0.5;
   var MIN_SPAN = 6 * Math.PI / 180;
   var HL_PUSH = 0.9;
   var DENSITY_MAX = 2.6;
@@ -559,10 +876,9 @@ function mountVaultGraph(root, data, deps) {
     var l = hex2lab(hex);
     return (Math.atan2(l[2], l[1]) * 180 / Math.PI % 360 + 360) % 360;
   }
-  function hueBudget(basecol) {
+  function hueBudget(basecol, others) {
     var h = hueOf(basecol), gap = 180;
-    Object.keys(groupColor).forEach(function(g) {
-      var c = groupColor[g];
+    others.forEach(function(c) {
       if (c === basecol) return;
       var lab = hex2lab(c);
       if (Math.hypot(lab[1], lab[2]) < 0.02) return;
@@ -571,6 +887,32 @@ function mountVaultGraph(root, data, deps) {
       if (d < gap) gap = d;
     });
     return gap * HUE_BUDGET_FRACTION;
+  }
+  function groupColours() {
+    return Object.keys(groupColor).map(function(g) {
+      return groupColor[g];
+    });
+  }
+  function ladderStep(basecol, k, dark, budget) {
+    var lab = hex2lab(basecol);
+    if (Math.hypot(lab[1], lab[2]) < 0.02) return basecol;
+    var Lend = dark ? Math.min(SUB_L_LIMIT, lab[0] + SUB_L_SPAN) : Math.max(1 - SUB_L_LIMIT, lab[0] - SUB_L_SPAN);
+    var t = k / (SUB_SLOTS - 1);
+    return shade(basecol, (dark ? 1 : -1) * budget * t, (Lend - lab[0]) * t);
+  }
+  function previewLadder(key, suffix, group) {
+    var pal = suffix === "d" ? THEME.pal.d : THEME.pal.l;
+    var basecol = pal && pal.byKey ? pal.byKey[key] : "";
+    if (!basecol) return [];
+    var others = Object.keys(groupSlot).filter(function(g) {
+      return !group || g !== group;
+    }).map(function(g) {
+      return pal.byKey[groupSlot[g]] || "";
+    }).filter(Boolean);
+    var budget = hueBudget(basecol, others.concat([basecol]));
+    var out = [];
+    for (var k = 1; k < SUB_SLOTS; k++) out.push(ladderStep(basecol, k, pal.dark, budget));
+    return out;
   }
   function subTintIndex(folder, sub) {
     var subs = subOrder[folder] || [];
@@ -583,20 +925,20 @@ function mountVaultGraph(root, data, deps) {
     return n >= (depth || REF_ROWS) ? idx : SUB_SLOTS - 1;
   }
   function buildSubShades() {
+    clearPreviewCache();
     subShade = dict();
     subSlot = dict();
+    var others = groupColours();
     Object.keys(subOrder).forEach(function(f) {
       var subs = subOrder[f];
       var basecol = colorOf(f);
       var lab = hex2lab(basecol);
       var grey = Math.hypot(lab[1], lab[2]) < 0.02;
       var haveLadder = subs.length >= 2 && !grey;
-      var sign = THEME.dark ? 1 : -1;
-      var budget = haveLadder ? hueBudget(basecol) : 0;
-      var Lend = haveLadder ? THEME.dark ? Math.min(SUB_L_LIMIT, lab[0] + SUB_L_SPAN) : Math.max(1 - SUB_L_LIMIT, lab[0] - SUB_L_SPAN) : 0;
+      var budget = haveLadder ? hueBudget(basecol, others) : 0;
       subs.forEach(function(sb) {
         var pk = f + "/" + sb;
-        var pin2 = subfolderColors[pk];
+        var pin2 = subPin(pk);
         if (pin2 && THEME.byKey[pin2]) {
           subShade[pk] = THEME.byKey[pin2];
           subSlot[pk] = pin2;
@@ -608,8 +950,7 @@ function mountVaultGraph(root, data, deps) {
           subShade[pk] = basecol;
           return;
         }
-        var t = subTintIndex(f, sb) / (SUB_SLOTS - 1);
-        subShade[pk] = shade(basecol, sign * budget * t, (Lend - lab[0]) * t);
+        subShade[pk] = ladderStep(basecol, subTintIndex(f, sb), THEME.dark, budget);
       });
     });
   }
@@ -621,17 +962,22 @@ function mountVaultGraph(root, data, deps) {
       if (unlinkedTintColors.length >= UNLINKED_TINT_CAP) return;
       if (groupOf(id) !== UNLINKED) return;
       var a = graph.getNodeAttributes(id);
-      var c = subShade[a.folder + "/" + (a.sub || "")] || colorOf(a.folder);
+      var g = fileGroup(id, a);
+      var c = subShade[g + "/" + fileSub(id, a)] || colorOf(g);
       if (seen[c]) return;
       seen[c] = true;
       unlinkedTintColors.push(c);
     });
   }
   function nodeColor(id) {
+    if (leftColor && (leaving[id] || moveFrom && moveFrom[id] !== void 0)) {
+      var lc = leftColor[id];
+      if (lc) return lc;
+    }
     var a = graph.getNodeAttributes(id);
-    if (state.dim !== "folder") return colorOf(groupOf(id));
     if (groupOf(id) === UNLINKED && !unlinkedTintByFolder) return colorOf(UNLINKED);
-    return subShade[a.folder + "/" + (a.sub || "")] || colorOf(a.folder);
+    var g = fileGroup(id, a);
+    return subShade[g + "/" + fileSub(id, a)] || colorOf(g);
   }
   function isHidden(group) {
     var h = state.hidden[state.dim];
@@ -682,25 +1028,33 @@ function mountVaultGraph(root, data, deps) {
   }
   function gapFor(nGroups, band) {
     var g = seamAngle(band, 1);
-    return g * nGroups > Math.PI ? Math.PI / Math.max(1, nGroups) : g;
+    var half = arcSpan() / 2;
+    return g * nGroups > half ? half / Math.max(1, nGroups) : g;
   }
   var SEAM_CAP = 0.45;
   function edgeSweep(c, which, rGraph) {
     var sm = seamAt(rGraph, c.nB, c.bandKey);
     return which === "lead" ? c.pLead + sm.gap / 2 : c.pTrail - sm.gap / 2;
   }
+  var planArc = null;
+  function arcSpan() {
+    return planArc ? planArc.to - planArc.from : 2 * Math.PI;
+  }
+  function arcFrom() {
+    return planArc ? planArc.from : 0;
+  }
   function seamAt(r, nBoundaries, band) {
     var g = r > 1e-6 ? SEAM_ROWS * pitchUnits(band) / r : 0;
     var tot = g * nBoundaries;
-    var cap = 2 * Math.PI * SEAM_CAP;
+    var cap = arcSpan() * SEAM_CAP;
     if (tot > cap) {
       g *= cap / tot;
       tot = cap;
     }
-    return { gap: g, avail: 2 * Math.PI - tot };
+    return { gap: g, avail: arcSpan() - tot };
   }
   function allocateBand(list, weightOf, opts) {
-    var TWO = 2 * Math.PI;
+    var TWO = arcSpan();
     var tot = 0;
     var gw = dict();
     list.forEach(function(c) {
@@ -807,10 +1161,9 @@ function mountVaultGraph(root, data, deps) {
       return 1;
     };
     var all = order[state.dim] || [];
-    var nested = state.dim === "folder";
     var SEP = "\0";
-    var byCell = {};
-    var cellsOf = {};
+    var byCell = dict();
+    var cellsOf = dict();
     var planTotal = 0;
     var presMax = dict();
     var liveG = dict();
@@ -820,13 +1173,13 @@ function mountVaultGraph(root, data, deps) {
     var useSkel = !!skel && skel.filled && skel.keep === planKeep && skel.dim === state.dim && skel.order === all && skel.pinned === state.pinned.join(SEP) && skel.onlyVisible === !!onlyVisible;
     var members = [];
     var memberG = [];
-    var leaving = [];
+    var leaving2 = [];
     var dropped = false;
     if (useSkel && skel) {
       var gone = dict();
       for (var li = 0, ln = skel.leaving.length; li < ln; li++) {
         var lid = skel.leaving[li];
-        if ((planKeep || willShow)(lid)) leaving.push(lid);
+        if ((planKeep || willShow)(lid)) leaving2.push(lid);
         else {
           gone[lid] = true;
           dropped = true;
@@ -844,7 +1197,7 @@ function mountVaultGraph(root, data, deps) {
           var cid = skel.members[ci], cg = skel.memberG[ci];
           if (gone[cid]) {
             liveN[cg] -= 1;
-            liveSub[cg + "/" + (graph.getNodeAttributes(cid).sub || "")] -= 1;
+            liveSub[cg + "/" + fileSub(cid)] -= 1;
             continue;
           }
           members.push(cid);
@@ -856,16 +1209,17 @@ function mountVaultGraph(root, data, deps) {
         liveG[gm] = (liveG[gm] || 0) + (wm > 1 ? 1 : wm < 0 ? 0 : wm);
       }
     } else graph.forEachNode(function(id) {
+      if (oldWorld ? !!graph.getNodeAttribute(id, "standIn") : !!leaving2[id]) return;
       if (onlyVisible && !(planKeep || willShow)(id)) return;
       if (isPinned(id)) return;
       members.push(id);
       var g0 = groupOf(id);
       memberG.push(g0);
-      if (skel && onlyVisible && !willShow(id)) leaving.push(id);
+      if (skel && onlyVisible && !willShow(id)) leaving2.push(id);
       var wv = W(id);
       liveG[g0] = (liveG[g0] || 0) + (wv > 1 ? 1 : wv < 0 ? 0 : wv);
       liveN[g0] = (liveN[g0] || 0) + 1;
-      var sk = g0 + "/" + (graph.getNodeAttributes(id).sub || "");
+      var sk = g0 + "/" + fileSub(id);
       liveSub[sk] = (liveSub[sk] || 0) + 1;
     });
     var bandLive = { i: 0, o: 0 };
@@ -880,7 +1234,7 @@ function mountVaultGraph(root, data, deps) {
       var base = isInner ? geomLock.r0 : geomLock.rOuter;
       if (!(thick > 0) || !(n > 0.5)) return REF_ROWS;
       var T = thick * scale2, R = (base + thick / 2) * scale2;
-      var rw = Math.round(T / Math.sqrt(2 * Math.PI * R * T / n));
+      var rw = Math.round(T / Math.sqrt(arcSpan() * R * T / n));
       return rw < 1 ? 1 : rw > 200 ? 200 : rw;
     };
     var bandDepth = { i: 0, o: 0 };
@@ -894,7 +1248,7 @@ function mountVaultGraph(root, data, deps) {
         if (!bandDepth[bk]) bandDepth[bk] = depthOfBand(bk === "i");
         var nSubs = (subOrder[g] || []).length;
         var splitPieces = Math.min(nSubs, SUB_SLOTS);
-        splitOf[g] = nested && nSubs > 1 && (liveN[g] || 0) >= Math.max(NEST_MIN, splitPieces * bandDepth[bk]);
+        splitOf[g] = nSubs > 1 && (liveN[g] || 0) >= Math.max(NEST_MIN, splitPieces * bandDepth[bk]);
       }
       return splitOf[g];
     };
@@ -906,8 +1260,9 @@ function mountVaultGraph(root, data, deps) {
       var mId = members[mIdx], mG = memberG[mIdx];
       if (!useCells) {
         var mA = graph.getNodeAttributes(mId);
+        var mSub = fileSub(mId, mA);
         var mBk = bandLock && bandLock[mG] ? "i" : "o";
-        var mKey = splitFor(mG) ? mG + SEP + subCellIndex(mG, mA.sub, liveSub[mG + "/" + (mA.sub || "")] || 0, bandDepth[mBk]) : mG;
+        var mKey = splitFor(mG) ? mG + SEP + subCellIndex(mG, mSub, liveSub[mG + "/" + mSub] || 0, bandDepth[mBk]) : mG;
         if (!byCell[mKey]) {
           byCell[mKey] = [];
           (cellsOf[mG] || (cellsOf[mG] = [])).push(mKey);
@@ -940,7 +1295,7 @@ function mountVaultGraph(root, data, deps) {
     var cells = [];
     big.forEach(function(g) {
       var ks = cellsOf[g];
-      if (nested && !useCells) {
+      if (!useCells) {
         ks.sort(function(x, y) {
           return +(x.split(SEP)[1] || 0) - +(y.split(SEP)[1] || 0);
         });
@@ -970,7 +1325,7 @@ function mountVaultGraph(root, data, deps) {
       if (!useSkel || dropped) {
         skel.members = members;
         skel.memberG = memberG;
-        skel.leaving = leaving;
+        skel.leaving = leaving2;
         skel.liveN = liveN;
         skel.liveSub = liveSub;
         skel.keep = planKeep;
@@ -992,9 +1347,9 @@ function mountVaultGraph(root, data, deps) {
       skel.filled = true;
     }
     var TOTAL = planTotal;
-    var MIN = MIN_SPAN, TWO = 2 * Math.PI;
+    var MIN = MIN_SPAN, TWO = arcSpan();
     var smallAt = TOTAL * (MIN / TWO);
-    var groupInner = {};
+    var groupInner = dict();
     cells.forEach(function(c) {
       var small = c.wsum < smallAt;
       if (groupInner[c.g] === void 0) groupInner[c.g] = small;
@@ -1055,7 +1410,7 @@ function mountVaultGraph(root, data, deps) {
       return Math.min(DENSITY_MAX, Math.sqrt(full / now));
     };
     var r0 = geomLock ? geomLock.r0 : Math.max(1.5, HOLE * Math.sqrt(
-      Math.max(1, TOTAL) / (Math.PI * (1 - HOLE * HOLE))
+      Math.max(1, TOTAL) / (arcSpan() / 2 * (1 - HOLE * HOLE))
     ));
     function rowsNeeded(span, n, st, sp) {
       if (!(n > 0)) return 0;
@@ -1085,18 +1440,18 @@ function mountVaultGraph(root, data, deps) {
         if (names.indexOf(c.g) < 0) names.push(c.g);
       });
       if (names.length < 2) return;
-      var assign = {};
+      var assign = dict();
       cells.forEach(function(c) {
         assign[c.g] = !!c.inner;
       });
       var PIN_BELOW = 10;
-      var groupNotes = {};
+      var groupNotes = dict();
       var totalNotes = 0;
       cells.forEach(function(c) {
         groupNotes[c.g] = (groupNotes[c.g] || 0) + c.list.length;
         totalNotes += c.list.length;
       });
-      var pinnedInner = {};
+      var pinnedInner = dict();
       names.forEach(function(g) {
         if (assign[g] && (groupNotes[g] || 0) < PIN_BELOW) pinnedInner[g] = true;
       });
@@ -1227,7 +1582,7 @@ function mountVaultGraph(root, data, deps) {
         return { sp, rows: rk > 0 ? rk : 1 };
       }
       var T = thick * scale2, R = (base + thick / 2) * scale2;
-      var s = Math.sqrt(2 * Math.PI * R * T / n);
+      var s = Math.sqrt(arcSpan() * R * T / n);
       var rw = Math.round(T / s);
       if (rw < 1) rw = 1;
       if (rw > 200) rw = 200;
@@ -1432,6 +1787,7 @@ function mountVaultGraph(root, data, deps) {
       if (!pinnedIds().length) return null;
       var hubOut = {};
       hubPlace(hubOut, geomLock ? geomLock.r0 : 1.5, UNIT);
+      ovCells = null;
       return hubOut;
     }
     var live = 0;
@@ -1455,7 +1811,10 @@ function mountVaultGraph(root, data, deps) {
     var shown = plan.cells.filter(function(c) {
       return c.geom > 1e-4;
     });
-    if (!shown.length || !live) return null;
+    if (!shown.length || !live) {
+      ovCells = null;
+      return null;
+    }
     lastMaxR = plan.maxR || lastMaxR;
     if (plan.sp > 0) bandOf("o").sp = plan.sp;
     if (plan.spInner > 0) bandOf("i").sp = plan.spInner;
@@ -1563,7 +1922,7 @@ function mountVaultGraph(root, data, deps) {
         c.bandKey = isInner ? "i" : "o";
         c.nB = nB;
         if (sBand) {
-          var A0c = sBand.gap * seamsBefore + sBand.avail * fracBefore;
+          var A0c = arcFrom() + sBand.gap * seamsBefore + sBand.avail * fracBefore;
           c.pLead = A0c - sBand.gap;
           c.pTrail = A0c + sBand.avail * frac * open;
         } else {
@@ -1610,10 +1969,10 @@ function mountVaultGraph(root, data, deps) {
             a0 = edgeSweep(c, "lead", sl.r * UNIT);
             a1 = edgeSweep(c, "trail", sl.r * UNIT);
           } else if (rs && rs.frac[cIdx] > 0) {
-            a0 = sm.gap * rs.seams[cIdx] + sm.avail * rs.before[cIdx] - sm.gap / 2;
+            a0 = arcFrom() + sm.gap * rs.seams[cIdx] + sm.avail * rs.before[cIdx] - sm.gap / 2;
             a1 = a0 + sm.avail * rs.frac[cIdx] * open;
           } else {
-            a0 = sm.gap * seamsBefore + sm.avail * fracBefore - sm.gap / 2;
+            a0 = arcFrom() + sm.gap * seamsBefore + sm.avail * fracBefore - sm.gap / 2;
             a1 = a0 + sm.avail * frac * open;
           }
           if (probe && probe.watch === sl.id) {
@@ -1707,7 +2066,7 @@ function mountVaultGraph(root, data, deps) {
         });
         fracBefore += frac * open;
       });
-      Object.keys(firstAt).forEach(function(rk) {
+      if (!planArc) Object.keys(firstAt).forEach(function(rk) {
         var fst = firstAt[rk], lst = lastAt[rk];
         if (!fst || !lst || fst.id === lst.id) return;
         var d = fst.t - lst.t;
@@ -1735,7 +2094,7 @@ function mountVaultGraph(root, data, deps) {
       v.sort(function(x, y) {
         return x - y;
       });
-      return v[Math.floor(v.length * 0.1)];
+      return v[Math.floor(v.length * ROOM_PCTL)];
     };
     if (!roomNow) {
       bandOf("i").room = pick(pool.i);
@@ -1758,6 +2117,7 @@ function mountVaultGraph(root, data, deps) {
     hubRow0 = hubRow0Next;
     dotFit = fit2;
     if (dbgCells) DBG.cells = dbgCells;
+    ovCells = shown;
     hubPlace(out, plan.r0, scale2);
     return out;
   }
@@ -1817,9 +2177,10 @@ function mountVaultGraph(root, data, deps) {
     return Math.max(HUB_SIZE_MIN, Math.min(HUB_SIZE_MAX, HUB_SIZE_K * hubSep));
   }
   function isPinned(id) {
-    return state.pinned.indexOf(id) >= 0;
+    return state.pinned.indexOf(noteOf(id)) >= 0;
   }
   function pin(id, at) {
+    id = noteOf(id);
     var i = state.pinned.indexOf(id);
     if (i >= 0) state.pinned.splice(i, 1);
     if (at === void 0 || at > state.pinned.length) at = state.pinned.length;
@@ -1830,7 +2191,7 @@ function mountVaultGraph(root, data, deps) {
     return true;
   }
   function unpin(id) {
-    var i = state.pinned.indexOf(id);
+    var i = state.pinned.indexOf(noteOf(id));
     if (i < 0) return false;
     state.pinned.splice(i, 1);
     return true;
@@ -1962,10 +2323,13 @@ function mountVaultGraph(root, data, deps) {
   var tlDateMs = [];
   var tlMs = dict();
   var dateSpan = null;
+  invalidatesOnData("timeline", function() {
+    buildTimeline();
+  });
   function buildTimeline() {
     var dated = [];
     graph.forEachNode(function(id, a) {
-      if (a.created) dated.push([id, a.created]);
+      if (!a.dupOf && a.created) dated.push([id, a.created]);
     });
     dated.sort(function(x, y) {
       return x[1] < y[1] ? -1 : x[1] > y[1] ? 1 : 0;
@@ -2135,9 +2499,9 @@ function mountVaultGraph(root, data, deps) {
     var g = groupOf(id);
     if (state.highlight[g]) return true;
     if (state.hoverGroup === g) return true;
-    var a = graph.getNodeAttributes(id), d = a.dirs || [];
+    var a = graph.getNodeAttributes(id), d = fileDirs(id, a);
     for (var k = 1; k <= d.length; k++) {
-      var pk = pathKey(a, k);
+      var pk = pathKey(id, k, a);
       if (state.highlightSub[pk]) return true;
       if (state.hoverSub[pk]) return true;
     }
@@ -2549,7 +2913,7 @@ function mountVaultGraph(root, data, deps) {
   function isPushed(id) {
     if (state.highlight[groupOf(id)]) return true;
     var a = graph.getNodeAttributes(id);
-    return !!state.highlightSub[pathKey(a, 1)] && ownsWedge(a.folder, a.sub || "");
+    return !!state.highlightSub[pathKey(id, 1, a)] && ownsWedge(fileGroup(id, a), fileSub(id, a));
   }
   function willShow(id) {
     return visible(id) && timeFactor(id) > 4e-3;
@@ -2604,6 +2968,9 @@ function mountVaultGraph(root, data, deps) {
     return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a.toFixed(3) + ")";
   }
   var FADE_FRAMES = 12;
+  var HAND_SWEEP = 12;
+  var HAND_BLADE_DEG = 20;
+  var HAND_FADE_DEG = 12;
   var RADIAL_EASE = 0.25;
   var SPREAD_MAX = 78;
   var SPREAD_PER = 0.17;
@@ -2613,6 +2980,9 @@ function mountVaultGraph(root, data, deps) {
     return m && +m[2] > 0 ? +m[2] : 1.25;
   }();
   var TIMELINE_MS = 4500;
+  function reducedMotion() {
+    return !!(WIN.matchMedia && WIN.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
   var CASCADE_MS = 1600;
   var TWEEN_MS = 380;
   var NOW = function() {
@@ -2772,6 +3142,7 @@ function mountVaultGraph(root, data, deps) {
   var lastMinArc = 0;
   var roomNow = null;
   var colWalk = null;
+  var shrinkFade = false;
   var splitHold = null;
   var posSrc = null;
   var cellRoom = dict();
@@ -2825,6 +3196,10 @@ function mountVaultGraph(root, data, deps) {
     }
     moveFrom = null;
     splitHold = null;
+    leftColor = null;
+    if (!opts.hand && standIns.length) dropStandIns();
+    if (opts.from && opts.from.color) leftColor = opts.from.color;
+    shrinkFade = !!opts.hand;
     fullRing = false;
     graph.forEachNode(function(id) {
       if (present(id)) fullRing = true;
@@ -2868,11 +3243,15 @@ function mountVaultGraph(root, data, deps) {
     var moves = [];
     if (opts.movesFrom) {
       moveFrom = opts.movesFrom;
+      leftColor = opts.from && opts.from.color ? opts.from.color : null;
       Object.keys(opts.movesFrom).forEach(function(id) {
         if (!graph.hasNode(id)) return;
         moves.push(id);
       });
-      if (!moves.length) moveFrom = null;
+      if (!moves.length) {
+        moveFrom = null;
+        leftColor = null;
+      }
     }
     var isMove = dict();
     moves.forEach(function(id) {
@@ -2952,9 +3331,71 @@ function mountVaultGraph(root, data, deps) {
     var moveSpan = moves.length ? Math.max(2 * windowFor(moves.length), 4 * FADE_FRAMES * TIME_SCALE) + 2 * FADE_FRAMES * TIME_SCALE : 0;
     var span = Math.max(windowFor(ins.length), windowFor(outs.length)) + FADE_FRAMES * TIME_SCALE;
     if (moveSpan > span) span = moveSpan;
+    var crossGap = 0, crossW = 0;
+    if (opts.cross) {
+      crossGap = 2.5 * FADE_FRAMES * TIME_SCALE;
+      crossW = Math.max(1, span - crossGap);
+      [ins, outs].forEach(function(set) {
+        set.forEach(function(id, i) {
+          delay[id] = set.length < 2 ? 0 : crossW * i / (set.length - 1);
+        });
+      });
+    }
     var arriveAt = dict();
     var crossAt = dict();
+    var handLap = 0;
+    var fadeLen = FADE_FRAMES * TIME_SCALE;
+    if (opts.hand) {
+      var TWO_PI = 2 * Math.PI;
+      var handW = Math.max(span, HAND_SWEEP * FADE_FRAMES * TIME_SCALE);
+      handLap = handW;
+      fadeLen = Math.max(1, handW * HAND_FADE_DEG / 360);
+      var handF = fadeLen;
+      var blade = HAND_BLADE_DEG * Math.PI / 180;
+      span = handW * (1 + blade / TWO_PI) + handF;
+      var bearingNow = function(id) {
+        var a = graph.getNodeAttributes(id);
+        return a.x || a.y ? angleSweep(Math.atan2(a.y, a.x)) : sweepOf[id];
+      };
+      var sweepAt = function(b, inner) {
+        return inner ? (TWO_PI - b) % TWO_PI : b;
+      };
+      var innerOld = function(id) {
+        var bl = opts.from ? opts.from.bandLock : bandLock;
+        return !!(bl && bl[groupOf(id)]);
+      };
+      var innerNew = function(id) {
+        return !!(bandLock && bandLock[groupOf(id)]);
+      };
+      var handAt = function(id) {
+        return handW * sweepAt(bearingNow(id), innerOld(id)) / TWO_PI;
+      };
+      var fillAt = function(id) {
+        return handW * (sweepAt(sweepOf[id], innerNew(id)) + blade) / TWO_PI;
+      };
+      outs.forEach(function(id) {
+        delay[id] = handAt(id);
+      });
+      ins.forEach(function(id) {
+        delay[id] = fillAt(id);
+      });
+      moves.forEach(function(id) {
+        delay[id] = handAt(id);
+        crossAt[id] = delay[id] + handF;
+        arriveAt[id] = Math.max(fillAt(id), crossAt[id]);
+      });
+    }
     if (moves.length) (function() {
+      if (opts.hand) return;
+      if (opts.cross) {
+        moves.forEach(function(id, i) {
+          var f = moves.length < 2 ? 0 : i / (moves.length - 1);
+          delay[id] = crossW * f;
+          arriveAt[id] = delay[id] + crossGap;
+          crossAt[id] = delay[id] + FADE_FRAMES * TIME_SCALE;
+        });
+        return;
+      }
       var leaveW = span * 0.35;
       var landW = Math.max(1, span * 0.45 - FADE_FRAMES * TIME_SCALE);
       moves.forEach(function(id, i) {
@@ -3022,7 +3463,7 @@ function mountVaultGraph(root, data, deps) {
         }
       });
     })();
-    if (moves.length) (function() {
+    if (moves.length && !opts.cross && !opts.hand) (function() {
       var byG = dict();
       moves.forEach(function(id) {
         var g0 = moveFrom[id];
@@ -3042,7 +3483,7 @@ function mountVaultGraph(root, data, deps) {
         });
       });
     })();
-    if (moves.length) (function() {
+    if (moves.length && !opts.cross && !opts.hand) (function() {
       var save = moveFrom;
       moveFrom = null;
       var byDest = dict();
@@ -3083,11 +3524,14 @@ function mountVaultGraph(root, data, deps) {
       if (!lastCascade.exit) lastCascade.exit = "settle() called from outside the loop";
       moveFrom = null;
       splitHold = null;
+      leftColor = null;
+      shrinkFade = false;
       if (cascadeRun) {
         WIN.cancelAnimationFrame(cascadeRun.raf);
         WIN.clearTimeout(cascadeRun.guard);
         cascadeRun = null;
       }
+      barWalkEnd();
       probeSample("pre-settle");
       moving.forEach(function(id) {
         alpha[id] = to[id];
@@ -3143,9 +3587,32 @@ function mountVaultGraph(root, data, deps) {
       planKeep = save;
       return p;
     };
+    var inWorld = function(fn) {
+      var w = opts.from;
+      if (!w) return fn();
+      var sDim = state.dim, sSub = subOrder, sBand = bandLock, sGeom = geomLock, sMove = moveFrom;
+      state.dim = w.dim;
+      subOrder = w.subOrder;
+      bandLock = w.bandLock;
+      geomLock = w.geomLock;
+      moveFrom = null;
+      oldWorld = true;
+      try {
+        return fn();
+      } finally {
+        state.dim = sDim;
+        subOrder = sSub;
+        bandLock = sBand;
+        geomLock = sGeom;
+        moveFrom = sMove;
+        oldWorld = false;
+      }
+    };
     (function() {
-      var a = staticPlan(function(id) {
-        return wasPresent[id];
+      var a = inWorld(function() {
+        return staticPlan(function(id) {
+          return wasPresent[id];
+        });
       });
       var cellsOfG = function(p0) {
         var m = dict();
@@ -3216,6 +3683,7 @@ function mountVaultGraph(root, data, deps) {
         var keepFit = dotFit, keepCell = cellRoom, keepEdge = edgeCap, keepHub = hubRow0;
         var keepRampI = bandOf("i").ramp, keepRampO = bandOf("o").ramp, keepScale = sizeScale;
         var keepPin = pinnedPlan, keepKeep = planKeep;
+        var keepOv = ovCells;
         var saved = roomNow, savedCell = cellNow, savedEdge = edgeNow;
         roomNow = null;
         cellNow = null;
@@ -3252,12 +3720,15 @@ function mountVaultGraph(root, data, deps) {
         hubRow0 = keepHub;
         pinnedPlan = keepPin;
         planKeep = keepKeep;
+        ovCells = keepOv;
         if (keepAlpha) graph.forEachNode(function(id) {
           alpha[id] = keepAlpha[id];
         });
         return got;
       };
-      var rA = roomOf(a, null);
+      var rA = inWorld(function() {
+        return roomOf(a, null);
+      });
       var rB = roomOf(b, function(id) {
         return willShow(id) ? timeFactor(id) : 0;
       });
@@ -3306,6 +3777,7 @@ function mountVaultGraph(root, data, deps) {
         posSrc[id] = { x: graph.getNodeAttribute(id, "x"), y: graph.getNodeAttribute(id, "y") };
       });
     })();
+    var seated = dict();
     var STALL_MS = 400;
     var watchdog = function() {
       if (cascadeRun && NOW() - cascadeRun.tick < STALL_MS) {
@@ -3315,10 +3787,11 @@ function mountVaultGraph(root, data, deps) {
       settle();
     };
     var msPerFrame = (opts.totalMs > 0 ? opts.totalMs : CASCADE_MS * TIME_SCALE) / Math.max(1, span);
-    var MIN_FRAMES = 20;
+    var reduced = reducedMotion();
+    var MIN_FRAMES = reduced ? 1 : 20;
     var maxAdv = Math.max(1, span) / MIN_FRAMES;
     var frame = 0, tPrev = NOW(), tailFrames = 0;
-    (function() {
+    if (!opts.hand) (function() {
       var stretch = Math.max(1, span - FADE_FRAMES * TIME_SCALE);
       var radiusOf = function(id, out) {
         var pt = out ? posSrc[id] : finalPos[id];
@@ -3361,38 +3834,46 @@ function mountVaultGraph(root, data, deps) {
       sizeCap,
       skel: moveFrom ? null : freshSkel()
     };
+    var barWalking = opts.hand && legendSwitch ? false : barWalkStart();
     (function step() {
       var tn = NOW();
       var adv = (tn - tPrev) / msPerFrame;
       tPrev = tn;
-      if (adv > maxAdv) adv = maxAdv;
+      if (reduced) adv = Math.max(1, span);
+      else if (adv > maxAdv) adv = maxAdv;
       frame += adv;
       if (cascadeRun) cascadeRun.tick = tn;
       var pr = Math.min(1, frame / Math.max(1, span));
+      if (handLap) {
+        lastCascade.handDeg = 360 * frame / handLap;
+        lastCascade.handLap = handLap;
+      }
       var ease = pr * pr * (3 - 2 * pr);
+      if (barWalking) barWalkTick(ease);
       var busy = false;
       for (var i = 0; i < moving.length; i++) {
         var id = moving[i];
         if (isMove[id]) {
           if (moveFrom && moveFrom[id] !== void 0 && frame >= crossAt[id]) delete moveFrom[id];
           if (frame < arriveAt[id]) {
-            var q1 = (frame - delay[id]) / (FADE_FRAMES * TIME_SCALE);
+            var q1 = (frame - delay[id]) / fadeLen;
             q1 = q1 < 0 ? 0 : q1 > 1 ? 1 : q1;
             alpha[id] = (from[id] === void 0 ? 1 : from[id]) * (1 - q1 * q1 * (3 - 2 * q1));
           } else {
-            var q2 = (frame - arriveAt[id]) / (FADE_FRAMES * TIME_SCALE);
+            var q2 = (frame - arriveAt[id]) / fadeLen;
             q2 = q2 < 0 ? 0 : q2 > 1 ? 1 : q2;
             alpha[id] = (to[id] === void 0 ? 1 : to[id]) * (q2 * q2 * (3 - 2 * q2));
           }
-          if (frame < arriveAt[id] + FADE_FRAMES * TIME_SCALE) busy = true;
+          if (frame < arriveAt[id] + fadeLen) busy = true;
           continue;
         }
-        var q = (frame - delay[id]) / (FADE_FRAMES * TIME_SCALE);
+        var q = (frame - delay[id]) / fadeLen;
         q = q < 0 ? 0 : q > 1 ? 1 : q;
         alpha[id] = from[id] + (to[id] - from[id]) * (q * q * (3 - 2 * q));
         if (q < 1) busy = true;
       }
       if (opts.onFrame) opts.onFrame(pr);
+      if (opts.hand && legendSwitch) legendSwitchTick();
       var rowsAt = function(c) {
         var s = rowsSrc[c.k], d = rowsDst[c.k];
         if (s === void 0 && d === void 0) return 0;
@@ -3453,24 +3934,47 @@ function mountVaultGraph(root, data, deps) {
       if (cellPair) cellNow = walkPair(cellPair);
       if (edgePair) edgeNow = walkPair(edgePair);
       var plan = null;
-      planSkel = cascadeRun ? cascadeRun.skel : null;
-      try {
-        plan = buildWedgePlan(ovAfter, weightOf, rowsAt, spNow);
-      } finally {
-        planSkel = null;
-      }
-      if (planSkelCheck && cascadeRun && cascadeRun.skel) {
-        var why = planDiff(plan, buildWedgePlan(ovAfter, weightOf, rowsAt, spNow));
-        lastCascade.skelFrames++;
-        if (why) {
-          lastCascade.skelMismatch++;
-          if (!lastCascade.skelFirst) lastCascade.skelFirst = why;
+      var targets = null;
+      if (opts.hand && opts.from) {
+        var mf = moveFrom;
+        colWalk = null;
+        cellNow = null;
+        edgeNow = null;
+        if (roomDstB.i > 1) bandOf("i").room = roomDstB.i;
+        if (roomDstB.o > 1) bandOf("o").room = roomDstB.o;
+        var seats = dict();
+        for (var mi = 0; mi < moving.length; mi++) {
+          var mid = moving[mi];
+          if (isMove[mid] && mf && mf[mid] !== void 0) continue;
+          var fq = finalPos[mid];
+          if (!fq) continue;
+          seats[mid] = fq;
+          if (!seated[mid]) {
+            graph.mergeNodeAttributes(mid, { x: fq.x, y: fq.y });
+            seated[mid] = true;
+          }
         }
+        targets = seats;
+      } else {
+        planSkel = cascadeRun ? cascadeRun.skel : null;
+        try {
+          plan = buildWedgePlan(ovAfter, weightOf, rowsAt, spNow);
+        } finally {
+          planSkel = null;
+        }
+        if (planSkelCheck && cascadeRun && cascadeRun.skel) {
+          var why = planDiff(plan, buildWedgePlan(ovAfter, weightOf, rowsAt, spNow));
+          lastCascade.skelFrames++;
+          if (why) {
+            lastCascade.skelMismatch++;
+            if (!lastCascade.skelFirst) lastCascade.skelFirst = why;
+          }
+        }
+        traceTag("frame");
+        targets = plan ? ringsLayout(plan, true) : null;
+        traceTag("");
       }
-      traceTag("frame");
-      var targets = plan ? ringsLayout(plan, true) : null;
-      traceTag("");
-      var ez = pr < 1 ? RADIAL_EASE : Math.min(1, RADIAL_EASE + tailFrames * 0.15);
+      var ez = reduced ? 1 : pr < 1 ? RADIAL_EASE : Math.min(1, RADIAL_EASE + tailFrames * 0.15);
       var resid = 0;
       if (targets) graph.forEachNode(function(id2) {
         var q3 = targets[id2];
@@ -3646,13 +4150,15 @@ function mountVaultGraph(root, data, deps) {
     };
     animGuard = WIN.setTimeout(tweenDog, TWEEN_STALL);
     var MIN_FRAMES = 20;
+    var reduced = reducedMotion();
     var p = 0, tPrev = NOW();
     (function step() {
       var tn = NOW();
       lastFrame = tn;
       var adv = (tn - tPrev) / dur;
       tPrev = tn;
-      if (adv > 1 / MIN_FRAMES) adv = 1 / MIN_FRAMES;
+      if (reduced) adv = 1;
+      else if (adv > 1 / MIN_FRAMES) adv = 1 / MIN_FRAMES;
       p = Math.min(1, p + adv);
       var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
       graph.forEachNode(function(id) {
@@ -3722,28 +4228,27 @@ function mountVaultGraph(root, data, deps) {
     });
     lazyShown = want;
   }
-  function pathKey(a, k) {
-    var d = a.dirs;
-    if (!d || !d.length) return a.folder + "/";
-    if (!(k >= 1)) return a.folder + "/" + d.slice(0, k).join("/");
-    var out = a.folder + "/" + d[0];
+  function pathKey(id, k, a) {
+    var g = fileGroup(id, a), d = fileDirs(id, a);
+    if (!d.length) return g + "/";
+    if (!(k >= 1)) return g + "/" + d.slice(0, k).join("/");
+    var out = g + "/" + d[0];
     for (var i = 1; i < k && i < d.length; i++) out += "/" + d[i];
     return out;
   }
   function visible(id) {
+    if (leaving[id] && !oldWorld) return false;
     var a = graph.getNodeAttributes(id);
     if (isHidden(groupOf(id))) return false;
-    if (state.dim === "folder") {
-      var d = a.dirs || [];
-      if (!d.length) {
-        if (state.hiddenSub[a.folder + "/"]) return false;
-      } else {
-        var key = a.folder + "/" + d[0];
+    var d = fileDirs(id, a);
+    if (!d.length) {
+      if (state.hiddenSub[fileGroup(id, a) + "/"]) return false;
+    } else {
+      var key = fileGroup(id, a) + "/" + d[0];
+      if (state.hiddenSub[key]) return false;
+      for (var k = 1; k < d.length; k++) {
+        key += "/" + d[k];
         if (state.hiddenSub[key]) return false;
-        for (var k = 1; k < d.length; k++) {
-          key += "/" + d[k];
-          if (state.hiddenSub[key]) return false;
-        }
       }
     }
     return true;
@@ -4135,6 +4640,22 @@ function mountVaultGraph(root, data, deps) {
   var DOT_MAX_SPREAD = DENSITY_MAX;
   var DOT_ROOM_MAX = DENSITY_MAX;
   var sizeScale = 1;
+  var PREVIEW_R_PX = [0.35, 0.65, 1.38, 2.19, 4.06];
+  var PREVIEW_W = 48;
+  var PREVIEW_H = 40;
+  var PREVIEW_ROW_H = PREVIEW_H / SUB_SLOTS;
+  var PREVIEW_CX = function() {
+    var i, wide = 0;
+    for (i = 0; i < PREVIEW_R_PX.length; i++) wide += 2 * PREVIEW_R_PX[i];
+    var gap = (PREVIEW_W - wide) / (PREVIEW_R_PX.length + 1);
+    var out = [];
+    var x = gap;
+    for (i = 0; i < PREVIEW_R_PX.length; i++) {
+      out.push(Math.round((x + PREVIEW_R_PX[i]) * 100) / 100);
+      x += 2 * PREVIEW_R_PX[i] + gap;
+    }
+    return out;
+  }();
   function measureSizeScale() {
     if (!renderer) return sizeScale;
     var a = renderer.graphToViewport({ x: 0, y: 0 });
@@ -4189,7 +4710,6 @@ function mountVaultGraph(root, data, deps) {
     var isIn = id !== void 0 && bandLock && !!bandLock[groupOf(id)];
     var rp = bandOf(isIn ? "i" : "o").ramp;
     var v = rp.m * (size || 4) + rp.b;
-    var scale2 = 1;
     if (id !== void 0) {
       var room = bandOf(isIn ? "i" : "o").room;
       var mine = cellRoom[id];
@@ -4204,10 +4724,9 @@ function mountVaultGraph(root, data, deps) {
         var f = room / pit;
         if (f > DOT_ROOM_MAX) f = DOT_ROOM_MAX;
         v *= f;
-        scale2 = f;
       }
     }
-    var lo = (rp.lo || DOT_MIN_PX) * scale2;
+    var lo = rp.lo || DOT_MIN_PX;
     if (v < lo) v = lo;
     var capU = edgeCap[id];
     if (capU !== void 0 && capU > 0) {
@@ -4323,7 +4842,7 @@ function mountVaultGraph(root, data, deps) {
         var r = nodeStyle(id, a);
         if (al < 0.999) {
           r.color = withAlpha(r.color, al);
-          r.size = (r.size || a.size) * (0.45 + 0.55 * al);
+          r.size = (r.size || a.size) * (shrinkFade ? al : 0.45 + 0.55 * al);
           if (al < 0.62) {
             r.label = "";
             r.forceLabel = false;
@@ -4385,6 +4904,38 @@ function mountVaultGraph(root, data, deps) {
       }
     });
     (function() {
+      var captor = renderer.getMouseCaptor && renderer.getMouseCaptor();
+      if (!captor) return;
+      captor.on("mousedown", function(e) {
+        var o = e && e.original;
+        if (o && o.button !== void 0 && o.button !== 0) return;
+        dragging = true;
+        dragStartedAt = NOW();
+      });
+      captor.on("mouseup", function() {
+        dragging = false;
+        dragEndedAt = NOW();
+      });
+      captor.on("mousemovebody", function(e) {
+        if (!dragging) return;
+        var o = e && e.original;
+        if (o && o.buttons !== void 0 && !(o.buttons & 1)) {
+          dragging = false;
+          dragEndedAt = NOW();
+        }
+      });
+      var onDocUp = function() {
+        if (!dragging) return;
+        dragging = false;
+        dragEndedAt = NOW();
+      };
+      DOC.addEventListener("mouseup", onDocUp, true);
+      onDestroy.push(function() {
+        DOC.removeEventListener("mouseup", onDocUp, true);
+        dragging = false;
+      });
+    })();
+    (function() {
       var cam = renderer.getCamera();
       var edgeRaf = 0;
       if (syncEdgeMult()) renderer.refresh({ skipIndexation: true });
@@ -4435,6 +4986,7 @@ function mountVaultGraph(root, data, deps) {
       heatDraw();
       hlSync();
       placeHubDrop();
+      ovSync();
     });
     renderer.on("enterNode", function(e) {
       state.hovered = e.node;
@@ -4487,6 +5039,13 @@ function mountVaultGraph(root, data, deps) {
   var trail = [];
   var TRAIL_CAP = 30;
   var trailHop = false;
+  invalidatesOnData("hop trail", function() {
+    var kept = trail.filter(function(id) {
+      return graph.hasNode(id);
+    });
+    trail.length = 0;
+    trail.push.apply(trail, kept);
+  });
   function goTo(id) {
     if (state.selected && state.selected !== id) {
       trail.push(state.selected);
@@ -4547,7 +5106,61 @@ function mountVaultGraph(root, data, deps) {
     }
     return '<nav class="crumbs" aria-label="Hop trail"><button type="button" class="nvb" data-tr="' + (trail.length - 1) + '" aria-label="Back to ' + esc(trailLabel(trail[trail.length - 1])) + '" title="Back to ' + esc(trailLabel(trail[trail.length - 1])) + '">&#8592;</button><ol>' + parts.join("") + "</ol></nav>";
   }
+  invalidatesOnData("selection, hover and pins", function() {
+    if (state.selected && !graph.hasNode(state.selected)) select(null);
+    if (state.hovered && !graph.hasNode(state.hovered)) state.hovered = null;
+    var pins = state.pinned.filter(function(id) {
+      return graph.hasNode(id);
+    });
+    if (pins.length !== state.pinned.length) {
+      state.pinned = pins;
+      if (savePinned) savePinned(pins.slice());
+    }
+  });
+  var reading = "groups";
+  var readScroll = { groups: 0, note: 0 };
+  function cardHome() {
+    var d = $("detail"), note = $("readnote"), canvas = $("canvas");
+    if (!d || !note || !canvas) return;
+    var want = narrow() ? canvas : note;
+    if (d.parentNode !== want) want.appendChild(d);
+  }
+  function setReading(which) {
+    var tabs = $("tabs"), tg = $("tabgroups"), tn = $("tabnote");
+    var pg = $("readgroups"), pn = $("readnote"), sb = $("sidebar");
+    if (!tabs || !tg || !tn || !pg || !pn) return;
+    var note = which === "note" && !!state.selected && !narrow();
+    var next = note ? "note" : "groups";
+    if (sb && next !== reading) readScroll[reading] = sb.scrollTop;
+    reading = next;
+    tg.setAttribute("aria-selected", note ? "false" : "true");
+    tn.setAttribute("aria-selected", note ? "true" : "false");
+    tn.disabled = !state.selected || narrow();
+    pg.hidden = note;
+    pn.hidden = !note;
+    if (sb) sb.scrollTop = readScroll[reading] || 0;
+  }
+  if (WIN.matchMedia) {
+    var readMq = WIN.matchMedia("(max-width: 720px)");
+    var onReadMq = function() {
+      cardHome();
+      setReading(reading);
+      afterPanel();
+    };
+    if (readMq.addEventListener) {
+      readMq.addEventListener("change", onReadMq);
+      onDestroy.push(function() {
+        readMq.removeEventListener("change", onReadMq);
+      });
+    } else if (readMq.addListener) {
+      readMq.addListener(onReadMq);
+      onDestroy.push(function() {
+        readMq.removeListener(onReadMq);
+      });
+    }
+  }
   function select(id) {
+    if (id) id = noteOf(id);
     if (id && sheetOpen && narrow()) setSheet(false);
     if (!trailHop && (!id || id !== state.selected)) trail.length = 0;
     trailHop = false;
@@ -4556,6 +5169,7 @@ function mountVaultGraph(root, data, deps) {
     var d = $("detail");
     if (!id) {
       d.hidden = true;
+      setReading("groups");
       renderer.refresh();
       return;
     }
@@ -4565,9 +5179,11 @@ function mountVaultGraph(root, data, deps) {
     });
     var vault = encodeURIComponent(DATA.vault);
     var file = encodeURIComponent(a.path.replace(/\.md$/, ""));
-    var h = '<button class="x" title="Close">&times;</button>' + trailHTML() + "<h2>" + esc(a.label) + '</h2><div class="meta"><span><b style="color:' + colorOf(groupOf(id)) + '">&#9632;</b> ' + esc(groupOf(id)) + "</span><span>" + a.deg + " link" + (a.deg === 1 ? "" : "s") + "</span>" + (a.words ? "<span>" + a.words + " words</span>" : "") + (a.created ? "<span>" + esc(a.created) + "</span>" : "") + "</div><div>" + (a.tags || []).slice(0, 8).map(function(t) {
-      return '<span class="chip">#' + esc(t) + "</span>";
-    }).join("") + '</div><div class="chip" style="border-style:dashed">' + esc(a.folder) + (a.sub ? " / " + esc(a.sub) : "") + " / " + esc(a.ntype) + '</div><div class="actions">' + (a.ghost ? "" : '<a class="open" href="obsidian://open?vault=' + vault + "&file=" + file + '">Open in Obsidian</a>') + '<button class="btn pin" data-pin="' + id + '" aria-pressed="' + isPinned(id) + '" title="' + (isPinned(id) ? "Unpin from hub" : "Pin to hub") + '">' + pinSvg(isPinned(id)) + " Pin to hub</button></div>";
+    var h = '<button class="x" title="Close">&times;</button>' + trailHTML() + "<h2>" + esc(a.label) + '</h2><div class="meta"><span><b style="color:' + colorOf(groupOf(id)) + '">&#9632;</b> ' + esc(groupOf(id)) + "</span><span>" + a.deg + " link" + (a.deg === 1 ? "" : "s") + "</span>" + (a.words ? "<span>" + a.words + " words</span>" : "") + (a.created ? "<span>" + esc(a.created) + "</span>" : "") + "</div><div>" + (a.tags || []).slice(0, 8).map(function(t, ti) {
+      var files = state.dim === "tag" && ti === 0;
+      return '<span class="chip"' + (files ? ' style="border-style:solid" title="Filed under this tag"' : "") + ">#" + esc(t) + "</span>";
+    }).join("") + '</div><div class="chip" style="border-style:dashed">' + esc(a.folder) + (a.sub ? " / " + esc(a.sub) : "") + " / " + esc(a.ntype) + '</div><div class="actions">' + // github#131
+    (a.ghost ? "" : '<a class="open" title="Open in Obsidian" href="obsidian://open?vault=' + vault + "&file=" + file + '">Open</a>') + '<button class="btn pin" data-pin="' + id + '" aria-pressed="' + isPinned(id) + '" title="' + (isPinned(id) ? "Unpin from hub" : "Pin to hub") + '">' + pinSvg(isPinned(id)) + " Pin to hub</button></div>";
     if (nb.length) {
       h += '<div class="nb">Linked notes (' + nb.length + ")</div><ul>" + nb.slice(0, 40).map(function(n) {
         return '<li><button data-go="' + n + '">' + esc(graph.getNodeAttribute(n, "label")) + ' <span style="color:var(--text-3)">' + graph.getNodeAttribute(n, "deg") + "</span></button></li>";
@@ -4604,6 +5220,8 @@ function mountVaultGraph(root, data, deps) {
         };
       }
     );
+    cardHome();
+    setReading("note");
     renderer.refresh();
   }
   function centerOn(id) {
@@ -4628,27 +5246,87 @@ function mountVaultGraph(root, data, deps) {
     if (!counts[g]) return "No notes on the disc";
     return bandLock2 && bandLock2[g] ? "Inner ring" : "Outer ring";
   }
+  function rowTitle(g) {
+    var base = "Highlight " + g;
+    if (state.dim !== "tag") return base;
+    var carried = tagCarried[g];
+    var filed = folderCount[g] || 0;
+    if (carried === void 0 || carried === filed) return base;
+    return base + " -- " + filed + " filed here, " + carried + " carry this tag";
+  }
+  var previewCache = dict();
+  function clearPreviewCache() {
+    previewCache = dict();
+  }
+  function swatchPreviewHTML(key, group) {
+    var ck = group ? "g" + group.length + ":" + group + ":" + key : key;
+    var hit = previewCache[ck];
+    if (hit !== void 0) return hit;
+    var L = previewLadder(key, "l", group), D = previewLadder(key, "d", group);
+    var marks = "", vars = "";
+    for (var r = 0; r < SUB_SLOTS; r++) {
+      var cy = PREVIEW_ROW_H * r + PREVIEW_ROW_H / 2;
+      var cls = r === 0 ? "d" : "t" + r;
+      if (r > 0) {
+        vars += "--k" + r + ":" + (L[r - 1] || "currentColor") + ";--k" + r + "d:" + (D[r - 1] || "currentColor") + ";";
+      }
+      for (var c = 0; c < PREVIEW_R_PX.length; c++) {
+        marks += '<circle class="' + cls + '" cx="' + PREVIEW_CX[c] + '" cy="' + cy + '" r="' + PREVIEW_R_PX[c] + '"/>';
+      }
+    }
+    var html = '<svg class="prev" width="' + PREVIEW_W + '" height="' + PREVIEW_H + '" viewBox="0 0 ' + PREVIEW_W + " " + PREVIEW_H + '" style="' + vars + '" aria-hidden="true" focusable="false"><rect class="gnd" x="0" y="0" width="' + PREVIEW_W + '" height="' + PREVIEW_H + '"/>' + marks + "</svg>";
+    previewCache[ck] = html;
+    return html;
+  }
   function countText(g) {
     if (g === UNLINKED && !unlinkedByFolder) return "(" + counts[g] + ")";
     var held = folderCount[g] || 0;
     return !counts[g] && held ? "(" + held + ")" : String(counts[g]);
   }
+  var barShown = null;
+  var barNow = null;
+  var barPrev = null;
+  function barBasis() {
+    var names = order[state.dim] || [], out = { max: 0, group: "" };
+    for (var i = 0; i < names.length; i++) {
+      var g = names[i];
+      if (!counts[g] || isHidden(g)) continue;
+      if (g === UNLINKED && !unlinkedByFolder) continue;
+      if (counts[g] > out.max) {
+        out.max = counts[g];
+        out.group = g;
+      }
+    }
+    return out;
+  }
+  function barShare(g, basis) {
+    if (!countBars) return 0;
+    if (!counts[g] || isHidden(g)) return 0;
+    if (g === UNLINKED && !unlinkedByFolder) return 0;
+    if (!basis.max) return 0;
+    return counts[g] / basis.max;
+  }
+  function shareText(share) {
+    var pct = share * 100;
+    return (pct < 0.1 ? "<0.1" : pct.toFixed(1)) + "%";
+  }
   var ptr = null;
+  function lgrHTML(o) {
+    return '<div class="' + o.cls + '" data-row="' + esc(o.g) + '"' + (o.old ? ' data-old="1"' : "") + ">" + o.tw + o.eye + "<button" + o.lgAttrs + (o.old ? "" : ' data-g="' + esc(o.g) + '"') + ' data-hl="' + (o.hl ? "on" : "off") + '" aria-pressed="' + o.vis + '" title="' + esc(o.title) + '"><span class="' + o.swClass + '" title="' + o.swTitle + '" style="background:' + o.swFill + '"></span><span class="nm" title="' + esc(o.g) + '">' + esc(o.g) + "</span>" + o.only + '<span class="ct"' + o.ctTitle + ">" + o.ct + "</span></button></div>";
+  }
   function buildLegend() {
     hoverHighlight(null, null);
     var names = order[state.dim] || [];
-    $("gcount").textContent = "(" + names.length + ")";
+    syncDimCounts();
     var kids = dict();
-    if (state.dim === "folder") {
-      graph.forEachNode(function(_id, a) {
-        var d = a.dirs || [];
-        for (var i = 0; i < d.length; i++) {
-          var pk = a.folder + "/" + d.slice(0, i).join("/");
-          if (!kids[pk]) kids[pk] = dict();
-          kids[pk][d[i]] = (kids[pk][d[i]] || 0) + 1;
-        }
-      });
-    }
+    graph.forEachNode(function(id, a) {
+      var d = fileDirs(id, a), g0 = fileGroup(id, a);
+      for (var i = 0; i < d.length; i++) {
+        var pk = g0 + "/" + d.slice(0, i).join("/");
+        if (!kids[pk]) kids[pk] = dict();
+        kids[pk][d[i]] = (kids[pk][d[i]] || 0) + 1;
+      }
+    });
     var eyeBtn = function(attrs, on, what) {
       return '<button class="eye" ' + attrs + ' aria-pressed="' + on + '" title="' + (on ? "Hide " : "Show ") + esc(what) + '">' + eyeSvg(on) + "</button>";
     };
@@ -4664,16 +5342,104 @@ function mountVaultGraph(root, data, deps) {
         return '<div class="lgr sub' + Math.min(depth, 4) + '">' + twBtn(kids[pk] ? 'data-twp="' + esc(pk) + '"' : null, !!state.pathOpen[pk]) + eyeBtn('data-epath="' + esc(pk) + '"', on, nm) + '<button class="lgs" data-hpath="' + esc(pk) + '" data-hl="' + (hlk ? "on" : "off") + '" aria-pressed="' + on + '" title="Highlight ' + esc(nm) + '"><span class="sw" style="background:' + col + ';border-radius:50%"></span><span class="nm">' + esc(nm) + '</span><span class="only" data-only="1" title="Show only ' + esc(nm) + '">only</span><span class="ct">' + m[nm] + "</span></button></div>" + subtree(pk, depth + 1, col);
       }).join("");
     };
-    setHTML($("legend"), names.map(function(g) {
-      var vis = !isHidden(g);
-      var hasSubs = state.dim === "folder" && (groupHasPinnedSub(g) || (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN);
-      var open = hasSubs && !state.collapsed[g];
-      var hl2 = !!state.highlight[g];
-      var live = !!counts[g];
+    var basis = barBasis();
+    var rendered = dict();
+    var liveNow = legendSwitch ? liveByGroup() : null;
+    var here = {
+      inert: false,
+      counts,
+      hidden: isHidden,
+      color: colorOf,
+      fill: swatchFill,
+      swTitle: function(g) {
+        return swatchTitle(g, bandLock);
+      },
+      bandLock,
+      basisMax: basis.max,
+      basisGroup: basis.group,
+      share: function(g) {
+        return barShare(g, basis);
+      },
+      live: function(g) {
+        return liveNow ? liveNow.now[g] || 0 : null;
+      },
+      subs: function(g) {
+        return groupHasPinnedSub(g) || (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN;
+      },
+      open: function(g) {
+        return !state.collapsed[g];
+      }
+    };
+    var left = null;
+    if (legendSwitch) (function() {
+      var ls = legendSwitch;
+      left = {
+        inert: true,
+        counts: ls.counts,
+        hidden: function(g) {
+          return !!ls.hidden[g];
+        },
+        color: function(g) {
+          return ls.colors[g] || "";
+        },
+        fill: function(g) {
+          return ls.fill[g] || ls.colors[g] || "";
+        },
+        swTitle: function(g) {
+          return ls.swTitle[g] || "";
+        },
+        bandLock: ls.bandLock,
+        basisMax: ls.basis,
+        basisGroup: ls.basisGroup,
+        share: function(g) {
+          var lv = liveNow ? liveNow.old[g] || 0 : ls.counts[g] || 0;
+          return ls.basis > 0 ? lv / ls.basis : 0;
+        },
+        live: function(g) {
+          return liveNow ? liveNow.old[g] || 0 : null;
+        },
+        subs: function(g) {
+          return !!ls.subs[g];
+        },
+        open: function(g) {
+          return !!ls.open[g];
+        }
+      };
+    })();
+    var rowFor = function(g, w) {
+      var vis = !w.hidden(g);
+      var hasSubs = w.subs(g);
+      var open = hasSubs && w.open(g);
+      var hl2 = !w.inert && !!state.highlight[g];
+      var live = !!w.counts[g];
       var lgrClass = "lgr" + (live ? "" : " lgr-empty");
-      var row = '<div class="' + lgrClass + '">' + twBtn(hasSubs ? 'data-tw="' + esc(g) + '"' : null, open) + (live ? eyeBtn('data-eye="' + esc(g) + '"', vis, g) : '<button class="eye none" disabled aria-hidden="true"></button>') + '<button class="lg" data-g="' + esc(g) + '" data-hl="' + (hl2 ? "on" : "off") + '" aria-pressed="' + vis + '" title="Highlight ' + esc(g) + '"><span class="sw' + (bandLock && bandLock[g] ? " sw-in" : "") + '" title="' + swatchTitle(g, bandLock) + '" style="background:' + swatchFill(g) + '"></span><span class="nm" title="' + esc(g) + '">' + esc(g) + "</span>" + (live ? '<span class="only" data-only="1" title="Show only ' + esc(g) + '">only</span>' : '<span class="only none" aria-hidden="true"></span>') + // github#50
-      '<span class="ct">' + countText(g) + "</span></button></div>";
-      if (open && vis) {
+      var share = w.share(g);
+      if (!w.inert) rendered[g] = share;
+      var shown = !w.inert && cascadeRun && barShown && barShown[g] !== void 0 ? barShown[g] : share;
+      var lgAttrs = ' class="lg' + (shown ? " bar" + (share ? "" : " bar-out") : "") + '" style="--vg-share:' + (shown * 100).toFixed(3) + "%;--vg-bar:" + w.color(g) + '"' + (w.inert ? ' tabindex="-1" aria-hidden="true"' : "");
+      var ctTitle = share ? ' title="' + w.counts[g] + (w.counts[g] === 1 ? " note" : " notes") + (g === w.basisGroup ? " \xB7 the largest folder shown" : " \xB7 " + shareText(share) + " of " + esc(w.basisGroup)) + '"' : "";
+      var lv = w.live(g);
+      if (lv !== null && !(lv > 4e-3)) lgrClass += " lgr-gone";
+      var row = lgrHTML({
+        g,
+        cls: lgrClass,
+        old: w.inert,
+        // github#86 -- a leaving row keeps its twisty, eye and only chip, disabled
+        tw: twBtn(hasSubs ? w.inert ? 'disabled aria-disabled="true"' : 'data-tw="' + esc(g) + '"' : null, open),
+        eye: live ? eyeBtn(w.inert ? 'disabled aria-disabled="true"' : 'data-eye="' + esc(g) + '"', vis, g) : '<button class="eye none" disabled aria-hidden="true"></button>',
+        lgAttrs,
+        hl: hl2,
+        vis,
+        title: w.inert ? g : rowTitle(g),
+        swClass: "sw" + (w.bandLock && w.bandLock[g] ? " sw-in" : ""),
+        swTitle: w.swTitle(g),
+        swFill: w.fill(g),
+        only: live ? w.inert ? '<span class="only" aria-hidden="true">only</span>' : '<span class="only" data-only="1" title="Show only ' + esc(g) + '">only</span>' : '<span class="only none" aria-hidden="true"></span>',
+        // github#50, github#78
+        ctTitle,
+        ct: w.inert ? String(w.counts[g]) : countText(g)
+      });
+      if (open && vis && !w.inert) {
         var subs = subOrder[g];
         var srow = function(col, nm, ct, idx, depth, twAttrs, twOpen) {
           var on = !state.hiddenSub[g + "/" + subs[idx[0]]];
@@ -4731,7 +5497,22 @@ function mountVaultGraph(root, data, deps) {
         }
       }
       return row;
+    };
+    var oldRows = left ? legendSwitch.order.map(function(g) {
+      return !legendSwitch.counts[g] || legendSwitch.hidden[g] ? "" : rowFor(
+        g,
+        /** @type {RowWorld} */
+        left
+      );
+    }).join("") : "";
+    $("legend").classList.toggle("lg-switching", !!legendSwitch);
+    setHTML($("legend"), oldRows + names.map(function(g) {
+      return rowFor(g, here);
     }).join(""));
+    if (!barShown) {
+      barPrev = barNow;
+    }
+    barNow = rendered;
     var each = function(sel, fn) {
       Array.prototype.forEach.call($("legend").querySelectorAll(sel), fn);
     };
@@ -4753,9 +5534,9 @@ function mountVaultGraph(root, data, deps) {
       state.hiddenSub = dict();
       var rest = path.slice(g.length + 1);
       var want = rest ? rest.split("/") : [];
-      graph.forEachNode(function(_id, a) {
-        if (a.folder !== g) return;
-        var d = a.dirs || [], i = 0;
+      graph.forEachNode(function(id, a) {
+        if (fileGroup(id, a) !== g) return;
+        var d = fileDirs(id, a), i = 0;
         while (i < want.length && i < d.length && d[i] === want[i]) i++;
         if (i === want.length) return;
         state.hiddenSub[g + "/" + d.slice(0, i + 1).join("/")] = true;
@@ -4973,7 +5754,67 @@ function mountVaultGraph(root, data, deps) {
       state.collapsed[g] = true;
     });
   }
-  var collapsedInit = false;
+  var dimSeeded = dict();
+  function takeGeom(bandHint) {
+    var base = buildWedgePlan(false);
+    if (!base) return null;
+    bandLock = dict();
+    base.cells.forEach(function(c) {
+      bandLock[c.g] = c.inner;
+    });
+    if (bandHint) Object.keys(bandHint).forEach(function(g) {
+      bandLock[g] = bandHint[g];
+    });
+    var bandTotal = { i: 0, o: 0 };
+    base.cells.forEach(function(c) {
+      bandTotal[c.inner ? "i" : "o"] += c.wsum;
+    });
+    var bandR = { i: 0, o: 0 }, bandRows = { i: 0, o: 0 };
+    base.cells.forEach(function(c) {
+      var k = c.inner ? "i" : "o";
+      if (c.rows > bandRows[k]) bandRows[k] = c.rows;
+      (c.slots || []).forEach(function(sl) {
+        var rr = sl.r * UNIT;
+        if (rr > bandR[k]) bandR[k] = rr;
+      });
+    });
+    geomLock = {
+      r0: base.r0,
+      rOuter: base.rOuter,
+      maxR: base.maxR,
+      total: base.total,
+      bandTotal,
+      bandR,
+      rows: bandRows,
+      dim: state.dim
+    };
+    var again = buildWedgePlan(false);
+    if (again) geomLock = {
+      r0: again.r0,
+      rOuter: again.rOuter,
+      maxR: again.maxR,
+      total: again.total,
+      bandTotal,
+      bandR,
+      rows: bandRows,
+      dim: state.dim
+    };
+    return base;
+  }
+  function ringsIn(dim) {
+    var sBand = bandLock, sGeom = geomLock;
+    bandLock = null;
+    geomLock = null;
+    try {
+      return inDim(dim, function() {
+        takeGeom();
+        return geomLock;
+      });
+    } finally {
+      bandLock = sBand;
+      geomLock = sGeom;
+    }
+  }
   function regroup(skipLayout, bandHint, keepAlpha) {
     counts = computeOrder();
     var colorsBefore = null;
@@ -4982,57 +5823,16 @@ function mountVaultGraph(root, data, deps) {
     });
     buildColors();
     colorWalk(colorsBefore);
-    if (!collapsedInit) {
-      collapsedInit = true;
+    if (!dimSeeded[state.dim]) {
+      dimSeeded[state.dim] = true;
       collapseAll();
       seedHidden();
     }
     if (!bandLock) {
-      var base = buildWedgePlan(false);
-      if (base) {
-        bandLock = dict();
-        base.cells.forEach(function(c) {
-          bandLock[c.g] = c.inner;
-        });
-        if (bandHint) Object.keys(bandHint).forEach(function(g) {
-          bandLock[g] = bandHint[g];
-        });
-        var bandTotal = { i: 0, o: 0 };
-        base.cells.forEach(function(c) {
-          bandTotal[c.inner ? "i" : "o"] += c.wsum;
-        });
-        var bandR = { i: 0, o: 0 }, bandRows = { i: 0, o: 0 };
-        base.cells.forEach(function(c) {
-          var k = c.inner ? "i" : "o";
-          if (c.rows > bandRows[k]) bandRows[k] = c.rows;
-          (c.slots || []).forEach(function(sl) {
-            var rr = sl.r * UNIT;
-            if (rr > bandR[k]) bandR[k] = rr;
-          });
-        });
-        geomLock = {
-          r0: base.r0,
-          rOuter: base.rOuter,
-          maxR: base.maxR,
-          total: base.total,
-          bandTotal,
-          bandR,
-          rows: bandRows
-        };
-        var again = buildWedgePlan(false);
-        if (again) geomLock = {
-          r0: again.r0,
-          rOuter: again.rOuter,
-          maxR: again.maxR,
-          total: again.total,
-          bandTotal,
-          bandR,
-          rows: bandRows
-        };
-        if (renderer) {
-          var span = base.maxR * UNIT * 1.02;
-          renderer.setCustomBBox({ x: [-span, span], y: [-span, span] });
-        }
+      var base = takeGeom(bandHint);
+      if (base && renderer) {
+        var span = base.maxR * UNIT * 1.02;
+        renderer.setCustomBBox({ x: [-span, span], y: [-span, span] });
       }
     }
     buildLegend();
@@ -5043,7 +5843,7 @@ function mountVaultGraph(root, data, deps) {
       heatDraw();
     }
   }
-  function hardRelayout(animate, deferLayout) {
+  function hardRelayout(animate, deferLayout, freshGeom) {
     stopPlay();
     if (cascadeRun) {
       WIN.cancelAnimationFrame(cascadeRun.raf);
@@ -5072,13 +5872,18 @@ function mountVaultGraph(root, data, deps) {
     geomLock = null;
     if (deferLayout && prevBand) {
       regroup(true, prevBand, true);
-      if (prevGeom) geomLock = prevGeom;
+      if (prevGeom && !freshGeom) geomLock = prevGeom;
       return;
     }
     regroup(true);
+    if (!deferLayout && !animate) applyLayout(false);
     if (!deferLayout) applyLayout(!!animate);
     if (renderer) renderer.refresh();
   }
+  invalidatesOnData("search hits", function() {
+    var hits = $("hits");
+    if (hits && hits.firstChild) hits.replaceChildren();
+  });
   function buildSearch() {
     var q = (
       /** @type {HTMLInputElement} */
@@ -5094,6 +5899,7 @@ function mountVaultGraph(root, data, deps) {
       }
       var found = [];
       graph.forEachNode(function(id, a) {
+        if (a.dupOf) return;
         if (a.label.toLowerCase().indexOf(state.query) > -1) found.push(id);
       });
       found.sort(function(p, o) {
@@ -5298,8 +6104,57 @@ function mountVaultGraph(root, data, deps) {
     rangeChrome();
     buildLegend();
   }
+  function syncDimCounts() {
+    var seg = $("dim");
+    if (!seg) return;
+    var btns = seg.querySelectorAll("button[data-dim]");
+    for (var i = 0; i < btns.length; i++) {
+      var b = (
+        /** @type {HTMLElement} */
+        btns[i]
+      );
+      var d = b.getAttribute("data-dim");
+      var ct = b.querySelector(".dimct");
+      if (!ct || !d) continue;
+      ct.textContent = "(" + inDim(d, dimGroupCount(d)) + ")";
+    }
+  }
+  function dimGroupCount(d) {
+    return function() {
+      return (order[d] || []).length;
+    };
+  }
+  function syncDimUI() {
+    var seg = $("dim");
+    if (!seg) return;
+    var btns = seg.querySelectorAll("button[data-dim]");
+    for (var i = 0; i < btns.length; i++) {
+      var b = (
+        /** @type {HTMLElement} */
+        btns[i]
+      );
+      b.setAttribute("aria-pressed", b.getAttribute("data-dim") === state.dim ? "true" : "false");
+    }
+  }
   function buildTools() {
     refreshSettingsPanel = buildSettings;
+    var dimSeg = $("dim");
+    if (dimSeg) dimSeg.addEventListener("click", function(ev) {
+      var t = (
+        /** @type {Element | null} */
+        ev.target instanceof Element ? ev.target.closest("button[data-dim]") : null
+      );
+      if (t) setDim(t.getAttribute("data-dim") || "folder", true);
+    });
+    syncDimUI();
+    if ($("tabgroups")) $("tabgroups").onclick = function() {
+      setReading("groups");
+    };
+    if ($("tabnote")) $("tabnote").onclick = function() {
+      setReading("note");
+    };
+    cardHome();
+    setReading("groups");
     $("allon").onclick = function() {
       seedHidden();
       state.hiddenSub = dict();
@@ -5337,6 +6192,7 @@ function mountVaultGraph(root, data, deps) {
     if ($("pan")) $("pan").onclick = function() {
       setPan(!panEnabled, true);
     };
+    if ($("ov")) $("ov").onclick = fit;
     setPan(panEnabled, false);
     if ($("compact")) $("compact").onclick = function() {
       setCompactAxis(!compactAxis, true);
@@ -5398,17 +6254,23 @@ function mountVaultGraph(root, data, deps) {
         }
       };
       $("fcreset").onclick = function() {
-        pickColor(null, null);
-        var savedSub = applySubfolderColors({});
-        if (saveSubfolderColors) saveSubfolderColors(Object.assign({}, savedSub));
+        pickColor(null, null, settingsDim);
+        var savedSub = applySubfolderColors({}, settingsDim);
+        saveSubColorsFor(settingsDim, Object.assign(dict(), savedSub));
         buildSettings();
       };
       $("setbody").addEventListener("click", function(ev) {
         var t = ev.target instanceof Element ? ev.target : null;
         if (!t) return;
+        var td = t.closest("[data-setdim]");
+        if (td) {
+          settingsDim = td.getAttribute("data-setdim") === "tag" ? "tag" : "folder";
+          buildSettings();
+          return;
+        }
         var v = t.closest("[data-vis]");
         if (v) {
-          pickVisible(v.getAttribute("data-vis"));
+          pickVisible(v.getAttribute("data-vis"), settingsDim);
           return;
         }
         var tw = t.closest("[data-stw]");
@@ -5426,12 +6288,13 @@ function mountVaultGraph(root, data, deps) {
           pickSubColors(
             pk.slice(0, slash),
             [pk.slice(slash + 1)],
-            s.getAttribute("data-key") || null
+            s.getAttribute("data-key") || null,
+            settingsDim
           );
           return;
         }
         var b = t.closest("[data-fc]");
-        if (b) pickColor(b.getAttribute("data-fc"), b.getAttribute("data-key") || null);
+        if (b) pickColor(b.getAttribute("data-fc"), b.getAttribute("data-key") || null, settingsDim);
       });
       $("optbody").addEventListener("click", function(ev) {
         var t = ev.target instanceof Element ? ev.target : null;
@@ -5469,10 +6332,10 @@ function mountVaultGraph(root, data, deps) {
       return pal.map(function(p) {
         var on = opts.current === p.key;
         var isAuto = !!opts.autoKey && opts.autoKey === p.key;
-        return '<button class="swatch vg-' + p.key + '" role="' + opts.role + '"' + (opts.dataAttr ? " data-" + opts.dataAttr + '="' + esc(opts.dataValue) + '"' : "") + ' data-key="' + p.key + '" aria-checked="' + on + '"' + (isAuto ? ' data-auto="1"' : "") + ' title="' + esc(p.name) + (opts.titleFor ? opts.titleFor(on, isAuto) : "") + '" aria-label="' + esc(p.name) + '"></button>';
+        return '<button class="swatch vg-' + p.key + '" role="' + opts.role + '"' + (opts.dataAttr ? " data-" + opts.dataAttr + '="' + esc(opts.dataValue) + '"' : "") + ' data-key="' + p.key + '" aria-checked="' + on + '"' + (isAuto ? ' data-auto="1"' : "") + ' title="' + esc(slotTitle(p.key, p.name)) + (opts.titleFor ? opts.titleFor(on, isAuto) : "") + '" aria-label="' + esc(p.name) + '">' + swatchPreviewHTML(p.key, opts.group) + "</button>";
       }).join("");
     }
-    function openCtxMenu(x, y, current, onPick, autoKey, visShown, onToggleVisible, byFolderOn, onToggleByFolder, tintOn, onToggleTint) {
+    function openCtxMenu(x, y, current, onPick, autoKey, visShown, onToggleVisible, byFolderOn, onToggleByFolder, tintOn, onToggleTint, group) {
       var el = $("ctxmenu");
       if (!el) return;
       var pal = paletteInfo();
@@ -5480,6 +6343,7 @@ function mountVaultGraph(root, data, deps) {
         role: "menuitemradio",
         current,
         autoKey,
+        group,
         titleFor: function(on, isAuto) {
           return isAuto ? " (automatic)" : "";
         }
@@ -5541,7 +6405,7 @@ function mountVaultGraph(root, data, deps) {
         openCtxMenu(
           ev.clientX,
           ev.clientY,
-          folderColors[g] || groupSlot[g] || "",
+          colorsFor()[g] || groupSlot[g] || "",
           function(key) {
             pickColor(g, key);
           },
@@ -5557,7 +6421,8 @@ function mountVaultGraph(root, data, deps) {
           keptSeparate ? unlinkedTintByFolder : void 0,
           keptSeparate ? function() {
             setUnlinkedTintByFolder(!unlinkedTintByFolder, true);
-          } : void 0
+          } : void 0,
+          g
         );
         return;
       }
@@ -5570,7 +6435,7 @@ function mountVaultGraph(root, data, deps) {
         var picked = idx.map(function(i) {
           return subs[i];
         });
-        var cur = idx.length === 1 ? subfolderColors[f + "/" + picked[0]] || "" : "";
+        var cur = idx.length === 1 ? subColorsFor()[f + "/" + picked[0]] || "" : "";
         openCtxMenu(
           ev.clientX,
           ev.clientY,
@@ -5582,54 +6447,64 @@ function mountVaultGraph(root, data, deps) {
         return;
       }
     });
-    function pickColor(folder, key) {
+    function pickColor(folder, key, dim) {
+      var d = dim || state.dim;
       var next = dict();
       if (folder) {
-        Object.keys(folderColors).forEach(function(g) {
-          next[g] = folderColors[g];
+        var cur = colorsFor(d);
+        Object.keys(cur).forEach(function(g) {
+          next[g] = cur[g];
         });
         if (key) next[folder] = key;
         else delete next[folder];
       }
-      var saved = applyFolderColors(next);
-      if (saveFolderColors) saveFolderColors(Object.assign({}, saved));
+      var saved = applyFolderColors(next, d);
+      saveColorsFor(d, Object.assign(dict(), saved));
       buildSettings();
     }
-    function pickSubColors(folder, subs, key) {
+    function pickSubColors(folder, subs, key, dim) {
+      var d = dim || state.dim;
       var next = dict();
-      Object.keys(subfolderColors).forEach(function(k) {
-        next[k] = subfolderColors[k];
+      var curSub = subColorsFor(d);
+      Object.keys(curSub).forEach(function(k) {
+        next[k] = curSub[k];
       });
       subs.forEach(function(sb) {
         var pk = folder + "/" + sb;
         if (key) next[pk] = key;
         else delete next[pk];
       });
-      var saved = applySubfolderColors(next);
-      if (saveSubfolderColors) saveSubfolderColors(Object.assign({}, saved));
+      var saved = applySubfolderColors(next, d);
+      saveSubColorsFor(d, Object.assign(dict(), saved));
       buildSettings();
     }
-    function pickVisible(folder) {
+    function pickVisible(folder, dim) {
+      var d = dim || state.dim;
       var next = dict();
-      Object.keys(folderShown).forEach(function(g) {
-        next[g] = folderShown[g];
+      var cur = shownFor(d);
+      Object.keys(cur).forEach(function(g) {
+        next[g] = cur[g];
       });
-      next[folder] = hiddenByDefault(folder);
-      var saved = applyFolderShown(next);
-      if (saveFolderShown) saveFolderShown(Object.assign({}, saved));
-      var h = state.hidden[state.dim] || (state.hidden[state.dim] = dict());
-      if (hiddenByDefault(folder)) h[folder] = true;
-      else delete h[folder];
-      buildLegend();
-      cascade(null, { colToggle: true });
+      var wasHidden = typeof cur[folder] === "boolean" ? !cur[folder] : isArchiveGroup2(folder);
+      next[folder] = wasHidden;
+      var saved = applyFolderShown(next, d);
+      saveShownFor(d, Object.assign(dict(), saved));
+      if (d === state.dim) {
+        var h = state.hidden[state.dim] || (state.hidden[state.dim] = dict());
+        if (hiddenByDefault(folder)) h[folder] = true;
+        else delete h[folder];
+        buildLegend();
+        cascade(null, { colToggle: true });
+      }
       buildSettings();
     }
-    function subfolderRows(g, pal) {
-      return (subOrder[g] || []).map(function(sb) {
+    function subfolderRows(g, pal, dim) {
+      var d = dim || state.dim;
+      return subsFor(d, g).map(function(sb) {
         var pk = g + "/" + sb;
-        var pin2 = subfolderColors[pk] || "";
-        var tint = subShade[pk] || colorOf(g);
-        var nm = sb || "(directly in folder)";
+        var pin2 = subColorsFor(d)[pk] || "";
+        var tint = subShadeFor(d, pk) || slotColor(slotFor(d, g));
+        var nm = sb || (d === "tag" ? "(no nested tag)" : "(directly in folder)");
         var sws = swatchButtonsHTML(pal, {
           role: "radio",
           dataAttr: "sfc",
@@ -5639,7 +6514,7 @@ function mountVaultGraph(root, data, deps) {
             return on ? " (chosen)" : "";
           }
         });
-        return '<div class="scr scrsub" role="radiogroup" aria-label="Colour for ' + esc(g + "/" + nm) + '"><div class="scrh"><span class="sw" style="background:' + tint + ';border-radius:50%"></span><span class="nm" title="' + esc(nm) + '">' + esc(nm) + '</span><span class="ct">' + (subCount[pk] || 0) + '</span><button class="auto" data-sfc="' + esc(pk) + '" data-key="" aria-pressed="' + !pin2 + '" title="Back to the automatic tint">Auto</button></div><span class="sws">' + sws + "</span></div>";
+        return '<div class="scr scrsub" role="radiogroup" aria-label="Colour for ' + esc(g + "/" + nm) + '"><div class="scrh"><span class="sw" style="background:' + tint + ';border-radius:50%"></span><span class="nm" title="' + esc(nm) + '">' + esc(nm) + '</span><span class="ct">' + subCountFor(d, pk) + '</span><button class="auto" data-sfc="' + esc(pk) + '" data-key="" aria-pressed="' + !pin2 + '" title="Back to the automatic tint">Auto</button></div><span class="sws">' + sws + "</span></div>";
       }).join("");
     }
     var OPTION_ROWS = [
@@ -5675,6 +6550,18 @@ function mountVaultGraph(root, data, deps) {
         set: function(v) {
           setUnlinkedTintByFolder(v, true);
         }
+      },
+      // github#78, design/0006
+      {
+        key: "countBars",
+        label: "Count bars in the legend",
+        title: "Draw a short rule along the bottom of each folder row, in that folder's own colour, scaled so the largest folder currently shown fills its row -- the count alone makes 406 notes and 1 note look the same",
+        get: function() {
+          return countBars;
+        },
+        set: function(v) {
+          setCountBars(v, true);
+        }
       }
     ];
     function buildOptions() {
@@ -5685,31 +6572,78 @@ function mountVaultGraph(root, data, deps) {
         return '<div class="row" style="margin-bottom:7px"><div class="lbl" style="margin:0">' + esc(o.label) + '</div><div class="mini"><button id="vg-opt-' + o.key + '" data-opt="' + o.key + '" aria-pressed="' + on + '" title="' + esc(o.title) + '">Enabled</button></div></div>';
       }).join(""));
     }
+    function orderFor(dim) {
+      return inDim(dim, function() {
+        return (order[dim] || []).slice();
+      });
+    }
+    function slotFor(dim, g) {
+      return inDim(dim, function() {
+        return groupSlot[g] || "";
+      });
+    }
+    function autoSlotFor(dim, g) {
+      return inDim(dim, function() {
+        return groupAutoSlot[g] || "";
+      });
+    }
+    function subsFor(dim, g) {
+      return inDim(dim, function() {
+        return (subOrder[g] || []).slice();
+      });
+    }
+    function subCountFor(dim, pk) {
+      return inDim(dim, function() {
+        return subCount[pk] || 0;
+      });
+    }
+    function subShadeFor(dim, pk) {
+      return inDim(dim, function() {
+        return subShade[pk] || "";
+      });
+    }
+    function slotColor(key) {
+      return THEME.byKey[key] || THEME.neutrals[0];
+    }
     function buildSettings() {
       var pal = paletteInfo();
-      var rows = (order[state.dim] || []).map(function(g) {
-        var pinned = folderColors[g] || "";
-        var cur = pinned || groupSlot[g] || "";
-        var autoKey = groupAutoSlot[g] || "";
+      var d = settingsDim;
+      var tabs = '<span class="dimseg setseg" role="group" aria-label="Set colours for">' + DIMS.map(function(k) {
+        return '<button type="button" data-setdim="' + k + '" aria-pressed="' + (k === d) + '" title="Colours and default visibility for ' + (k === "tag" ? "tags" : "folders") + '">' + (k === "tag" ? "Tags" : "Folders") + "</button>";
+      }).join("") + "</span>";
+      var names = orderFor(d);
+      if (!names.length) {
+        setHTML($("setbody"), tabs + '<div class="lbl" style="margin:9px 0 0;opacity:.7">This vault has no ' + (d === "tag" ? "tags" : "folders") + " to colour.</div>");
+        return;
+      }
+      var rows = names.map(function(g) {
+        var pinned = colorsFor(d)[g] || "";
+        var cur = pinned || slotFor(d, g) || "";
+        var autoKey = autoSlotFor(d, g) || "";
         var sws = swatchButtonsHTML(pal, {
           role: "radio",
           dataAttr: "fc",
           dataValue: g,
+          group: g,
           current: cur,
           autoKey,
           titleFor: function(on, isAuto) {
             return on ? pinned ? " (chosen)" : " (automatic)" : isAuto ? " (automatic default)" : "";
           }
         });
-        var shown = !hiddenByDefault(g);
-        var hasSubs = state.dim === "folder" && (groupHasPinnedSub(g) || (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN);
+        var shownMap = shownFor(d)[g];
+        var shown = typeof shownMap === "boolean" ? shownMap : !isArchiveGroup2(g);
+        var subs = subsFor(d, g);
+        var hasSubs = subs.length > 1 || subs.some(function(sb) {
+          return !!subColorsFor(d)[g + "/" + sb];
+        });
         var open = hasSubs && !state.collapsed[g];
-        return '<div class="scr" role="radiogroup" aria-label="Colour for ' + esc(g) + '"><div class="scrh">' + twBtn(hasSubs ? 'data-stw="' + esc(g) + '"' : null, open) + '<button class="eye vis" data-vis="' + esc(g) + '" aria-pressed="' + shown + '" title="' + (shown ? "Shown by default" : "Hidden by default") + '" aria-label="' + (shown ? "Hide" : "Show") + " " + esc(g) + '">' + eyeSvg(shown) + '</button><span class="nm" title="' + esc(g) + '">' + esc(g) + '</span><button class="auto" data-fc="' + esc(g) + '" data-key="" aria-pressed="' + !pinned + '" title="Back to the slot this folder gets automatically">Auto</button></div><span class="sws">' + sws + "</span></div>" + (open ? subfolderRows(g, pal) : "");
+        return '<div class="scr" role="radiogroup" aria-label="Colour for ' + esc(g) + '"><div class="scrh">' + twBtn(hasSubs ? 'data-stw="' + esc(g) + '"' : null, open) + '<button class="eye vis" data-vis="' + esc(g) + '" aria-pressed="' + shown + '" title="' + (shown ? "Shown by default" : "Hidden by default") + '" aria-label="' + (shown ? "Hide" : "Show") + " " + esc(g) + '">' + eyeSvg(shown) + '</button><span class="nm" title="' + esc(g) + '">' + esc(g) + '</span><button class="auto" data-fc="' + esc(g) + '" data-key="" aria-pressed="' + !pinned + '" title="Back to the slot this folder gets automatically">Auto</button></div><span class="sws">' + sws + "</span></div>" + (open ? subfolderRows(g, pal, d) : "");
       }).join("");
-      setHTML($("setbody"), rows);
+      setHTML($("setbody"), tabs + rows);
     }
   }
-  var FIT_RATIO = 1.08;
+  var FIT_RATIO = 0.954;
   var camAtRest = true, fitting = false;
   function fitRatio() {
     var locked = geomLock && geomLock.maxR ? geomLock.maxR : 0;
@@ -5745,6 +6679,242 @@ function mountVaultGraph(root, data, deps) {
     if (typeof lo === "number" && r < lo) r = lo;
     if (typeof hi === "number" && r > hi) r = hi;
     cam.animate({ ratio: r }, { duration: renderer.getSetting("zoomDuration") || 120 });
+  }
+  var OV_DISC_FRAC = 0.62;
+  var OV_CHEV_PX = 6;
+  var OV_SECTOR_A = 0.55;
+  var OV_FILL_A = 0.18;
+  var ovCells = null;
+  var ovSig = "";
+  var ovPaints = 0;
+  var ovOn = false;
+  var ovLast = null;
+  function ovSize() {
+    var host = $("ov");
+    var cv = host ? host.querySelector("canvas") : null;
+    var w = cv ? cv.clientWidth : 0;
+    if (w > 0) return w;
+    var v = parseFloat(css("--ov-size"));
+    return v > 0 ? v : 96;
+  }
+  function ovFootprint() {
+    if (!renderer) return null;
+    var d = renderer.getDimensions();
+    if (!(d.width > 0) || !(d.height > 0)) return null;
+    var a = renderer.viewportToGraph({ x: 0, y: 0 });
+    var b = renderer.viewportToGraph({ x: d.width, y: d.height });
+    if (!isFinite(a.x) || !isFinite(a.y) || !isFinite(b.x) || !isFinite(b.y)) return null;
+    return {
+      x0: Math.min(a.x, b.x),
+      x1: Math.max(a.x, b.x),
+      y0: Math.min(a.y, b.y),
+      y1: Math.max(a.y, b.y)
+    };
+  }
+  function ovCropped(fp) {
+    var r = (lastMaxR || 0) * UNIT;
+    if (!(r > 0)) return false;
+    return !(fp.x0 <= -r && fp.x1 >= r && fp.y0 <= -r && fp.y1 >= r);
+  }
+  function ovSectors() {
+    var byKey = dict();
+    var out = [];
+    var list = ovCells || [];
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      if (c.pLead === void 0 || c.pTrail === void 0) continue;
+      if (!(c.pTrail > c.pLead)) continue;
+      var key = c.bandKey + "\0" + c.g;
+      var s = byKey[key];
+      if (!s) {
+        s = { g: c.g, band: c.bandKey, a0: c.pLead, a1: c.pTrail, c: colorOf(c.g) };
+        byKey[key] = s;
+        out.push(s);
+      } else {
+        if (c.pLead < s.a0) s.a0 = c.pLead;
+        if (c.pTrail > s.a1) s.a1 = c.pTrail;
+      }
+    }
+    return out;
+  }
+  function ovShape(fp) {
+    if (!geomLock) return null;
+    var outer = geomLock.maxR * UNIT;
+    if (!(outer > 0)) return null;
+    var s = ovSize(), half = s / 2;
+    var k = OV_DISC_FRAC * half / outer;
+    var bR = geomLock.bandR;
+    var iLo = geomLock.r0 * INNER_SCALE * UNIT;
+    var iHi = bR && bR.i > iLo ? bR.i : iLo;
+    var oLo = geomLock.rOuter * UNIT;
+    var oHi = bR && bR.o > oLo ? bR.o : outer;
+    var rect = [half + k * fp.x0, half - k * fp.y1, half + k * fp.x1, half - k * fp.y0];
+    var misses = rect[2] < 0 || rect[0] > s || rect[3] < 0 || rect[1] > s;
+    return {
+      s,
+      k,
+      rings: { i: iHi * k, o: oHi * k },
+      inner: [iLo * k, oLo * k],
+      sectors: ovSectors(),
+      rect,
+      chevron: misses ? Math.atan2(-(fp.y0 + fp.y1) / 2, (fp.x0 + fp.x1) / 2) : null
+    };
+  }
+  function ovSigOf(sh) {
+    var p = [
+      Math.round(sh.s),
+      Math.round((WIN.devicePixelRatio || 1) * 100),
+      Math.round(sh.rings.i * 2),
+      Math.round(sh.rings.o * 2),
+      Math.round(sh.inner[0] * 2),
+      Math.round(sh.inner[1] * 2),
+      sh.chevron === null ? "-" : Math.round(sh.chevron * 180 / Math.PI)
+    ];
+    for (var i = 0; i < 4; i++) p.push(Math.round(sh.rect[i] * 4));
+    for (var j = 0; j < sh.sectors.length; j++) {
+      var sc = sh.sectors[j];
+      p.push(
+        sc.g,
+        sc.band,
+        sc.c,
+        Math.round(sc.a0 * 180 / Math.PI),
+        Math.round(sc.a1 * 180 / Math.PI)
+      );
+    }
+    p.push(THEME.text, THEME.dim);
+    return p.join(",");
+  }
+  var OV_DIRS = [
+    "right",
+    "lower right",
+    "below",
+    "lower left",
+    "left",
+    "upper left",
+    "above",
+    "upper right"
+  ];
+  function ovDirWord(a) {
+    var i = Math.round(a / (Math.PI / 4));
+    while (i < 0) i += 8;
+    return OV_DIRS[i % 8];
+  }
+  function ovLabel(sh) {
+    var host = $("ov");
+    if (!host) return;
+    var t = sh.chevron === null ? "Where the frame sits on the disc. Click to fit." : "Viewport " + ovDirWord(sh.chevron) + " of the disc. Click to fit.";
+    if (host.title !== t) {
+      host.title = t;
+      host.setAttribute("aria-label", t);
+    }
+  }
+  function ovPaint(sh) {
+    var host = $("ov");
+    if (!host) return;
+    var cv = (
+      /** @type {HTMLCanvasElement | null} */
+      host.querySelector("canvas")
+    );
+    if (!cv || !cv.getContext) return;
+    var s = sh.s, half = s / 2, dpr = WIN.devicePixelRatio || 1;
+    var w = Math.round(s * dpr);
+    if (cv.width !== w || cv.height !== w) {
+      cv.width = w;
+      cv.height = w;
+    }
+    var g2 = (
+      /** @type {CanvasRenderingContext2D} */
+      cv.getContext("2d")
+    );
+    g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g2.clearRect(0, 0, s, s);
+    g2.strokeStyle = THEME.dim;
+    g2.lineWidth = 1;
+    [sh.rings.i, sh.rings.o].forEach(function(r2) {
+      if (!(r2 > 0.5)) return;
+      g2.beginPath();
+      g2.arc(half, half, r2, 0, 2 * Math.PI);
+      g2.stroke();
+    });
+    g2.globalAlpha = OV_SECTOR_A;
+    sh.sectors.forEach(function(sc) {
+      var lo = sc.band === "i" ? sh.inner[0] : sh.inner[1];
+      var hi = sc.band === "i" ? sh.rings.i : sh.rings.o;
+      if (!(hi > lo)) return;
+      var a0 = sc.a0 - Math.PI / 2, a1 = sc.a1 - Math.PI / 2;
+      g2.fillStyle = sc.c;
+      g2.beginPath();
+      g2.arc(half, half, hi, a0, a1, false);
+      g2.arc(half, half, lo, a1, a0, true);
+      g2.closePath();
+      g2.fill();
+    });
+    g2.globalAlpha = 1;
+    var r = sh.rect;
+    if (sh.chevron === null) {
+      g2.fillStyle = THEME.text;
+      g2.globalAlpha = OV_FILL_A;
+      g2.fillRect(r[0], r[1], r[2] - r[0], r[3] - r[1]);
+      g2.globalAlpha = 0.85;
+      g2.strokeStyle = THEME.text;
+      g2.strokeRect(
+        r[0] + 0.5,
+        r[1] + 0.5,
+        Math.max(1, r[2] - r[0] - 1),
+        Math.max(1, r[3] - r[1] - 1)
+      );
+    } else {
+      var rr = half - OV_CHEV_PX - 1;
+      g2.save();
+      g2.translate(half + rr * Math.cos(sh.chevron), half + rr * Math.sin(sh.chevron));
+      g2.rotate(sh.chevron);
+      g2.fillStyle = THEME.text;
+      g2.globalAlpha = 0.85;
+      g2.beginPath();
+      g2.moveTo(OV_CHEV_PX, 0);
+      g2.lineTo(-OV_CHEV_PX * 0.6, OV_CHEV_PX * 0.7);
+      g2.lineTo(-OV_CHEV_PX * 0.6, -OV_CHEV_PX * 0.7);
+      g2.closePath();
+      g2.fill();
+      g2.restore();
+    }
+    g2.globalAlpha = 1;
+    ovLabel(sh);
+    ovPaints++;
+    ovLast = sh;
+  }
+  function ovShow(on) {
+    if (ovOn === on) return;
+    ovOn = on;
+    var host = $("ov");
+    if (host) {
+      if (!on && DOC && DOC.activeElement === host) {
+        var back = $("reset");
+        if (back) back.focus();
+      }
+      host.hidden = !on;
+    }
+    ROOT.setAttribute("data-ov", on ? "on" : "off");
+    if (!on) {
+      ovSig = "";
+      ovLast = null;
+    }
+  }
+  function ovSync() {
+    if (dead || !$("ov")) return;
+    var fp = geomLock ? ovFootprint() : null;
+    var cropped = !!fp && ovCropped(fp);
+    if (cropped && !ovOn && cascadeRun && fitting) cropped = false;
+    var sh = cropped && fp ? ovShape(fp) : null;
+    if (!sh) {
+      ovShow(false);
+      return;
+    }
+    ovShow(true);
+    var sig = ovSigOf(sh);
+    if (sig === ovSig) return;
+    ovSig = sig;
+    ovPaint(sh);
   }
   function syncCanvasTop() {
     var c = $("canvas");
@@ -5828,6 +6998,137 @@ function mountVaultGraph(root, data, deps) {
     if (persist && onCompactAxis) onCompactAxis(compactAxis);
     return compactAxis;
   }
+  var dimNav = dict();
+  function stashDimNav(dim) {
+    dimNav[dim] = {
+      hiddenSub: state.hiddenSub,
+      highlight: state.highlight,
+      highlightSub: state.highlightSub,
+      collapsed: state.collapsed,
+      tailOpen: state.tailOpen,
+      pathOpen: state.pathOpen
+    };
+  }
+  function restoreDimNav(dim) {
+    var b = dimNav[dim];
+    state.hiddenSub = b ? b.hiddenSub : dict();
+    state.highlight = b ? b.highlight : dict();
+    state.highlightSub = b ? b.highlightSub : dict();
+    state.collapsed = b ? b.collapsed : dict();
+    state.tailOpen = b ? b.tailOpen : dict();
+    state.pathOpen = b ? b.pathOpen : dict();
+  }
+  function keepRings(rings) {
+    if (!rings || !geomLock) return;
+    geomLock.r0 = rings.r0;
+    geomLock.rOuter = rings.rOuter;
+    geomLock.maxR = rings.maxR;
+    geomLock.bandR = rings.bandR;
+    geomLock.dim = rings.dim;
+    if (renderer) {
+      var span = rings.maxR * UNIT * 1.02;
+      renderer.setCustomBBox({ x: [-span, span], y: [-span, span] });
+    }
+  }
+  function setDim(v, persist, instant) {
+    var next = DIMS.indexOf(
+      /** @type {"folder" | "tag"} */
+      v
+    ) >= 0 ? (
+      /** @type {"folder" | "tag"} */
+      v
+    ) : "folder";
+    if (next === state.dim) return state.dim;
+    if (next === "tag") buildTagFiling();
+    dropStandIns();
+    var leftColors = dict();
+    var n = 0;
+    if (renderer && !instant) {
+      graph.forEachNode(function(id, a) {
+        if (a.dupOf) return;
+        if (!visible(id) || (alpha[id] || 0) <= 4e-3) return;
+        leftColors[id] = nodeColor(id);
+        leftGroup[id] = groupOf(id);
+        leaving[id] = true;
+        n++;
+      });
+      if (n) {
+        addStandIns();
+        var oldCounts = dict();
+        var oldColors = dict();
+        var oldBasis = barBasis();
+        var oldFill = dict();
+        var oldSwTitle = dict();
+        var oldSubs = dict();
+        var oldOpen = dict();
+        (order[state.dim] || []).forEach(function(g) {
+          oldCounts[g] = counts[g] || 0;
+          oldColors[g] = colorOf(g);
+          oldFill[g] = swatchFill(g);
+          oldSwTitle[g] = swatchTitle(g, bandLock);
+          oldSubs[g] = groupHasPinnedSub(g) || (subOrder[g] || []).length > 1 && (counts[g] || 0) >= NEST_MIN;
+          oldOpen[g] = oldSubs[g] && !state.collapsed[g];
+        });
+        legendSwitch = {
+          dim: state.dim,
+          order: (order[state.dim] || []).slice(),
+          counts: oldCounts,
+          colors: oldColors,
+          fill: oldFill,
+          swTitle: oldSwTitle,
+          bandLock,
+          subs: oldSubs,
+          open: oldOpen,
+          hidden: state.hidden[state.dim] || dict(),
+          basis: oldBasis.max,
+          basisGroup: oldBasis.group
+        };
+      }
+    }
+    var from = {
+      dim: state.dim,
+      subOrder,
+      bandLock,
+      geomLock,
+      color: leftColors
+    };
+    var rings = geomLock;
+    stashDimNav(state.dim);
+    state.dim = next;
+    settingsDim = next;
+    restoreDimNav(next);
+    state.hoverGroup = null;
+    state.hoverSub = dict();
+    buildSubOrder();
+    syncDimUI();
+    if (n) {
+      moveFrom = null;
+      splitHold = null;
+      pinnedPlan = null;
+      planKeep = null;
+      roomNow = null;
+      cellNow = null;
+      edgeNow = null;
+      colWalk = null;
+      posSrc = null;
+      bandLock = null;
+      geomLock = null;
+      regroup(true, void 0, true);
+      keepRings(rings);
+    } else {
+      hardRelayout(false, false);
+      keepRings(rings);
+      applyLayout(false);
+      applyLayout(false);
+    }
+    attempt2(placeLogo);
+    attempt2(heatBuild);
+    attempt2(buildLegend);
+    if (refreshSettingsPanel) refreshSettingsPanel();
+    if (persist && onDim) onDim(state.dim);
+    if (n) cascade(dropStandIns, { colToggle: true, hand: true, from });
+    return state.dim;
+  }
   function setUnlinkedByFolder(on, persist, instant) {
     var next = !!on;
     var movesFrom = null;
@@ -5862,6 +7163,67 @@ function mountVaultGraph(root, data, deps) {
     attempt2(buildLegend);
     if (persist && onUnlinkedTintByFolder) onUnlinkedTintByFolder(unlinkedTintByFolder);
     return unlinkedTintByFolder;
+  }
+  function paintBars(map) {
+    var host = $("legend");
+    if (!host) return;
+    Array.prototype.forEach.call(
+      host.querySelectorAll(".lg[data-g]"),
+      /** @param {HTMLElement} el */
+      function(el) {
+        var g = el.getAttribute("data-g");
+        if (g === null || map[g] === void 0) return;
+        var v = map[g];
+        if (v <= 0) {
+          el.classList.remove("bar");
+          el.classList.remove("bar-out");
+          el.style.removeProperty("--vg-share");
+          return;
+        }
+        el.classList.add("bar");
+        el.classList.toggle("bar-out", !!barNow && !barNow[g]);
+        el.style.setProperty("--vg-share", (v * 100).toFixed(3) + "%");
+      }
+    );
+  }
+  function barWalkStart() {
+    barShown = null;
+    if (!countBars || !barPrev || !barNow) return false;
+    var moved = false;
+    Object.keys(barNow).forEach(function(g) {
+      var a = barPrev[g] === void 0 ? 0 : barPrev[g];
+      if (Math.abs(a - barNow[g]) > 5e-4) moved = true;
+    });
+    if (!moved) return false;
+    var from = dict();
+    Object.keys(barNow).forEach(function(g) {
+      from[g] = barPrev && barPrev[g] !== void 0 ? barPrev[g] : 0;
+    });
+    barShown = from;
+    paintBars(from);
+    return true;
+  }
+  function barWalkTick(e) {
+    if (!barShown || !barNow) return;
+    var at = dict();
+    Object.keys(barNow).forEach(function(g) {
+      var a = barShown[g] === void 0 ? 0 : barShown[g];
+      at[g] = a + (barNow[g] - a) * e;
+    });
+    paintBars(at);
+  }
+  function barWalkEnd() {
+    if (!barShown) return;
+    barShown = null;
+    if (barNow) paintBars(barNow);
+  }
+  function setCountBars(on, persist) {
+    countBars = !!on;
+    var btn = $("opt-countBars");
+    if (btn) btn.setAttribute("aria-pressed", countBars ? "true" : "false");
+    attempt2(buildLegend);
+    if (persist && onCountBars) onCountBars(countBars);
+    return countBars;
   }
   function savePng() {
     var canvases = renderer.getCanvases();
@@ -5957,7 +7319,7 @@ function mountVaultGraph(root, data, deps) {
   function buildStats() {
     var s = DATA.stats;
     $("vname").textContent = DATA.vault + " graph";
-    setHTML($("stats"), "<b>" + s.nodes + "</b> notes &middot; <b>" + s.edges + "</b> links &middot; <b>" + s.orphans + "</b> unlinked<br><b>" + s.unresolved + "</b> link(s) point at notes that do not exist" + (s.ghostsIncluded ? " (shown as ghosts)" : " (hidden)") + "<br>" + (s.templatesExcluded ? "Templates excluded. " : "") + "Generated " + esc(DATA.generated));
+    setHTML($("stats"), "<b>" + s.nodes + "</b> notes &middot; <b>" + s.edges + "</b> links &middot; <b>" + s.orphans + "</b> unlinked<br><b>" + s.unresolved + "</b> link(s) point at notes that do not exist" + (s.ghostsIncluded ? " (shown as ghosts)" : " (hidden)") + "<br>" + (s.templatesExcluded ? "Templates excluded. " : "") + "Generated " + esc(DATA.generated) + (DATA.version ? " &middot; v" + esc(DATA.version) : ""));
   }
   function esc(s) {
     return String(s).replace(
@@ -5994,6 +7356,10 @@ function mountVaultGraph(root, data, deps) {
   var heat = null;
   var heatSig = "";
   var heatRz = null;
+  invalidatesOnData("heatmap tally", function() {
+    heatSig = "";
+    if (heat) heatBuild();
+  });
   function heatParse(s) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
     return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN;
@@ -6039,6 +7405,7 @@ function mountVaultGraph(root, data, deps) {
     var before = 0, after = 0, undated = 0;
     var all = dict();
     graph.forEachNode(function(id, a) {
+      if (a.dupOf && !a.standIn) return;
       var k2 = a.created;
       if (!heatParse(k2)) {
         undated++;
@@ -6097,7 +7464,7 @@ function mountVaultGraph(root, data, deps) {
     cv.style.height = heat.h + "px";
     var inWin = 0;
     for (var i = 0; i < keys.length; i++) inWin += days[keys[i]].ids.length;
-    $("heatnote").textContent = "last " + cols + " weeks \xB7 " + inWin + " of " + graph.order + " notes" + (before ? " \xB7 " + before + " earlier" : "") + (after ? " \xB7 " + after + " later" : "") + (undated ? " \xB7 " + undated + " undated" : "");
+    $("heatnote").textContent = "last " + cols + " weeks \xB7 " + inWin + " of " + (graph.order - standIns.length) + " notes" + (before ? " \xB7 " + before + " earlier" : "") + (after ? " \xB7 " + after + " later" : "") + (undated ? " \xB7 " + undated + " undated" : "");
     heatSig = "";
     heatDraw();
   }
@@ -6150,6 +7517,7 @@ function mountVaultGraph(root, data, deps) {
       sig.push(Math.ceil(heat.days[heat.keys[i]].n * 4));
     }
     sig.push(state.markDay || "", state.hoverDay || "", heat.cell);
+    if (standIns.length) sig.push("s" + lastCascade.frames);
     sig = sig.join(",");
     if (sig === heatSig) return;
     heatSig = sig;
@@ -6877,20 +8245,246 @@ function mountVaultGraph(root, data, deps) {
   function demoOn() {
     return /(^|[?&#])demo\b/.test(String(location.search) + " " + String(location.hash));
   }
+  var LIVE_MAX_CHANGED = 200;
+  var livePending = null;
+  var liveTimer = null;
+  var LIVE_IDLE_MS = 120;
+  var dragging = false;
+  var dragEndedAt = -1e9;
+  var dragStartedAt = 0;
+  var DRAG_GRACE_MS = 250;
+  var DRAG_MAX_MS = 6e4;
+  function dragOwnsFrames() {
+    if (dragging && NOW() - dragStartedAt > DRAG_MAX_MS) dragging = false;
+    return dragging || NOW() - dragEndedAt < DRAG_GRACE_MS;
+  }
+  function liveBusy() {
+    return !!(cascadeRun || anim || play || dragOwnsFrames());
+  }
+  function liveWhy() {
+    return cascadeRun ? "cascade" : anim ? "tween" : play ? "timeline" : dragOwnsFrames() ? "drag" : "";
+  }
+  function placeKeyOf(n) {
+    return n.label + "	" + n.folder + "	" + (n.sub || "") + "	" + (n.dirs || []).join("/") + "	" + (n.type || "") + "	" + (n.tags || []).join(",") + "	" + (n.created || "") + "	" + (n.touched || "") + "	" + n.deg + "	" + (n.ghost ? "1" : "");
+  }
+  function linkWeights(src) {
+    var m = dict();
+    src.edges.forEach(function(e) {
+      var a = src.nodes[e.s], b = src.nodes[e.t];
+      if (!a || !b) return;
+      var lo = a.id < b.id ? a.id : b.id, hi = a.id < b.id ? b.id : a.id;
+      (m[lo] || (m[lo] = dict()))[hi] = e.w;
+    });
+    return m;
+  }
+  function diffData(was, now) {
+    var old = dict();
+    was.nodes.forEach(function(n) {
+      old[n.id] = n;
+    });
+    var d = { added: [], removed: [], replaced: [], links: false, words: [] };
+    var seen = dict();
+    now.nodes.forEach(function(n) {
+      seen[n.id] = 1;
+      var o = old[n.id];
+      if (!o) {
+        d.added.push(n.id);
+        return;
+      }
+      if (placeKeyOf(o) !== placeKeyOf(n)) d.replaced.push(n.id);
+      else if ((o.words || 0) !== (n.words || 0)) d.words.push(n.id);
+    });
+    was.nodes.forEach(function(n) {
+      if (!seen[n.id]) d.removed.push(n.id);
+    });
+    var wa = linkWeights(was), wb = linkWeights(now);
+    var missing = function(x, y) {
+      return Object.keys(x).some(function(lo) {
+        var row = x[lo], other = y[lo];
+        return Object.keys(row).some(function(hi) {
+          return !other || other[hi] !== row[hi];
+        });
+      });
+    };
+    d.links = missing(wa, wb) || missing(wb, wa);
+    return d;
+  }
+  function applyData(next, opts) {
+    if (dead) return { applied: false, reason: "torn down" };
+    if (!next || !next.nodes || !next.edges) return { applied: false, reason: "not a build" };
+    var renames = opts && opts.renames || dict();
+    if (liveBusy()) {
+      livePending = { data: next, renames };
+      if (liveTimer === null) liveTimer = WIN.setInterval(drainLive, LIVE_IDLE_MS);
+      return { applied: false, reason: "busy", busy: liveWhy(), queued: true };
+    }
+    var held = dict();
+    var posOf = dict();
+    var alphaOf = dict();
+    var groupWas = dict();
+    graph.forEachNode(function(id, a) {
+      held[a.path] = id;
+      posOf[a.path] = { x: a.x, y: a.y };
+      alphaOf[a.path] = alpha[id] || 0;
+      groupWas[a.path] = groupOf(id);
+    });
+    Object.keys(renames).forEach(function(from) {
+      var to = renames[from];
+      if (!to || held[from] === void 0) return;
+      held[to] = held[from];
+      posOf[to] = posOf[from];
+      alphaOf[to] = alphaOf[from];
+      groupWas[to] = groupWas[from];
+      delete held[from];
+    });
+    var d = diffData(DATA, next);
+    var churn = d.added.length + d.removed.length + d.replaced.length;
+    if (churn > LIVE_MAX_CHANGED) {
+      return { applied: false, reason: "too much changed", churn, limit: LIVE_MAX_CHANGED };
+    }
+    if (!churn && !d.links) {
+      var wordsOf = dict();
+      next.nodes.forEach(function(n) {
+        wordsOf[n.id] = n.words || 0;
+      });
+      d.words.forEach(function(path) {
+        var id = idOfPath[path];
+        if (id !== void 0) graph.setNodeAttribute(id, "words", wordsOf[path] || 0);
+      });
+      DATA = next;
+      return {
+        applied: true,
+        reason: "words only",
+        added: 0,
+        removed: 0,
+        replaced: 0,
+        moved: 0,
+        cascaded: false
+      };
+    }
+    DATA = next;
+    ingest(next, function(path) {
+      return held[path];
+    });
+    graph.forEachNode(function(id, a) {
+      var p = posOf[a.path];
+      if (p) graph.mergeNodeAttributes(id, { x: p.x, y: p.y });
+      alpha[id] = p ? alphaOf[a.path] || 0 : 0;
+    });
+    onData.forEach(function(h) {
+      attempt2(h.fn);
+    });
+    var ringsDim = geomLock ? geomLock.dim : null;
+    hardRelayout(false, true, true);
+    if (ringsDim && ringsDim !== state.dim) keepRings(ringsIn(ringsDim));
+    var movesFrom = null;
+    var moved = 0;
+    graph.forEachNode(function(id, a) {
+      var g0 = groupWas[a.path];
+      if (g0 === void 0 || (alphaOf[a.path] || 0) <= 4e-3) return;
+      if (g0 === groupOf(id)) return;
+      if (!movesFrom) movesFrom = dict();
+      movesFrom[id] = g0;
+      moved++;
+    });
+    attempt2(placeLogo);
+    attempt2(buildLegend);
+    attempt2(buildStats);
+    if (dateSpan) attempt2(drawDateUI);
+    cascade(null, { colToggle: true, movesFrom });
+    return {
+      applied: true,
+      reason: "",
+      added: d.added.length,
+      removed: d.removed.length,
+      replaced: d.replaced.length,
+      moved,
+      cascaded: true
+    };
+  }
+  function setWords(path, words) {
+    var id = idOfPath[path];
+    if (id === void 0 || !graph.hasNode(id)) return false;
+    graph.setNodeAttribute(id, "words", words);
+    return true;
+  }
+  function drainLive() {
+    if (dead || !livePending) {
+      stopDrain();
+      return;
+    }
+    if (liveBusy()) return;
+    var held = livePending;
+    livePending = null;
+    stopDrain();
+    attempt2(function() {
+      applyData(held.data, { renames: held.renames });
+    });
+  }
+  function stopDrain() {
+    if (liveTimer !== null) {
+      WIN.clearInterval(liveTimer);
+      liveTimer = null;
+    }
+  }
+  onDestroy.push(function() {
+    livePending = null;
+    stopDrain();
+  });
   var bootTimer = WIN.setTimeout(function() {
     if (dead) return;
     makeRenderer();
     API = window.__vg = {
       graph,
+      // github#72
+      applyData,
+      // github#120 -- NOT part of the debug API, because the host needs it in a
+      // github#120 -- the host asks before building, not only applying
+      interacting: dragOwnsFrames,
+      setWords,
       readTheme,
       get renderer() {
         return renderer;
       },
       placeLogo,
       palette: paletteInfo,
+      // github#77
+      slotContrast,
+      slotTitle,
+      previewLadder,
+      swatchPreview: swatchPreviewHTML,
+      previewSizes: function() {
+        return PREVIEW_R_PX.slice();
+      },
       groupOrder: function() {
         return (order[state.dim] || []).slice();
       },
+      // github#86, design/0015 -- one grouping's rows, whichever disc is on screen:
+      // github#86 -- what a settings surface needs to offer colours for it
+      groupsOf: (
+        /** @param {string} dim */
+        function(dim) {
+          return inDim(String(dim), function() {
+            return (order[state.dim] || []).map(function(g) {
+              return {
+                name: g,
+                n: counts[g] || 0,
+                slot: colorsFor()[g] || groupSlot[g] || "",
+                autoSlot: groupAutoSlot[g] || "",
+                pinned: !!colorsFor()[g],
+                shown: !hiddenByDefault(g),
+                subs: (subOrder[g] || []).map(function(sb) {
+                  return {
+                    name: sb,
+                    n: subCount[g + "/" + sb] || 0,
+                    pin: subColorsFor()[g + "/" + sb] || ""
+                  };
+                })
+              };
+            });
+          });
+        }
+      ),
       groupCount: (
         /** @param {string} g */
         function(g) {
@@ -6903,6 +8497,8 @@ function mountVaultGraph(root, data, deps) {
           return groupSlot[g] || "";
         }
       ),
+      // github#84
+      colorOf,
       autoSlotOf: (
         /** @param {string} g */
         function(g) {
@@ -6910,7 +8506,33 @@ function mountVaultGraph(root, data, deps) {
         }
       ),
       setFolderColors: applyFolderColors,
-      setSubfolderColors: applySubfolderColors,
+      setSubfolderColors: (
+        /** @param {Record<string, unknown>} m */
+        function(m) {
+          return applySubfolderColors(m, "folder");
+        }
+      ),
+      setTagColors: (
+        /** @param {Record<string, unknown>} m */
+        function(m) {
+          return applyFolderColors(m, "tag");
+        }
+      ),
+      setSubtagColors: (
+        /** @param {Record<string, unknown>} m */
+        function(m) {
+          return applySubfolderColors(m, "tag");
+        }
+      ),
+      get tagColors() {
+        return Object.assign(dict(), dimColors.tag);
+      },
+      get subtagColors() {
+        return Object.assign(dict(), dimSubColors.tag);
+      },
+      get tagShown() {
+        return Object.assign(dict(), dimShown.tag);
+      },
       setFolderShown: applyFolderShown,
       setPanEnabled: function(v) {
         return setPan(v !== false, false);
@@ -6923,12 +8545,38 @@ function mountVaultGraph(root, data, deps) {
       setUnlinkedByFolder: function(v) {
         return setUnlinkedByFolder(v !== false, false, true);
       },
+      // github#86, design/0015
+      setDim: (
+        /** @param {string} v */
+        function(v) {
+          return setDim(String(v), false, true);
+        }
+      ),
+      noteOf: (
+        /** @param {string} id */
+        function(id) {
+          return noteOf(String(id));
+        }
+      ),
+      filingOf: (
+        /** @param {string} id */
+        function(id) {
+          return {
+            g: fileGroup(String(id)),
+            sub: fileSub(String(id)),
+            dirs: fileDirs(String(id)).slice()
+          };
+        }
+      ),
       // github#41, design/0011
       setFitCap: function(v) {
         return setFitCap(v === true);
       },
       setUnlinkedTintByFolder: function(v) {
         return setUnlinkedTintByFolder(v === true, false);
+      },
+      setCountBars: function(v) {
+        return setCountBars(v !== false, false);
       },
       applyHiddenDefaults: function() {
         seedHidden();
@@ -7090,7 +8738,7 @@ function mountVaultGraph(root, data, deps) {
             r: Math.hypot(a.x, a.y),
             th: Math.atan2(a.y, a.x),
             rad: (d && renderer ? renderer.scaleSize(d.size) : 4) * perPx,
-            g: a.folder
+            g: groupOf(id)
           });
         });
         pts.sort(function(x, y) {
@@ -7309,9 +8957,12 @@ function mountVaultGraph(root, data, deps) {
       attempt2(onDestroy[i]);
     }
     onDestroy.length = 0;
-    if (renderer) attempt2(function() {
-      renderer.kill();
-    });
+    if (renderer) {
+      attempt2(function() {
+        renderer.kill();
+      });
+      renderer = null;
+    }
     if (window.__vg === API) delete window.__vg;
     API = null;
   }
@@ -7353,6 +9004,21 @@ var GraphStore = class {
     this.adjacency.set(id, /* @__PURE__ */ new Map());
     return id;
   }
+  /**
+   * github#86 -- drop a node and its edges; for the satellite dots
+   * github#86 -- the caller must follow with a full refresh
+   */
+  dropNode(id) {
+    const around = this.adjacency.get(id);
+    if (!around) throw new Error(`GraphStore: node "${id}" not found`);
+    for (const rec of Array.from(around.values())) {
+      const other = rec.source === id ? rec.target : rec.source;
+      this.neighboursOf(other).delete(id);
+      this.edgeRecords.delete(rec.key);
+    }
+    this.adjacency.delete(id);
+    this.nodeAttrs.delete(id);
+  }
   addUndirectedEdge(source, target, attrs) {
     const a = this.adjacency.get(source);
     const b = this.adjacency.get(target);
@@ -7365,6 +9031,12 @@ var GraphStore = class {
     a.set(target, rec);
     b.set(source, rec);
     return key;
+  }
+  // github#72, design/0014
+  clear() {
+    this.nodeAttrs.clear();
+    this.edgeRecords.clear();
+    this.adjacency.clear();
   }
   hasNode(id) {
     return this.nodeAttrs.has(id);
@@ -9433,12 +11105,15 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
       <!-- github#23 -->
       <div id="vg-optbody"></div>
       <div class="row" style="margin-bottom:7px">
-        <div class="lbl" style="margin:0">Folder colours</div>
-        <div class="mini"><button id="vg-fcreset" title="Drop every folder AND subfolder override and go back to the automatic order">Reset</button></div>
+        <div class="lbl" style="margin:0">Group colours</div>
+        <div class="mini"><button id="vg-fcreset" title="Drop every override for the grouping shown, group and sub-wedge, and go back to the automatic order">Reset</button></div>
       </div>
       <div id="vg-setbody"></div>
       <p class="hint">Twelve slots, handed out in folder order and round again. Setting
-        one folder never moves another, and two folders may share a colour.</p>
+        one folder never moves another, and two folders may share a colour.
+        Each swatch shows the slot at the sizes the disc really draws, over both
+        grounds. Its contrast figure is for a <em>solid area</em> of the colour; a
+        dot a pixel across is mostly antialiasing and reads lower than the number.</p>
     </div>
 
     <div class="block">
@@ -9450,12 +11125,23 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
       <div id="vg-hits"></div>
     </div>
 
+    <!-- github#131, design/0019 -- two readings, one column. The readings are plain
+         wrappers on purpose: \`hidden\` is unreliable on anything this stylesheet gives a
+         display of its own, and hiding a wrapper sidesteps that for everything inside it. -->
     <div class="block">
-      <div class="row" style="margin-bottom:7px">
-        <div class="lbl" style="margin:0">Groups <span id="vg-gcount" class="val"></span></div>
-        <div class="mini"><button id="vg-allon">All</button><button id="vg-alloff">None</button></div>
+      <div id="vg-tabs" class="tabs" role="tablist" aria-label="Sidebar reading">
+        <button id="vg-tabgroups" type="button" class="tab" role="tab"
+                aria-selected="true" aria-controls="vg-readgroups">Groups</button>
+        <button id="vg-tabnote" type="button" class="tab" role="tab" disabled
+                aria-selected="false" aria-controls="vg-readnote"
+                title="Click a note on the disc to read it here">Selected note</button>
       </div>
-      <div id="vg-legend"></div>
+      <div id="vg-readgroups" role="tabpanel" aria-labelledby="vg-tabgroups">
+        <span id="vg-dim" class="dimseg dimfull" role="group" aria-label="Group the disc by"><button type="button" data-dim="folder" aria-pressed="true" title="Cut the disc by folder"><span class="dimnm">Folders</span><span class="dimct"></span></button><button type="button" data-dim="tag" aria-pressed="false" title="Cut the disc by tag: the first tag a note lists files it"><span class="dimnm">Tags</span><span class="dimct"></span></button></span>
+        <div class="mini dimall"><button id="vg-allon">All</button><button id="vg-alloff">None</button></div>
+        <div id="vg-legend"></div>
+      </div>
+      <div id="vg-readnote" role="tabpanel" aria-labelledby="vg-tabnote" hidden></div>
     </div>
 
     <div class="block">
@@ -9539,6 +11225,14 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
           </svg>
         </button>
       </div>
+      <!-- github#79 -- a sibling of the cluster, not a fifth button in it: the cluster's own
+           check pins four 31px buttons and their box. Absent entirely while the whole disc is
+           in view; it appears left of the pan button once zoom or a pan crops the disc. -->
+      <button id="vg-ov" type="button" hidden
+              title="Where the frame sits on the disc. Click to fit."
+              aria-label="Where the frame sits on the disc. Click to fit.">
+        <canvas aria-hidden="true"></canvas>
+      </button>
       <div id="vg-tip" hidden></div>
       <!-- github#73 -->
       <div id="vg-mob" role="group" aria-label="Panels">
@@ -9600,9 +11294,169 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
 // b64::assets/logo-mask.png
 var logo_mask_default = "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";
 
+// raw::plugin/whats-new.md
+var whats_new_default = "<!--\n  The update note the plugin shows ONCE, on the first open after a MINOR or MAJOR update\n  (github#83, design/0016). Three line kinds, in any order after the heading:\n\n    # 2.6.0          the release this note is for -- one per file, and it must be the one\n                     being cut, or the strip stays silent rather than showing a stale note\n    - <text>         up to five bullets, plain text: what you can now do, not how it was\n                     built. No markup, no images, no links -- the strip builds its own\n    > vg-dim         up to four control ids from src/page.html: what this release ADDED.\n                     They pulse while the note is up and stop when it is dismissed. Leave\n                     the line out when a release adds no control of its own\n\n  The strip links out on its own: one link per release between the version last seen and\n  this one, oldest first, plus the feature gallery. The release branch rewrites this file\n  beside the CHANGELOG entry; a PATCH leaves it as it is, and shows nothing.\n  scripts/build-plugin.mjs refuses a file that breaks any of that.\n-->\n# 2.7.0\n- Click a note and the sidebar reads it. Nothing lands over the disc any more.\n- The sidebar holds two readings, Groups and Selected note. The tabs at its top switch between them, and each one keeps its own scroll position.\n- Close the note, or click empty space, and you are back on the groupings where you left them.\n- The disc fills more of the window, and a square pane gains the most.\n- Panning no longer freezes when notes arrive under it.\n> vg-tabs\n";
+
+// vg::vg:releases
+var vg_releases_default = [{ "version": "2.7.0", "name": "Reader" }, { "version": "2.6.0", "name": "Minimap" }, { "version": "2.5.0", "name": "Tags" }, { "version": "2.4.1", "name": "" }, { "version": "2.4.0", "name": "Auto" }, { "version": "2.3.0", "name": "Gauge" }, { "version": "2.2.0", "name": "Fold" }, { "version": "2.1.0", "name": "Mobile" }, { "version": "2.0.0", "name": "Own Engine" }, { "version": "1.9.0", "name": "Belonging" }, { "version": "1.8.0", "name": "The Hub" }, { "version": "1.7.0", "name": "" }, { "version": "1.6.1", "name": "" }, { "version": "1.6.0", "name": "" }, { "version": "1.5.3", "name": "" }, { "version": "1.5.2", "name": "" }, { "version": "1.5.1", "name": "" }, { "version": "1.5.0", "name": "" }, { "version": "1.4.4", "name": "" }, { "version": "1.4.3", "name": "" }, { "version": "1.4.2", "name": "" }, { "version": "1.4.1", "name": "" }, { "version": "1.4.0", "name": "" }, { "version": "1.3.0", "name": "" }, { "version": "1.2.0", "name": "" }, { "version": "1.1.1", "name": "" }, { "version": "1.1.0", "name": "" }];
+
+// plugin/update-note.mjs
+var NOTE_MAX_BYTES = 4096;
+var NOTE_MAX_LINES = 5;
+var NOTE_MAX_LINE_CHARS = 160;
+var SEMVER = /^(\d+)\.(\d+)\.(\d+)$/;
+var CHAIN_MAX = 8;
+var POINTS_MAX = 4;
+var POINT_ID = /^vg-[a-z0-9-]+$/;
+function semver(v) {
+  const m = SEMVER.exec(String(v || "").trim());
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : null;
+}
+function minorOf(v) {
+  const p = semver(v);
+  return p ? p[0] + "." + p[1] : "";
+}
+function compare(a, b) {
+  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1;
+  return 0;
+}
+function parseNote(text) {
+  const src = String(text || "");
+  const problems = [];
+  const lines = [];
+  const points = [];
+  let version = "";
+  let inComment = false;
+  src.split(/\r?\n/).forEach((raw, i) => {
+    let line = raw;
+    if (inComment) {
+      const end = line.indexOf("-->");
+      if (end < 0) return;
+      inComment = false;
+      line = line.slice(end + 3);
+    }
+    line = line.replace(/<!--[\s\S]*?-->/g, " ");
+    const open = line.indexOf("<!--");
+    if (open >= 0) {
+      inComment = true;
+      line = line.slice(0, open);
+    }
+    line = line.replace(/\s+/g, " ").trim();
+    if (!line) return;
+    const at = "line " + (i + 1) + ": ";
+    if (!version) {
+      const m = /^#\s+(\S+)$/.exec(line);
+      if (m && semver(m[1])) {
+        version = m[1];
+        return;
+      }
+      problems.push(at + 'expected "# <MAJOR.MINOR.PATCH>" first, got ' + JSON.stringify(line));
+      return;
+    }
+    if (line.startsWith("- ")) {
+      const bullet = line.slice(2).trim();
+      if (!bullet) {
+        problems.push(at + "empty bullet");
+        return;
+      }
+      if (bullet.length > NOTE_MAX_LINE_CHARS) {
+        problems.push(at + "bullet is " + bullet.length + " characters, at most " + NOTE_MAX_LINE_CHARS);
+      }
+      lines.push(bullet);
+      return;
+    }
+    if (line.startsWith("> ")) {
+      for (const id of line.slice(2).split(/[\s,]+/).filter(Boolean)) {
+        if (!POINT_ID.test(id)) {
+          problems.push(at + "not a control id: " + JSON.stringify(id));
+          continue;
+        }
+        if (!points.includes(id)) points.push(id);
+      }
+      return;
+    }
+    if (line.startsWith("#")) {
+      problems.push(at + "a second heading -- one release per file");
+      return;
+    }
+    problems.push(at + 'not a "- " bullet: ' + JSON.stringify(line));
+  });
+  if (!version) problems.push('no "# <version>" heading');
+  if (!lines.length) problems.push("no bullets");
+  if (lines.length > NOTE_MAX_LINES) problems.push(lines.length + " bullets, at most " + NOTE_MAX_LINES);
+  if (points.length > POINTS_MAX) problems.push(points.length + " controls pointed at, at most " + POINTS_MAX);
+  const bytes2 = new TextEncoder().encode(src).length;
+  if (bytes2 > NOTE_MAX_BYTES) problems.push(bytes2 + " bytes, at most " + NOTE_MAX_BYTES);
+  const body = lines.join("\n");
+  if (/\bdata:[\w.+-]+\/[\w.+-]+[;,]/i.test(body)) problems.push("carries a data: URI -- the note is text, link out instead");
+  if (/<[a-z!/]/i.test(body)) problems.push("carries markup -- the note is text");
+  return { note: problems.length ? null : { version, lines, points }, problems };
+}
+function releaseChain(a) {
+  const seen = a.lastSeen ? semver(a.lastSeen) : null;
+  const top = semver(a.note.version);
+  if (!seen || !top) return [{ version: a.note.version, name: nameOf(a.releases, a.note.version) }];
+  const out = [];
+  for (const r of a.releases) {
+    const v = semver(r.version);
+    if (!v || v[2] !== 0) continue;
+    if (compare(v, seen) <= 0 || compare(v, top) > 0) continue;
+    if (!out.some((o) => o.version === r.version)) out.push(r);
+  }
+  if (!out.some((o) => o.version === a.note.version)) out.push({ version: a.note.version, name: "" });
+  out.sort((x, y) => compare(
+    /** @type {number[]} */
+    semver(x.version),
+    /** @type {number[]} */
+    semver(y.version)
+  ));
+  return out;
+}
+function nameOf(releases, version) {
+  const hit = releases.find((r) => r.version === version);
+  return hit ? hit.name : "";
+}
+function decideNote(a) {
+  const installed = semver(a.installed);
+  if (!installed) return { show: null, record: false, why: "installed version is not semver" };
+  if (!a.hadData) return { show: null, record: true, why: "fresh install" };
+  const seen = a.lastSeen ? semver(a.lastSeen) : null;
+  if (a.lastSeen && !seen) return { show: null, record: true, why: "lastSeenVersion is not semver" };
+  if (seen) {
+    const c = compare(installed, seen);
+    if (c === 0) return { show: null, record: false, why: "already seen" };
+    if (c < 0) return { show: null, record: true, why: "downgrade" };
+    if (minorOf(a.lastSeen || "") === minorOf(a.installed)) return { show: null, record: true, why: "patch" };
+  }
+  if (a.note && minorOf(a.note.version) === minorOf(a.installed)) {
+    return { show: a.note, record: false, why: seen ? "minor or major bump" : "upgrade from before update notes" };
+  }
+  return {
+    show: null,
+    record: true,
+    why: a.note ? "the note is for " + a.note.version + ", not " + a.installed : "no note"
+  };
+}
+
 // plugin/main.js
 var VIEW_TYPE = "vault-graph-view";
 var ICON_ID = "vault-graph-disc";
+var LIVE_DEBOUNCE_MS = 1e3;
+var LIVE_WAKE_MS = 500;
+function pathMap() {
+  const o = /* @__PURE__ */ Object.create(null);
+  return (
+    /** @type {Record<string, string>} */
+    o
+  );
+}
+function bareMap() {
+  const o = /* @__PURE__ */ Object.create(null);
+  return (
+    /** @type {Record<string, T>} */
+    o
+  );
+}
 function discIcon() {
   const ring = (r, dot, slots2, offset) => {
     let out = "";
@@ -9636,6 +11490,10 @@ var attempt = (fn) => {
     return e;
   }
 };
+var RELEASE_URL = "https://github.com/luke321/vault-graph/releases/tag/";
+var RELEASES_URL = "https://github.com/luke321/vault-graph/releases";
+var NEW_CLASS = "vg-new";
+var GALLERY_URL = "https://luke321.github.io/vault-graph/features.html";
 var walkOrder = (a, b) => {
   const sa = a.split("/"), sb = b.split("/");
   const n = Math.min(sa.length, sb.length);
@@ -9700,7 +11558,7 @@ async function readFolders(app) {
   const dailyDir = dn.trim() ? norm(dn) : "";
   return { templateDirs: Array.from(dirs), dailyDir };
 }
-async function buildData(app, opts) {
+async function buildData(app, opts, version) {
   const t0 = performance.now();
   const folders = await readFolders(app);
   const templateDirs = folders.templateDirs, dailyDir = folders.dailyDir;
@@ -9795,11 +11653,12 @@ async function buildData(app, opts) {
   }
   const tEdges = performance.now();
   const wordFiles = opts.words ? nodes.map((n) => n._file || null) : null;
-  const readWords = async (apply) => {
+  const readWords = async (apply, only) => {
     const t = performance.now();
     if (!wordFiles) return 0;
     await Promise.all(wordFiles.map(async (file, i) => {
       if (!file) return;
+      if (only && !only.has(file.path)) return;
       let words = 0;
       try {
         const raw = await app.vault.cachedRead(file);
@@ -9835,6 +11694,7 @@ async function buildData(app, opts) {
   const now = /* @__PURE__ */ new Date();
   return {
     vault: app.vault.getName(),
+    version,
     generated: now.getFullYear() + "-" + p2(now.getMonth() + 1) + "-" + p2(now.getDate()) + " " + p2(now.getHours()) + ":" + p2(now.getMinutes()),
     nodes: out,
     edges,
@@ -9866,7 +11726,7 @@ async function buildData(app, opts) {
     }
   };
 }
-var VaultGraphView = class extends import_obsidian.ItemView {
+var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
   /**
    * @param {import("obsidian").WorkspaceLeaf} leaf
    * @param {VaultGraphPlugin} plugin
@@ -9877,6 +11737,16 @@ var VaultGraphView = class extends import_obsidian.ItemView {
     this.handle = null;
     this.lastData = null;
     this.mountMs = 0;
+    this.liveTimer = null;
+    this.pendingRenames = pathMap();
+    this.dirtyPaths = /* @__PURE__ */ new Set();
+    this.liveBuilding = false;
+    this.liveAgain = false;
+    this.liveDeferred = false;
+    this.liveWake = null;
+    this.lastLive = null;
+    this.cssRef = null;
+    this.liveRefs = null;
   }
   getViewType() {
     return VIEW_TYPE;
@@ -9895,11 +11765,170 @@ var VaultGraphView = class extends import_obsidian.ItemView {
   }
   // github#62
   teardown() {
+    this.cancelLive();
     if (this.handle) {
       attempt(() => this.handle.destroy());
     }
     this.handle = null;
     this.contentEl.empty();
+  }
+  /* ------------------------------------------------------- live rebuild (github#72) */
+  liveOn() {
+    return this.plugin.settings.liveRefresh !== false;
+  }
+  cancelLive() {
+    if (this.liveTimer !== null) {
+      window.clearTimeout(this.liveTimer);
+      this.liveTimer = null;
+    }
+    this.stopLiveWake();
+    this.dirtyPaths.clear();
+    this.pendingRenames = pathMap();
+    this.liveAgain = false;
+    this.liveDeferred = false;
+  }
+  // github#120 -- is a hand on the disc? absent on an older page
+  interacting() {
+    const api = this.handle && this.handle.api;
+    return !!(api && typeof api.interacting === "function" && api.interacting());
+  }
+  // github#72, design/0014
+  startLiveWake() {
+    if (this.liveWake !== null) return;
+    this.liveWake = window.setInterval(() => {
+      if (!this.liveVisible() || this.interacting()) return;
+      this.stopLiveWake();
+      this.scheduleLive();
+    }, LIVE_WAKE_MS);
+  }
+  stopLiveWake() {
+    if (this.liveWake !== null) {
+      window.clearInterval(this.liveWake);
+      this.liveWake = null;
+    }
+  }
+  // github#72, design/0014
+  liveVisible() {
+    const el = this.containerEl;
+    return !!(el && el.offsetParent !== null);
+  }
+  // github#72, design/0014
+  liveSettingChanged() {
+    if (!this.liveOn()) this.cancelLive();
+  }
+  // github#72, design/0014
+  // github#120 -- ONCE FOR THE VIEW'S LIFE, NOT ONCE PER RENDER
+  subscribeLive() {
+    if (this.liveRefs) return;
+    const cache2 = this.app.metadataCache, vault = this.app.vault;
+    const refs = [];
+    this.liveRefs = refs;
+    const keep = (
+      /** @param {EventRef} r */
+      (r) => {
+        refs.push(r);
+        this.registerEvent(r);
+      }
+    );
+    keep(cache2.on("resolved", () => this.scheduleLive()));
+    keep(cache2.on("changed", (file) => this.scheduleLive(file && file.path)));
+    keep(vault.on("create", (file) => this.scheduleLive(file && file.path)));
+    keep(vault.on("delete", (file) => this.scheduleLive(file && file.path)));
+    keep(vault.on("rename", (file, oldPath) => {
+      const to = file && file.path;
+      if (to && oldPath) {
+        let from = oldPath;
+        for (const k of Object.keys(this.pendingRenames)) {
+          if (this.pendingRenames[k] === oldPath) {
+            from = k;
+            break;
+          }
+        }
+        this.pendingRenames[from] = to;
+        this.dirtyPaths.add(oldPath);
+      }
+      this.scheduleLive(to);
+    }));
+  }
+  /** @param {string} [path] */
+  scheduleLive(path) {
+    if (!this.liveOn() || !this.handle) return;
+    if (path) this.dirtyPaths.add(path);
+    if (this.liveTimer !== null) window.clearTimeout(this.liveTimer);
+    this.liveTimer = window.setTimeout(() => {
+      this.liveTimer = null;
+      void this.liveRebuild();
+    }, LIVE_DEBOUNCE_MS);
+  }
+  // github#72, design/0014 -- whether the disc MOVES is applyData's call, not this one's
+  async liveRebuild() {
+    const handle = this.handle;
+    const api = handle && handle.api;
+    if (!api || typeof api.applyData !== "function") return;
+    if (!this.liveVisible()) {
+      this.liveDeferred = true;
+      this.startLiveWake();
+      return;
+    }
+    if (this.interacting()) {
+      this.liveDeferred = true;
+      this.startLiveWake();
+      return;
+    }
+    this.liveDeferred = false;
+    this.stopLiveWake();
+    if (this.liveBuilding) {
+      this.liveAgain = true;
+      return;
+    }
+    this.liveBuilding = true;
+    const dirty = this.dirtyPaths;
+    this.dirtyPaths = /* @__PURE__ */ new Set();
+    const renames = this.pendingRenames;
+    this.pendingRenames = pathMap();
+    try {
+      const next = await buildData(this.app, this.plugin.settings, this.plugin.manifest.version);
+      if (this.handle !== handle || handle.api !== api) return;
+      const had = /* @__PURE__ */ new Map();
+      for (const n of this.lastData ? this.lastData.nodes : []) had.set(n.id, n.words || 0);
+      const cameFrom = /* @__PURE__ */ new Map();
+      for (const from of Object.keys(renames)) cameFrom.set(renames[from], from);
+      const wordsBefore = (path) => {
+        const was = cameFrom.get(path);
+        return had.has(path) ? had.get(path) : was !== void 0 ? had.get(was) : void 0;
+      };
+      for (const n of next.nodes) {
+        const before = wordsBefore(n.id);
+        if (!dirty.has(n.id) && before !== void 0) n.words = before;
+      }
+      const r = api.applyData(next, { renames });
+      this.lastLive = r;
+      if (r && r.churn !== void 0) {
+        this.lastData = null;
+        await this.render();
+        return;
+      }
+      this.lastData = next;
+      if (!this.plugin.settings.words) return;
+      const want = new Set(dirty);
+      for (const n of next.nodes) if (wordsBefore(n.id) === void 0) want.add(n.id);
+      if (!want.size) return;
+      void next.readWords((i, words) => {
+        const node = next.nodes[i];
+        if (!node) return;
+        node.words = words;
+        if (this.handle === handle && handle.api === api) api.setWords(node.id, words);
+      }, want).catch(() => {
+      });
+    } catch (e) {
+      new import_obsidian.Notice("Vault Graph: live refresh failed -- " + (e instanceof Error ? e.message : String(e)));
+    } finally {
+      this.liveBuilding = false;
+      if (this.liveAgain) {
+        this.liveAgain = false;
+        this.scheduleLive();
+      }
+    }
   }
   syncTheme() {
     if (!this.page) return;
@@ -9916,11 +11945,70 @@ var VaultGraphView = class extends import_obsidian.ItemView {
       });
     }
   }
+  /* ------------------------------------------------------ update note (github#83) */
+  // github#83, design/0016 -- above the page root, so the page's own resize path re-fits
+  mountNote() {
+    const note = this.plugin.pendingNote;
+    if (!note) return;
+    const strip = this.contentEl.createDiv({ cls: "vg-whatsnew", attr: { role: "status" } });
+    const head = strip.createDiv({ cls: "vg-whatsnew-head" });
+    head.createEl("strong", { text: "What's new in Vault Graph " + minorOf(note.version) });
+    const links = { target: "_blank", rel: "noopener" };
+    const chain = head.createSpan({ cls: "vg-whatsnew-chain" });
+    const all = this.plugin.pendingChain;
+    const shown = all.length > CHAIN_MAX ? all.slice(all.length - CHAIN_MAX) : all;
+    if (shown.length < all.length) {
+      chain.createEl("a", {
+        text: "\u2026",
+        href: RELEASES_URL,
+        attr: Object.assign({ title: all.length - shown.length + " earlier releases" }, links)
+      });
+      chain.appendText(" \u2013 ");
+    }
+    shown.forEach((r, i) => {
+      if (i) chain.appendText(" \u2013 ");
+      chain.createEl("a", {
+        text: r.version,
+        href: RELEASE_URL + r.version,
+        attr: r.name ? Object.assign({ title: r.name }, links) : links
+      });
+    });
+    head.createEl("a", { text: "Feature gallery", href: GALLERY_URL, attr: links });
+    const list = strip.createEl("ul");
+    for (const line of note.lines) list.createEl("li", { text: line });
+    const ok = strip.createEl("button", { text: "Got it", cls: "vg-whatsnew-ok", attr: { type: "button" } });
+    this.registerDomEvent(ok, "click", () => {
+      void this.dismissNote(strip);
+    });
+  }
+  // github#83, design/0016 -- the controls the note points at, pulsing while it is up
+  markNew() {
+    const note = this.plugin.pendingNote;
+    if (!note || !this.page) return;
+    for (const id of note.points) {
+      const el = this.page.querySelector("#" + id);
+      if (el instanceof HTMLElement) el.addClass(NEW_CLASS);
+    }
+  }
+  // github#83 -- dismissing is the write that marks the version seen
+  /** @param {HTMLElement} strip */
+  async dismissNote(strip) {
+    strip.remove();
+    this.plugin.pendingNote = null;
+    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) {
+      if (leaf.view instanceof _VaultGraphView) {
+        leaf.view.contentEl.querySelectorAll(".vg-whatsnew").forEach((el) => el.remove());
+        leaf.view.contentEl.querySelectorAll("." + NEW_CLASS).forEach((el) => el.removeClass(NEW_CLASS));
+      }
+    }
+    await this.plugin.recordVersion();
+  }
   async render() {
     this.teardown();
     const root = this.contentEl;
     root.addClass("vault-graph-view");
-    const data = await buildData(this.app, this.plugin.settings);
+    this.mountNote();
+    const data = await buildData(this.app, this.plugin.settings, this.plugin.manifest.version);
     this.lastData = data;
     const parsed = new DOMParser().parseFromString(page_default, "text/html");
     const page = parsed.body.firstElementChild;
@@ -9928,7 +12016,11 @@ var VaultGraphView = class extends import_obsidian.ItemView {
     root.appendChild(page);
     this.page = page;
     this.syncTheme();
-    this.registerEvent(this.app.workspace.on("css-change", () => this.syncTheme()));
+    this.markNew();
+    if (!this.cssRef) {
+      this.cssRef = this.app.workspace.on("css-change", () => this.syncTheme());
+      this.registerEvent(this.cssRef);
+    }
     const t0 = performance.now();
     this.handle = mountVaultGraph(page, data, {
       Graph: GraphStore,
@@ -9936,6 +12028,25 @@ var VaultGraphView = class extends import_obsidian.ItemView {
       logoMask: "data:image/png;base64," + logo_mask_default,
       folderColors: this.plugin.settings.folderColors,
       subfolderColors: this.plugin.settings.subfolderColors,
+      // github#86 -- every grouping keeps its own pins
+      tagColors: this.plugin.settings.tagColors,
+      subtagColors: this.plugin.settings.subtagColors,
+      tagShown: this.plugin.settings.tagShown,
+      /** @param {Record<string, string>} map */
+      onTagColors: async (map) => {
+        this.plugin.settings.tagColors = map;
+        await this.plugin.saveSettings();
+      },
+      /** @param {Record<string, string>} map */
+      onSubtagColors: async (map) => {
+        this.plugin.settings.subtagColors = map;
+        await this.plugin.saveSettings();
+      },
+      /** @param {Record<string, boolean>} map */
+      onTagShown: async (map) => {
+        this.plugin.settings.tagShown = map;
+        await this.plugin.saveSettings();
+      },
       /** @param {Record<string, string>} map */
       onFolderColors: async (map) => {
         this.plugin.settings.folderColors = map;
@@ -9974,11 +12085,25 @@ var VaultGraphView = class extends import_obsidian.ItemView {
         this.plugin.settings.unlinkedByFolder = !!v;
         await this.plugin.saveSettings();
       },
+      // github#78, design/0006
+      countBars: this.plugin.settings.countBars,
+      /** @param {boolean} v */
+      onCountBars: async (v) => {
+        this.plugin.settings.countBars = !!v;
+        await this.plugin.saveSettings();
+      },
       // github#3
       unlinkedTintByFolder: this.plugin.settings.unlinkedTintByFolder,
       /** @param {boolean} v */
       onUnlinkedTintByFolder: async (v) => {
         this.plugin.settings.unlinkedTintByFolder = !!v;
+        await this.plugin.saveSettings();
+      },
+      // github#86, design/0015, decisions/0009 -- the host only remembers it
+      dim: this.plugin.settings.dim,
+      /** @param {"folder" | "tag"} v */
+      onDim: async (v) => {
+        this.plugin.settings.dim = v === "tag" ? "tag" : "folder";
         await this.plugin.saveSettings();
       },
       // github#82, decisions/0009 -- no tab row; absent = width decides
@@ -10019,14 +12144,17 @@ var VaultGraphView = class extends import_obsidian.ItemView {
     this.mountMs = Math.round(performance.now() - t0);
     const handle = this.handle;
     void data.readWords((i, words) => {
-      data.nodes[i].words = words;
+      const node = data.nodes[i];
+      if (!node) return;
+      node.words = words;
       const api = handle.api;
-      if (api && api.graph && this.handle === handle) api.graph.setNodeAttribute(String(i), "words", words);
+      if (api && api.setWords && this.handle === handle) api.setWords(node.id, words);
     }).then((ms) => {
       data._spike.msWordsBackground = ms;
     }, () => {
     });
-    this.registerDomEvent(page, "click", (ev) => {
+    this.subscribeLive();
+    page.addEventListener("click", (ev) => {
       const a = ev.target instanceof Element ? ev.target.closest('a[href^="obsidian://"]') : null;
       if (!a) return;
       ev.preventDefault();
@@ -10047,6 +12175,9 @@ var DEFAULTS = {
   words: true,
   folderColors: {},
   subfolderColors: {},
+  tagColors: {},
+  subtagColors: {},
+  tagShown: {},
   folderShown: {},
   pinned: [],
   panEnabled: true,
@@ -10056,8 +12187,14 @@ var DEFAULTS = {
   unlinkedByFolder: true,
   // github#3
   unlinkedTintByFolder: false,
+  // github#78, design/0006
+  countBars: true,
   // github#41, design/0011
-  fitCap: true
+  fitCap: true,
+  // github#86 -- folder is the default
+  dim: "folder",
+  // github#72
+  liveRefresh: true
 };
 var BUILD_SETTINGS = [
   {
@@ -10110,6 +12247,14 @@ var VIEW_SETTINGS = [
     api: "setUnlinkedTintByFolder",
     desc: "While unlinked notes are kept as their own group (the toggle just above is off), give each one its own folder's colour instead of the flat unlinked swatch. The (unlinked) row's right-click menu carries this too."
   },
+  // github#78, design/0006
+  {
+    key: "countBars",
+    name: "Count bars in the legend",
+    defaultOn: true,
+    api: "setCountBars",
+    desc: "Draw a short rule along the bottom of each folder row in the legend, in that folder's own colour, scaled so the largest folder currently shown fills its row and the rest are read against it. The count alone makes a 406-note folder and a 1-note folder look identical. Hovering a count says which folder the bar is measured against."
+  },
   // github#41, design/0011
   {
     key: "fitCap",
@@ -10117,9 +12262,18 @@ var VIEW_SETTINGS = [
     defaultOn: true,
     api: "setFitCap",
     desc: "While the disc animates, cap every dot at just under half its distance to the nearest visible note, measured on the frame being drawn, so dots stay apart while rows slide. The disc at rest is unchanged. Experimental: dots breathe while a cascade walks."
+  },
+  // github#72
+  {
+    key: "liveRefresh",
+    name: "Follow the vault",
+    defaultOn: true,
+    api: "",
+    host: true,
+    desc: "Take a note you have just written, moved or linked into the disc where it stands, instead of waiting for Refresh to rebuild the whole thing. Only a change that decides where a note SITS moves anything -- writing prose does not, so typing is still. Off, the disc is a snapshot until you press Refresh."
   }
 ];
-var COLOURS_DESC = "Twelve slots, handed out in folder order and round again. Setting one folder never moves another, and two folders may share a colour.";
+var COLOURS_DESC = "Twelve slots, handed out in group order and round again. Folders and tags keep their own colours; the tabs choose which. Setting one group never moves another, and two may share a colour. Each swatch shows the slot at the sizes the disc really draws, over both grounds. Its contrast figure is for a solid area of the colour; a dot a pixel across is mostly antialiasing and reads lower than the number.";
 var SLOT_NAMES = [
   "Blue",
   "Orange",
@@ -10172,9 +12326,13 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
    */
   constructor(app, plugin) {
     super(app, plugin);
+    // github#86 -- the grouping the colour section shows
+    /** @type {"folder" | "tag"} */
+    __publicField(this, "colourDim", "folder");
     this.plugin = plugin;
-    this.subOpen = {};
+    this.subOpen = bareMap();
     this.scope = null;
+    this.cssRef = null;
   }
   /* ----------------------------------------------------------- two render paths --
    * Obsidian 1.13 renders a settings tab from getSettingDefinitions() -- that is also what
@@ -10212,9 +12370,9 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
           /** @type {"group"} */
           "group"
         ),
-        heading: "Folder colours",
+        heading: "Group colours",
         items: [{
-          name: "Folder and subfolder colours",
+          name: "Group and sub-wedge colours",
           desc: COLOURS_DESC,
           aliases: ["colour", "color", "swatch", "palette", "subfolder", "hidden by default", "archive"],
           /** @param {Setting} setting */
@@ -10262,8 +12420,12 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
   /** @param {ViewSetting} def @param {boolean} v */
   async applyView(def, v) {
     const view = await this.plugin.currentView();
+    if (def.host) {
+      if (view) view.liveSettingChanged();
+      return;
+    }
     const api = view && view.handle && view.handle.api;
-    if (api && api[def.api]) api[def.api](v);
+    if (api && def.api && api[def.api]) api[def.api](v);
   }
   display() {
     const { containerEl } = this;
@@ -10283,7 +12445,7 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.applyView(s, v);
       }));
     }
-    new import_obsidian.Setting(containerEl).setName("Folder colours").setHeading();
+    new import_obsidian.Setting(containerEl).setName("Group colours").setHeading();
     this.renderColourSection(new import_obsidian.Setting(containerEl).setDesc(COLOURS_DESC));
   }
   /**
@@ -10298,9 +12460,10 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
    * @param {Setting} row
    */
   renderColourSection(row) {
-    row.addButton((b) => b.setButtonText("Reset all").setTooltip("Also drops every subfolder override").onClick(async () => {
-      this.plugin.settings.folderColors = {};
-      this.plugin.settings.subfolderColors = {};
+    row.addButton((b) => b.setButtonText("Reset all").setTooltip("Also drops every sub-wedge override, for the grouping shown").onClick(async () => {
+      const tag = this.colourDim === "tag";
+      this.plugin.settings[tag ? "tagColors" : "folderColors"] = {};
+      this.plugin.settings[tag ? "subtagColors" : "subfolderColors"] = {};
       await this.plugin.saveSettings();
       await this.plugin.applyFolderColors();
       await this.plugin.applySubfolderColors();
@@ -10308,20 +12471,37 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
     }));
     row.settingEl.addClass("vg-colour-row");
     const scope = row.settingEl.createDiv({ cls: ["vault-graph", "vg-tokens"] });
-    scope.setAttribute(
+    this.scope = scope;
+    this.syncScopeTheme(false);
+    if (!this.cssRef) {
+      this.cssRef = this.app.workspace.on("css-change", () => this.syncScopeTheme(true));
+      this.plugin.registerEvent(this.cssRef);
+    }
+    this.redrawColours();
+  }
+  // github#77
+  syncScopeTheme(defer) {
+    if (defer) {
+      window.requestAnimationFrame(() => this.syncScopeTheme(false));
+      return;
+    }
+    if (!this.scope) return;
+    this.scope.setAttribute(
       "data-theme",
       activeDocument.body.classList.contains("theme-light") ? "light" : "dark"
     );
-    this.scope = scope;
-    this.redrawColours();
   }
   redrawColours() {
     if (!this.scope) return;
-    let auto = 0;
-    this.renderColours(topFolders(this.app).map((f) => {
-      const s = isArchiveGroup(f.name) ? ARCHIVE_SLOT : "g" + (auto++ % SLOT_NAMES.length + 1);
-      return { name: f.name, n: f.n, slot: s, autoSlot: s };
-    }));
+    if (this.colourDim === "folder") {
+      let auto = 0;
+      this.renderColours(topFolders(this.app).map((f) => {
+        const s = isArchiveGroup(f.name) ? ARCHIVE_SLOT : "g" + (auto++ % SLOT_NAMES.length + 1);
+        return { name: f.name, n: f.n, slot: s, autoSlot: s };
+      }));
+    } else {
+      this.renderColours([]);
+    }
     this.refreshFromView();
   }
   async refreshFromView() {
@@ -10329,25 +12509,55 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
     const view = await this.plugin.currentView();
     const api = view && view.handle && view.handle.api;
     if (!api || !api.groupOrder || !api.palette || !scope || !scope.isConnected) return;
-    const groups = api.groupOrder().map((name) => ({
+    const groups = api.groupsOf ? api.groupsOf(this.colourDim).map((g) => ({ name: g.name, n: g.n, slot: g.slot, autoSlot: g.autoSlot })) : api.groupOrder().map((name) => ({
       name,
       n: api.groupCount(name),
       slot: api.slotOf ? api.slotOf(name) : "",
       autoSlot: api.autoSlotOf ? api.autoSlotOf(name) : ""
     }));
-    if (groups.length) this.renderColours(groups);
+    if (groups.length) this.renderColours(groups, api);
   }
-  /** @param {GroupRow[]} groups */
-  renderColours(groups) {
+  // github#77
+  /**
+   * @param {VgApi | null} api @param {HTMLElement} btn
+   * @param {string} key @param {string} name @param {string} tail @param {string} [group]
+   */
+  fillSwatch(api, btn, key, name, tail, group) {
+    if (!api || !api.swatchPreview) return;
+    const doc = new DOMParser().parseFromString(
+      "<body>" + api.swatchPreview(key, group) + "</body>",
+      "text/html"
+    );
+    btn.replaceChildren.apply(btn, Array.prototype.slice.call(doc.body.childNodes));
+    if (api.slotTitle) btn.setAttribute("title", api.slotTitle(key, name) + tail);
+  }
+  // github#77
+  /** @param {GroupRow[]} groups @param {VgApi | null} [api] */
+  renderColours(groups, api) {
     const scope = this.scope;
     scope.empty();
+    const tabs = scope.createDiv({ cls: ["dimseg", "setseg"] });
+    tabs.setAttribute("role", "group");
+    tabs.setAttribute("aria-label", "Set colours for");
+    for (const [dim, label] of [["folder", "Folders"], ["tag", "Tags"]]) {
+      const b = tabs.createEl("button", { text: label });
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(dim === this.colourDim));
+      b.onclick = () => {
+        if (this.colourDim === dim) return;
+        this.colourDim = /** @type {"folder" | "tag"} */
+        dim;
+        this.redrawColours();
+      };
+    }
     if (!groups.length) {
-      scope.createEl("p", { text: "No folders to colour yet." });
+      scope.createEl("p", { text: this.colourDim === "tag" ? "Open the graph to colour this vault's tags." : "No folders to colour yet." });
       return;
     }
     const subsByFolder = allSubfolders(this.app, this.plugin.settings.flatMonths);
     for (const group of groups) {
-      const pinned = this.plugin.settings.folderColors[group.name] || "";
+      const colors = this.plugin.settings.folderColors;
+      const pinned = Object.prototype.hasOwnProperty.call(colors, group.name) && colors[group.name] || "";
       const current = pinned || group.slot;
       const shown = this.shownByDefault(group.name);
       const subs = subsByFolder.get(group.name) || [];
@@ -10358,23 +12568,26 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
       if (hasSubs) {
         row.addExtraButton((b) => b.setIcon(open ? "chevron-down" : "chevron-right").setTooltip(open ? "Hide subfolder colours" : "Subfolder colours").onClick(() => {
           this.subOpen[group.name] = !open;
-          this.renderColours(groups);
+          this.renderColours(groups, api);
         }));
       }
       row.addExtraButton((b) => b.setIcon(shown ? "eye" : "eye-off").setTooltip(shown ? "Shown by default" : "Hidden by default").onClick(() => this.pickVisible(group.name)));
       row.controlEl.addClass("sws");
+      const grid = row.controlEl.createDiv({ cls: "sw-grid" });
       SLOT_NAMES.forEach((name, i) => {
         const key = "g" + (i + 1);
         const on = current === key;
         const isAuto = group.autoSlot === key;
+        const tail = on ? pinned ? " (chosen)" : " (automatic)" : isAuto ? " (automatic default)" : "";
         const attr = {
           role: "radio",
           "aria-checked": String(on),
           "aria-label": name,
-          title: name + (on ? pinned ? " (chosen)" : " (automatic)" : isAuto ? " (automatic default)" : "")
+          title: name + tail
         };
         if (isAuto) attr["data-auto"] = "1";
-        const b = row.controlEl.createEl("button", { cls: ["swatch", "vg-" + key], attr });
+        const b = grid.createEl("button", { cls: ["swatch", "vg-" + key], attr });
+        this.fillSwatch(api, b, key, name, tail, group.name);
         b.addEventListener("click", () => this.pick(group.name, key));
       });
       const auto = row.controlEl.createEl("button", {
@@ -10386,25 +12599,27 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
         }
       });
       auto.addEventListener("click", () => this.pick(group.name, null));
-      if (open) this.renderSubRows(scope, group.name, subs);
+      if (open) this.renderSubRows(scope, group.name, subs, api);
     }
   }
   /**
    * @param {HTMLElement} scope
    * @param {string} folder
    * @param {SubRow[]} subs
+   * @param {VgApi | null} [api]
    */
-  renderSubRows(scope, folder, subs) {
+  renderSubRows(scope, folder, subs, api) {
     for (const s of subs) {
       const pk = folder + "/" + s.name;
       const pinned = this.plugin.settings.subfolderColors[pk] || "";
       const row = new import_obsidian.Setting(scope).setName(s.name || "(directly in folder)").setDesc(s.n === 1 ? "1 note" : s.n + " notes");
       row.settingEl.addClass("vg-subrow");
       row.controlEl.addClass("sws");
+      const grid = row.controlEl.createDiv({ cls: "sw-grid" });
       SLOT_NAMES.forEach((name, i) => {
         const key = "g" + (i + 1);
         const on = pinned === key;
-        const b = row.controlEl.createEl("button", {
+        const b = grid.createEl("button", {
           cls: ["swatch", "vg-" + key],
           attr: {
             role: "radio",
@@ -10413,6 +12628,7 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
             title: name + (on ? " (chosen)" : "")
           }
         });
+        this.fillSwatch(api, b, key, name, on ? " (chosen)" : "");
         b.addEventListener("click", () => this.pickSub(folder, s.name, key));
       });
       const auto = row.controlEl.createEl("button", {
@@ -10431,7 +12647,7 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
   }
   /** @param {string} folder */
   async pickVisible(folder) {
-    const map = Object.assign({}, this.plugin.settings.folderShown);
+    const map = Object.assign(bareMap(), this.plugin.settings.folderShown);
     map[folder] = !this.shownByDefault(folder);
     this.plugin.settings.folderShown = map;
     await this.plugin.saveSettings();
@@ -10439,13 +12655,13 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
     this.redrawColours();
   }
   /**
-   * @param {"folderColors" | "subfolderColors"} settingsKey
+   * @param {"folderColors" | "subfolderColors" | "tagColors" | "subtagColors"} settingsKey
    * @param {string} mapKey
    * @param {string | null} key
    * @param {"applyFolderColors" | "applySubfolderColors"} applyMethod
    */
   async setOverride(settingsKey, mapKey, key, applyMethod) {
-    const map = Object.assign({}, this.plugin.settings[settingsKey]);
+    const map = Object.assign(bareMap(), this.plugin.settings[settingsKey]);
     if (key) map[mapKey] = key;
     else delete map[mapKey];
     this.plugin.settings[settingsKey] = map;
@@ -10455,11 +12671,21 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
   }
   /** @param {string} folder @param {string | null} key */
   async pick(folder, key) {
-    return this.setOverride("folderColors", folder, key, "applyFolderColors");
+    return this.setOverride(
+      this.colourDim === "tag" ? "tagColors" : "folderColors",
+      folder,
+      key,
+      "applyFolderColors"
+    );
   }
   /** @param {string} folder @param {string} sub @param {string | null} key */
   async pickSub(folder, sub, key) {
-    return this.setOverride("subfolderColors", folder + "/" + sub, key, "applySubfolderColors");
+    return this.setOverride(
+      this.colourDim === "tag" ? "subtagColors" : "subfolderColors",
+      folder + "/" + sub,
+      key,
+      "applySubfolderColors"
+    );
   }
 };
 var VaultGraphPlugin = class extends import_obsidian.Plugin {
@@ -10467,10 +12693,29 @@ var VaultGraphPlugin = class extends import_obsidian.Plugin {
     super(...arguments);
     /** @type {Settings} */
     __publicField(this, "settings", DEFAULTS);
+    // github#83 -- the note the next view mount shows, until it is dismissed
+    /** @type {import("./update-note.mjs").UpdateNote | null} */
+    __publicField(this, "pendingNote", null);
+    /** @type {import("./update-note.mjs").Release[]} */
+    __publicField(this, "pendingChain", []);
   }
   async onload() {
     const saved = await this.loadData();
     this.settings = Object.assign({}, DEFAULTS, saved);
+    const verdict = decideNote({
+      installed: this.manifest.version,
+      lastSeen: this.settings.lastSeenVersion,
+      hadData: saved !== null && saved !== void 0,
+      note: parseNote(whats_new_default).note
+    });
+    this.pendingNote = verdict.show;
+    this.pendingChain = verdict.show ? releaseChain({
+      releases: vg_releases_default,
+      lastSeen: this.settings.lastSeenVersion,
+      installed: this.manifest.version,
+      note: verdict.show
+    }) : [];
+    if (verdict.record) await this.recordVersion(saved);
     this.addSettingTab(new VaultGraphSettingTab(this.app, this));
     this.registerView(VIEW_TYPE, (leaf) => new VaultGraphView(leaf, this));
     (0, import_obsidian.addIcon)(ICON_ID, discIcon());
@@ -10529,6 +12774,17 @@ var VaultGraphPlugin = class extends import_obsidian.Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
   }
+  // github#83, design/0016 -- the marker alone, never the defaults onto an empty file
+  /** @param {unknown} [saved] */
+  async recordVersion(saved) {
+    const disk = saved === void 0 ? await this.loadData() : saved;
+    const base = disk && typeof disk === "object" ? (
+      /** @type {Record<string, unknown>} */
+      disk
+    ) : {};
+    this.settings.lastSeenVersion = this.manifest.version;
+    await this.saveData(Object.assign({}, base, { lastSeenVersion: this.manifest.version }));
+  }
   openSettings() {
     const setting = (
       /** @type {AppWithSetting} */
@@ -10560,6 +12816,7 @@ var VaultGraphPlugin = class extends import_obsidian.Plugin {
     if (api.setCompactAxis) api.setCompactAxis(this.settings.compactAxis !== false);
     if (api.setUnlinkedByFolder) api.setUnlinkedByFolder(this.settings.unlinkedByFolder !== false);
     if (api.setUnlinkedTintByFolder) api.setUnlinkedTintByFolder(this.settings.unlinkedTintByFolder === true);
+    if (api.setCountBars) api.setCountBars(this.settings.countBars !== false);
     if (api.setFitCap) api.setFitCap(this.settings.fitCap !== false);
     if (api.applyHiddenDefaults) api.applyHiddenDefaults();
   }

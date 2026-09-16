@@ -16,13 +16,13 @@ needsUpdating: false
 
 In the database, there are a number of predefined roles for users. They are:
 
-|**Name**|**Email Address**|**Role**|
-|---|---|---|
-|Alice (Admin)|admin@school.com|admin|
-|Bob (Teacher)|teacher@school.com|staff|
-|Charlie|student1@school.com|student|
-|Diana|student2@school.com|student|
-|Eve|guest@school.com|guest|
+| **Name**      | **Email Address**   | **Role** |
+| ------------- | ------------------- | -------- |
+| Alice (Admin) | admin@school.com    | admin    |
+| Bob (Teacher) | teacher@school.com  | staff    |
+| Charlie       | student1@school.com | student  |
+| Diana         | student2@school.com | student  |
+| Eve           | guest@school.com    | guest    |
 
 With a focus on security, you need to decide which roles get access to what data.
 

@@ -50,6 +50,9 @@ This guide will demonstrate how to update the navigation bar (navbar) to only sh
 
 6. Highlight the logged in user by including their first name as the *heading* of the menu.
 ![[navbarUserHeading.png]]
+In `template.php` add the following code:
+![[navbarUserName.png]]
+
 ```php
 <?= htmlspecialchars($_SESSION['first_name']) ?>
 ```

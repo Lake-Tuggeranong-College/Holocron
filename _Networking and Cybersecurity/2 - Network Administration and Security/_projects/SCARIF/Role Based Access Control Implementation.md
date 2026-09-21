@@ -35,6 +35,13 @@ With a focus on security, you need to decide which roles get access to what data
 | errorlog.php     | ?      |
 | data.php         | ?      |
 
+Use a document to track what you intend the access level is for each page and role. After [[#Implementing RBAC]] then test each page with an account with that level of access to see what the actual security is.
+
+You can create your own, or make a copy of this spreadsheet:
+
+[![[rbacSecurityAudit.png]]](https://docs.google.com/spreadsheets/d/1ZcEig42v3VWMtYUBYE8Hw4d4lTRX2nlfLknGVlf-Blo/edit?usp=sharing)
+
+
 # Implementing RBAC
 
 Create a new file called `auth.php` which will host the code to provide authorisation to particular roles. This file will not be accessed directly, however will be included by all the other files. If the user is authorised, then the page will be loaded. If the user is not authorised, then `auth.php` will display an error message.

@@ -16,5 +16,5 @@ As a F.A.L.C.O.N. Systems Engineer, your training will cover four core engineeri
 1. **Python Control Logic:** Master Python programming to parse complex data payloads, process incoming command instructions, and manage system power usage.
 2. **Sub-GHz Radio Telemetry:** Configure the **Feather RP2040 RFM** board to listen on targeted LoRa frequencies, filtering incoming packets to identify commands meant specifically for your node.
 3. **E-Paper Visual Rendering:** Program sharp, low-power visual interfaces on e-ink displays using custom layouts, dynamic price fields, and custom Aurebesh asset graphics.
-4. **End-to-End Network Integration:** Connect your physical node to the live class database, creating a fully synchronized, dynamic inventory grid capable of surviving real-world interference.
+4. **End-to-End Network Integration:** Connect your physical node to the live class database, creating a fully synchronised, dynamic inventory grid capable of surviving real-world interference.
 

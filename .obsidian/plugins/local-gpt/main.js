@@ -77,14 +77,31 @@ var require_dist = __commonJS({
     __export2(index_exports, {
       __testing__: () => __testing__,
       initAI: () => initAI2,
+      recommendedPluginVersionForApi: () => recommendedPluginVersionForApi,
+      supportsVersion: () => supportsVersion2,
       waitForAI: () => waitForAI5
     });
     module2.exports = __toCommonJS2(index_exports);
-    var import_obsidian15 = require("obsidian");
+    var import_obsidian16 = require("obsidian");
     var FALLBACK_TIMEOUT = 100;
-    var REQUIRED_AI_PROVIDERS_VERSION = 4;
+    var REQUIRED_AI_PROVIDERS_VERSION = 5;
+    var RECOMMENDED_AI_PROVIDERS_PLUGIN_VERSION = "1.12.0";
     var AI_PROVIDERS_READY_EVENT = "ai-providers-ready";
     var aiProvidersReadyAiResolver = null;
+    function recommendedPluginVersionForApi(apiVersion) {
+      if (apiVersion === 5) {
+        return `${RECOMMENDED_AI_PROVIDERS_PLUGIN_VERSION}+`;
+      }
+      if (apiVersion >= 1 && apiVersion <= 4) {
+        return "1.11.0+";
+      }
+      return `API v${apiVersion}`;
+    }
+    __name(recommendedPluginVersionForApi, "recommendedPluginVersionForApi");
+    function supportsVersion2(service, requiredVersion) {
+      return typeof (service == null ? void 0 : service.version) === "number" && service.version >= requiredVersion;
+    }
+    __name(supportsVersion2, "supportsVersion");
     async function waitForAIProviders(app, plugin) {
       if (aiProvidersReadyAiResolver) {
         return aiProvidersReadyAiResolver;
@@ -151,39 +168,48 @@ var require_dist = __commonJS({
     _AIProvidersManager.instance = null;
     var AIProvidersManager = _AIProvidersManager;
     async function initAI2(app, plugin, onDone, options) {
+      var _a7, _b3;
       AIProvidersManager.getInstance(app, plugin);
       let isFallbackShown = false;
+      const minVersion = (_a7 = options == null ? void 0 : options.minVersion) != null ? _a7 : REQUIRED_AI_PROVIDERS_VERSION;
       if (options == null ? void 0 : options.disableFallback) {
         await onDone();
         return;
       }
+      const timeout = setTimeout(async () => {
+        plugin.addSettingTab(
+          new AIProvidersFallbackSettingsTab(app, plugin, {
+            reason: "missing"
+          })
+        );
+        isFallbackShown = true;
+      }, FALLBACK_TIMEOUT);
       try {
-        const timeout = setTimeout(async () => {
-          plugin.addSettingTab(
-            new AIProvidersFallbackSettingsTab(app, plugin)
-          );
-          isFallbackShown = true;
-        }, FALLBACK_TIMEOUT);
         const aiProvidersAiResolver = await waitForAIProviders(app, plugin);
         const aiProviders = await aiProvidersAiResolver.promise;
         clearTimeout(timeout);
         try {
-          aiProviders.checkCompatibility(REQUIRED_AI_PROVIDERS_VERSION);
+          aiProviders.checkCompatibility(minVersion);
         } catch (error) {
           console.error(`AI Providers compatibility check failed: ${error}`);
           const compatibilityError = error;
           if (compatibilityError.code === "version_mismatch") {
+            const required = (_b3 = compatibilityError.requiredVersion) != null ? _b3 : minVersion;
             plugin.addSettingTab(
-              new AIProvidersFallbackSettingsTab(app, plugin)
+              new AIProvidersFallbackSettingsTab(app, plugin, {
+                reason: "outdated",
+                requiredVersion: required,
+                currentVersion: compatibilityError.currentVersion,
+                recommendedPluginVersion: recommendedPluginVersionForApi(required)
+              })
             );
-            throw new Error(
-              `AI Providers version ${REQUIRED_AI_PROVIDERS_VERSION} is required`
-            );
+            throw new Error(`AI Providers version ${required} is required`);
           }
           throw error;
         }
         await onDone();
       } finally {
+        clearTimeout(timeout);
         if (isFallbackShown && app.plugins) {
           await app.plugins.disablePlugin(plugin.manifest.id);
           await app.plugins.enablePlugin(plugin.manifest.id);
@@ -196,18 +222,33 @@ var require_dist = __commonJS({
       return waitForAIProviders(manager.getApp(), manager.getPlugin());
     }
     __name(waitForAI5, "waitForAI");
-    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian15.PluginSettingTab {
-      constructor(app, plugin) {
+    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian16.PluginSettingTab {
+      constructor(app, plugin, fallback2 = { reason: "missing" }) {
         super(app, plugin);
         this.plugin = plugin;
+        this.fallback = fallback2;
       }
       async display() {
+        var _a7, _b3;
         const { containerEl } = this;
         containerEl.empty();
         const aiProvidersNotice = containerEl.createEl("div");
         aiProvidersNotice.addClass("ai-providers-notice");
+        if (this.fallback.reason === "outdated") {
+          const required = (_a7 = this.fallback.requiredVersion) != null ? _a7 : REQUIRED_AI_PROVIDERS_VERSION;
+          const current = this.fallback.currentVersion !== void 0 ? String(this.fallback.currentVersion) : "unknown";
+          const pluginVersion = (_b3 = this.fallback.recommendedPluginVersion) != null ? _b3 : recommendedPluginVersionForApi(required);
+          aiProvidersNotice.appendChild(
+            (0, import_obsidian16.sanitizeHTMLToDom)(`
+            <p>\u26A0\uFE0F <a href="obsidian://show-plugin?id=ai-providers">AI Providers</a> is outdated.</p>
+            <p>This plugin needs <strong>AI Providers ${pluginVersion}</strong> (service API ${required}). Current service API: ${current}.</p>
+            <p>Please update AI Providers from Community Plugins, then reload Obsidian.</p>
+        `)
+          );
+          return;
+        }
         aiProvidersNotice.appendChild(
-          (0, import_obsidian15.sanitizeHTMLToDom)(`
+          (0, import_obsidian16.sanitizeHTMLToDom)(`
             <p>\u26A0\uFE0F This plugin requires <a href="obsidian://show-plugin?id=ai-providers">AI Providers</a> plugin to be installed.</p>
             <p>Please install and configure AI Providers plugin first.</p>
         `)
@@ -219,7 +260,9 @@ var require_dist = __commonJS({
     var __testing__ = {
       resetManager: /* @__PURE__ */ __name(() => AIProvidersManager.reset(), "resetManager"),
       waitForAIProviders,
-      REQUIRED_AI_PROVIDERS_VERSION
+      REQUIRED_AI_PROVIDERS_VERSION,
+      RECOMMENDED_AI_PROVIDERS_PLUGIN_VERSION,
+      AIProvidersFallbackSettingsTab
     };
   }
 });
@@ -230,90 +273,6 @@ __export(main_exports, {
   default: () => LocalGPT2
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian14 = require("obsidian");
-
-// src/LocalGPTSettingTab.ts
-var import_obsidian6 = require("obsidian");
-
-// src/defaultSettings.ts
-var DEFAULT_SETTINGS = {
-  aiProviders: {
-    main: null,
-    embedding: null,
-    vision: null
-  },
-  actionPalette: {
-    systemPromptActionId: null
-  },
-  defaults: {
-    creativity: "low",
-    contextLimit: "local"
-  },
-  actions: [
-    {
-      name: "\u{1FA84} General help",
-      prompt: "",
-      system: "You are an assistant helping a user write more content in a document based on a prompt. Output in markdown format. Do not use links. Do not include literal content from the original document."
-    },
-    {
-      name: "\u270D\uFE0F Continue writing",
-      prompt: "Act as a professional editor with many years of experience as a writer. Carefully finalize the following text, add details, use facts and make sure that the meaning and original style are preserved. Purposely write in detail, with examples, so that your reader is comfortable, even if they don't understand the specifics. Don't use clericalisms, evaluations without proof with facts, passive voice. Use Markdown markup language for formatting. Answer only content and nothing else, no introductory words, only substance.",
-      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
-    },
-    {
-      name: "\u{1F36D} Summarize",
-      prompt: "Make a concise summary of the key points of the following text.",
-      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
-    },
-    {
-      name: "\u{1F4D6} Fix spelling and grammar",
-      prompt: "Proofread the below for spelling and grammar.",
-      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can.",
-      replace: true
-    },
-    {
-      name: "\u2705 Find action items",
-      prompt: 'Act as an assistant helping find action items inside a document. An action item is an extracted task or to-do found inside of an unstructured document. Use Markdown checkbox format: each line starts with "- [ ] "',
-      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
-    },
-    {
-      name: "\u{1F9E0} New System Prompt",
-      prompt: "",
-      system: `You are a highly skilled AI prompt engineer with expertise in creating tailored prompts for a wide range of professional roles. You have a deep knowledge of how to craft prompts that effectively guide the language model to produce high-quality, contextually appropriate responses.
-
-Your task is to generate a custom system prompt for different roles based on user input. This involves understanding the specific requirements of each role, the context in which the prompt will be used, and the desired output format. You are skilled in structuring prompts that ensure clarity, relevance, and utility.
-
-Create a custom system prompt for an LLM to assist users in generating contextually appropriate and highly effective responses for various roles. The prompt should provide clear instructions to the LLM on how to handle specific scenarios related to the role, including the tone and format of the response.
-
-Start by providing a role "You are..." and context as a summary of the situation or background information relevant to the prompt. Define the main objective, outlining what the LLM needs to accomplish.
-
-Include instructions on the appropriate style and tone (e.g., formal, casual, technical, empathetic) based on the role and audience. Identify the target audience to tailor the LLM's output effectively. Specify the format of the response, whether it should be a narrative, bullet points, step-by-step guide, code, or another format. Avoid using headings or examples; the prompt should read as a continuous, cohesive set of instructions.
-ANSWER PROMPT AND NOTHING ELSE!`
-    }
-  ],
-  _version: 10
-};
-var CREATIVITY = {
-  "": {
-    temperature: 0
-  },
-  low: {
-    temperature: 0.2
-  },
-  medium: {
-    temperature: 0.5
-  },
-  high: {
-    temperature: 1
-  }
-};
-var SELECTION_KEYWORD = "{{=SELECTION=}}";
-var CONTEXT_KEYWORD = "{{=CONTEXT=}}";
-var CONTEXT_CONDITION_START = "{{=CONTEXT_START=}}";
-var CONTEXT_CONDITION_END = "{{=CONTEXT_END=}}";
-
-// src/LocalGPTSettingTab.ts
-var import_sdk = __toESM(require_dist());
 
 // src/i18n/de.json
 var de_default = {
@@ -328,7 +287,10 @@ var de_default = {
       changeSystemPrompt: "System-Prompt wechseln",
       clearSystemPrompt: "System-Prompt l\xF6schen",
       unknownModel: "Unbekanntes Modell",
-      hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien"
+      hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien",
+      changeReasoning: "Denkmodus f\xFCr diese Anfrage",
+      noMatchingCommands: "Keine passenden Befehle",
+      noMatchingFiles: "Keine passenden Dateien"
     }
   },
   statusBar: {
@@ -348,7 +310,8 @@ var de_default = {
     actionNameExists: 'Eine Aktion mit dem Namen "{{name}}" existiert bereits.',
     actionRewritten: 'Aktion "{{name}}" \xFCberschrieben',
     actionAdded: 'Aktion "{{name}}" hinzugef\xFCgt',
-    copied: "Kopiert"
+    copied: "Kopiert",
+    aiProvidersUpdateForReasoning: "Aktualisieren Sie AI Providers auf {{version}}+, um Reasoning-Modi zu nutzen"
   },
   settings: {
     mainProvider: "Haupt-AI-Provider",
@@ -428,7 +391,25 @@ var de_default = {
     resetActions: "Aktionen zur\xFCcksetzen",
     resetActionsDesc: "\u{1F6A8} Setzt alle Aktionen auf die Standardeinstellungen zur\xFCck. Dies kann nicht r\xFCckg\xE4ngig gemacht werden und l\xF6scht alle Ihre benutzerdefinierten Aktionen.",
     reset: "Zur\xFCcksetzen",
-    confirmReset: "Zur\xFCcksetzen best\xE4tigen"
+    confirmReset: "Zur\xFCcksetzen best\xE4tigen",
+    reasoningEffort: "Denkmodus",
+    reasoningEffortDesc: "Nur Local GPT; nicht unterst\xFCtzte Modi nutzen den API-Standard.",
+    reasoningEffortDefault: "API-Standard",
+    reasoningEffortInherit: "Globale Einstellung verwenden",
+    reasoningEffortLow: "Niedrig",
+    reasoningEffortHigh: "Hoch",
+    reasoningEffortMax: "Maximum",
+    reasoningEffortNone: "Keine",
+    reasoningEffortMinimal: "Minimal",
+    reasoningEffortMedium: "Mittel",
+    reasoningEffortXHigh: "Sehr hoch",
+    reasoningEffortTrue: "An",
+    reasoningEffortFalse: "Aus",
+    reasoningUnavailable: "nicht verf\xFCgbar",
+    creativityDefault: "API-Standard",
+    creativityInherit: "Globale Einstellung verwenden",
+    creativityDesc: "API-Standard l\xE4sst temperature weg. Keine sendet 0. Aktionen k\xF6nnen diese globale Wahl erben.",
+    aiProvidersUpdateHeading: "Reasoning erfordert neueres AI Providers"
   }
 };
 
@@ -445,7 +426,10 @@ var en_default = {
       changeSystemPrompt: "Change system prompt",
       clearSystemPrompt: "Clear system prompt",
       unknownModel: "Unknown model",
-      hint: "Use / for commands, @ for files"
+      hint: "Use / for commands, @ for files",
+      changeReasoning: "Reasoning for this request",
+      noMatchingCommands: "No matching commands",
+      noMatchingFiles: "No matching files"
     }
   },
   statusBar: {
@@ -465,7 +449,8 @@ var en_default = {
     actionNameExists: 'An action with the name "{{name}}" already exists.',
     actionRewritten: 'Rewritten "{{name}}" action',
     actionAdded: 'Added "{{name}}" action',
-    copied: "Copied"
+    copied: "Copied",
+    aiProvidersUpdateForReasoning: "Update AI Providers to {{version}}+ to use reasoning modes"
   },
   settings: {
     mainProvider: "Main AI Provider",
@@ -545,7 +530,25 @@ var en_default = {
     resetActions: "Reset actions",
     resetActionsDesc: "\u{1F6A8} Reset all actions to the default. This cannot be undone and will delete all your custom actions.",
     reset: "Reset",
-    confirmReset: "Confirm reset"
+    confirmReset: "Confirm reset",
+    reasoningEffort: "Reasoning",
+    reasoningEffortDesc: "Local GPT only; unsupported modes use API default.",
+    reasoningEffortDefault: "API default",
+    reasoningEffortInherit: "Use global setting",
+    reasoningEffortLow: "Low",
+    reasoningEffortHigh: "High",
+    reasoningEffortMax: "Max",
+    reasoningEffortNone: "None",
+    reasoningEffortMinimal: "Minimal",
+    reasoningEffortMedium: "Medium",
+    reasoningEffortXHigh: "Extra high",
+    reasoningEffortTrue: "On",
+    reasoningEffortFalse: "Off",
+    reasoningUnavailable: "unavailable",
+    creativityDefault: "API default",
+    creativityInherit: "Use global setting",
+    creativityDesc: "API default omits temperature. None sends 0. Actions can inherit this global choice.",
+    aiProvidersUpdateHeading: "Reasoning requires a newer AI Providers"
   }
 };
 
@@ -562,7 +565,10 @@ var es_default = {
       changeSystemPrompt: "Cambiar mensaje del sistema",
       clearSystemPrompt: "Borrar mensaje del sistema",
       unknownModel: "Modelo desconocido",
-      hint: "Use / para comandos, @ para archivos"
+      hint: "Use / para comandos, @ para archivos",
+      changeReasoning: "Razonamiento para esta solicitud",
+      noMatchingCommands: "No hay comandos coincidentes",
+      noMatchingFiles: "No hay archivos coincidentes"
     }
   },
   statusBar: {
@@ -582,7 +588,8 @@ var es_default = {
     actionNameExists: 'Ya existe una acci\xF3n con el nombre "{{name}}".',
     actionRewritten: 'Acci\xF3n "{{name}}" reescrita',
     actionAdded: 'Acci\xF3n "{{name}}" a\xF1adida',
-    copied: "Copiado"
+    copied: "Copiado",
+    aiProvidersUpdateForReasoning: "Actualice AI Providers a {{version}}+ para usar modos de razonamiento"
   },
   settings: {
     mainProvider: "Proveedor principal de IA",
@@ -662,7 +669,25 @@ var es_default = {
     communityActionsConflictNote: "Ya existe una acci\xF3n con este nombre. Instalarla la sobrescribir\xE1.",
     communityActionsSyncSummary: "{{updated}} acciones actualizadas. {{skipped}} modificadas omitidas.",
     communityActionsUpdated: "Se actualizaron {{count}} acciones de la comunidad.",
-    communityActionsSkipped: "Se omitieron {{count}} acciones de la comunidad modificadas."
+    communityActionsSkipped: "Se omitieron {{count}} acciones de la comunidad modificadas.",
+    reasoningEffort: "Razonamiento",
+    reasoningEffortDesc: "Solo Local GPT; los modos no compatibles usan el valor predeterminado de la API.",
+    reasoningEffortDefault: "Predeterminado de la API",
+    reasoningEffortInherit: "Usar ajuste global",
+    reasoningEffortLow: "Bajo",
+    reasoningEffortHigh: "Alto",
+    reasoningEffortMax: "M\xE1ximo",
+    reasoningEffortNone: "Ninguno",
+    reasoningEffortMinimal: "M\xEDnimo",
+    reasoningEffortMedium: "Medio",
+    reasoningEffortXHigh: "Muy alto",
+    reasoningEffortTrue: "Activado",
+    reasoningEffortFalse: "Desactivado",
+    reasoningUnavailable: "no disponible",
+    creativityDefault: "Predeterminado de API",
+    creativityInherit: "Usar ajuste global",
+    creativityDesc: "API default omite temperature. Ninguno env\xEDa 0. Las acciones pueden heredar esta elecci\xF3n global.",
+    aiProvidersUpdateHeading: "El razonamiento requiere un AI Providers m\xE1s reciente"
   }
 };
 
@@ -679,7 +704,10 @@ var fr_default = {
       changeSystemPrompt: "Changer l'invite syst\xE8me",
       clearSystemPrompt: "Effacer l'invite syst\xE8me",
       unknownModel: "Mod\xE8le inconnu",
-      hint: "Utilisez / pour les commandes, @ pour les fichiers"
+      hint: "Utilisez / pour les commandes, @ pour les fichiers",
+      changeReasoning: "Raisonnement pour cette requ\xEAte",
+      noMatchingCommands: "Aucune commande correspondante",
+      noMatchingFiles: "Aucun fichier correspondant"
     }
   },
   statusBar: {
@@ -699,7 +727,8 @@ var fr_default = {
     actionNameExists: 'Une action nomm\xE9e "{{name}}" existe d\xE9j\xE0.',
     actionRewritten: 'Action "{{name}}" r\xE9\xE9crite',
     actionAdded: 'Action "{{name}}" ajout\xE9e',
-    copied: "Copi\xE9"
+    copied: "Copi\xE9",
+    aiProvidersUpdateForReasoning: "Mettez \xE0 jour AI Providers vers {{version}}+ pour utiliser les modes de raisonnement"
   },
   settings: {
     mainProvider: "Fournisseur d'IA principal",
@@ -779,7 +808,25 @@ var fr_default = {
     communityActionsConflictNote: "Une action portant ce nom existe d\xE9j\xE0. L'installation l'\xE9crasera.",
     communityActionsSyncSummary: "{{updated}} actions mises \xE0 jour. {{skipped}} modifi\xE9es ignor\xE9es.",
     communityActionsUpdated: "{{count}} actions de la communaut\xE9 mises \xE0 jour.",
-    communityActionsSkipped: "{{count}} actions de la communaut\xE9 modifi\xE9es ignor\xE9es."
+    communityActionsSkipped: "{{count}} actions de la communaut\xE9 modifi\xE9es ignor\xE9es.",
+    reasoningEffort: "Raisonnement",
+    reasoningEffortDesc: "Local GPT uniquement ; les modes non pris en charge utilisent le d\xE9faut API.",
+    reasoningEffortDefault: "Valeur par d\xE9faut de l\u2019API",
+    reasoningEffortInherit: "Utiliser le r\xE9glage global",
+    reasoningEffortLow: "Faible",
+    reasoningEffortHigh: "\xC9lev\xE9",
+    reasoningEffortMax: "Maximum",
+    reasoningEffortNone: "Aucun",
+    reasoningEffortMinimal: "Minimal",
+    reasoningEffortMedium: "Moyen",
+    reasoningEffortXHigh: "Tr\xE8s \xE9lev\xE9",
+    reasoningEffortTrue: "Activ\xE9",
+    reasoningEffortFalse: "D\xE9sactiv\xE9",
+    reasoningUnavailable: "indisponible",
+    creativityDefault: "Valeur par d\xE9faut de l\u2019API",
+    creativityInherit: "Utiliser le r\xE9glage global",
+    creativityDesc: "API default omet temperature. Aucun envoie 0. Les actions peuvent h\xE9riter de ce choix global.",
+    aiProvidersUpdateHeading: "Le raisonnement n\xE9cessite une version plus r\xE9cente d\u2019AI Providers"
   }
 };
 
@@ -796,7 +843,10 @@ var it_default = {
       changeSystemPrompt: "Cambia prompt di sistema",
       clearSystemPrompt: "Cancella prompt di sistema",
       unknownModel: "Modello sconosciuto",
-      hint: "Usa / per i comandi, @ per i file"
+      hint: "Usa / per i comandi, @ per i file",
+      changeReasoning: "Ragionamento per questa richiesta",
+      noMatchingCommands: "Nessun comando corrispondente",
+      noMatchingFiles: "Nessun file corrispondente"
     }
   },
   statusBar: {
@@ -816,7 +866,8 @@ var it_default = {
     actionNameExists: `Esiste gi\xE0 un'azione con il nome "{{name}}".`,
     actionRewritten: 'Azione "{{name}}" riscritta',
     actionAdded: 'Azione "{{name}}" aggiunta',
-    copied: "Copiato"
+    copied: "Copiato",
+    aiProvidersUpdateForReasoning: "Aggiorna AI Providers a {{version}}+ per usare le modalit\xE0 di ragionamento"
   },
   settings: {
     mainProvider: "Fornitore AI principale",
@@ -896,7 +947,25 @@ var it_default = {
     communityActionsConflictNote: "Esiste gi\xE0 un'azione con questo nome. L'installazione la sovrascriver\xE0.",
     communityActionsSyncSummary: "Aggiornate {{updated}} azioni. Saltate {{skipped}} modificate.",
     communityActionsUpdated: "Aggiornate {{count}} azioni della community.",
-    communityActionsSkipped: "Saltate {{count}} azioni della community modificate."
+    communityActionsSkipped: "Saltate {{count}} azioni della community modificate.",
+    reasoningEffort: "Ragionamento",
+    reasoningEffortDesc: "Solo Local GPT; le modalit\xE0 non supportate usano il valore predefinito API.",
+    reasoningEffortDefault: "Predefinito API",
+    reasoningEffortInherit: "Usa impostazione globale",
+    reasoningEffortLow: "Basso",
+    reasoningEffortHigh: "Alto",
+    reasoningEffortMax: "Massimo",
+    reasoningEffortNone: "Nessuno",
+    reasoningEffortMinimal: "Minimo",
+    reasoningEffortMedium: "Medio",
+    reasoningEffortXHigh: "Molto alto",
+    reasoningEffortTrue: "Attivo",
+    reasoningEffortFalse: "Disattivo",
+    reasoningUnavailable: "non disponibile",
+    creativityDefault: "Predefinito API",
+    creativityInherit: "Usa impostazione globale",
+    creativityDesc: "API default omette temperature. Nessuno invia 0. Le azioni possono ereditare questa scelta globale.",
+    aiProvidersUpdateHeading: "Il ragionamento richiede un AI Providers pi\xF9 recente"
   }
 };
 
@@ -913,7 +982,10 @@ var ja_default = {
       changeSystemPrompt: "\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\u3092\u5909\u66F4",
       clearSystemPrompt: "\u30B7\u30B9\u30C6\u30E0\u30D7\u30ED\u30F3\u30D7\u30C8\u3092\u30AF\u30EA\u30A2",
       unknownModel: "\u4E0D\u660E\u306A\u30E2\u30C7\u30EB",
-      hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528"
+      hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528",
+      changeReasoning: "\u3053\u306E\u30EA\u30AF\u30A8\u30B9\u30C8\u306E\u63A8\u8AD6",
+      noMatchingCommands: "\u4E00\u81F4\u3059\u308B\u30B3\u30DE\u30F3\u30C9\u304C\u3042\u308A\u307E\u305B\u3093",
+      noMatchingFiles: "\u4E00\u81F4\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093"
     }
   },
   statusBar: {
@@ -933,7 +1005,8 @@ var ja_default = {
     actionNameExists: '"{{name}}" \u3068\u3044\u3046\u540D\u524D\u306E\u30A2\u30AF\u30B7\u30E7\u30F3\u306F\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059\u3002',
     actionRewritten: '\u30A2\u30AF\u30B7\u30E7\u30F3 "{{name}}" \u3092\u4E0A\u66F8\u304D\u3057\u307E\u3057\u305F',
     actionAdded: '\u30A2\u30AF\u30B7\u30E7\u30F3 "{{name}}" \u3092\u8FFD\u52A0\u3057\u307E\u3057\u305F',
-    copied: "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F"
+    copied: "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F",
+    aiProvidersUpdateForReasoning: "\u63A8\u8AD6\u30E2\u30FC\u30C9\u3092\u4F7F\u3046\u306B\u306F AI Providers \u3092 {{version}}+ \u306B\u66F4\u65B0\u3057\u3066\u304F\u3060\u3055\u3044"
   },
   settings: {
     mainProvider: "\u30E1\u30A4\u30F3AI\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC",
@@ -1013,7 +1086,25 @@ var ja_default = {
     communityActionsConflictNote: "\u3053\u306E\u540D\u524D\u306E\u30A2\u30AF\u30B7\u30E7\u30F3\u306F\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059\u3002\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u3059\u308B\u3068\u4E0A\u66F8\u304D\u3055\u308C\u307E\u3059\u3002",
     communityActionsSyncSummary: "{{updated}} \u4EF6\u306E\u30A2\u30AF\u30B7\u30E7\u30F3\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F\u3002{{skipped}} \u4EF6\u306E\u5909\u66F4\u3055\u308C\u305F\u30A2\u30AF\u30B7\u30E7\u30F3\u3092\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3057\u305F\u3002",
     communityActionsUpdated: "{{count}} \u4EF6\u306E\u30B3\u30DF\u30E5\u30CB\u30C6\u30A3\u30A2\u30AF\u30B7\u30E7\u30F3\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F\u3002",
-    communityActionsSkipped: "{{count}} \u4EF6\u306E\u5909\u66F4\u3055\u308C\u305F\u30B3\u30DF\u30E5\u30CB\u30C6\u30A3\u30A2\u30AF\u30B7\u30E7\u30F3\u3092\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3057\u305F\u3002"
+    communityActionsSkipped: "{{count}} \u4EF6\u306E\u5909\u66F4\u3055\u308C\u305F\u30B3\u30DF\u30E5\u30CB\u30C6\u30A3\u30A2\u30AF\u30B7\u30E7\u30F3\u3092\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3057\u305F\u3002",
+    reasoningEffort: "\u63A8\u8AD6",
+    reasoningEffortDesc: "Local GPT\u306E\u307F\uFF1A\u672A\u5BFE\u5FDC\u306E\u30E2\u30FC\u30C9\u306FAPI\u306E\u65E2\u5B9A\u5024\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002",
+    reasoningEffortDefault: "API \u306E\u65E2\u5B9A\u5024",
+    reasoningEffortInherit: "\u30B0\u30ED\u30FC\u30D0\u30EB\u8A2D\u5B9A\u3092\u4F7F\u7528",
+    reasoningEffortLow: "\u4F4E",
+    reasoningEffortHigh: "\u9AD8",
+    reasoningEffortMax: "\u6700\u5927",
+    reasoningEffortNone: "\u306A\u3057",
+    reasoningEffortMinimal: "\u6700\u5C0F",
+    reasoningEffortMedium: "\u4E2D",
+    reasoningEffortXHigh: "\u975E\u5E38\u306B\u9AD8",
+    reasoningEffortTrue: "\u30AA\u30F3",
+    reasoningEffortFalse: "\u30AA\u30D5",
+    reasoningUnavailable: "\u5229\u7528\u4E0D\u53EF",
+    creativityDefault: "API \u306E\u65E2\u5B9A\u5024",
+    creativityInherit: "\u30B0\u30ED\u30FC\u30D0\u30EB\u8A2D\u5B9A\u3092\u4F7F\u7528",
+    creativityDesc: "API default \u306F temperature \u3092\u9001\u308A\u307E\u305B\u3093\u3002\u300C\u306A\u3057\u300D\u306F 0 \u3092\u9001\u308A\u307E\u3059\u3002\u30A2\u30AF\u30B7\u30E7\u30F3\u306F\u3053\u306E\u30B0\u30ED\u30FC\u30D0\u30EB\u8A2D\u5B9A\u3092\u7D99\u627F\u3067\u304D\u307E\u3059\u3002",
+    aiProvidersUpdateHeading: "\u63A8\u8AD6\u306B\u306F\u65B0\u3057\u3044 AI Providers \u304C\u5FC5\u8981\u3067\u3059"
   }
 };
 
@@ -1030,7 +1121,10 @@ var ko_default = {
       changeSystemPrompt: "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uBCC0\uACBD",
       clearSystemPrompt: "\uC2DC\uC2A4\uD15C \uD504\uB86C\uD504\uD2B8 \uC9C0\uC6B0\uAE30",
       unknownModel: "\uC54C \uC218 \uC5C6\uB294 \uBAA8\uB378",
-      hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9"
+      hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9",
+      changeReasoning: "\uC774 \uC694\uCCAD\uC758 \uCD94\uB860",
+      noMatchingCommands: "\uC77C\uCE58\uD558\uB294 \uBA85\uB839\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+      noMatchingFiles: "\uC77C\uCE58\uD558\uB294 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4"
     }
   },
   statusBar: {
@@ -1050,7 +1144,8 @@ var ko_default = {
     actionNameExists: '"{{name}}" \uC774\uB984\uC744 \uAC00\uC9C4 \uC561\uC158\uC774 \uC774\uBBF8 \uC874\uC7AC\uD569\uB2C8\uB2E4.',
     actionRewritten: '\uB2E4\uC2DC \uC791\uC131\uB41C "{{name}}" \uC561\uC158',
     actionAdded: '"{{name}}" \uC561\uC158 \uCD94\uAC00\uB428',
-    copied: "\uBCF5\uC0AC\uB428"
+    copied: "\uBCF5\uC0AC\uB428",
+    aiProvidersUpdateForReasoning: "\uCD94\uB860 \uBAA8\uB4DC\uB97C \uC0AC\uC6A9\uD558\uB824\uBA74 AI Providers\uB97C {{version}}+\uB85C \uC5C5\uB370\uC774\uD2B8\uD558\uC138\uC694"
   },
   settings: {
     mainProvider: "\uBA54\uC778 AI \uC81C\uACF5\uC5C5\uCCB4",
@@ -1130,7 +1225,25 @@ var ko_default = {
     communityActionsConflictNote: "\uC774 \uC774\uB984\uC758 \uC561\uC158\uC774 \uC774\uBBF8 \uC874\uC7AC\uD569\uB2C8\uB2E4. \uC124\uCE58\uD558\uBA74 \uB36E\uC5B4\uC501\uB2C8\uB2E4.",
     communityActionsSyncSummary: "{{updated}}\uAC1C \uC561\uC158 \uC5C5\uB370\uC774\uD2B8\uB428. \uC218\uC815\uB41C {{skipped}}\uAC1C \uAC74\uB108\uB700.",
     communityActionsUpdated: "{{count}}\uAC1C\uC758 \uCEE4\uBBA4\uB2C8\uD2F0 \uC561\uC158\uC774 \uC5C5\uB370\uC774\uD2B8\uB418\uC5C8\uC2B5\uB2C8\uB2E4.",
-    communityActionsSkipped: "{{count}}\uAC1C\uC758 \uC218\uC815\uB41C \uCEE4\uBBA4\uB2C8\uD2F0 \uC561\uC158\uC774 \uAC74\uB108\uB6F0\uC5B4\uC84C\uC2B5\uB2C8\uB2E4."
+    communityActionsSkipped: "{{count}}\uAC1C\uC758 \uC218\uC815\uB41C \uCEE4\uBBA4\uB2C8\uD2F0 \uC561\uC158\uC774 \uAC74\uB108\uB6F0\uC5B4\uC84C\uC2B5\uB2C8\uB2E4.",
+    reasoningEffort: "\uCD94\uB860",
+    reasoningEffortDesc: "Local GPT\uC5D0\uB9CC \uC801\uC6A9\uB418\uBA70, \uBBF8\uC9C0\uC6D0 \uBAA8\uB4DC\uB294 API \uAE30\uBCF8\uAC12\uC744 \uC0AC\uC6A9\uD569\uB2C8\uB2E4.",
+    reasoningEffortDefault: "API \uAE30\uBCF8\uAC12",
+    reasoningEffortInherit: "\uC804\uC5ED \uC124\uC815 \uC0AC\uC6A9",
+    reasoningEffortLow: "\uB0AE\uC74C",
+    reasoningEffortHigh: "\uB192\uC74C",
+    reasoningEffortMax: "\uCD5C\uB300",
+    reasoningEffortNone: "\uC5C6\uC74C",
+    reasoningEffortMinimal: "\uCD5C\uC18C",
+    reasoningEffortMedium: "\uBCF4\uD1B5",
+    reasoningEffortXHigh: "\uB9E4\uC6B0 \uB192\uC74C",
+    reasoningEffortTrue: "\uCF1C\uAE30",
+    reasoningEffortFalse: "\uB044\uAE30",
+    reasoningUnavailable: "\uC0AC\uC6A9 \uBD88\uAC00",
+    creativityDefault: "API \uAE30\uBCF8\uAC12",
+    creativityInherit: "\uC804\uC5ED \uC124\uC815 \uC0AC\uC6A9",
+    creativityDesc: "API default\uB294 temperature\uB97C \uBCF4\uB0B4\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC5C6\uC74C\uC740 0\uC744 \uBCF4\uB0C5\uB2C8\uB2E4. \uC791\uC5C5\uC740 \uC774 \uC804\uC5ED \uC120\uD0DD\uC744 \uC0C1\uC18D\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+    aiProvidersUpdateHeading: "\uCD94\uB860\uC5D0\uB294 \uCD5C\uC2E0 AI Providers\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4"
   }
 };
 
@@ -1147,7 +1260,10 @@ var nl_default = {
       changeSystemPrompt: "Wijzig systeemprompt",
       clearSystemPrompt: "Systeemprompt wissen",
       unknownModel: "Onbekend model",
-      hint: "Gebruik / voor commando's, @ voor bestanden"
+      hint: "Gebruik / voor commando's, @ voor bestanden",
+      changeReasoning: "Redeneren voor dit verzoek",
+      noMatchingCommands: "Geen overeenkomende opdrachten",
+      noMatchingFiles: "Geen overeenkomende bestanden"
     }
   },
   statusBar: {
@@ -1167,7 +1283,8 @@ var nl_default = {
     actionNameExists: 'Er bestaat al een actie met de naam "{{name}}".',
     actionRewritten: 'Actie "{{name}}" herschreven',
     actionAdded: 'Actie "{{name}}" toegevoegd',
-    copied: "Gekopieerd"
+    copied: "Gekopieerd",
+    aiProvidersUpdateForReasoning: "Werk AI Providers bij naar {{version}}+ om redeneermodi te gebruiken"
   },
   settings: {
     mainProvider: "Hoofd AI-provider",
@@ -1247,7 +1364,25 @@ var nl_default = {
     communityActionsConflictNote: "Een actie met deze naam bestaat al. Installeren zal deze overschrijven.",
     communityActionsSyncSummary: "{{updated}} acties bijgewerkt. {{skipped}} gewijzigde overgeslagen.",
     communityActionsUpdated: "{{count}} community-acties bijgewerkt.",
-    communityActionsSkipped: "{{count}} gewijzigde community-acties overgeslagen."
+    communityActionsSkipped: "{{count}} gewijzigde community-acties overgeslagen.",
+    reasoningEffort: "Redeneren",
+    reasoningEffortDesc: "Alleen Local GPT; niet-ondersteunde modi gebruiken de API-standaard.",
+    reasoningEffortDefault: "API-standaard",
+    reasoningEffortInherit: "Globale instelling gebruiken",
+    reasoningEffortLow: "Laag",
+    reasoningEffortHigh: "Hoog",
+    reasoningEffortMax: "Maximum",
+    reasoningEffortNone: "Geen",
+    reasoningEffortMinimal: "Minimaal",
+    reasoningEffortMedium: "Gemiddeld",
+    reasoningEffortXHigh: "Zeer hoog",
+    reasoningEffortTrue: "Aan",
+    reasoningEffortFalse: "Uit",
+    reasoningUnavailable: "niet beschikbaar",
+    creativityDefault: "API-standaard",
+    creativityInherit: "Globale instelling gebruiken",
+    creativityDesc: "API-standaard laat temperature weg. Geen stuurt 0. Acties kunnen deze globale keuze overnemen.",
+    aiProvidersUpdateHeading: "Redeneren vereist een nieuwere AI Providers"
   }
 };
 
@@ -1264,7 +1399,10 @@ var pt_default = {
       changeSystemPrompt: "Mudar prompt do sistema",
       clearSystemPrompt: "Limpar prompt do sistema",
       unknownModel: "Modelo desconhecido",
-      hint: "Use / para comandos, @ para arquivos"
+      hint: "Use / para comandos, @ para arquivos",
+      changeReasoning: "Racioc\xEDnio para esta solicita\xE7\xE3o",
+      noMatchingCommands: "Nenhum comando correspondente",
+      noMatchingFiles: "Nenhum arquivo correspondente"
     }
   },
   statusBar: {
@@ -1284,7 +1422,8 @@ var pt_default = {
     actionNameExists: 'J\xE1 existe uma a\xE7\xE3o com o nome "{{name}}".',
     actionRewritten: 'A\xE7\xE3o "{{name}}" reescrita',
     actionAdded: 'A\xE7\xE3o "{{name}}" adicionada',
-    copied: "Copiado"
+    copied: "Copiado",
+    aiProvidersUpdateForReasoning: "Atualize o AI Providers para {{version}}+ para usar modos de racioc\xEDnio"
   },
   settings: {
     mainProvider: "Provedor de IA Principal",
@@ -1364,7 +1503,25 @@ var pt_default = {
     communityActionsConflictNote: "J\xE1 existe uma a\xE7\xE3o com este nome. A instala\xE7\xE3o ir\xE1 substitu\xED-la.",
     communityActionsSyncSummary: "{{updated}} a\xE7\xF5es atualizadas. {{skipped}} modificadas ignoradas.",
     communityActionsUpdated: "{{count}} a\xE7\xF5es da comunidade atualizadas.",
-    communityActionsSkipped: "{{count}} a\xE7\xF5es da comunidade modificadas ignoradas."
+    communityActionsSkipped: "{{count}} a\xE7\xF5es da comunidade modificadas ignoradas.",
+    reasoningEffort: "Racioc\xEDnio",
+    reasoningEffortDesc: "S\xF3 Local GPT; modos n\xE3o suportados usam o padr\xE3o da API.",
+    reasoningEffortDefault: "Padr\xE3o da API",
+    reasoningEffortInherit: "Usar configura\xE7\xE3o global",
+    reasoningEffortLow: "Baixo",
+    reasoningEffortHigh: "Alto",
+    reasoningEffortMax: "M\xE1ximo",
+    reasoningEffortNone: "Nenhum",
+    reasoningEffortMinimal: "M\xEDnimo",
+    reasoningEffortMedium: "M\xE9dio",
+    reasoningEffortXHigh: "Muito alto",
+    reasoningEffortTrue: "Ligado",
+    reasoningEffortFalse: "Desligado",
+    reasoningUnavailable: "indispon\xEDvel",
+    creativityDefault: "Padr\xE3o da API",
+    creativityInherit: "Usar configura\xE7\xE3o global",
+    creativityDesc: "API default omite temperature. Nenhum envia 0. As a\xE7\xF5es podem herdar esta escolha global.",
+    aiProvidersUpdateHeading: "Racioc\xEDnio exige um AI Providers mais recente"
   }
 };
 
@@ -1381,7 +1538,10 @@ var ru_default = {
       changeSystemPrompt: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u0443\u044E \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044E",
       clearSystemPrompt: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u0443\u044E \u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044E",
       unknownModel: "\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C",
-      hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432"
+      hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432",
+      changeReasoning: "\u0420\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0430",
+      noMatchingCommands: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043A\u043E\u043C\u0430\u043D\u0434",
+      noMatchingFiles: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0444\u0430\u0439\u043B\u043E\u0432"
     }
   },
   statusBar: {
@@ -1401,7 +1561,8 @@ var ru_default = {
     actionNameExists: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \xAB{{name}}\xBB \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442.",
     actionRewritten: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \xAB{{name}}\xBB \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E",
     actionAdded: "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \xAB{{name}}\xBB \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E",
-    copied: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E"
+    copied: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E",
+    aiProvidersUpdateForReasoning: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 AI Providers \u0434\u043E {{version}}+, \u0447\u0442\u043E\u0431\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0440\u0435\u0436\u0438\u043C\u044B \u0440\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u044F"
   },
   settings: {
     mainProvider: "\u041E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 AI-\u043F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440",
@@ -1481,7 +1642,25 @@ var ru_default = {
     resetActions: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
     resetActionsDesc: "\u{1F6A8} \u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0434\u043E \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u044B\u0445. \u042D\u0442\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u043D\u0435\u043E\u0431\u0440\u0430\u0442\u0438\u043C\u043E \u0438 \u0443\u0434\u0430\u043B\u0438\u0442 \u0432\u0441\u0435 \u0432\u0430\u0448\u0438 \u043A\u0430\u0441\u0442\u043E\u043C\u043D\u044B\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F.",
     reset: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C",
-    confirmReset: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0441\u0431\u0440\u043E\u0441"
+    confirmReset: "\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C \u0441\u0431\u0440\u043E\u0441",
+    reasoningEffort: "\u0420\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0435",
+    reasoningEffortDesc: "\u0422\u043E\u043B\u044C\u043A\u043E Local GPT; \u043D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u044B\u0435 \u0440\u0435\u0436\u0438\u043C\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 API \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E.",
+    reasoningEffortDefault: "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E API",
+    reasoningEffortInherit: "\u0413\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u0430\u044F \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430",
+    reasoningEffortLow: "\u041D\u0438\u0437\u043A\u0438\u0439",
+    reasoningEffortHigh: "\u0412\u044B\u0441\u043E\u043A\u0438\u0439",
+    reasoningEffortMax: "\u041C\u0430\u043A\u0441\u0438\u043C\u0443\u043C",
+    reasoningEffortNone: "\u041D\u0435\u0442",
+    reasoningEffortMinimal: "\u041C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439",
+    reasoningEffortMedium: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439",
+    reasoningEffortXHigh: "\u041E\u0447\u0435\u043D\u044C \u0432\u044B\u0441\u043E\u043A\u0438\u0439",
+    reasoningEffortTrue: "\u0412\u043A\u043B.",
+    reasoningEffortFalse: "\u0412\u044B\u043A\u043B.",
+    reasoningUnavailable: "\u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E",
+    creativityDefault: "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E API",
+    creativityInherit: "\u0413\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u0430\u044F \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430",
+    creativityDesc: "API default \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u0451\u0442 temperature. \xAB\u041D\u0435\u0442\xBB \u043E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 0. \u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043C\u043E\u0433\u0443\u0442 \u043D\u0430\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u044C \u044D\u0442\u043E\u0442 \u0433\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440.",
+    aiProvidersUpdateHeading: "\u0414\u043B\u044F \u0440\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0439 \u043D\u0443\u0436\u043D\u0430 \u043D\u043E\u0432\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F AI Providers"
   }
 };
 
@@ -1498,7 +1677,10 @@ var zh_default = {
       changeSystemPrompt: "\u66F4\u6539\u7CFB\u7EDF\u63D0\u793A",
       clearSystemPrompt: "\u6E05\u9664\u7CFB\u7EDF\u63D0\u793A",
       unknownModel: "\u672A\u77E5\u6A21\u578B",
-      hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6"
+      hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6",
+      changeReasoning: "\u672C\u6B21\u8BF7\u6C42\u7684\u63A8\u7406",
+      noMatchingCommands: "\u6CA1\u6709\u5339\u914D\u7684\u547D\u4EE4",
+      noMatchingFiles: "\u6CA1\u6709\u5339\u914D\u7684\u6587\u4EF6"
     }
   },
   statusBar: {
@@ -1518,7 +1700,8 @@ var zh_default = {
     actionNameExists: '\u540D\u4E3A"{{name}}"\u7684\u64CD\u4F5C\u5DF2\u5B58\u5728\u3002',
     actionRewritten: '\u5DF2\u91CD\u5199\u64CD\u4F5C"{{name}}"',
     actionAdded: '\u5DF2\u6DFB\u52A0\u64CD\u4F5C"{{name}}"',
-    copied: "\u5DF2\u590D\u5236"
+    copied: "\u5DF2\u590D\u5236",
+    aiProvidersUpdateForReasoning: "\u8BF7\u5C06 AI Providers \u66F4\u65B0\u5230 {{version}}+ \u4EE5\u4F7F\u7528\u63A8\u7406\u6A21\u5F0F"
   },
   settings: {
     mainProvider: "\u4E3B\u8981AI\u63D0\u4F9B\u5546",
@@ -1598,7 +1781,25 @@ var zh_default = {
     resetActions: "\u91CD\u7F6E\u64CD\u4F5C",
     resetActionsDesc: "\u{1F6A8} \u5C06\u6240\u6709\u64CD\u4F5C\u91CD\u7F6E\u4E3A\u9ED8\u8BA4\u503C\u3002\u6B64\u64CD\u4F5C\u65E0\u6CD5\u64A4\u9500\uFF0C\u5E76\u5C06\u5220\u9664\u6240\u6709\u60A8\u7684\u81EA\u5B9A\u4E49\u64CD\u4F5C\u3002",
     reset: "\u91CD\u7F6E",
-    confirmReset: "\u786E\u8BA4\u91CD\u7F6E"
+    confirmReset: "\u786E\u8BA4\u91CD\u7F6E",
+    reasoningEffort: "\u63A8\u7406",
+    reasoningEffortDesc: "\u4EC5\u9650 Local GPT\uFF1B\u4E0D\u652F\u6301\u7684\u6A21\u5F0F\u4F7F\u7528 API \u9ED8\u8BA4\u503C\u3002",
+    reasoningEffortDefault: "API \u9ED8\u8BA4\u503C",
+    reasoningEffortInherit: "\u4F7F\u7528\u5168\u5C40\u8BBE\u7F6E",
+    reasoningEffortLow: "\u4F4E",
+    reasoningEffortHigh: "\u9AD8",
+    reasoningEffortMax: "\u6700\u5927",
+    reasoningEffortNone: "\u65E0",
+    reasoningEffortMinimal: "\u6700\u4F4E",
+    reasoningEffortMedium: "\u4E2D",
+    reasoningEffortXHigh: "\u5F88\u9AD8",
+    reasoningEffortTrue: "\u5F00",
+    reasoningEffortFalse: "\u5173",
+    reasoningUnavailable: "\u4E0D\u53EF\u7528",
+    creativityDefault: "API \u9ED8\u8BA4\u503C",
+    creativityInherit: "\u4F7F\u7528\u5168\u5C40\u8BBE\u7F6E",
+    creativityDesc: "API default \u4E0D\u53D1\u9001 temperature\u3002\u300C\u65E0\u300D\u53D1\u9001 0\u3002\u64CD\u4F5C\u53EF\u4EE5\u7EE7\u627F\u6B64\u5168\u5C40\u9009\u62E9\u3002",
+    aiProvidersUpdateHeading: "\u63A8\u7406\u529F\u80FD\u9700\u8981\u66F4\u65B0\u7248 AI Providers"
   }
 };
 
@@ -1798,6 +1999,290 @@ var I18n = class {
   }
 };
 
+// src/reasoningEffort.ts
+var REASONING_MODE_ORDER = [
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+  "max",
+  "true",
+  "false"
+];
+var MODE_LABEL_KEYS = {
+  none: "settings.reasoningEffortNone",
+  minimal: "settings.reasoningEffortMinimal",
+  low: "settings.reasoningEffortLow",
+  medium: "settings.reasoningEffortMedium",
+  high: "settings.reasoningEffortHigh",
+  xhigh: "settings.reasoningEffortXHigh",
+  max: "settings.reasoningEffortMax",
+  true: "settings.reasoningEffortTrue",
+  false: "settings.reasoningEffortFalse"
+};
+function getReasoningModes(provider) {
+  var _a7, _b3;
+  const modes = (_b3 = (_a7 = provider.modelCapabilities) == null ? void 0 : _a7[provider.model || ""]) == null ? void 0 : _b3.reasoningModes;
+  return Array.isArray(modes) ? modes.filter(isReasoningEffort) : [];
+}
+function supportsReasoningEffort(provider) {
+  return getReasoningModes(provider).length > 0;
+}
+function isReasoningEffort(value) {
+  return typeof value === "string" && value.length > 0 && value !== "default";
+}
+function resolveReasoningEffort(provider, settings, actionEffort) {
+  var _a7;
+  const value = actionEffort != null ? actionEffort : (_a7 = settings.providerReasoningEffort) == null ? void 0 : _a7[provider.id];
+  return isReasoningEffort(value) && getReasoningModes(provider).includes(value) ? value : void 0;
+}
+function sortReasoningModes(modes) {
+  return [...modes].sort((a, b) => {
+    const indexA = REASONING_MODE_ORDER.indexOf(
+      a
+    );
+    const indexB = REASONING_MODE_ORDER.indexOf(
+      b
+    );
+    const rankA = indexA === -1 ? REASONING_MODE_ORDER.length : indexA;
+    const rankB = indexB === -1 ? REASONING_MODE_ORDER.length : indexB;
+    if (rankA !== rankB) return rankA - rankB;
+    return a.localeCompare(b);
+  });
+}
+function reasoningEffortLabel(mode) {
+  if (!mode || mode === "default")
+    return I18n.t("settings.reasoningEffortDefault");
+  const key2 = MODE_LABEL_KEYS[mode];
+  return key2 ? I18n.t(key2) : mode;
+}
+function reasoningEffortOptionLabel(source2) {
+  const label = reasoningEffortLabel(source2.mode);
+  if (!source2.providerNames.length) return label;
+  return `${label} (${source2.providerNames.join(", ")})`;
+}
+function collectReasoningModeSources(providers) {
+  const byMode = /* @__PURE__ */ new Map();
+  for (const provider of providers) {
+    const declared = /* @__PURE__ */ new Set();
+    const current = getReasoningModes(provider);
+    current.forEach((mode) => declared.add(mode));
+    for (const caps of Object.values(provider.modelCapabilities || {})) {
+      ((caps == null ? void 0 : caps.reasoningModes) || []).filter(isReasoningEffort).forEach((mode) => declared.add(mode));
+    }
+    for (const mode of declared) {
+      if (!byMode.has(mode)) byMode.set(mode, /* @__PURE__ */ new Set());
+      byMode.get(mode).add(provider.name);
+    }
+  }
+  return sortReasoningModes([...byMode.keys()]).map((mode) => ({
+    mode,
+    providerNames: [...byMode.get(mode) || []].sort(
+      (a, b) => a.localeCompare(b)
+    )
+  }));
+}
+function reasoningEffortOptions(modes = []) {
+  return Object.fromEntries([
+    ["default", I18n.t("settings.reasoningEffortDefault")],
+    ...sortReasoningModes(modes).map((mode) => [
+      mode,
+      reasoningEffortLabel(mode)
+    ])
+  ]);
+}
+function reasoningEffortOptionsFromSources(sources = []) {
+  return Object.fromEntries([
+    ["default", I18n.t("settings.reasoningEffortDefault")],
+    ...sources.map((source2) => [
+      source2.mode,
+      reasoningEffortOptionLabel(source2)
+    ])
+  ]);
+}
+function formatReasoningBadgeLabel(options) {
+  const mode = options.mode;
+  if (!mode || mode === "default") return "";
+  return reasoningEffortLabel(mode);
+}
+
+// src/main.ts
+var import_obsidian15 = require("obsidian");
+
+// src/LocalGPTSettingTab.ts
+var import_obsidian7 = require("obsidian");
+
+// src/defaultSettings.ts
+var DEFAULT_SETTINGS = {
+  aiProviders: {
+    main: null,
+    embedding: null,
+    vision: null
+  },
+  actionPalette: {
+    systemPromptActionId: null
+  },
+  defaults: {
+    contextLimit: "local"
+  },
+  actions: [
+    {
+      name: "\u{1FA84} General help",
+      prompt: "",
+      system: "You are an assistant helping a user write more content in a document based on a prompt. Output in markdown format. Do not use links. Do not include literal content from the original document."
+    },
+    {
+      name: "\u270D\uFE0F Continue writing",
+      prompt: "Act as a professional editor with many years of experience as a writer. Carefully finalize the following text, add details, use facts and make sure that the meaning and original style are preserved. Purposely write in detail, with examples, so that your reader is comfortable, even if they don't understand the specifics. Don't use clericalisms, evaluations without proof with facts, passive voice. Use Markdown markup language for formatting. Answer only content and nothing else, no introductory words, only substance.",
+      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
+    },
+    {
+      name: "\u{1F36D} Summarize",
+      prompt: "Make a concise summary of the key points of the following text.",
+      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
+    },
+    {
+      name: "\u{1F4D6} Fix spelling and grammar",
+      prompt: "Proofread the below for spelling and grammar.",
+      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can.",
+      replace: true
+    },
+    {
+      name: "\u2705 Find action items",
+      prompt: 'Act as an assistant helping find action items inside a document. An action item is an extracted task or to-do found inside of an unstructured document. Use Markdown checkbox format: each line starts with "- [ ] "',
+      system: "You are an AI assistant that follows instruction extremely well. Help as much as you can."
+    },
+    {
+      name: "\u{1F9E0} New System Prompt",
+      prompt: "",
+      system: `You are a highly skilled AI prompt engineer with expertise in creating tailored prompts for a wide range of professional roles. You have a deep knowledge of how to craft prompts that effectively guide the language model to produce high-quality, contextually appropriate responses.
+
+Your task is to generate a custom system prompt for different roles based on user input. This involves understanding the specific requirements of each role, the context in which the prompt will be used, and the desired output format. You are skilled in structuring prompts that ensure clarity, relevance, and utility.
+
+Create a custom system prompt for an LLM to assist users in generating contextually appropriate and highly effective responses for various roles. The prompt should provide clear instructions to the LLM on how to handle specific scenarios related to the role, including the tone and format of the response.
+
+Start by providing a role "You are..." and context as a summary of the situation or background information relevant to the prompt. Define the main objective, outlining what the LLM needs to accomplish.
+
+Include instructions on the appropriate style and tone (e.g., formal, casual, technical, empathetic) based on the role and audience. Identify the target audience to tailor the LLM's output effectively. Specify the format of the response, whether it should be a narrative, bullet points, step-by-step guide, code, or another format. Avoid using headings or examples; the prompt should read as a continuous, cohesive set of instructions.
+ANSWER PROMPT AND NOTHING ELSE!`
+    }
+  ],
+  _version: 11
+};
+var CREATIVITY = {
+  default: {},
+  "": {
+    temperature: 0
+  },
+  low: {
+    temperature: 0.2
+  },
+  medium: {
+    temperature: 0.5
+  },
+  high: {
+    temperature: 1
+  }
+};
+var SELECTION_KEYWORD = "{{=SELECTION=}}";
+var CONTEXT_KEYWORD = "{{=CONTEXT=}}";
+var CONTEXT_CONDITION_START = "{{=CONTEXT_START=}}";
+var CONTEXT_CONDITION_END = "{{=CONTEXT_END=}}";
+
+// src/LocalGPTSettingTab.ts
+var import_sdk2 = __toESM(require_dist());
+
+// src/aiProvidersCompat.ts
+var import_obsidian = require("obsidian");
+var import_sdk = __toESM(require_dist());
+var MINIMUM_AI_PROVIDERS_API_VERSION = 4;
+var REASONING_AI_PROVIDERS_API_VERSION = 5;
+var REQUIRED_AI_PROVIDERS_PLUGIN_VERSION = "1.12.0";
+var NOTICE_STORAGE_KEY = "local-gpt:noticed-ai-providers-reasoning-upgrade";
+function supportsReasoningApi(service) {
+  return (0, import_sdk.supportsVersion)(service, REASONING_AI_PROVIDERS_API_VERSION);
+}
+function aiProvidersUpgradeMessage() {
+  return I18n.t("notices.aiProvidersUpdateForReasoning", {
+    version: REQUIRED_AI_PROVIDERS_PLUGIN_VERSION
+  });
+}
+function maybeNoticeAiProvidersUpgrade(service) {
+  if (supportsReasoningApi(service)) return;
+  try {
+    if (window.localStorage.getItem(NOTICE_STORAGE_KEY) === "1") return;
+    window.localStorage.setItem(NOTICE_STORAGE_KEY, "1");
+  } catch (e) {
+  }
+  new import_obsidian.Notice(aiProvidersUpgradeMessage());
+}
+
+// src/temperature.ts
+var API_DEFAULT_CREATIVITY_KEY = "default";
+var LEGACY_FALLBACK_CREATIVITY = "low";
+function isLegacyCreativityValue(value) {
+  return value === "" || value === "low" || value === "medium" || value === "high";
+}
+function getEffectiveCreativityKey(settings) {
+  var _a7, _b3;
+  if ((_a7 = settings.defaults) == null ? void 0 : _a7.omitTemperature) {
+    return API_DEFAULT_CREATIVITY_KEY;
+  }
+  const stored = (_b3 = settings.defaults) == null ? void 0 : _b3.creativity;
+  if (stored === API_DEFAULT_CREATIVITY_KEY) {
+    return API_DEFAULT_CREATIVITY_KEY;
+  }
+  if (stored !== void 0) {
+    return stored;
+  }
+  return API_DEFAULT_CREATIVITY_KEY;
+}
+function applyCreativityKey(settings, key2) {
+  if (!settings.defaults) {
+    settings.defaults = {};
+  }
+  if (key2 === API_DEFAULT_CREATIVITY_KEY) {
+    settings.defaults.omitTemperature = true;
+    if (!isLegacyCreativityValue(settings.defaults.creativity)) {
+      settings.defaults.creativity = LEGACY_FALLBACK_CREATIVITY;
+    }
+    return;
+  }
+  delete settings.defaults.omitTemperature;
+  settings.defaults.creativity = key2;
+}
+function normalizeCreativityForLegacy(settings) {
+  if (!settings.defaults) {
+    settings.defaults = {};
+  }
+  const defaults2 = settings.defaults;
+  let changed = false;
+  if (defaults2.creativity === API_DEFAULT_CREATIVITY_KEY) {
+    defaults2.omitTemperature = true;
+    defaults2.creativity = LEGACY_FALLBACK_CREATIVITY;
+    changed = true;
+  }
+  if (defaults2.omitTemperature && !isLegacyCreativityValue(defaults2.creativity)) {
+    defaults2.creativity = LEGACY_FALLBACK_CREATIVITY;
+    changed = true;
+  }
+  return changed;
+}
+function resolveTemperature(settings, override) {
+  var _a7, _b3, _c2, _d, _e;
+  if (override === null) return void 0;
+  if (override !== void 0) {
+    return typeof override === "number" && Number.isFinite(override) ? override : void 0;
+  }
+  if (((_a7 = settings.defaults) == null ? void 0 : _a7.omitTemperature) || ((_b3 = settings.defaults) == null ? void 0 : _b3.creativity) === API_DEFAULT_CREATIVITY_KEY) {
+    return void 0;
+  }
+  const value = (_e = CREATIVITY[(_d = (_c2 = settings.defaults) == null ? void 0 : _c2.creativity) != null ? _d : API_DEFAULT_CREATIVITY_KEY]) == null ? void 0 : _e.temperature;
+  return typeof value === "number" && Number.isFinite(value) ? value : void 0;
+}
+
 // src/actionUtils.ts
 var isSeparatorAction = (action2) => Boolean(action2.separator);
 var getRunnableActions = (actions) => actions.filter((action2) => !isSeparatorAction(action2));
@@ -1840,7 +2325,7 @@ var moveAction = (actions, fromIndex, toIndex) => {
 };
 
 // src/CommunityActionsService.ts
-var import_obsidian = require("obsidian");
+var import_obsidian2 = require("obsidian");
 var DISCUSSION_COMMENTS_URL = "https://api.github.com/repos/pfrankov/obsidian-local-gpt/discussions/89/comments";
 var PER_PAGE = 100;
 var SEPARATOR = "\u2702\uFE0F";
@@ -1944,7 +2429,7 @@ var CommunityActionsService = class {
   }
   static async requestPage(page) {
     try {
-      const response = await (0, import_obsidian.requestUrl)({
+      const response = await (0, import_obsidian2.requestUrl)({
         url: `${DISCUSSION_COMMENTS_URL}?per_page=${PER_PAGE}&page=${page}&sort=created&direction=asc`,
         headers: {
           Accept: "application/vnd.github+json"
@@ -2149,8 +2634,10 @@ CommunityActionsService.cache = null;
 CommunityActionsService.HTML_TAG_REGEX = /<[^>]*>/g;
 
 // src/settingsActionEditor.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 function renderActionEditor({
+  reasoningModes = [],
+  reasoningModeSources,
   container,
   plugin,
   actionToEdit,
@@ -2159,7 +2646,7 @@ function renderActionEditor({
   addNewAction,
   dropCommunityLinkIfModified
 }) {
-  new import_obsidian2.Setting(container).setName(I18n.t("settings.actionName")).addText((text2) => {
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.actionName")).addText((text2) => {
     text2.inputEl.classList.add("local-gpt-action-input");
     (actionToEdit == null ? void 0 : actionToEdit.name) && text2.setValue(actionToEdit.name);
     text2.setPlaceholder(I18n.t("settings.actionNamePlaceholder"));
@@ -2167,7 +2654,7 @@ function renderActionEditor({
       actionToEdit.name = value;
     });
   });
-  new import_obsidian2.Setting(container).setName(I18n.t("settings.systemPrompt")).setDesc(I18n.t("settings.systemPromptDesc")).addTextArea((text2) => {
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.systemPrompt")).setDesc(I18n.t("settings.systemPromptDesc")).addTextArea((text2) => {
     text2.inputEl.classList.add("local-gpt-action-textarea");
     (actionToEdit == null ? void 0 : actionToEdit.system) && text2.setValue(actionToEdit.system);
     text2.setPlaceholder(I18n.t("settings.systemPromptPlaceholder"));
@@ -2175,7 +2662,7 @@ function renderActionEditor({
       actionToEdit.system = value;
     });
   });
-  const promptSetting = new import_obsidian2.Setting(container).setName(I18n.t("settings.prompt")).setDesc("").addTextArea((text2) => {
+  const promptSetting = new import_obsidian3.Setting(container).setName(I18n.t("settings.prompt")).setDesc("").addTextArea((text2) => {
     text2.inputEl.classList.add("local-gpt-action-textarea");
     (actionToEdit == null ? void 0 : actionToEdit.prompt) && text2.setValue(actionToEdit.prompt);
     text2.setPlaceholder("");
@@ -2184,13 +2671,45 @@ function renderActionEditor({
     });
   });
   promptSetting.descEl.innerHTML = I18n.t("settings.promptDesc");
-  new import_obsidian2.Setting(container).setName(I18n.t("settings.replaceSelected")).setDesc(I18n.t("settings.replaceSelectedDesc")).addToggle((component2) => {
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.replaceSelected")).setDesc(I18n.t("settings.replaceSelectedDesc")).addToggle((component2) => {
     (actionToEdit == null ? void 0 : actionToEdit.replace) && component2.setValue(actionToEdit.replace);
     component2.onChange(async (value) => {
       actionToEdit.replace = value;
     });
   });
-  const actionButtonsRow = new import_obsidian2.Setting(container).setName("");
+  const modeSources = reasoningModeSources != null ? reasoningModeSources : reasoningModes.map((mode) => ({ mode, providerNames: [] }));
+  const knownModes = modeSources.map((source2) => source2.mode);
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.reasoningEffort")).setDesc(I18n.t("settings.reasoningEffortDesc")).addDropdown(
+    (dropdown) => {
+      var _a7;
+      return dropdown.addOption("", I18n.t("settings.reasoningEffortInherit")).addOptions(reasoningEffortOptionsFromSources(modeSources)).addOptions(
+        actionToEdit.reasoningEffort && actionToEdit.reasoningEffort !== "default" && !knownModes.includes(actionToEdit.reasoningEffort) ? {
+          [actionToEdit.reasoningEffort]: `${actionToEdit.reasoningEffort} (${I18n.t("settings.reasoningUnavailable")})`
+        } : {}
+      ).setValue((_a7 = actionToEdit.reasoningEffort) != null ? _a7 : "").onChange((value) => {
+        if (isReasoningEffort(value) && knownModes.includes(value) || value === "default") {
+          actionToEdit.reasoningEffort = value;
+        } else {
+          delete actionToEdit.reasoningEffort;
+        }
+      });
+    }
+  );
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.creativity")).setDesc(I18n.t("settings.creativityDesc")).addDropdown((dropdown) => {
+    dropdown.addOption("inherit", I18n.t("settings.creativityInherit")).addOption("default", I18n.t("settings.creativityDefault")).addOption("0", I18n.t("settings.creativityNone")).addOption("0.2", I18n.t("settings.creativityLow")).addOption("0.5", I18n.t("settings.creativityMedium")).addOption("1", I18n.t("settings.creativityHigh"));
+    const value = actionToEdit.temperature;
+    if (typeof value === "number" && ![0, 0.2, 0.5, 1].includes(value))
+      dropdown.addOption(String(value), String(value));
+    dropdown.setValue(
+      value === void 0 ? "inherit" : value === null ? "default" : String(value)
+    ).onChange((selection) => {
+      if (selection === "inherit")
+        delete actionToEdit.temperature;
+      else
+        actionToEdit.temperature = selection === "default" ? null : Number(selection);
+    });
+  });
+  const actionButtonsRow = new import_obsidian3.Setting(container).setName("");
   if (isExistingAction) {
     actionButtonsRow.addButton((button) => {
       button.setClass("local-gpt-action-remove");
@@ -2214,7 +2733,7 @@ function renderActionEditor({
   }).addButton(
     (button) => button.setCta().setButtonText(I18n.t("settings.save")).onClick(async () => {
       if (!actionToEdit.name) {
-        new import_obsidian2.Notice(I18n.t("notices.actionNameRequired"));
+        new import_obsidian3.Notice(I18n.t("notices.actionNameRequired"));
         return;
       }
       const actionToSave = ensureActionId(actionToEdit);
@@ -2222,7 +2741,7 @@ function renderActionEditor({
         if (plugin.settings.actions.find(
           (action2) => action2.name === actionToSave.name
         )) {
-          new import_obsidian2.Notice(
+          new import_obsidian3.Notice(
             I18n.t("notices.actionNameExists", {
               name: actionToSave.name
             })
@@ -2234,7 +2753,7 @@ function renderActionEditor({
         if (plugin.settings.actions.filter(
           (action2) => action2.name === actionToSave.name
         ).length > 1) {
-          new import_obsidian2.Notice(
+          new import_obsidian3.Notice(
             I18n.t("notices.actionNameExists", {
               name: actionToSave.name
             })
@@ -2906,10 +3425,10 @@ function triggerHighlight(element2) {
 }
 
 // src/settingsCommunityActionsModal.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 
 // src/settingsCommunityActionRows.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 function renderCommunityActionRow({
   listEl,
   action: action2,
@@ -2978,7 +3497,7 @@ function renderCommunityActionRow({
   }
   const actions = footer.createDiv("local-gpt-community-actions-actions");
   const controlEl = actions.createDiv("local-gpt-community-actions-control");
-  const button = new import_obsidian3.ButtonComponent(controlEl);
+  const button = new import_obsidian4.ButtonComponent(controlEl);
   configureCommunityActionButton(
     button,
     action2,
@@ -3041,7 +3560,7 @@ function configureCommunityActionButton(button, action2, state2, installCommunit
   const icon = button.buttonEl.createSpan(
     "local-gpt-community-actions-install-icon"
   );
-  (0, import_obsidian3.setIcon)(icon, "plus");
+  (0, import_obsidian4.setIcon)(icon, "plus");
   button.buttonEl.prepend(icon);
 }
 function addPreviewLine(preview, label, value) {
@@ -3147,7 +3666,7 @@ function tryAdoptCommunityAction(action2, lookup) {
 
 // src/settingsCommunityActionsModal.ts
 function openCommunityActionsModal(options) {
-  const modal = new import_obsidian4.Modal(options.app);
+  const modal = new import_obsidian5.Modal(options.app);
   modal.modalEl.addClass("local-gpt-community-actions-modal");
   modal.titleEl.setText(I18n.t("settings.communityActions"));
   const modalContent = modal.contentEl;
@@ -3365,7 +3884,7 @@ function openCommunityActionsModal(options) {
       refreshButton == null ? void 0 : refreshButton.setDisabled(false);
     }
   };
-  const languageSetting = new import_obsidian4.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsLanguage")).setDesc(I18n.t("settings.communityActionsLanguageDesc")).addDropdown((dropdown) => {
+  const languageSetting = new import_obsidian5.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsLanguage")).setDesc(I18n.t("settings.communityActionsLanguageDesc")).addDropdown((dropdown) => {
     languageDropdown = dropdown;
     const initialLanguage = getSelectedLanguage();
     dropdown.addOption(initialLanguage, initialLanguage);
@@ -3385,7 +3904,7 @@ function openCommunityActionsModal(options) {
     languageSetting.settingEl,
     communityActionsList
   );
-  const searchSetting = new import_obsidian4.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsSearch")).setDesc("").setClass("local-gpt-community-actions-search").addText((text2) => {
+  const searchSetting = new import_obsidian5.Setting(communityActionsSection).setName(I18n.t("settings.communityActionsSearch")).setDesc("").setClass("local-gpt-community-actions-search").addText((text2) => {
     text2.setPlaceholder(
       I18n.t("settings.communityActionsSearchPlaceholder")
     );
@@ -3407,7 +3926,7 @@ function openCommunityActionsModal(options) {
 }
 
 // src/settingsActionsList.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // node_modules/sortablejs/modular/sortable.esm.js
 function _defineProperty(e, r2, t) {
@@ -5606,7 +6125,7 @@ function renderActionsList(options) {
   const actionsContainer = options.containerEl.createDiv(
     "local-gpt-actions-container"
   );
-  const isMobile = import_obsidian5.Platform.isMobile || import_obsidian5.Platform.isMobileApp;
+  const isMobile = import_obsidian6.Platform.isMobile || import_obsidian6.Platform.isMobileApp;
   const updateOrder = async (fromIndex, toIndex) => {
     const updatedActions = moveAction(
       options.plugin.settings.actions,
@@ -5658,7 +6177,7 @@ function renderActionsList(options) {
     });
   };
   const renderSeparatorActionRow = (action2, actionIndex) => {
-    const actionRow = new import_obsidian5.Setting(actionsContainer).setName("").setDesc("");
+    const actionRow = new import_obsidian6.Setting(actionsContainer).setName("").setDesc("");
     actionRow.settingEl.addClass("local-gpt-action-row");
     actionRow.settingEl.addClass("local-gpt-action-separator");
     actionRow.settingEl.setAttribute(
@@ -5666,7 +6185,7 @@ function renderActionsList(options) {
       I18n.t("settings.separator")
     );
     const handle = actionRow.settingEl.createDiv("local-gpt-drag-handle");
-    (0, import_obsidian5.setIcon)(handle, "grip-vertical");
+    (0, import_obsidian6.setIcon)(handle, "grip-vertical");
     actionRow.settingEl.prepend(handle);
     addMobileMoveButtons(actionRow, actionIndex);
     actionRow.infoEl.empty();
@@ -5688,12 +6207,14 @@ function renderActionsList(options) {
   const renderActionRow = (action2, actionIndex) => {
     var _a7, _b3;
     const isEditingRow = options.editExistingAction === action2;
-    const actionRow = new import_obsidian5.Setting(actionsContainer);
+    const actionRow = new import_obsidian6.Setting(actionsContainer);
     actionRow.settingEl.addClass("local-gpt-action-row");
     if (isEditingRow) {
       actionRow.controlEl.remove();
       actionRow.infoEl.empty();
       renderActionEditor({
+        reasoningModes: options.reasoningModes,
+        reasoningModeSources: options.reasoningModeSources,
         container: actionRow.infoEl,
         plugin: options.plugin,
         actionToEdit: action2,
@@ -5727,7 +6248,7 @@ function renderActionsList(options) {
       });
     }
     const handle = actionRow.settingEl.createDiv("local-gpt-drag-handle");
-    (0, import_obsidian5.setIcon)(handle, "grip-vertical");
+    (0, import_obsidian6.setIcon)(handle, "grip-vertical");
     actionRow.settingEl.prepend(handle);
     addMobileMoveButtons(actionRow, actionIndex);
     const sharingString = buildSharingString(
@@ -5737,7 +6258,7 @@ function renderActionsList(options) {
     actionRow.addButton(
       (button) => button.setIcon("copy").onClick(async () => {
         navigator.clipboard.writeText(sharingString);
-        new import_obsidian5.Notice(I18n.t("notices.copied"));
+        new import_obsidian6.Notice(I18n.t("notices.copied"));
       })
     ).addButton(
       (button) => button.setButtonText("Edit").onClick(async () => {
@@ -5864,11 +6385,13 @@ function animateDropNeighbor(element2, className) {
 }
 
 // src/LocalGPTSettingTab.ts
-var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
+var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.editEnabled = false;
     this.modelsOptions = {};
+    this.reasoningModes = [];
+    this.reasoningModeSources = [];
     // Controls visibility of the Advanced settings section
     this.isAdvancedMode = false;
     this.communityActionsStatusMessage = "";
@@ -5881,8 +6404,16 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     try {
-      const aiProvidersWaiter = await (0, import_sdk.waitForAI)();
+      const aiProvidersWaiter = await (0, import_sdk2.waitForAI)();
       const aiProvidersResponse = await aiProvidersWaiter.promise;
+      const reasoningAvailable = supportsReasoningApi(aiProvidersResponse);
+      this.reasoningModeSources = reasoningAvailable ? collectReasoningModeSources(aiProvidersResponse.providers) : [];
+      this.reasoningModes = this.reasoningModeSources.map(
+        (source2) => source2.mode
+      );
+      if (!reasoningAvailable) {
+        new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.aiProvidersUpdateHeading")).setDesc(aiProvidersUpgradeMessage());
+      }
       const providers = aiProvidersResponse.providers.reduce(
         (acc, provider) => ({
           ...acc,
@@ -5892,7 +6423,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
           "": ""
         }
       );
-      new import_obsidian6.Setting(containerEl).setHeading().setName(I18n.t("settings.mainProvider")).setClass("local-gpt-ai-providers-select").addDropdown(
+      new import_obsidian7.Setting(containerEl).setHeading().setName(I18n.t("settings.mainProvider")).setClass("local-gpt-ai-providers-select").addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(String(this.plugin.settings.aiProviders.main)).onChange(async (value) => {
           this.plugin.settings.aiProviders.main = value;
           this.plugin.actionPaletteProviderId = value;
@@ -5900,7 +6431,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.embeddingProvider")).setDesc(I18n.t("settings.embeddingProviderDesc")).setClass("local-gpt-ai-providers-select").addDropdown(
+      new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.embeddingProvider")).setDesc(I18n.t("settings.embeddingProviderDesc")).setClass("local-gpt-ai-providers-select").addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(
           String(this.plugin.settings.aiProviders.embedding)
         ).onChange(async (value) => {
@@ -5909,7 +6440,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.visionProvider")).setClass("local-gpt-ai-providers-select").setDesc(I18n.t("settings.visionProviderDesc")).addDropdown(
+      new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.visionProvider")).setClass("local-gpt-ai-providers-select").setDesc(I18n.t("settings.visionProviderDesc")).addDropdown(
         (dropdown) => dropdown.addOptions(providers).setValue(
           String(this.plugin.settings.aiProviders.vision)
         ).onChange(async (value) => {
@@ -5918,15 +6449,43 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
           await this.display();
         })
       );
-      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.creativity")).setDesc("").addDropdown((dropdown) => {
-        dropdown.addOption("", I18n.t("settings.creativityNone")).addOptions({
+      for (const provider of (reasoningAvailable ? aiProvidersResponse.providers : []).filter(supportsReasoningEffort)) {
+        new import_obsidian7.Setting(containerEl).setName(
+          `${I18n.t("settings.reasoningEffort")} \xB7 ${provider.name}`
+        ).setDesc(I18n.t("settings.reasoningEffortDesc")).addDropdown(
+          (dropdown) => {
+            var _a7, _b3;
+            return dropdown.addOptions(
+              reasoningEffortOptions(
+                getReasoningModes(provider)
+              )
+            ).setValue(
+              (_b3 = (_a7 = this.plugin.settings.providerReasoningEffort) == null ? void 0 : _a7[provider.id]) != null ? _b3 : "default"
+            ).onChange(async (value) => {
+              var _a8, _b4;
+              const efforts = (_b4 = (_a8 = this.plugin.settings).providerReasoningEffort) != null ? _b4 : _a8.providerReasoningEffort = {};
+              if (isReasoningEffort(value) && getReasoningModes(provider).includes(value)) {
+                efforts[provider.id] = value;
+              } else {
+                delete efforts[provider.id];
+              }
+              await this.plugin.saveSettings();
+            });
+          }
+        );
+      }
+      new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.creativity")).setDesc(I18n.t("settings.creativityDesc")).addDropdown((dropdown) => {
+        dropdown.addOption(
+          "default",
+          I18n.t("settings.creativityDefault")
+        ).addOption("", I18n.t("settings.creativityNone")).addOptions({
           low: I18n.t("settings.creativityLow"),
           medium: I18n.t("settings.creativityMedium"),
           high: I18n.t("settings.creativityHigh")
         }).setValue(
-          String(this.plugin.settings.defaults.creativity) || ""
+          getEffectiveCreativityKey(this.plugin.settings)
         ).onChange(async (value) => {
-          this.plugin.settings.defaults.creativity = value;
+          applyCreativityKey(this.plugin.settings, value);
           await this.plugin.saveSettings();
           await this.display();
         });
@@ -5937,7 +6496,6 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
     const editingAction = this.editExistingAction || {
       name: "",
       prompt: "",
-      temperature: void 0,
       system: "",
       replace: false
     };
@@ -5978,7 +6536,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
     containerEl.createEl("div", { cls: "local-gpt-settings-separator" });
     containerEl.createEl("h3", { text: I18n.t("settings.actions") });
     if (!isEditingNew) {
-      const quickAdd = new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.quickAdd")).setDesc("").addText((text2) => {
+      const quickAdd = new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.quickAdd")).setDesc("").addText((text2) => {
         text2.inputEl.classList.add("local-gpt-action-input");
         text2.setPlaceholder(I18n.t("settings.quickAddPlaceholder"));
         text2.onChange(async (value) => {
@@ -6013,7 +6571,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
         });
       });
       quickAdd.descEl.innerHTML = I18n.t("settings.quickAddDesc");
-      new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.communityActions")).setDesc(I18n.t("settings.communityActionsOpenDesc")).addButton((button) => {
+      new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.communityActions")).setDesc(I18n.t("settings.communityActionsOpenDesc")).addButton((button) => {
         button.setButtonText(I18n.t("settings.communityActionsOpen")).setCta().onClick(
           () => openCommunityActionsModal({
             app: this.app,
@@ -6041,7 +6599,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
           })
         );
       });
-      const addActionsRow = new import_obsidian6.Setting(containerEl).setName(I18n.t("settings.addNewManually")).setClass("local-gpt-add-actions");
+      const addActionsRow = new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.addNewManually")).setClass("local-gpt-add-actions");
       addActionsRow.addButton(
         (button) => button.setCta().setButtonText(I18n.t("settings.addAction")).onClick(async () => {
           this.editEnabled = true;
@@ -6057,6 +6615,8 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
       );
     } else {
       renderActionEditor({
+        reasoningModes: this.reasoningModes,
+        reasoningModeSources: this.reasoningModeSources,
         container: containerEl,
         plugin: this.plugin,
         actionToEdit: editingAction,
@@ -6067,6 +6627,8 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
       });
     }
     renderActionsList({
+      reasoningModes: this.reasoningModes,
+      reasoningModeSources: this.reasoningModeSources,
       containerEl,
       plugin: this.plugin,
       editExistingAction: this.editExistingAction,
@@ -6091,7 +6653,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
       },
       display: () => this.display()
     });
-    new import_obsidian6.Setting(containerEl).setHeading().setName(I18n.t("settings.advancedSettings")).setDesc(I18n.t("settings.advancedSettingsDesc")).setClass("local-gpt-advanced-toggle").addToggle(
+    new import_obsidian7.Setting(containerEl).setHeading().setName(I18n.t("settings.advancedSettings")).setDesc(I18n.t("settings.advancedSettingsDesc")).setClass("local-gpt-advanced-toggle").addToggle(
       (toggle) => toggle.setValue(this.isAdvancedMode).onChange((value) => {
         this.isAdvancedMode = value;
         this.display();
@@ -6104,7 +6666,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
       enhancedSection.createEl("h4", {
         text: I18n.t("settings.enhancedActions")
       });
-      new import_obsidian6.Setting(enhancedSection).setName(I18n.t("settings.enhancedActionsLabel")).setDesc(I18n.t("settings.enhancedActionsDesc")).setClass("local-gpt-ai-providers-select").addDropdown((dropdown) => {
+      new import_obsidian7.Setting(enhancedSection).setName(I18n.t("settings.enhancedActionsLabel")).setDesc(I18n.t("settings.enhancedActionsDesc")).setClass("local-gpt-ai-providers-select").addDropdown((dropdown) => {
         dropdown.addOptions({
           local: I18n.t("settings.contextLimitLocal"),
           cloud: I18n.t("settings.contextLimitCloud"),
@@ -6125,7 +6687,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
       dangerSection.createEl("h4", {
         text: I18n.t("settings.dangerZone")
       });
-      new import_obsidian6.Setting(dangerSection).setName(I18n.t("settings.resetActions")).setDesc(I18n.t("settings.resetActionsDesc")).addButton(
+      new import_obsidian7.Setting(dangerSection).setName(I18n.t("settings.resetActions")).setDesc(I18n.t("settings.resetActionsDesc")).addButton(
         (button) => button.setClass("mod-warning").setButtonText(I18n.t("settings.reset")).onClick(async () => {
           if (!this.isConfirmingReset) {
             this.isConfirmingReset = true;
@@ -6156,7 +6718,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
     );
     if (alreadyExistingActionIndex >= 0) {
       this.plugin.settings.actions[alreadyExistingActionIndex] = actionWithId;
-      new import_obsidian6.Notice(
+      new import_obsidian7.Notice(
         I18n.t("notices.actionRewritten", { name: actionWithId.name })
       );
     } else {
@@ -6164,7 +6726,7 @@ var LocalGPTSettingTab = class extends import_obsidian6.PluginSettingTab {
         actionWithId,
         ...this.plugin.settings.actions
       ];
-      new import_obsidian6.Notice(
+      new import_obsidian7.Notice(
         I18n.t("notices.actionAdded", { name: actionWithId.name })
       );
     }
@@ -6224,10 +6786,10 @@ var ContentWidget = class extends import_view.WidgetType {
 
 // src/spinnerWidgets.ts
 var import_view2 = require("@codemirror/view");
-var import_obsidian8 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 
 // src/spinnerIcons.ts
-var import_obsidian7 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 var THINKING_ICON_CANDIDATES = [
   "atom",
   "beaker",
@@ -6256,15 +6818,15 @@ var resolveThinkingIconPool = () => {
   }
   let pool = [];
   try {
-    if (typeof import_obsidian7.getIconIds === "function") {
-      const available = new Set((0, import_obsidian7.getIconIds)());
+    if (typeof import_obsidian8.getIconIds === "function") {
+      const available = new Set((0, import_obsidian8.getIconIds)());
       pool = THINKING_ICON_CANDIDATES.filter(
         (icon) => available.has(icon)
       );
     }
-    if (typeof import_obsidian7.getIcon === "function") {
+    if (typeof import_obsidian8.getIcon === "function") {
       const candidates = pool.length ? pool : THINKING_ICON_CANDIDATES;
-      pool = candidates.filter((icon) => Boolean((0, import_obsidian7.getIcon)(icon)));
+      pool = candidates.filter((icon) => Boolean((0, import_obsidian8.getIcon)(icon)));
     }
   } catch (e) {
     pool = [];
@@ -6534,7 +7096,7 @@ var ThinkingStreamWidget = class extends import_view2.WidgetType {
     const incoming = this.iconSecondary;
     const outgoing = this.iconPrimary;
     incoming.textContent = "";
-    (0, import_obsidian8.setIcon)(incoming, nextIcon);
+    (0, import_obsidian9.setIcon)(incoming, nextIcon);
     this.iconCrossfadeRaf = requestAnimationFrame(() => {
       this.iconCrossfadeRaf = null;
       outgoing.classList.remove("local-gpt-is-active");
@@ -6557,7 +7119,7 @@ var ThinkingStreamWidget = class extends import_view2.WidgetType {
       return;
     }
     this.iconPrimary.textContent = "";
-    (0, import_obsidian8.setIcon)(this.iconPrimary, iconId);
+    (0, import_obsidian9.setIcon)(this.iconPrimary, iconId);
     this.iconPrimary.classList.add("local-gpt-is-active");
     this.iconSecondary.classList.remove("local-gpt-is-active");
     this.iconSecondary.textContent = "";
@@ -6636,6 +7198,22 @@ var ThinkingStreamWidget = class extends import_view2.WidgetType {
     this.stopIconCycle();
   }
 };
+var RequestStatusWidget = class extends import_view2.WidgetType {
+  constructor(label) {
+    super();
+    this.label = label;
+  }
+  eq(other) {
+    return this.label === other.label;
+  }
+  toDOM() {
+    const element2 = document.createElement("span");
+    element2.className = "local-gpt-request-status";
+    element2.textContent = this.label;
+    element2.setAttribute("role", "status");
+    return element2;
+  }
+};
 
 // src/spinnerPlugin.ts
 var SpinnerPlugin = class {
@@ -6654,7 +7232,7 @@ var SpinnerPlugin = class {
    * @param position Optional position to update specific spinner
    * @returns void
    */
-  processText(text2, processFunc, position) {
+  processText(text2, processFunc, position, requestId) {
     const result = this.processThinkingTags(text2);
     if (result.hasThinkingTags) {
       const displayText = result.displayText.trim() ? processFunc ? processFunc(result.displayText) : result.displayText : "";
@@ -6662,13 +7240,14 @@ var SpinnerPlugin = class {
         result.thinkingText,
         displayText,
         result.isThinking,
-        position
+        position,
+        requestId
       );
       return;
     }
     if (result.displayText.trim()) {
       const displayText = processFunc ? processFunc(result.displayText) : result.displayText;
-      this.updateContent(displayText, position);
+      this.updateContent(displayText, position, requestId);
     }
   }
   /**
@@ -6729,17 +7308,27 @@ var SpinnerPlugin = class {
     });
     this.positionToId.set(position, id);
     this.updateDecorations();
-    return () => this.hide(id);
+    return Object.assign(() => this.hide(id), {
+      processText: (text2, processFunc) => this.processText(text2, processFunc, void 0, id),
+      setStatus: (label) => {
+        const entry = this.entries.get(id);
+        if (!entry) return;
+        entry.status = label;
+        this.updateDecorations();
+      }
+    });
   }
   hide(id) {
     const entry = this.entries.get(id);
     if (entry) {
-      this.positionToId.delete(entry.position);
+      for (const [position, mappedId] of this.positionToId) {
+        if (mappedId === id) this.positionToId.delete(position);
+      }
       this.entries.delete(id);
       this.updateDecorations();
     }
   }
-  updateThinkingStream(thinkingText, answerText, isThinking, originalPosition) {
+  updateThinkingStream(thinkingText, answerText, isThinking, originalPosition, requestId) {
     let updated = false;
     const updateEntry = (data) => {
       if (data.widget instanceof ThinkingStreamWidget) {
@@ -6754,8 +7343,8 @@ var SpinnerPlugin = class {
       );
       updated = true;
     };
-    if (originalPosition !== void 0) {
-      const id = this.positionToId.get(originalPosition);
+    if (requestId !== void 0 || originalPosition !== void 0) {
+      const id = requestId != null ? requestId : this.positionToId.get(originalPosition);
       const data = id ? this.entries.get(id) : void 0;
       if (data) updateEntry(data);
     } else {
@@ -6765,7 +7354,7 @@ var SpinnerPlugin = class {
       this.updateDecorations();
     }
   }
-  updateContent(text2, originalPosition) {
+  updateContent(text2, originalPosition, requestId) {
     let updated = false;
     const updateEntry = (data) => {
       if (data.widget instanceof LoaderWidget) {
@@ -6776,8 +7365,8 @@ var SpinnerPlugin = class {
         updated = true;
       }
     };
-    if (originalPosition !== void 0) {
-      const id = this.positionToId.get(originalPosition);
+    if (requestId !== void 0 || originalPosition !== void 0) {
+      const id = requestId != null ? requestId : this.positionToId.get(originalPosition);
       const data = id ? this.entries.get(id) : void 0;
       if (data) updateEntry(data);
     } else {
@@ -6802,21 +7391,24 @@ var SpinnerPlugin = class {
     }
   }
   updateDecorations() {
-    const builder = new import_state.RangeSetBuilder();
-    const sorted = [...this.entries.values()].sort(
-      (a, b) => a.position - b.position
-    );
-    for (const data of sorted) {
-      builder.add(
-        data.position,
-        data.position,
+    const ranges = [];
+    for (const data of this.entries.values()) {
+      if (data.status) {
+        ranges.push(
+          import_view3.Decoration.widget({
+            widget: new RequestStatusWidget(data.status),
+            side: data.isEndOfLine ? 0 : -2
+          }).range(data.position)
+        );
+      }
+      ranges.push(
         import_view3.Decoration.widget({
           widget: data.widget,
           side: data.isEndOfLine ? 1 : -1
-        })
+        }).range(data.position)
       );
     }
-    this.decorations = builder.finish();
+    this.decorations = import_view3.Decoration.set(ranges, true);
     this.editorView.requestMeasure();
   }
   isPositionAtEndOfLine(state2, position) {
@@ -11598,6 +12190,28 @@ if (dev_fallback_default) {
   throw_rune_error("$props");
   throw_rune_error("$bindable");
 }
+function onMount(fn) {
+  if (component_context === null) {
+    lifecycle_outside_component("onMount");
+  }
+  if (legacy_mode_flag && component_context.l !== null) {
+    init_update_callbacks(component_context).m.push(fn);
+  } else {
+    user_effect(() => {
+      const cleanup = untrack(fn);
+      if (typeof cleanup === "function") return (
+        /** @type {() => void} */
+        cleanup
+      );
+    });
+  }
+}
+function onDestroy(fn) {
+  if (component_context === null) {
+    lifecycle_outside_component("onDestroy");
+  }
+  onMount(() => () => untrack(fn));
+}
 function create_custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   return new CustomEvent(type, { detail, bubbles, cancelable });
 }
@@ -11630,6 +12244,14 @@ function createEventDispatcher() {
     }
     return true;
   };
+}
+function init_update_callbacks(context) {
+  var _a7;
+  var l = (
+    /** @type {ComponentContextLegacy} */
+    context.l
+  );
+  return (_a7 = l.u) != null ? _a7 : l.u = { a: [], b: [], m: [] };
 }
 
 // node_modules/svelte/src/internal/client/dom/blocks/if.js
@@ -12920,15 +13542,18 @@ var CLEAR_SYSTEM_PROMPT_ID = "__clear_system_prompt__";
 var SYSTEM_PREVIEW_LENGTH = 80;
 
 // src/ui/ActionPaletteDropdowns.svelte
-var root_2 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-file-name"> </span> <span class="local-gpt-file-path"> </span></div>`);
-var root_4 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-command-name"> </span> <span class="local-gpt-command-description"> </span></div>`);
-var root_7 = from_html(`<span class="local-gpt-provider-url"> </span>`);
-var root_6 = from_html(`<div role="option" tabindex="0"><div class="local-gpt-provider-header"><span class="local-gpt-provider-name"> </span> <!></div> <span class="local-gpt-provider-model"> </span></div>`);
-var root_9 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-model-name"> </span></div>`);
-var root_11 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-creativity-name"> </span></div>`);
-var root_14 = from_html(`<span class="local-gpt-system-detail"> </span>`);
-var root_13 = from_html(`<div role="option" tabindex="0"><span class="local-gpt-system-name"> </span> <!></div>`);
-var root = from_html(`<div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
+var root_1 = from_html(`<div class="local-gpt-dropdown-item local-gpt-dropdown-empty" role="status"> </div>`);
+var root_3 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-file-name"> </span> <span class="local-gpt-file-path"> </span></div>`);
+var root_4 = from_html(`<div class="local-gpt-dropdown-item local-gpt-dropdown-empty" role="status"> </div>`);
+var root_6 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-command-name"> </span> <span class="local-gpt-command-description"> </span></div>`);
+var root_9 = from_html(`<span class="local-gpt-provider-url"> </span>`);
+var root_8 = from_html(`<div role="option" tabindex="-1"><div class="local-gpt-provider-header"><span class="local-gpt-provider-name"> </span> <!></div> <span class="local-gpt-provider-model"> </span></div>`);
+var root_11 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-model-name"> </span></div>`);
+var root_13 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-creativity-name"> </span></div>`);
+var root_15 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-reasoning-name"> </span></div>`);
+var root_18 = from_html(`<span class="local-gpt-system-detail"> </span>`);
+var root_17 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-system-name"> </span> <!></div>`);
+var root = from_html(`<div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
 function ActionPaletteDropdowns($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPaletteDropdowns, ...$$anchor });
   push($$props, false);
@@ -12938,6 +13563,8 @@ function ActionPaletteDropdowns($$anchor, $$props) {
   let commandItems = prop($$props, "commandItems", 12);
   let providerItems = prop($$props, "providerItems", 12);
   let modelItems = prop($$props, "modelItems", 12);
+  let reasoningItems = prop($$props, "reasoningItems", 28, () => []);
+  let reasoningDropdownElement = prop($$props, "reasoningDropdownElement", 12, null);
   let creativityItems = prop($$props, "creativityItems", 12);
   let systemItems = prop($$props, "systemItems", 12);
   let onSelect = prop($$props, "onSelect", 12);
@@ -12948,8 +13575,8 @@ function ActionPaletteDropdowns($$anchor, $$props) {
   let modelDropdownElement = prop($$props, "modelDropdownElement", 12, null);
   let creativityDropdownElement = prop($$props, "creativityDropdownElement", 12, null);
   let systemDropdownElement = prop($$props, "systemDropdownElement", 12, null);
-  function selectedClass(index3) {
-    return index3 === selectedIndex() ? "local-gpt-selected" : "";
+  function keepFocus(event2) {
+    event2.preventDefault();
   }
   var $$exports = {
     get activeDropdown() {
@@ -12992,6 +13619,20 @@ function ActionPaletteDropdowns($$anchor, $$props) {
     },
     set modelItems($$value) {
       modelItems($$value);
+      flushSync();
+    },
+    get reasoningItems() {
+      return reasoningItems();
+    },
+    set reasoningItems($$value) {
+      reasoningItems($$value);
+      flushSync();
+    },
+    get reasoningDropdownElement() {
+      return reasoningDropdownElement();
+    },
+    set reasoningDropdownElement($$value) {
+      reasoningDropdownElement($$value);
       flushSync();
     },
     get creativityItems() {
@@ -13070,245 +13711,592 @@ function ActionPaletteDropdowns($$anchor, $$props) {
   init();
   var fragment = root();
   var div = first_child(fragment);
-  each(div, 5, fileItems, index2, ($$anchor2, item, index3) => {
+  var node = child(div);
+  {
+    var consequent = ($$anchor2) => {
+      var div_1 = root_1();
+      var text2 = child(div_1, true);
+      reset(div_1);
+      template_effect(($0) => set_text(text2, $0), [
+        () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.noMatchingFiles")))
+      ]);
+      append($$anchor2, div_1);
+    };
+    if_block(node, ($$render) => {
+      if (deep_read_state(activeDropdown()), deep_read_state(fileItems()), untrack(() => activeDropdown() === "file" && fileItems().length === 0)) $$render(consequent);
+    });
+  }
+  var node_1 = sibling(node, 2);
+  each(node_1, 1, fileItems, index2, ($$anchor2, item, index3) => {
     var fragment_1 = comment();
-    var node = first_child(fragment_1);
+    var node_2 = first_child(fragment_1);
     {
-      var consequent = ($$anchor3) => {
-        var div_1 = root_2();
-        var span = child(div_1);
-        var text2 = child(span);
+      var consequent_1 = ($$anchor3) => {
+        var div_2 = root_3();
+        let classes;
+        var span = child(div_2);
+        var text_1 = child(span);
         reset(span);
         var span_1 = sibling(span, 2);
-        var text_1 = child(span_1, true);
+        var text_2 = child(span_1, true);
         reset(span_1);
-        reset(div_1);
-        template_effect(
-          ($0) => {
-            var _a7, _b3;
-            set_class(div_1, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_1, "aria-selected", index3 === selectedIndex());
-            set_text(text2, `${(_a7 = (get(item), untrack(() => get(item).basename))) != null ? _a7 : ""}.${(_b3 = (get(item), untrack(() => get(item).extension))) != null ? _b3 : ""}`);
-            set_text(text_1, (get(item), untrack(() => get(item).path)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
-        event("click", div_1, () => onSelect()(get(item)));
-        event("keydown", div_1, (event2) => event2.key === "Enter" && onSelect()(get(item)));
-        append($$anchor3, div_1);
+        reset(div_2);
+        template_effect(() => {
+          var _a7, _b3;
+          classes = set_class(div_2, 1, "local-gpt-dropdown-item", null, classes, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_2, "aria-selected", index3 === selectedIndex());
+          set_text(text_1, `${(_a7 = (get(item), untrack(() => get(item).basename))) != null ? _a7 : ""}.${(_b3 = (get(item), untrack(() => get(item).extension))) != null ? _b3 : ""}`);
+          set_text(text_2, (get(item), untrack(() => get(item).path)));
+        });
+        event("mousedown", div_2, keepFocus);
+        event("click", div_2, () => onSelect()(get(item)));
+        event("keydown", div_2, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_2);
       };
-      if_block(node, ($$render) => {
-        if (activeDropdown() === "file") $$render(consequent);
+      if_block(node_2, ($$render) => {
+        if (activeDropdown() === "file") $$render(consequent_1);
       });
     }
     append($$anchor2, fragment_1);
   });
   reset(div);
   bind_this(div, ($$value) => dropdownElement($$value), () => dropdownElement());
-  var div_2 = sibling(div, 2);
-  each(div_2, 5, commandItems, index2, ($$anchor2, item, index3) => {
+  var div_3 = sibling(div, 2);
+  var node_3 = child(div_3);
+  {
+    var consequent_2 = ($$anchor2) => {
+      var div_4 = root_4();
+      var text_3 = child(div_4, true);
+      reset(div_4);
+      template_effect(($0) => set_text(text_3, $0), [
+        () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.noMatchingCommands")))
+      ]);
+      append($$anchor2, div_4);
+    };
+    if_block(node_3, ($$render) => {
+      if (deep_read_state(activeDropdown()), deep_read_state(commandItems()), untrack(() => activeDropdown() === "command" && commandItems().length === 0)) $$render(consequent_2);
+    });
+  }
+  var node_4 = sibling(node_3, 2);
+  each(node_4, 1, commandItems, index2, ($$anchor2, item, index3) => {
     var fragment_2 = comment();
-    var node_1 = first_child(fragment_2);
-    {
-      var consequent_1 = ($$anchor3) => {
-        var div_3 = root_4();
-        var span_2 = child(div_3);
-        var text_2 = child(span_2);
-        reset(span_2);
-        var span_3 = sibling(span_2, 2);
-        var text_3 = child(span_3, true);
-        reset(span_3);
-        reset(div_3);
-        template_effect(
-          ($0) => {
-            var _a7;
-            set_class(div_3, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_3, "aria-selected", index3 === selectedIndex());
-            set_text(text_2, `/${(_a7 = (get(item), untrack(() => get(item).name))) != null ? _a7 : ""}`);
-            set_text(text_3, (get(item), untrack(() => get(item).description)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
-        event("click", div_3, () => onSelect()(get(item)));
-        event("keydown", div_3, (event2) => event2.key === "Enter" && onSelect()(get(item)));
-        append($$anchor3, div_3);
-      };
-      if_block(node_1, ($$render) => {
-        if (activeDropdown() === "command") $$render(consequent_1);
-      });
-    }
-    append($$anchor2, fragment_2);
-  });
-  reset(div_2);
-  bind_this(div_2, ($$value) => commandDropdownElement($$value), () => commandDropdownElement());
-  var div_4 = sibling(div_2, 2);
-  each(div_4, 5, providerItems, index2, ($$anchor2, item, index3) => {
-    var fragment_3 = comment();
-    var node_2 = first_child(fragment_3);
+    var node_5 = first_child(fragment_2);
     {
       var consequent_3 = ($$anchor3) => {
         var div_5 = root_6();
-        var div_6 = child(div_5);
-        var span_4 = child(div_6);
-        var text_4 = child(span_4, true);
-        reset(span_4);
-        var node_3 = sibling(span_4, 2);
-        {
-          var consequent_2 = ($$anchor4) => {
-            var span_5 = root_7();
-            var text_5 = child(span_5, true);
-            reset(span_5);
-            template_effect(() => set_text(text_5, (get(item), untrack(() => get(item).providerUrl))));
-            append($$anchor4, span_5);
-          };
-          if_block(node_3, ($$render) => {
-            if (get(item), untrack(() => get(item).providerUrl)) $$render(consequent_2);
-          });
-        }
-        reset(div_6);
-        var span_6 = sibling(div_6, 2);
-        var text_6 = child(span_6, true);
-        reset(span_6);
+        let classes_1;
+        var span_2 = child(div_5);
+        var text_4 = child(span_2);
+        reset(span_2);
+        var span_3 = sibling(span_2, 2);
+        var text_5 = child(span_3, true);
+        reset(span_3);
         reset(div_5);
-        template_effect(
-          ($0) => {
-            set_class(div_5, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_5, "aria-selected", index3 === selectedIndex());
-            set_text(text_4, (get(item), untrack(() => get(item).providerName)));
-            set_text(text_6, (get(item), untrack(() => get(item).name)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
+        template_effect(() => {
+          var _a7;
+          classes_1 = set_class(div_5, 1, "local-gpt-dropdown-item", null, classes_1, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_5, "aria-selected", index3 === selectedIndex());
+          set_text(text_4, `/${(_a7 = (get(item), untrack(() => get(item).name))) != null ? _a7 : ""}`);
+          set_text(text_5, (get(item), untrack(() => get(item).description)));
+        });
+        event("mousedown", div_5, keepFocus);
         event("click", div_5, () => onSelect()(get(item)));
         event("keydown", div_5, (event2) => event2.key === "Enter" && onSelect()(get(item)));
         append($$anchor3, div_5);
       };
-      if_block(node_2, ($$render) => {
-        if (activeDropdown() === "provider") $$render(consequent_3);
+      if_block(node_5, ($$render) => {
+        if (activeDropdown() === "command") $$render(consequent_3);
+      });
+    }
+    append($$anchor2, fragment_2);
+  });
+  reset(div_3);
+  bind_this(div_3, ($$value) => commandDropdownElement($$value), () => commandDropdownElement());
+  var div_6 = sibling(div_3, 2);
+  each(div_6, 5, providerItems, index2, ($$anchor2, item, index3) => {
+    var fragment_3 = comment();
+    var node_6 = first_child(fragment_3);
+    {
+      var consequent_5 = ($$anchor3) => {
+        var div_7 = root_8();
+        let classes_2;
+        var div_8 = child(div_7);
+        var span_4 = child(div_8);
+        var text_6 = child(span_4, true);
+        reset(span_4);
+        var node_7 = sibling(span_4, 2);
+        {
+          var consequent_4 = ($$anchor4) => {
+            var span_5 = root_9();
+            var text_7 = child(span_5, true);
+            reset(span_5);
+            template_effect(() => set_text(text_7, (get(item), untrack(() => get(item).providerUrl))));
+            append($$anchor4, span_5);
+          };
+          if_block(node_7, ($$render) => {
+            if (get(item), untrack(() => get(item).providerUrl)) $$render(consequent_4);
+          });
+        }
+        reset(div_8);
+        var span_6 = sibling(div_8, 2);
+        var text_8 = child(span_6, true);
+        reset(span_6);
+        reset(div_7);
+        template_effect(() => {
+          classes_2 = set_class(div_7, 1, "local-gpt-dropdown-item", null, classes_2, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_7, "aria-selected", index3 === selectedIndex());
+          set_text(text_6, (get(item), untrack(() => get(item).providerName)));
+          set_text(text_8, (get(item), untrack(() => get(item).name)));
+        });
+        event("mousedown", div_7, keepFocus);
+        event("click", div_7, () => onSelect()(get(item)));
+        event("keydown", div_7, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_7);
+      };
+      if_block(node_6, ($$render) => {
+        if (activeDropdown() === "provider") $$render(consequent_5);
       });
     }
     append($$anchor2, fragment_3);
   });
-  reset(div_4);
-  bind_this(div_4, ($$value) => providerDropdownElement($$value), () => providerDropdownElement());
-  var div_7 = sibling(div_4, 2);
-  each(div_7, 5, modelItems, index2, ($$anchor2, item, index3) => {
+  reset(div_6);
+  bind_this(div_6, ($$value) => providerDropdownElement($$value), () => providerDropdownElement());
+  var div_9 = sibling(div_6, 2);
+  each(div_9, 5, modelItems, index2, ($$anchor2, item, index3) => {
     var fragment_4 = comment();
-    var node_4 = first_child(fragment_4);
+    var node_8 = first_child(fragment_4);
     {
-      var consequent_4 = ($$anchor3) => {
-        var div_8 = root_9();
-        var span_7 = child(div_8);
-        var text_7 = child(span_7, true);
-        reset(span_7);
-        reset(div_8);
-        template_effect(
-          ($0) => {
-            set_class(div_8, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_8, "aria-selected", index3 === selectedIndex());
-            set_text(text_7, (get(item), untrack(() => get(item).name)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
-        event("click", div_8, () => onSelect()(get(item)));
-        event("keydown", div_8, (event2) => event2.key === "Enter" && onSelect()(get(item)));
-        append($$anchor3, div_8);
-      };
-      if_block(node_4, ($$render) => {
-        if (activeDropdown() === "model") $$render(consequent_4);
-      });
-    }
-    append($$anchor2, fragment_4);
-  });
-  reset(div_7);
-  bind_this(div_7, ($$value) => modelDropdownElement($$value), () => modelDropdownElement());
-  var div_9 = sibling(div_7, 2);
-  each(div_9, 5, creativityItems, index2, ($$anchor2, item, index3) => {
-    var fragment_5 = comment();
-    var node_5 = first_child(fragment_5);
-    {
-      var consequent_5 = ($$anchor3) => {
+      var consequent_6 = ($$anchor3) => {
         var div_10 = root_11();
-        var span_8 = child(div_10);
-        var text_8 = child(span_8, true);
-        reset(span_8);
+        let classes_3;
+        var span_7 = child(div_10);
+        var text_9 = child(span_7, true);
+        reset(span_7);
         reset(div_10);
-        template_effect(
-          ($0) => {
-            set_class(div_10, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_10, "aria-selected", index3 === selectedIndex());
-            set_text(text_8, (get(item), untrack(() => get(item).name)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
+        template_effect(() => {
+          classes_3 = set_class(div_10, 1, "local-gpt-dropdown-item", null, classes_3, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_10, "aria-selected", index3 === selectedIndex());
+          set_text(text_9, (get(item), untrack(() => get(item).name)));
+        });
+        event("mousedown", div_10, keepFocus);
         event("click", div_10, () => onSelect()(get(item)));
         event("keydown", div_10, (event2) => event2.key === "Enter" && onSelect()(get(item)));
         append($$anchor3, div_10);
       };
-      if_block(node_5, ($$render) => {
-        if (activeDropdown() === "creativity") $$render(consequent_5);
+      if_block(node_8, ($$render) => {
+        if (activeDropdown() === "model") $$render(consequent_6);
       });
     }
-    append($$anchor2, fragment_5);
+    append($$anchor2, fragment_4);
   });
   reset(div_9);
-  bind_this(div_9, ($$value) => creativityDropdownElement($$value), () => creativityDropdownElement());
+  bind_this(div_9, ($$value) => modelDropdownElement($$value), () => modelDropdownElement());
   var div_11 = sibling(div_9, 2);
-  each(div_11, 5, systemItems, index2, ($$anchor2, item, index3) => {
-    var fragment_6 = comment();
-    var node_6 = first_child(fragment_6);
+  each(div_11, 5, creativityItems, index2, ($$anchor2, item, index3) => {
+    var fragment_5 = comment();
+    var node_9 = first_child(fragment_5);
     {
       var consequent_7 = ($$anchor3) => {
         var div_12 = root_13();
-        var span_9 = child(div_12);
-        var text_9 = child(span_9, true);
-        reset(span_9);
-        var node_7 = sibling(span_9, 2);
-        {
-          var consequent_6 = ($$anchor4) => {
-            var span_10 = root_14();
-            var text_10 = child(span_10, true);
-            reset(span_10);
-            template_effect(($0) => set_text(text_10, $0), [
-              () => (deep_read_state(formatSystemPreview2()), get(item), untrack(() => formatSystemPreview2()(get(item).system)))
-            ]);
-            append($$anchor4, span_10);
-          };
-          if_block(node_7, ($$render) => {
-            if (get(item), deep_read_state(CLEAR_SYSTEM_PROMPT_ID), untrack(() => get(item).id !== CLEAR_SYSTEM_PROMPT_ID)) $$render(consequent_6);
-          });
-        }
+        let classes_4;
+        var span_8 = child(div_12);
+        var text_10 = child(span_8, true);
+        reset(span_8);
         reset(div_12);
-        template_effect(
-          ($0) => {
-            set_class(div_12, 1, `local-gpt-dropdown-item ${$0 != null ? $0 : ""}`);
-            set_attribute2(div_12, "aria-selected", index3 === selectedIndex());
-            set_text(text_9, (get(item), untrack(() => get(item).name)));
-          },
-          [() => (index3, untrack(() => selectedClass(index3)))]
-        );
+        template_effect(() => {
+          classes_4 = set_class(div_12, 1, "local-gpt-dropdown-item", null, classes_4, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_12, "aria-selected", index3 === selectedIndex());
+          set_text(text_10, (get(item), untrack(() => get(item).name)));
+        });
+        event("mousedown", div_12, keepFocus);
         event("click", div_12, () => onSelect()(get(item)));
         event("keydown", div_12, (event2) => event2.key === "Enter" && onSelect()(get(item)));
         append($$anchor3, div_12);
       };
-      if_block(node_6, ($$render) => {
-        if (activeDropdown() === "system") $$render(consequent_7);
+      if_block(node_9, ($$render) => {
+        if (activeDropdown() === "creativity") $$render(consequent_7);
+      });
+    }
+    append($$anchor2, fragment_5);
+  });
+  reset(div_11);
+  bind_this(div_11, ($$value) => creativityDropdownElement($$value), () => creativityDropdownElement());
+  var div_13 = sibling(div_11, 2);
+  each(div_13, 5, reasoningItems, index2, ($$anchor2, item, index3) => {
+    var fragment_6 = comment();
+    var node_10 = first_child(fragment_6);
+    {
+      var consequent_8 = ($$anchor3) => {
+        var div_14 = root_15();
+        let classes_5;
+        var span_9 = child(div_14);
+        var text_11 = child(span_9, true);
+        reset(span_9);
+        reset(div_14);
+        template_effect(() => {
+          classes_5 = set_class(div_14, 1, "local-gpt-dropdown-item", null, classes_5, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_14, "aria-selected", index3 === selectedIndex());
+          set_text(text_11, (get(item), untrack(() => get(item).name)));
+        });
+        event("mousedown", div_14, keepFocus);
+        event("click", div_14, () => onSelect()(get(item)));
+        event("keydown", div_14, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_14);
+      };
+      if_block(node_10, ($$render) => {
+        if (activeDropdown() === "reasoning") $$render(consequent_8);
       });
     }
     append($$anchor2, fragment_6);
   });
-  reset(div_11);
-  bind_this(div_11, ($$value) => systemDropdownElement($$value), () => systemDropdownElement());
+  reset(div_13);
+  bind_this(div_13, ($$value) => reasoningDropdownElement($$value), () => reasoningDropdownElement());
+  var div_15 = sibling(div_13, 2);
+  each(div_15, 5, systemItems, index2, ($$anchor2, item, index3) => {
+    var fragment_7 = comment();
+    var node_11 = first_child(fragment_7);
+    {
+      var consequent_10 = ($$anchor3) => {
+        var div_16 = root_17();
+        let classes_6;
+        var span_10 = child(div_16);
+        var text_12 = child(span_10, true);
+        reset(span_10);
+        var node_12 = sibling(span_10, 2);
+        {
+          var consequent_9 = ($$anchor4) => {
+            var span_11 = root_18();
+            var text_13 = child(span_11, true);
+            reset(span_11);
+            template_effect(($0) => set_text(text_13, $0), [
+              () => (deep_read_state(formatSystemPreview2()), get(item), untrack(() => formatSystemPreview2()(get(item).system)))
+            ]);
+            append($$anchor4, span_11);
+          };
+          if_block(node_12, ($$render) => {
+            if (get(item), deep_read_state(CLEAR_SYSTEM_PROMPT_ID), untrack(() => get(item).id !== CLEAR_SYSTEM_PROMPT_ID)) $$render(consequent_9);
+          });
+        }
+        reset(div_16);
+        template_effect(() => {
+          classes_6 = set_class(div_16, 1, "local-gpt-dropdown-item", null, classes_6, { "local-gpt-selected": index3 === selectedIndex() });
+          set_attribute2(div_16, "aria-selected", index3 === selectedIndex());
+          set_text(text_12, (get(item), untrack(() => get(item).name)));
+        });
+        event("mousedown", div_16, keepFocus);
+        event("click", div_16, () => onSelect()(get(item)));
+        event("keydown", div_16, (event2) => event2.key === "Enter" && onSelect()(get(item)));
+        append($$anchor3, div_16);
+      };
+      if_block(node_11, ($$render) => {
+        if (activeDropdown() === "system") $$render(consequent_10);
+      });
+    }
+    append($$anchor2, fragment_7);
+  });
+  reset(div_15);
+  bind_this(div_15, ($$value) => systemDropdownElement($$value), () => systemDropdownElement());
   template_effect(() => {
     set_style(div, `display: ${activeDropdown() === "file" ? "block" : "none"}`);
-    set_style(div_2, `display: ${activeDropdown() === "command" ? "block" : "none"}`);
-    set_style(div_4, `display: ${activeDropdown() === "provider" ? "block" : "none"}`);
-    set_style(div_7, `display: ${activeDropdown() === "model" ? "block" : "none"}`);
-    set_style(div_9, `display: ${activeDropdown() === "creativity" ? "block" : "none"}`);
-    set_style(div_11, `display: ${activeDropdown() === "system" ? "block" : "none"}`);
+    set_style(div_3, `display: ${activeDropdown() === "command" ? "block" : "none"}`);
+    set_style(div_6, `display: ${activeDropdown() === "provider" ? "block" : "none"}`);
+    set_style(div_9, `display: ${activeDropdown() === "model" ? "block" : "none"}`);
+    set_style(div_11, `display: ${activeDropdown() === "creativity" ? "block" : "none"}`);
+    set_style(div_13, `display: ${activeDropdown() === "reasoning" ? "block" : "none"}`);
+    set_style(div_15, `display: ${activeDropdown() === "system" ? "block" : "none"}`);
   });
   append($$anchor, fragment);
   return pop($$exports);
+}
+
+// src/ui/actionPaletteDom.ts
+function getCurrentCursorPosition(contentElement, fallback2 = 0) {
+  var _a7;
+  if (!contentElement) return fallback2;
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return fallback2;
+  const range = selection.getRangeAt(0);
+  if (!contentElement.contains(range.startContainer)) return fallback2;
+  if (range.startContainer === contentElement) {
+    return cursorOffsetAmongChildren(contentElement, range.startOffset);
+  }
+  const textOffset = cursorOffsetAmongTextNodes(
+    contentElement,
+    range.startContainer,
+    range.startOffset
+  );
+  return textOffset != null ? textOffset : ((_a7 = contentElement.textContent) == null ? void 0 : _a7.length) || fallback2;
+}
+function cursorOffsetAmongChildren(element2, childOffset) {
+  var _a7;
+  let position = 0;
+  const children = element2.childNodes;
+  for (let i = 0; i < childOffset && i < children.length; i++) {
+    position += ((_a7 = children[i].textContent) == null ? void 0 : _a7.length) || 0;
+  }
+  return position;
+}
+function cursorOffsetAmongTextNodes(root3, target, offset) {
+  var _a7;
+  let position = 0;
+  const walker = document.createTreeWalker(root3, NodeFilter.SHOW_TEXT, null);
+  let textNode;
+  while (textNode = walker.nextNode()) {
+    if (textNode === target) return position + offset;
+    position += ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
+  }
+  return null;
+}
+function isInsideAtomicChip(node, root3) {
+  let element2 = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+  while (element2 && element2 !== root3) {
+    if (element2.getAttribute("contenteditable") === "false") {
+      return element2;
+    }
+    element2 = element2.parentElement;
+  }
+  return null;
+}
+function setCursorPosition(contentElement, position) {
+  var _a7;
+  if (!contentElement) return;
+  const selection = window.getSelection();
+  const range = document.createRange();
+  let currentPosition = 0;
+  const walker = document.createTreeWalker(
+    contentElement,
+    NodeFilter.SHOW_TEXT,
+    null
+  );
+  let textNode;
+  while (textNode = walker.nextNode()) {
+    const nodeLength = ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
+    if (currentPosition + nodeLength >= position) {
+      const chip = isInsideAtomicChip(textNode, contentElement);
+      if (chip) {
+        range.setStartAfter(chip);
+        range.collapse(true);
+      } else {
+        const offset = position - currentPosition;
+        range.setStart(textNode, offset);
+        range.setEnd(textNode, offset);
+      }
+      selection == null ? void 0 : selection.removeAllRanges();
+      selection == null ? void 0 : selection.addRange(range);
+      return;
+    }
+    currentPosition += nodeLength;
+  }
+  range.selectNodeContents(contentElement);
+  range.collapse(false);
+  selection == null ? void 0 : selection.removeAllRanges();
+  selection == null ? void 0 : selection.addRange(range);
+}
+function scrollSelectedIntoView(container, index3) {
+  if (!container || index3 < 0) return;
+  const selectedItem = container.children[index3];
+  if (!selectedItem) return;
+  const dropdownRect = container.getBoundingClientRect();
+  const itemRect = selectedItem.getBoundingClientRect();
+  const isItemVisible = itemRect.top >= dropdownRect.top && itemRect.bottom <= dropdownRect.bottom;
+  if (!isItemVisible) {
+    selectedItem.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth"
+    });
+  }
+}
+function itemId(item) {
+  const id = item == null ? void 0 : item.id;
+  return typeof id === "string" ? id : void 0;
+}
+function getHighlightedItemId(state2, kind) {
+  if (state2.activeDropdown !== kind) return void 0;
+  return itemId(state2.filteredItems[state2.selectedIndex]);
+}
+function highlightPreferredItem(context, kind, preferredIds) {
+  const items = context.state.filteredItems;
+  const index3 = preferredIds.filter((id) => id !== void 0).map((id) => items.findIndex((item) => itemId(item) === id)).find((match) => match >= 0);
+  context.state.selectedIndex = index3 != null ? index3 : items.length > 0 ? 0 : -1;
+  context.commit();
+  void tick().then(() => {
+    if (context.state.activeDropdown !== kind) return;
+    scrollSelectedIntoView(
+      context.options.getDropdownElement(kind),
+      context.state.selectedIndex
+    );
+  });
+}
+function getDropdownElementForKind(kind, elements) {
+  if (kind === "none") {
+    return null;
+  }
+  return elements[kind];
+}
+function focusPromptInput(contentElement, cursorPosition) {
+  if (!contentElement) return;
+  contentElement.focus({ preventScroll: true });
+  if (typeof cursorPosition === "number") {
+    setCursorPosition(contentElement, cursorPosition);
+  }
+}
+function selectAllInPromptInput(contentElement) {
+  if (!contentElement) return;
+  contentElement.focus({ preventScroll: true });
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(contentElement);
+  selection == null ? void 0 : selection.removeAllRanges();
+  selection == null ? void 0 : selection.addRange(range);
+}
+var holdingPromptFocus = /* @__PURE__ */ new WeakSet();
+function beginHoldingPromptFocus(contentElement) {
+  if (contentElement) holdingPromptFocus.add(contentElement);
+}
+function endHoldingPromptFocus(contentElement) {
+  if (contentElement) holdingPromptFocus.delete(contentElement);
+}
+function shouldReclaimPromptFocus(contentElement) {
+  if (!contentElement) return false;
+  return holdingPromptFocus.has(contentElement);
+}
+function restorePromptFocus(getContentElement, cursorPosition) {
+  const run3 = () => {
+    var _a7, _b3;
+    const el = getContentElement();
+    if (!el) return;
+    beginHoldingPromptFocus(el);
+    const position = typeof cursorPosition === "number" ? cursorPosition : (_b3 = (_a7 = el.textContent) == null ? void 0 : _a7.length) != null ? _b3 : 0;
+    focusPromptInput(el, position);
+  };
+  run3();
+  void tick().then(run3);
+}
+function installPaletteModAGuard(getContentElement) {
+  const onKeydown = (event2) => {
+    if (!(event2.ctrlKey || event2.metaKey)) return;
+    const key2 = event2.key.length === 1 ? event2.key.toLowerCase() : event2.key;
+    if (key2 !== "a") return;
+    const el = getContentElement();
+    if (!(el == null ? void 0 : el.isConnected)) return;
+    const shell = el.closest(".local-gpt-action-palette-shell");
+    const active = document.activeElement;
+    if (active !== el && !(shell && active instanceof Node && shell.contains(active))) {
+      return;
+    }
+    event2.preventDefault();
+    event2.stopImmediatePropagation();
+    selectAllInPromptInput(el);
+  };
+  window.addEventListener("keydown", onKeydown, true);
+  return () => window.removeEventListener("keydown", onKeydown, true);
+}
+function installPaletteOutsidePointerRelease(getContentElement) {
+  const onPointerDown = (event2) => {
+    const el = getContentElement();
+    if (!(el == null ? void 0 : el.isConnected)) return;
+    const shell = el.closest(".local-gpt-action-palette-shell");
+    const target = event2.target;
+    if (!(target instanceof Node)) return;
+    if ((shell == null ? void 0 : shell.contains(target)) || el.contains(target)) return;
+    endHoldingPromptFocus(el);
+  };
+  window.addEventListener("pointerdown", onPointerDown, true);
+  return () => window.removeEventListener("pointerdown", onPointerDown, true);
+}
+
+// src/ui/actionPaletteReasoning.ts
+function resetReasoning(context) {
+  context.state.reasoningRequest++;
+  context.state.reasoningSelection = void 0;
+  context.state.reasoningSnapshot = void 0;
+  context.state.reasoningLabel = "";
+  context.commit();
+}
+async function refreshReasoning(context) {
+  var _a7, _b3;
+  const getSnapshot = (_b3 = (_a7 = context.options).getReasoningSnapshot) == null ? void 0 : _b3.call(_a7);
+  if (!getSnapshot) return;
+  const request = ++context.state.reasoningRequest;
+  try {
+    const snapshot2 = await getSnapshot();
+    if (request !== context.state.reasoningRequest) return;
+    const selected = context.state.reasoningSelection;
+    if (selected && (selected.providerId !== snapshot2.providerId || selected.model !== snapshot2.model || selected.mode !== "default" && !snapshot2.modes.includes(selected.mode))) {
+      context.state.reasoningSelection = void 0;
+    }
+    context.state.reasoningSnapshot = snapshot2;
+    updateReasoningLabel(context);
+  } catch (e) {
+    if (request === context.state.reasoningRequest) resetReasoning(context);
+  }
+}
+function updateReasoningLabel(context) {
+  const snapshot2 = context.state.reasoningSnapshot;
+  if (!snapshot2) return;
+  const selected = context.state.reasoningSelection;
+  const mode = selected ? selected.mode : snapshot2.effectiveMode;
+  context.state.reasoningLabel = formatReasoningBadgeLabel({
+    selected: Boolean(selected),
+    mode
+  });
+  context.commit();
+}
+async function showReasoningDropdown(context) {
+  context.state.activeDropdown = "reasoning";
+  context.updateFilteredDropdownItems([]);
+  const request = context.state.reasoningRequest + 1;
+  await refreshReasoning(context);
+  if (request !== context.state.reasoningRequest || context.state.activeDropdown !== "reasoning" || !context.state.reasoningSnapshot)
+    return;
+  applyReasoningFilter(context);
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.cursorPosition >= 0 ? context.state.cursorPosition : context.state.textContent.length
+  );
+}
+function applyReasoningFilter(context) {
+  var _a7, _b3;
+  const query = context.getCommandQuery("reasoning").toLowerCase();
+  const modes = sortReasoningModes(
+    ((_a7 = context.state.reasoningSnapshot) == null ? void 0 : _a7.modes) || []
+  );
+  const options = [
+    { id: "", name: I18n.t("settings.reasoningEffortInherit") },
+    { id: "default", name: I18n.t("settings.reasoningEffortDefault") },
+    ...modes.map((mode) => ({
+      id: mode,
+      name: reasoningEffortLabel(mode)
+    }))
+  ].filter((option2) => option2.name.trim().length > 0);
+  const highlighted = getHighlightedItemId(context.state, "reasoning");
+  context.updateFilteredDropdownItems(
+    options.filter((option2) => option2.name.toLowerCase().includes(query))
+  );
+  const selected = context.state.reasoningSelection;
+  highlightPreferredItem(
+    context,
+    "reasoning",
+    selected ? [highlighted, selected.mode] : [highlighted, (_b3 = context.state.reasoningSnapshot) == null ? void 0 : _b3.effectiveMode, ""]
+  );
+}
+function selectReasoning(context, option2) {
+  const snapshot2 = context.state.reasoningSnapshot;
+  if (!snapshot2 || option2.id && option2.id !== "default" && !snapshot2.modes.includes(option2.id))
+    return;
+  context.state.reasoningSelection = option2.id ? {
+    mode: option2.id,
+    providerId: snapshot2.providerId,
+    model: snapshot2.model
+  } : void 0;
+  updateReasoningLabel(context);
+  context.removeCommandAndQuery("reasoning");
+  context.hideDropdown();
+  context.highlightBadgeTemporarily();
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.textContent.length
+  );
 }
 
 // src/ui/actionPaletteHistory.ts
@@ -13503,10 +14491,10 @@ function escapeHtmlContent(text2) {
 function renderTokensAsHtml(tokens) {
   return tokens.map((token) => {
     if (token.type === "file") {
-      return `<span class="file-mention" data-path="${token.filePath}">${escapeHtmlContent(token.content)}</span>`;
+      return `<span class="file-mention" contenteditable="false" data-path="${token.filePath}">${escapeHtmlContent(token.content)}</span>`;
     }
     if (token.type === "command") {
-      return `<span class="command-mention" data-command="${token.commandName}">${escapeHtmlContent(token.content)}</span>`;
+      return `<span class="command-mention" contenteditable="false" data-command="${token.commandName}">${escapeHtmlContent(token.content)}</span>`;
     }
     return escapeHtmlContent(token.content);
   }).join("");
@@ -13518,8 +14506,9 @@ function isCompleteMention(mentionText, availableFiles, selectedFiles) {
   return selectedFiles.some((filePath) => {
     const file = availableFiles.find((f) => f.path === filePath);
     if (!file) return false;
-    const fullFileName = getFullFileName(file);
-    return mentionText === `${MENTION_PREFIX}${fullFileName}`;
+    const token = `${MENTION_PREFIX}${getFullFileName(file)}`;
+    return mentionText === token || mentionText.startsWith(`${token} `) || mentionText.startsWith(`${token}
+`);
   });
 }
 function getCommandQuery(commandName, textContent, cursorPosition) {
@@ -13541,85 +14530,33 @@ function createFileRemovalPattern(file) {
   return new RegExp(`${MENTION_PREFIX}${escapedFileName}\\s?`, "g");
 }
 
-// src/ui/actionPaletteDom.ts
-function getCurrentCursorPosition(contentElement) {
-  var _a7;
-  if (!contentElement) return 0;
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return 0;
-  const range = selection.getRangeAt(0);
-  let position = 0;
-  const walker = document.createTreeWalker(
-    contentElement,
-    NodeFilter.SHOW_TEXT,
-    null
-  );
-  let textNode;
-  while (textNode = walker.nextNode()) {
-    if (textNode === range.startContainer) {
-      return position + range.startOffset;
-    }
-    position += ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
-  }
-  return position;
-}
-function setCursorPosition(contentElement, position) {
-  var _a7;
-  if (!contentElement) return;
-  const selection = window.getSelection();
-  const range = document.createRange();
-  let currentPosition = 0;
-  const walker = document.createTreeWalker(
-    contentElement,
-    NodeFilter.SHOW_TEXT,
-    null
-  );
-  let textNode;
-  while (textNode = walker.nextNode()) {
-    const nodeLength = ((_a7 = textNode.textContent) == null ? void 0 : _a7.length) || 0;
-    if (currentPosition + nodeLength >= position) {
-      const offset = position - currentPosition;
-      range.setStart(textNode, offset);
-      range.setEnd(textNode, offset);
-      selection == null ? void 0 : selection.removeAllRanges();
-      selection == null ? void 0 : selection.addRange(range);
-      return;
-    }
-    currentPosition += nodeLength;
-  }
-}
-function scrollSelectedIntoView(container, index3) {
-  if (!container || index3 < 0) return;
-  const selectedItem = container.children[index3];
-  if (!selectedItem) return;
-  const dropdownRect = container.getBoundingClientRect();
-  const itemRect = selectedItem.getBoundingClientRect();
-  const isItemVisible = itemRect.top >= dropdownRect.top && itemRect.bottom <= dropdownRect.bottom;
-  if (!isItemVisible) {
-    selectedItem.scrollIntoView({
-      block: "nearest",
-      behavior: "smooth"
-    });
-  }
-}
-function getDropdownElementForKind(kind, elements) {
-  if (kind === "none") {
-    return null;
-  }
-  return elements[kind];
-}
-
 // src/ui/actionPaletteOptions.ts
 function getCreativityOptions() {
   return [
+    { id: "default", name: I18n.t("settings.creativityDefault") },
     { id: "", name: I18n.t("settings.creativityNone") },
     { id: "low", name: I18n.t("settings.creativityLow") },
     { id: "medium", name: I18n.t("settings.creativityMedium") },
     { id: "high", name: I18n.t("settings.creativityHigh") }
   ];
 }
-function getAvailableCommands() {
-  return [
+function formatCreativityBadgeLabel(creativityKey) {
+  if (creativityKey === "default") {
+    return "";
+  }
+  const option2 = getCreativityOptions().find(
+    (entry) => entry.id === creativityKey
+  );
+  return (option2 == null ? void 0 : option2.name) || "";
+}
+function getCreativityKeyForBadge(creativityBadge) {
+  var _a7, _b3;
+  return (_b3 = (_a7 = getCreativityOptions().find(
+    (option2) => formatCreativityBadgeLabel(option2.id) === creativityBadge
+  )) == null ? void 0 : _a7.id) != null ? _b3 : "default";
+}
+function getAvailableCommands(includeReasoning = true) {
+  const commands = [
     {
       name: "provider",
       description: I18n.t("commands.actionPalette.changeProvider")
@@ -13637,10 +14574,17 @@ function getAvailableCommands() {
       description: I18n.t("commands.actionPalette.changeSystemPrompt")
     }
   ];
+  if (includeReasoning) {
+    commands.push({
+      name: "reasoning",
+      description: I18n.t("commands.actionPalette.changeReasoning")
+    });
+  }
+  return commands;
 }
-function filterAvailableCommands(query) {
+function filterAvailableCommands(query, includeReasoning = true) {
   const normalizedQuery = query.toLowerCase();
-  return getAvailableCommands().filter((command) => {
+  return getAvailableCommands(includeReasoning).filter((command) => {
     return command.name.toLowerCase().includes(normalizedQuery) || command.description.toLowerCase().includes(normalizedQuery);
   }).slice(0, MAX_DROPDOWN_RESULTS);
 }
@@ -13710,11 +14654,14 @@ function fuzzyMatch2(target, query) {
   return true;
 }
 function getProviderLabelParts(providerLabel) {
-  const [providerName = "", modelName = "", creativityBadge = ""] = providerLabel.split(" \xB7 ");
+  var _a7;
+  const parts = providerLabel.split(" \xB7 ");
+  const last = ((_a7 = parts[parts.length - 1]) == null ? void 0 : _a7.trim()) || "";
+  const creativityBadge = parts.length > 2 && getCreativityOptions().some((option2) => option2.name === last) ? parts.pop().trim() : "";
   return {
-    providerName,
-    modelName: modelName.trim(),
-    creativityBadge: creativityBadge.trim()
+    providerName: parts.shift() || "",
+    modelName: parts.join(" \xB7 ").trim(),
+    creativityBadge
   };
 }
 function buildProviderLabel(providerName, modelName, creativityBadge) {
@@ -13727,6 +14674,7 @@ function getMentionedFilePaths(tokens) {
 }
 
 // src/ui/actionPaletteEditing.ts
+var contentDisplayGeneration = 0;
 function applyInitialSelectedFiles(context) {
   if (!context.options.getFiles() || context.options.getInitialSelectedFiles().length === 0) {
     return;
@@ -13754,12 +14702,10 @@ function applyHistoryEntry(context, text2) {
   );
   context.hideDropdown();
   context.updateContentDisplay();
-  void tick().then(() => {
-    setCursorPosition(
-      context.options.getContentElement(),
-      context.state.textContent.length
-    );
-  });
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.textContent.length
+  );
   context.commit();
 }
 function insertFileAtCursor(context, file) {
@@ -13784,13 +14730,12 @@ function insertFileAtCursor(context, file) {
   );
   context.hideDropdown();
   context.updateContentDisplay();
-  void tick().then(() => {
-    const newCursorPosition = beforeMention.length + fullFileName.length + 2;
-    setCursorPosition(
-      context.options.getContentElement(),
-      newCursorPosition
-    );
-  });
+  const newCursorPosition = beforeMention.length + fullFileName.length + 2;
+  context.state.cursorPosition = newCursorPosition;
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    newCursorPosition
+  );
 }
 function insertCommandAtCursor(context, command) {
   if (context.state.commandStartIndex === -1) return;
@@ -13824,10 +14769,12 @@ function removeCommandAndQuery(context, commandName) {
   context.state.textTokens = context.parseTextToTokens(
     context.state.textContent
   );
+  context.state.cursorPosition = before.length;
   context.updateContentDisplay();
-  void tick().then(() => {
-    setCursorPosition(context.options.getContentElement(), before.length);
-  });
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    before.length
+  );
 }
 function removeFileReference(context, filePath) {
   context.state.selectedFiles = context.state.selectedFiles.filter(
@@ -13849,10 +14796,22 @@ function removeFileReference(context, filePath) {
 function updateContentDisplay(context) {
   const contentElement = context.options.getContentElement();
   if (!contentElement) return;
-  const currentCursor = getCurrentCursorPosition(contentElement);
+  const currentCursor = getCurrentCursorPosition(
+    contentElement,
+    context.state.cursorPosition
+  );
+  const hadFocus = document.activeElement === contentElement;
+  const generation = ++contentDisplayGeneration;
   contentElement.innerHTML = renderTokensAsHtml(context.state.textTokens);
+  context.state.cursorPosition = currentCursor;
+  if (hadFocus || shouldReclaimPromptFocus(contentElement)) {
+    focusPromptInput(contentElement, currentCursor);
+  }
   void tick().then(() => {
-    setCursorPosition(contentElement, currentCursor);
+    if (generation !== contentDisplayGeneration) return;
+    if (document.activeElement === contentElement || hadFocus || shouldReclaimPromptFocus(contentElement)) {
+      focusPromptInput(contentElement, currentCursor);
+    }
   });
 }
 function insertCommand(context, commandName) {
@@ -13870,13 +14829,12 @@ function insertCommand(context, commandName) {
   );
   context.hideDropdown();
   context.updateContentDisplay();
-  void tick().then(() => {
-    const newCursorPosition = beforeCommand.length + commandName.length + 2;
-    setCursorPosition(
-      context.options.getContentElement(),
-      newCursorPosition
-    );
-  });
+  const newCursorPosition = beforeCommand.length + commandName.length + 2;
+  context.state.cursorPosition = newCursorPosition;
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    newCursorPosition
+  );
 }
 function removeCommandFromText(context, commandStartIndex, commandLength) {
   if (commandStartIndex === -1) return;
@@ -13891,24 +14849,29 @@ function removeCommandFromText(context, commandStartIndex, commandLength) {
   context.state.textTokens = context.parseTextToTokens(
     context.state.textContent
   );
+  context.state.cursorPosition = beforeCommand.length;
   context.updateContentDisplay();
-  void tick().then(() => {
-    setCursorPosition(
-      context.options.getContentElement(),
-      beforeCommand.length
-    );
-  });
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    beforeCommand.length
+  );
 }
 
 // src/ui/actionPaletteSelections.ts
 async function selectProvider(context, provider) {
-  var _a7;
+  var _a7, _b3, _c2;
   try {
-    await ((_a7 = context.options.onProviderChange()) == null ? void 0 : _a7(provider.id));
+    (_a7 = context.resetReasoning) == null ? void 0 : _a7.call(context);
+    await ((_b3 = context.options.onProviderChange()) == null ? void 0 : _b3(provider.id));
     context.setProviderBadgeLabel(provider.providerName, provider.name);
     context.options.setProviderId(provider.id);
     context.state.providerName = provider.providerName;
     completeCommandSelection(context, "provider");
+    await ((_c2 = context.refreshReasoning) == null ? void 0 : _c2.call(context));
+    restorePromptFocus(
+      () => context.options.getContentElement(),
+      context.state.textContent.length
+    );
   } catch (error) {
     console.error("Error selecting provider:", error);
     context.hideDropdown();
@@ -13916,11 +14879,17 @@ async function selectProvider(context, provider) {
   context.commit();
 }
 async function selectModel(context, model) {
-  var _a7;
+  var _a7, _b3, _c2;
   try {
-    await ((_a7 = context.options.onModelChange()) == null ? void 0 : _a7(model.name));
+    (_a7 = context.resetReasoning) == null ? void 0 : _a7.call(context);
+    await ((_b3 = context.options.onModelChange()) == null ? void 0 : _b3(model.name));
     context.setProviderBadgeLabel(context.state.providerName, model.name);
     completeCommandSelection(context, "model");
+    await ((_c2 = context.refreshReasoning) == null ? void 0 : _c2.call(context));
+    restorePromptFocus(
+      () => context.options.getContentElement(),
+      context.state.textContent.length
+    );
   } catch (error) {
     console.error("Error selecting model:", error);
     context.hideDropdown();
@@ -13931,7 +14900,7 @@ async function selectCreativity(context, option2) {
   var _a7;
   try {
     await ((_a7 = context.options.onCreativityChange()) == null ? void 0 : _a7(option2.id));
-    context.state.creativityBadge = option2.name;
+    context.state.creativityBadge = formatCreativityBadgeLabel(option2.id);
     context.setProviderBadgeLabel(
       context.state.providerName,
       context.state.modelName
@@ -13953,6 +14922,10 @@ async function selectSystemPrompt(context, option2) {
       context.highlightBadgeTemporarily();
       context.removeCommandAndQuery("system");
       context.hideDropdown();
+      restorePromptFocus(
+        () => context.options.getContentElement(),
+        context.state.textContent.length
+      );
       context.commit();
       return;
     }
@@ -13997,12 +14970,15 @@ async function showCreativityDropdown(context) {
     applyCreativityFilter(context);
     if (context.state.filteredItems.length > 0) {
       context.state.activeDropdown = "creativity";
-      context.state.selectedIndex = 0;
     }
   } catch (error) {
     console.error("Error showing creativity dropdown:", error);
   }
   context.commit();
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.cursorPosition >= 0 ? context.state.cursorPosition : context.state.textContent.length
+  );
 }
 async function showSystemDropdown(context) {
   const getSystemPrompts2 = context.options.getSystemPrompts();
@@ -14044,7 +15020,12 @@ function applyCreativityFilter(context) {
   if (!context.state.allCreativities.length) return;
   const query = context.getCommandQuery("creativity");
   const matches2 = filterCreativityItems(context.state.allCreativities, query);
+  const highlighted = getHighlightedItemId(context.state, "creativity");
   context.updateFilteredDropdownItems(matches2);
+  highlightPreferredItem(context, "creativity", [
+    highlighted,
+    getCreativityKeyForBadge(context.state.creativityBadge)
+  ]);
   if (!query) return;
   const exact = matches2.find(
     (option2) => option2.name.toLowerCase() === query.toLowerCase()
@@ -14067,6 +15048,10 @@ function completeCommandSelection(context, commandName) {
   context.highlightBadgeTemporarily();
   context.removeCommandAndQuery(commandName);
   context.hideDropdown();
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.textContent.length
+  );
 }
 function showLoadedDropdown(context, kind, emptyMessage) {
   if (context.state.filteredItems.length > 0) {
@@ -14079,13 +15064,27 @@ function showLoadedDropdown(context, kind, emptyMessage) {
 
 // src/ui/actionPaletteNavigation.ts
 function handleDropdownNavigation(context, event2) {
+  if (event2.isComposing || event2.keyCode === 229) return true;
   if (!hasActiveDropdownItems(context)) {
     return false;
   }
   return handleDropdownMove(context, event2) || handleDropdownSelection(context, event2) || handleDropdownEscape(context, event2);
 }
+function handlePaletteShortcuts(context, event2) {
+  const mod = event2.ctrlKey || event2.metaKey;
+  if (!mod) return false;
+  const key2 = event2.key.length === 1 ? event2.key.toLowerCase() : event2.key;
+  if (key2 === "a") {
+    event2.preventDefault();
+    event2.stopPropagation();
+    selectAllInPromptInput(context.options.getContentElement());
+    return true;
+  }
+  return false;
+}
 function handleGeneralNavigation(context, event2) {
   var _a7;
+  if (event2.isComposing || event2.keyCode === 229) return;
   if (event2.key === "Enter") {
     if (event2.shiftKey) return;
     event2.preventDefault();
@@ -14094,6 +15093,7 @@ function handleGeneralNavigation(context, event2) {
   }
   if (event2.key === "Escape") {
     event2.preventDefault();
+    event2.stopPropagation();
     (_a7 = context.options.onCancel()) == null ? void 0 : _a7();
     context.options.dispatchCancel();
   }
@@ -14118,7 +15118,7 @@ function handleHistoryNavigation(context, event2) {
   return true;
 }
 function hasActiveDropdownItems(context) {
-  return context.state.activeDropdown !== "none" && context.state.filteredItems.length > 0;
+  return context.state.activeDropdown !== "none";
 }
 function handleDropdownMove(context, event2) {
   if (event2.key !== "ArrowDown" && event2.key !== "ArrowUp") {
@@ -14131,7 +15131,11 @@ function handleDropdownMove(context, event2) {
 function handleDropdownSelection(context, event2) {
   if (event2.key === "Enter" && event2.shiftKey) return false;
   if (event2.key !== "Enter" && event2.key !== "Tab") return false;
+  if (event2.key === "Enter" && context.state.filteredItems.length === 0 && ["command", "file"].includes(context.state.activeDropdown)) {
+    return false;
+  }
   event2.preventDefault();
+  event2.stopPropagation();
   const selectedItem = context.state.filteredItems[context.state.selectedIndex];
   if (context.state.selectedIndex >= 0 && selectedItem) {
     context.handleSelection(selectedItem);
@@ -14141,6 +15145,7 @@ function handleDropdownSelection(context, event2) {
 function handleDropdownEscape(context, event2) {
   if (event2.key !== "Escape") return false;
   event2.preventDefault();
+  event2.stopPropagation();
   context.hideDropdown();
   return true;
 }
@@ -14221,6 +15226,7 @@ function checkForMentionTrigger(context) {
   showDropdownItems(context, "file");
 }
 function checkForCommandTrigger(context) {
+  var _a7, _b3, _c2;
   const commandContext = getCommandContext(context);
   if (!commandContext) {
     if (context.state.activeDropdown !== "file") context.hideDropdown();
@@ -14230,13 +15236,14 @@ function checkForCommandTrigger(context) {
   if (context.activateCommandDropdown(commandContext.commandName)) {
     return;
   }
-  if (["provider", "model", "creativity", "system"].includes(
+  if (["provider", "model", "creativity", "system", "reasoning"].includes(
     context.state.activeDropdown
   )) {
     context.hideDropdown();
   }
   context.state.filteredItems = filterAvailableCommands(
-    commandContext.textAfterCommand
+    commandContext.textAfterCommand,
+    (_c2 = (_b3 = (_a7 = context.options).includeReasoning) == null ? void 0 : _b3.call(_a7)) != null ? _c2 : true
   );
   showDropdownItems(context, "command");
 }
@@ -14257,12 +15264,8 @@ function getCommandContext(context) {
   return { commandIndex, commandName, textAfterCommand };
 }
 function showDropdownItems(context, kind) {
-  if (context.state.filteredItems.length > 0) {
-    context.state.activeDropdown = kind;
-    context.state.selectedIndex = 0;
-    return;
-  }
-  context.hideDropdown();
+  context.state.activeDropdown = kind;
+  context.state.selectedIndex = context.state.filteredItems.length > 0 ? 0 : -1;
 }
 
 // src/ui/actionPaletteController.ts
@@ -14271,6 +15274,11 @@ var ActionPaletteController = class {
     this.state = state2;
     this.options = options;
     this.dropdownControllers = {
+      reasoning: {
+        kind: "reasoning",
+        show: () => showReasoningDropdown(this),
+        refresh: () => applyReasoningFilter(this)
+      },
       provider: {
         kind: "provider",
         show: () => showProviderDropdown(this),
@@ -14293,6 +15301,12 @@ var ActionPaletteController = class {
       }
     };
   }
+  refreshReasoning() {
+    return refreshReasoning(this);
+  }
+  resetReasoning() {
+    resetReasoning(this);
+  }
   initializeContent() {
     this.state.initializedContent = true;
     if (this.options.getValue()) {
@@ -14301,15 +15315,15 @@ var ActionPaletteController = class {
     applyInitialSelectedFiles(this);
     this.state.textTokens = this.parseTextToTokens(this.state.textContent);
     this.updateContentDisplay();
-    void tick().then(() => {
-      var _a7;
-      (_a7 = this.options.getContentElement()) == null ? void 0 : _a7.focus();
-      setCursorPosition(
-        this.options.getContentElement(),
-        this.state.textContent.length
-      );
-    });
+    beginHoldingPromptFocus(this.options.getContentElement());
+    restorePromptFocus(
+      () => this.options.getContentElement(),
+      this.state.textContent.length
+    );
     this.commit();
+  }
+  releaseFocusHold() {
+    endHoldingPromptFocus(this.options.getContentElement());
   }
   restoreSelectedSystemPrompt() {
     var _a7;
@@ -14336,6 +15350,11 @@ var ActionPaletteController = class {
     this.commit();
   }
   handleKeydown(event2) {
+    event2.stopPropagation();
+    if (handlePaletteShortcuts(this, event2)) {
+      this.commit();
+      return;
+    }
     if (handleDropdownNavigation(this, event2)) return;
     if (handleHistoryNavigation(this, event2)) return;
     handleGeneralNavigation(this, event2);
@@ -14344,9 +15363,15 @@ var ActionPaletteController = class {
   handleInput(event2) {
     const target = event2.target;
     this.state.textContent = target.textContent || "";
-    this.state.cursorPosition = getCurrentCursorPosition(
-      this.options.getContentElement()
+    const contentElement = this.options.getContentElement();
+    const selection = window.getSelection();
+    const selectionInPalette = Boolean(
+      contentElement && selection && selection.rangeCount > 0 && contentElement.contains(selection.getRangeAt(0).startContainer)
     );
+    this.state.cursorPosition = selectionInPalette ? getCurrentCursorPosition(
+      contentElement,
+      this.state.cursorPosition
+    ) : this.state.textContent.length;
     this.state.historyIndex = getPromptHistoryLength();
     this.state.draftBeforeHistory = this.state.textContent;
     this.state.textTokens = this.parseTextToTokens(this.state.textContent);
@@ -14360,6 +15385,9 @@ var ActionPaletteController = class {
   }
   handleSelection(item) {
     switch (this.state.activeDropdown) {
+      case "reasoning":
+        selectReasoning(this, item);
+        break;
       case "file":
         insertFileAtCursor(this, item);
         break;
@@ -14394,6 +15422,10 @@ var ActionPaletteController = class {
     this.commit();
   }
   handleKeyup(event2) {
+    event2.stopPropagation();
+    if (event2.key === "Enter" || event2.key === "Tab") {
+      event2.preventDefault();
+    }
     if (event2.key !== "Backspace" && event2.key !== "Delete") return;
     const currentlyMentionedFiles = getMentionedFilePaths(
       this.state.textTokens
@@ -14408,12 +15440,29 @@ var ActionPaletteController = class {
       this.commit();
     }
   }
+  handleFocusOut(event2) {
+    const contentElement = this.options.getContentElement();
+    if (!contentElement) return;
+    const shell = contentElement.closest(".local-gpt-action-palette-shell");
+    const related = event2 == null ? void 0 : event2.relatedTarget;
+    if (related instanceof Node && shell && shell.contains(related)) {
+      return;
+    }
+    if (!shouldReclaimPromptFocus(contentElement)) {
+      return;
+    }
+    restorePromptFocus(
+      () => this.options.getContentElement(),
+      this.state.cursorPosition >= 0 ? this.state.cursorPosition : this.state.textContent.length
+    );
+  }
   submitAction() {
     var _a7;
     addToPromptHistory(this.state.textContent);
     this.state.historyIndex = getPromptHistoryLength();
     this.state.draftBeforeHistory = this.state.textContent;
     const payload = {
+      ...this.state.reasoningSelection ? { reasoningSelection: this.state.reasoningSelection } : {},
       text: this.state.textContent,
       selectedFiles: this.state.selectedFiles,
       systemPrompt: this.state.selectedSystemPromptValue
@@ -14427,16 +15476,21 @@ var ActionPaletteController = class {
     return (_b3 = (_a7 = this.options.getFiles()) == null ? void 0 : _a7()) != null ? _b3 : [];
   }
   parseTextToTokens(text2) {
+    var _a7, _b3, _c2;
     const result = parseTextToTokens(
       text2,
       this.getFiles(),
       this.state.selectedFiles,
-      getAvailableCommands()
+      getAvailableCommands((_c2 = (_b3 = (_a7 = this.options).includeReasoning) == null ? void 0 : _b3.call(_a7)) != null ? _c2 : true)
     );
     this.state.selectedFiles = result.selectedFiles;
     return result.tokens;
   }
   activateCommandDropdown(commandName) {
+    var _a7, _b3, _c2;
+    if (commandName === "reasoning" && !((_c2 = (_b3 = (_a7 = this.options).includeReasoning) == null ? void 0 : _b3.call(_a7)) != null ? _c2 : true)) {
+      return false;
+    }
     const dropdownController = this.dropdownControllers[commandName];
     if (!dropdownController) return false;
     if (this.state.activeDropdown !== dropdownController.kind) {
@@ -14444,6 +15498,12 @@ var ActionPaletteController = class {
       return true;
     }
     dropdownController.refresh();
+    if (commandName === "creativity" || commandName === "reasoning") {
+      restorePromptFocus(
+        () => this.options.getContentElement(),
+        this.state.cursorPosition >= 0 ? this.state.cursorPosition : this.state.textContent.length
+      );
+    }
     return true;
   }
   updateFilteredDropdownItems(matches2) {
@@ -14505,9 +15565,11 @@ var ActionPaletteController = class {
 };
 
 // src/ui/actionPaletteState.ts
-function createActionPaletteState(value, providerLabel) {
-  const { providerName, modelName, creativityBadge } = getProviderLabelParts(providerLabel);
+function createActionPaletteState(value, providerLabel, providerDetails) {
+  const { providerName, modelName, creativityBadge } = providerDetails != null ? providerDetails : getProviderLabelParts(providerLabel);
   return {
+    reasoningLabel: "",
+    reasoningRequest: 0,
     activeDropdown: "none",
     filteredItems: [],
     allProviders: [],
@@ -14534,16 +15596,24 @@ function createActionPaletteState(value, providerLabel) {
 }
 
 // src/ui/ActionPalette.svelte
-var root_22 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
-var root_3 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
-var root_42 = from_html(`<div> </div>`);
-var root2 = from_html(`<div class="local-gpt-action-palette-shell"><div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
+var nextLabelId = 0;
+var root_2 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
+var root_32 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
+var root_5 = from_html(`<div class="local-gpt-provider-badge-label"> </div>`);
+var root_62 = from_html(`<button type="button" class="local-gpt-creativity-badge"> </button>`);
+var root_7 = from_html(`<button type="button" class="local-gpt-reasoning-badge"> </button>`);
+var root_42 = from_html(`<div><!> <!> <!></div>`);
+var root2 = from_html(`<div class="local-gpt-action-palette-shell"><span hidden=""> </span> <div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
 function ActionPalette($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPalette, ...$$anchor });
   push($$props, false);
+  const labelId = `local-gpt-action-palette-label-${++nextLabelId}`;
   let placeholder = prop($$props, "placeholder", 28, () => I18n.t("commands.actionPalette.placeholder"));
+  let getReasoningSnapshot = prop($$props, "getReasoningSnapshot", 12, void 0);
+  let includeReasoning = prop($$props, "includeReasoning", 12, true);
   let value = prop($$props, "value", 12, "");
   let providerLabel = prop($$props, "providerLabel", 12, "");
+  let providerDetails = prop($$props, "providerDetails", 12, void 0);
   let providerId = prop($$props, "providerId", 12, void 0);
   let getFiles = prop($$props, "getFiles", 12, void 0);
   let getProviders = prop($$props, "getProviders", 12, void 0);
@@ -14563,9 +15633,12 @@ function ActionPalette($$anchor, $$props) {
   let commandDropdownElement = mutable_source(null);
   let providerDropdownElement = mutable_source(null);
   let modelDropdownElement = mutable_source(null);
+  let reasoningDropdownElement = mutable_source(null);
+  let reasoningItems = mutable_source([]);
   let creativityDropdownElement = mutable_source(null);
   let systemDropdownElement = mutable_source(null);
-  let state2 = mutable_source(createActionPaletteState(value(), providerLabel()));
+  let state2 = mutable_source(createActionPaletteState(value(), providerLabel(), providerDetails()));
+  let invalidateEpoch = 0;
   let fileItems = mutable_source([]);
   let commandItems = mutable_source([]);
   let providerItems = mutable_source([]);
@@ -14574,6 +15647,7 @@ function ActionPalette($$anchor, $$props) {
   let systemItems = mutable_source([]);
   const controller = new ActionPaletteController(get(state2), {
     getValue: () => value(),
+    getReasoningSnapshot: () => getReasoningSnapshot(),
     getProviderId: () => providerId(),
     setProviderId: (nextProviderId) => {
       providerId(nextProviderId);
@@ -14594,27 +15668,46 @@ function ActionPalette($$anchor, $$props) {
       providerLabel(nextProviderLabel);
     },
     getContentElement: () => get(contentElement),
+    includeReasoning: () => includeReasoning() && Boolean(getReasoningSnapshot()),
     getDropdownElement: (kind) => getDropdownElementForKind(kind, {
       file: get(dropdownElement),
       command: get(commandDropdownElement),
       provider: get(providerDropdownElement),
       model: get(modelDropdownElement),
       creativity: get(creativityDropdownElement),
+      reasoning: get(reasoningDropdownElement),
       system: get(systemDropdownElement)
     }),
     dispatchSubmit: (payload) => dispatch("submit", payload),
     dispatchCancel: () => dispatch("cancel"),
     invalidate: () => {
+      invalidateEpoch += 1;
       set(state2, get(state2));
     }
   });
   controller.restoreSelectedSystemPrompt();
+  if (includeReasoning() && getReasoningSnapshot()) void controller.refreshReasoning();
+  onMount(() => {
+    const stopModA = installPaletteModAGuard(() => get(contentElement));
+    const stopPointer = installPaletteOutsidePointerRelease(() => get(contentElement));
+    return () => {
+      stopModA();
+      stopPointer();
+    };
+  });
+  onDestroy(() => {
+    controller.releaseFocusHold();
+    controller.resetReasoning();
+  });
   function handleSelection(item) {
     controller.handleSelection(item);
   }
   function handleInput(event2) {
     controller.handleInput(event2);
   }
+  legacy_pre_effect(() => get(state2), () => {
+    set(reasoningItems, get(state2).activeDropdown === "reasoning" ? get(state2).filteredItems : []);
+  });
   legacy_pre_effect(() => (get(contentElement), get(state2)), () => {
     if (get(contentElement) && !get(state2).initializedContent) {
       controller.initializeContent();
@@ -14647,6 +15740,20 @@ function ActionPalette($$anchor, $$props) {
       placeholder($$value);
       flushSync();
     },
+    get getReasoningSnapshot() {
+      return getReasoningSnapshot();
+    },
+    set getReasoningSnapshot($$value) {
+      getReasoningSnapshot($$value);
+      flushSync();
+    },
+    get includeReasoning() {
+      return includeReasoning();
+    },
+    set includeReasoning($$value) {
+      includeReasoning($$value);
+      flushSync();
+    },
     get value() {
       return value();
     },
@@ -14659,6 +15766,13 @@ function ActionPalette($$anchor, $$props) {
     },
     set providerLabel($$value) {
       providerLabel($$value);
+      flushSync();
+    },
+    get providerDetails() {
+      return providerDetails();
+    },
+    set providerDetails($$value) {
+      providerDetails($$value);
       flushSync();
     },
     get providerId() {
@@ -14757,7 +15871,10 @@ function ActionPalette($$anchor, $$props) {
   };
   init();
   var div = root2();
-  var div_1 = child(div);
+  var span = child(div);
+  var text2 = child(span, true);
+  reset(span);
+  var div_1 = sibling(span, 2);
   bind_this(div_1, ($$value) => set(contentElement, $$value), () => get(contentElement));
   var node = sibling(div_1, 2);
   {
@@ -14783,6 +15900,9 @@ function ActionPalette($$anchor, $$props) {
         },
         get creativityItems() {
           return get(creativityItems);
+        },
+        get reasoningItems() {
+          return get(reasoningItems);
         },
         get systemItems() {
           return get(systemItems);
@@ -14815,6 +15935,12 @@ function ActionPalette($$anchor, $$props) {
         set modelDropdownElement($$value) {
           set(modelDropdownElement, $$value);
         },
+        get reasoningDropdownElement() {
+          return get(reasoningDropdownElement);
+        },
+        set reasoningDropdownElement($$value) {
+          set(reasoningDropdownElement, $$value);
+        },
         get creativityDropdownElement() {
           return get(creativityDropdownElement);
         },
@@ -14831,29 +15957,29 @@ function ActionPalette($$anchor, $$props) {
       });
     };
     if_block(node, ($$render) => {
-      if (get(state2), untrack(() => get(state2).activeDropdown !== "none" && get(state2).filteredItems.length > 0)) $$render(consequent);
+      if (get(state2), untrack(() => get(state2).activeDropdown !== "none")) $$render(consequent);
     });
   }
   var div_2 = sibling(node, 2);
   var node_1 = child(div_2);
   {
     var consequent_1 = ($$anchor2) => {
-      var div_3 = root_22();
-      var span = child(div_3);
-      var text2 = child(span, true);
-      reset(span);
+      var div_3 = root_2();
+      var span_1 = child(div_3);
+      var text_1 = child(span_1, true);
+      reset(span_1);
       reset(div_3);
       template_effect(() => {
         set_class(div_3, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator"))));
-        set_text(text2, (get(state2), untrack(() => get(state2).selectedSystemPromptName)));
+        set_text(text_1, (get(state2), untrack(() => get(state2).selectedSystemPromptName)));
       });
       append($$anchor2, div_3);
     };
     var alternate = ($$anchor2) => {
-      var div_4 = root_3();
-      var text_1 = child(div_4, true);
+      var div_4 = root_32();
+      var text_2 = child(div_4, true);
       reset(div_4);
-      template_effect(($0) => set_text(text_1, $0), [
+      template_effect(($0) => set_text(text_2, $0), [
         () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.hint")))
       ]);
       append($$anchor2, div_4);
@@ -14865,29 +15991,94 @@ function ActionPalette($$anchor, $$props) {
   }
   var node_2 = sibling(node_1, 2);
   {
-    var consequent_2 = ($$anchor2) => {
+    var consequent_5 = ($$anchor2) => {
       var div_5 = root_42();
-      var text_2 = child(div_5, true);
+      var node_3 = child(div_5);
+      {
+        var consequent_2 = ($$anchor3) => {
+          var div_6 = root_5();
+          var text_3 = child(div_6, true);
+          reset(div_6);
+          template_effect(($0) => set_text(text_3, $0), [
+            () => (get(state2), untrack(() => [get(state2).providerName, get(state2).modelName].filter(Boolean).join(" \xB7 ")))
+          ]);
+          append($$anchor3, div_6);
+        };
+        if_block(node_3, ($$render) => {
+          if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName)) $$render(consequent_2);
+        });
+      }
+      var node_4 = sibling(node_3, 2);
+      {
+        var consequent_3 = ($$anchor3) => {
+          var button = root_62();
+          var text_4 = child(button, true);
+          reset(button);
+          template_effect(
+            ($0) => {
+              set_attribute2(button, "title", $0);
+              set_text(text_4, (get(state2), untrack(() => get(state2).creativityBadge)));
+            },
+            [
+              () => (deep_read_state(I18n), untrack(() => I18n.t("settings.creativity")))
+            ]
+          );
+          event("click", button, () => controller.activateCommandDropdown("creativity"));
+          append($$anchor3, button);
+        };
+        if_block(node_4, ($$render) => {
+          if (get(state2), untrack(() => get(state2).creativityBadge)) $$render(consequent_3);
+        });
+      }
+      var node_5 = sibling(node_4, 2);
+      {
+        var consequent_4 = ($$anchor3) => {
+          var button_1 = root_7();
+          var text_5 = child(button_1);
+          reset(button_1);
+          template_effect(
+            ($0) => {
+              var _a7;
+              set_attribute2(button_1, "title", $0);
+              set_text(text_5, `\u{1F9E0} ${(_a7 = (get(state2), untrack(() => get(state2).reasoningLabel))) != null ? _a7 : ""}`);
+            },
+            [
+              () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.changeReasoning")))
+            ]
+          );
+          event("click", button_1, () => controller.activateCommandDropdown("reasoning"));
+          append($$anchor3, button_1);
+        };
+        if_block(node_5, ($$render) => {
+          if (get(state2), untrack(() => get(state2).reasoningLabel)) $$render(consequent_4);
+        });
+      }
       reset(div_5);
-      template_effect(() => {
-        set_class(div_5, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-label local-gpt-badge-highlight" : "local-gpt-provider-badge-label"))));
-        set_text(text_2, providerLabel());
-      });
+      template_effect(() => set_class(div_5, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-meta local-gpt-badge-highlight" : "local-gpt-provider-badge-meta")))));
       append($$anchor2, div_5);
     };
     if_block(node_2, ($$render) => {
-      if (providerLabel()) $$render(consequent_2);
+      if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName || get(state2).creativityBadge || get(state2).reasoningLabel)) $$render(consequent_5);
     });
   }
   reset(div_2);
   reset(div);
-  template_effect(() => {
-    set_attribute2(div_1, "aria-label", placeholder());
-    set_attribute2(div_1, "data-placeholder", placeholder());
-  });
+  template_effect(
+    ($0) => {
+      set_attribute2(span, "id", labelId);
+      set_text(text2, $0);
+      set_attribute2(div_1, "aria-labelledby", labelId);
+      set_attribute2(div_1, "data-placeholder", placeholder());
+    },
+    [
+      () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.name")))
+    ]
+  );
   event("keydown", div_1, (event2) => controller.handleKeydown(event2));
   event("input", div_1, handleInput);
   event("keyup", div_1, (event2) => controller.handleKeyup(event2));
+  event("focusin", div_1, () => beginHoldingPromptFocus(get(contentElement)));
+  event("focusout", div_1, (event2) => controller.handleFocusOut(event2));
   event("click", div_1, (event2) => controller.handleContentClick(event2));
   append($$anchor, div);
   return pop($$exports);
@@ -14901,7 +16092,32 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
     this.container = null;
     this.app = null;
   }
-  toDOM(view) {
+  /**
+   * Keep the same DOM across decoration rebuilds/maps for *this* widget
+   * instance. Without eq/updateDOM, CM6 replaces the widget (default eq
+   * is false), detaching the focused contenteditable so keys go to the
+   * editor while a caret still looks present in the remounted input.
+   *
+   * Identity-only eq: a second showActionPalette() builds a new widget
+   * and must remount so onSubmit/options from that invocation win.
+   * Class-wide eq + no-op updateDOM reused the first mount's callbacks.
+   *
+   * Do NOT set `editable = true`: that leaves the host inside CM's
+   * contenteditable surface so Svelte DOM mutations are observed as
+   * editor changes and can livelock the renderer. BlockWidgetView already
+   * ignoreMutation()s; the host stays contentEditable=false (CM default)
+   * while the nested palette input remains contenteditable=true.
+   */
+  eq(other) {
+    return other === this;
+  }
+  updateDOM(dom, _view4) {
+    return this.container === dom && this.app !== null;
+  }
+  ignoreEvent() {
+    return true;
+  }
+  toDOM(_view4) {
     this.container = document.createElement("div");
     this.container.addClass("local-gpt-action-palette-container");
     const mountTarget = document.createElement("div");
@@ -14911,7 +16127,10 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
       props: {
         placeholder: this.options.placeholder || I18n.t("commands.actionPalette.placeholder"),
         providerLabel: this.options.modelLabel || "",
+        providerDetails: this.options.providerDetails,
         providerId: this.options.providerId,
+        getReasoningSnapshot: this.options.getReasoningSnapshot,
+        includeReasoning: this.options.includeReasoning !== false && Boolean(this.options.getReasoningSnapshot),
         getFiles: this.options.getFiles,
         getProviders: this.options.getProviders,
         onProviderChange: this.options.onProviderChange,
@@ -14928,7 +16147,8 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
             _a7,
             event2.text,
             event2.selectedFiles,
-            event2.systemPrompt
+            event2.systemPrompt,
+            event2.reasoningSelection
           );
         },
         onCancel: () => {
@@ -14939,7 +16159,7 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
     });
     return this.container;
   }
-  destroy(dom) {
+  destroy(_dom) {
     var _a7;
     (_a7 = this.app) == null ? void 0 : _a7.$destroy();
     this.app = null;
@@ -14966,9 +16186,8 @@ function mapRanges(ranges, changes) {
     to: changes.mapPos(r2.to)
   })) : null;
 }
-function buildDecorations(pos, options, fakeSelections) {
+function buildDecorations(pos, options, fakeSelections, widget) {
   const builder = new import_state3.RangeSetBuilder();
-  const widget = new SvelteActionPaletteWidget(options);
   builder.add(pos, pos, import_view5.Decoration.widget({ widget, side: -1, block: true }));
   if (fakeSelections) {
     for (const r2 of fakeSelections) {
@@ -14986,6 +16205,7 @@ var actionPaletteStateField = import_state3.StateField.define({
     return {
       deco: import_view5.Decoration.none,
       pos: null,
+      widget: null,
       fakeSelections: null,
       previousSelectionRanges: null,
       previousCursor: null
@@ -14995,6 +16215,7 @@ var actionPaletteStateField = import_state3.StateField.define({
     let {
       deco,
       pos,
+      widget,
       fakeSelections,
       previousSelectionRanges,
       previousCursor
@@ -15016,9 +16237,16 @@ var actionPaletteStateField = import_state3.StateField.define({
         fakeSelections = e.value.fakeSelections;
         previousSelectionRanges = e.value.previousSelectionRanges;
         previousCursor = e.value.previousCursor;
-        deco = buildDecorations(pos, e.value.options, fakeSelections);
+        widget = new SvelteActionPaletteWidget(e.value.options);
+        deco = buildDecorations(
+          pos,
+          e.value.options,
+          fakeSelections,
+          widget
+        );
       } else if (e.is(HideActionPaletteEffect)) {
         pos = null;
+        widget = null;
         fakeSelections = null;
         previousSelectionRanges = null;
         previousCursor = null;
@@ -15028,6 +16256,7 @@ var actionPaletteStateField = import_state3.StateField.define({
     return {
       deco,
       pos,
+      widget,
       fakeSelections,
       previousSelectionRanges,
       previousCursor
@@ -15351,7 +16580,7 @@ var FileCache = class {
 var fileCache = new FileCache();
 
 // src/main.ts
-var import_sdk4 = __toESM(require_dist());
+var import_sdk5 = __toESM(require_dist());
 
 // src/progressStatusBar.ts
 var MIN_BASE_SPEED = 0.02 / 16;
@@ -15517,8 +16746,8 @@ var ProgressStatusBar = class {
 };
 
 // src/settingsMigration.ts
-var import_obsidian9 = require("obsidian");
-var import_sdk2 = __toESM(require_dist());
+var import_obsidian10 = require("obsidian");
+var import_sdk3 = __toESM(require_dist());
 var legacyDefaultProviders = {
   ollama: {
     url: "http://localhost:11434",
@@ -15562,7 +16791,8 @@ async function migrateSettings(loadedData, legacyActionPaletteSystemPromptStorag
     (settings) => migrateToVersion10(
       settings,
       legacyActionPaletteSystemPromptStorageKey
-    )
+    ),
+    migrateToVersion11
   ];
   const changed = preAsyncMigrations.reduce(
     (hasChanged, migrate) => migrate(loadedData) || hasChanged,
@@ -15610,13 +16840,14 @@ function migrateToVersion3(settings) {
   return true;
 }
 function migrateToVersion4(settings) {
+  var _a7;
   if (settings._version && settings._version >= 4) {
     return false;
   }
   settings.defaults = {
     provider: settings.defaultProvider || "ollama",
     fallbackProvider: settings.fallbackProvider || "",
-    creativity: "low"
+    ...((_a7 = settings.defaults) == null ? void 0 : _a7.creativity) === void 0 ? {} : { creativity: settings.defaults.creativity }
   };
   delete settings.defaultProvider;
   delete settings.fallbackProvider;
@@ -15637,7 +16868,7 @@ function migrateToVersion5(settings) {
   }
   settings._version = 5;
   setTimeout(() => {
-    new import_obsidian9.Notice(
+    new import_obsidian10.Notice(
       `\u{1F389} LocalGPT can finally use
 context from links!
 Check the Settings!`,
@@ -15670,8 +16901,8 @@ async function migrateToVersion7(settings) {
   if (settings._version && settings._version >= 7) {
     return false;
   }
-  new import_obsidian9.Notice(I18n.t("notices.importantUpdate"), 0);
-  const aiRequestWaiter = await (0, import_sdk2.waitForAI)();
+  new import_obsidian10.Notice(I18n.t("notices.importantUpdate"), 0);
+  const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
   const aiProviders = await aiRequestWaiter.promise;
   settings.aiProviders = {
     main: null,
@@ -15688,7 +16919,7 @@ async function migrateToVersion7(settings) {
       oldDefaults
     );
   }
-  delete settings.defaults;
+  settings.defaults = (oldDefaults == null ? void 0 : oldDefaults.creativity) === void 0 ? {} : { creativity: oldDefaults.creativity };
   delete settings.providers;
   settings._version = 7;
   return true;
@@ -15804,10 +17035,149 @@ function clearLegacyActionPaletteSystemPromptId(storageKey) {
     );
   }
 }
+function migrateToVersion11(settings) {
+  if (settings._version && settings._version >= 11) {
+    return false;
+  }
+  normalizeCreativityForLegacy(settings);
+  settings._version = 11;
+  return true;
+}
+
+// src/providerRequest.ts
+var import_obsidian11 = require("obsidian");
+
+// src/utils.ts
+function preparePrompt(prompt = "", selectedText, context) {
+  const withSelection = mergeSelection(prompt, selectedText);
+  const withContext = injectContext(withSelection, context);
+  return resolveConditionalContext(withContext, context);
+}
+function mergeSelection(prompt, selectedText) {
+  if (prompt.includes(SELECTION_KEYWORD)) {
+    return prompt.replace(SELECTION_KEYWORD, selectedText || "");
+  }
+  return [prompt, selectedText].filter(Boolean).join("\n\n");
+}
+function injectContext(prompt, context) {
+  if (prompt.includes(CONTEXT_KEYWORD)) {
+    return prompt.replace(CONTEXT_KEYWORD, context || "");
+  }
+  if (context.trim()) {
+    return [prompt, "Context:\n" + context].filter(Boolean).join("\n\n");
+  }
+  return prompt;
+}
+function resolveConditionalContext(prompt, context) {
+  if (prompt.includes(CONTEXT_CONDITION_START) && prompt.includes(CONTEXT_CONDITION_END)) {
+    const start = prompt.indexOf(CONTEXT_CONDITION_START) - 1;
+    const end = prompt.indexOf(CONTEXT_CONDITION_END);
+    if (start !== -1 && end !== -1 && start < end) {
+      let contextBlock = prompt.substring(
+        start + CONTEXT_CONDITION_START.length + 1,
+        end
+      );
+      if (!context.trim()) {
+        contextBlock = "";
+      }
+      prompt = prompt.substring(0, start) + contextBlock + prompt.substring(end + CONTEXT_CONDITION_END.length + 1);
+    }
+  }
+  return prompt;
+}
+
+// src/providerRequest.ts
+function selectProvider2(aiProviders, settings, hasImages, overrideProviderId) {
+  const visionCandidate = hasImages ? aiProviders.providers.find(
+    (p) => p.id === settings.aiProviders.vision
+  ) : void 0;
+  const preferredProviderId = overrideProviderId || settings.aiProviders.main;
+  const fallback2 = aiProviders.providers.find(
+    (p) => p.id === preferredProviderId
+  );
+  const provider = visionCandidate || fallback2;
+  if (!provider) {
+    throw new Error("No AI provider found");
+  }
+  return provider;
+}
+function overrideProviderModel(provider, overrideProviderId, actionPaletteModel, actionPaletteModelProviderId) {
+  if (actionPaletteModel && overrideProviderId && provider.id === overrideProviderId && actionPaletteModelProviderId === overrideProviderId) {
+    return { ...provider, model: actionPaletteModel };
+  }
+  return provider;
+}
+function resolveRequestReasoningMode(aiProviders, provider, settings, reasoningEffort, reasoningSelection) {
+  const selectedMode = (reasoningSelection == null ? void 0 : reasoningSelection.providerId) === provider.id && reasoningSelection.model === provider.model ? reasoningSelection.mode : reasoningEffort;
+  const effort = resolveReasoningEffort(provider, settings, selectedMode);
+  if (effort && !supportsReasoningApi(aiProviders)) {
+    return void 0;
+  }
+  return effort;
+}
+async function executeProviderRequest({
+  aiProviders,
+  provider,
+  settings,
+  prompt,
+  system,
+  temperature,
+  reasoningEffort,
+  reasoningSelection,
+  onReasoningResolved,
+  selectedText,
+  context,
+  imagesInBase64,
+  abortController,
+  onUpdate
+}) {
+  if (abortController.signal.aborted) return "";
+  const resolvedTemperature = resolveTemperature(settings, temperature);
+  const effort = resolveRequestReasoningMode(
+    aiProviders,
+    provider,
+    settings,
+    reasoningEffort,
+    reasoningSelection
+  );
+  try {
+    const reasoningApi = supportsReasoningApi(aiProviders);
+    if (effort && reasoningApi) {
+      aiProviders.checkCompatibility(5);
+    }
+    if (reasoningApi) {
+      onReasoningResolved == null ? void 0 : onReasoningResolved(provider, effort);
+    }
+    return await aiProviders.execute({
+      ...effort ? { reasoningMode: effort } : {},
+      provider,
+      prompt: preparePrompt(prompt, selectedText, context),
+      images: imagesInBase64,
+      systemPrompt: system,
+      options: {
+        ...resolvedTemperature === void 0 ? {} : { temperature: resolvedTemperature }
+      },
+      onProgress: (_chunk, accumulatedText) => {
+        if (!abortController.signal.aborted) onUpdate(accumulatedText);
+      },
+      abortController
+    });
+  } catch (error) {
+    if (!abortController.signal.aborted) {
+      new import_obsidian11.Notice(
+        I18n.t("notices.errorGenerating", {
+          message: error.message
+        })
+      );
+    }
+    logger.separator();
+    return "";
+  }
+}
 
 // src/localGptCommands.ts
-var import_obsidian10 = require("obsidian");
-var import_sdk3 = __toESM(require_dist());
+var import_obsidian12 = require("obsidian");
+var import_sdk4 = __toESM(require_dist());
 
 // src/actionMenu.ts
 var populateActionContextMenu = (menu, actions, onAction) => {
@@ -15836,7 +17206,7 @@ function registerContextMenuCommand(plugin) {
       const editorView = editor.cm;
       const cursorPositionFrom = editor.getCursor("from");
       const cursorPositionTo = editor.getCursor("to");
-      const contextMenu = new import_obsidian10.Menu();
+      const contextMenu = new import_obsidian12.Menu();
       populateActionContextMenu(
         contextMenu,
         plugin.settings.actions,
@@ -15884,18 +17254,44 @@ function registerActionPaletteCommand(plugin) {
       );
       const paletteLabel = await getActionPaletteLabel(plugin);
       showActionPalette(editorView, insertPos, {
-        onSubmit: (text2, selectedFiles = [], systemPrompt) => {
+        includeReasoning: plugin.reasoningApiAvailable,
+        getReasoningSnapshot: plugin.reasoningApiAvailable ? async () => {
+          const service = await (await (0, import_sdk4.waitForAI)()).promise;
+          const providerId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+          const provider = overrideProviderModel(
+            selectProvider2(
+              service,
+              plugin.settings,
+              false,
+              providerId
+            ),
+            providerId,
+            plugin.actionPaletteModel,
+            plugin.actionPaletteModelProviderId
+          );
+          return {
+            providerId: provider.id,
+            model: provider.model,
+            modes: getReasoningModes(provider),
+            effectiveMode: resolveReasoningEffort(
+              provider,
+              plugin.settings
+            )
+          };
+        } : void 0,
+        onSubmit: (text2, selectedFiles = [], systemPrompt, reasoningSelection) => {
           var _a8, _b4, _c2;
           const overrideProviderId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
-          const creativityKey = (_b4 = (_a8 = plugin.actionPaletteCreativityKey) != null ? _a8 : plugin.settings.defaults.creativity) != null ? _b4 : "";
-          const temperatureOverride = (_c2 = CREATIVITY[creativityKey]) == null ? void 0 : _c2.temperature;
+          const creativityKey = (_a8 = plugin.actionPaletteCreativityKey) != null ? _a8 : getEffectiveCreativityKey(plugin.settings);
+          const temperatureOverride = (_c2 = (_b4 = CREATIVITY[creativityKey]) == null ? void 0 : _b4.temperature) != null ? _c2 : null;
           plugin.runFreeform(
             editor,
             text2,
             selectedFiles,
             overrideProviderId,
             temperatureOverride,
-            systemPrompt
+            systemPrompt,
+            reasoningSelection
           ).finally(() => {
           });
           hideActionPalette(editorView);
@@ -15907,6 +17303,7 @@ function registerActionPaletteCommand(plugin) {
         },
         placeholder: I18n.t("commands.actionPalette.placeholder"),
         modelLabel: paletteLabel.modelLabel,
+        providerDetails: paletteLabel.providerDetails,
         providerId: paletteLabel.currentProviderId,
         getFiles: () => getActionPaletteFiles(plugin),
         getProviders: () => getActionPaletteProviders(),
@@ -15947,11 +17344,12 @@ function getActionPaletteInitialSelectedFiles(plugin, editor) {
   return activeFile ? [activeFile.path] : [];
 }
 async function getActionPaletteLabel(plugin) {
-  var _a7, _b3;
+  var _a7;
   let modelLabel = "";
+  let providerDetails;
   let currentProviderId;
   try {
-    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiRequestWaiter = await (0, import_sdk4.waitForAI)();
     const aiProviders = await aiRequestWaiter.promise;
     const selectedProviderId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
     const provider = aiProviders.providers.find(
@@ -15960,20 +17358,19 @@ async function getActionPaletteLabel(plugin) {
     if (provider) {
       currentProviderId = provider.id;
       const modelToShow = plugin.actionPaletteModelProviderId === provider.id ? plugin.actionPaletteModel || provider.model : provider.model;
-      const creativityKey = (_b3 = (_a7 = plugin.actionPaletteCreativityKey) != null ? _a7 : plugin.settings.defaults.creativity) != null ? _b3 : "";
-      const creativityLabelMap = {
-        "": I18n.t("settings.creativityNone"),
-        low: I18n.t("settings.creativityLow"),
-        medium: I18n.t("settings.creativityMedium"),
-        high: I18n.t("settings.creativityHigh")
+      const creativityKey = (_a7 = plugin.actionPaletteCreativityKey) != null ? _a7 : getEffectiveCreativityKey(plugin.settings);
+      const creativityLabel = formatCreativityBadgeLabel(creativityKey);
+      providerDetails = {
+        providerName: provider.name,
+        modelName: modelToShow || "",
+        creativityBadge: creativityLabel
       };
-      const creativityLabel = creativityLabelMap[creativityKey] || "";
       modelLabel = [provider.name, modelToShow, creativityLabel].filter(Boolean).join(" \xB7 ");
     }
   } catch (error) {
     void error;
   }
-  return { modelLabel, currentProviderId };
+  return { modelLabel, currentProviderId, providerDetails };
 }
 function getActionPaletteFiles(plugin) {
   return plugin.app.vault.getMarkdownFiles().concat(
@@ -15986,7 +17383,7 @@ function getActionPaletteFiles(plugin) {
 }
 async function getActionPaletteProviders() {
   try {
-    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiRequestWaiter = await (0, import_sdk4.waitForAI)();
     const aiProviders = await aiRequestWaiter.promise;
     return aiProviders.providers.filter((p) => Boolean(p.model)).map((p) => ({
       id: p.id,
@@ -16001,7 +17398,7 @@ async function getActionPaletteProviders() {
 }
 async function getActionPaletteModels(providerId) {
   try {
-    const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
+    const aiRequestWaiter = await (0, import_sdk4.waitForAI)();
     const aiProviders = await aiRequestWaiter.promise;
     const provider = aiProviders.providers.find(
       (p) => p.id === providerId
@@ -16023,10 +17420,10 @@ function getSystemPrompts(plugin) {
 }
 
 // src/contextEnhancer.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // src/rag.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian13 = require("obsidian");
 
 // node_modules/pdfjs-dist/legacy/build/pdf.mjs
 var import_meta = {};
@@ -47984,7 +49381,7 @@ function getLinkedFiles(content, vault, metadataCache, currentFilePath, includeA
   }).filter(isSupportedRagFile);
 }
 function isSupportedRagFile(file) {
-  return file instanceof import_obsidian11.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
+  return file instanceof import_obsidian13.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
 }
 function sanitizeMarkdownForLinks(content) {
   return content.replace(/```[\s\S]*?```/g, "").replace(/<!--[\s\S]*?-->/g, "").replace(/`[^`]*`/g, "");
@@ -48228,7 +49625,7 @@ function handleContextError(error, abortController, hideStatusBar) {
   hideStatusBar();
   if (!(abortController == null ? void 0 : abortController.signal.aborted)) {
     console.error("Error processing RAG:", error);
-    new import_obsidian12.Notice(
+    new import_obsidian14.Notice(
       I18n.t("notices.errorProcessingRag", {
         message: error.message
       })
@@ -48244,7 +49641,7 @@ function collectLinkedFilesForContext(app, selectedText, selectedFiles, activeFi
     activeFilePath
   );
   const additionalFiles = (selectedFiles == null ? void 0 : selectedFiles.map((filePath) => app.vault.getAbstractFileByPath(filePath)).filter(
-    (file) => file !== null && file instanceof import_obsidian12.TFile && (file.extension === "md" || file.extension === "pdf")
+    (file) => file !== null && file instanceof import_obsidian14.TFile && (file.extension === "md" || file.extension === "pdf")
   )) || [];
   return [...linkedFiles, ...additionalFiles];
 }
@@ -48300,116 +49697,13 @@ async function readImageAsDataUrl(app, fileName) {
   });
 }
 
-// src/providerRequest.ts
-var import_obsidian13 = require("obsidian");
-
-// src/utils.ts
-function preparePrompt(prompt = "", selectedText, context) {
-  const withSelection = mergeSelection(prompt, selectedText);
-  const withContext = injectContext(withSelection, context);
-  return resolveConditionalContext(withContext, context);
-}
-function mergeSelection(prompt, selectedText) {
-  if (prompt.includes(SELECTION_KEYWORD)) {
-    return prompt.replace(SELECTION_KEYWORD, selectedText || "");
-  }
-  return [prompt, selectedText].filter(Boolean).join("\n\n");
-}
-function injectContext(prompt, context) {
-  if (prompt.includes(CONTEXT_KEYWORD)) {
-    return prompt.replace(CONTEXT_KEYWORD, context || "");
-  }
-  if (context.trim()) {
-    return [prompt, "Context:\n" + context].filter(Boolean).join("\n\n");
-  }
-  return prompt;
-}
-function resolveConditionalContext(prompt, context) {
-  if (prompt.includes(CONTEXT_CONDITION_START) && prompt.includes(CONTEXT_CONDITION_END)) {
-    const start = prompt.indexOf(CONTEXT_CONDITION_START) - 1;
-    const end = prompt.indexOf(CONTEXT_CONDITION_END);
-    if (start !== -1 && end !== -1 && start < end) {
-      let contextBlock = prompt.substring(
-        start + CONTEXT_CONDITION_START.length + 1,
-        end
-      );
-      if (!context.trim()) {
-        contextBlock = "";
-      }
-      prompt = prompt.substring(0, start) + contextBlock + prompt.substring(end + CONTEXT_CONDITION_END.length + 1);
-    }
-  }
-  return prompt;
-}
-
-// src/providerRequest.ts
-function selectProvider2(aiProviders, settings, hasImages, overrideProviderId) {
-  const visionCandidate = hasImages ? aiProviders.providers.find(
-    (p) => p.id === settings.aiProviders.vision
-  ) : void 0;
-  const preferredProviderId = overrideProviderId || settings.aiProviders.main;
-  const fallback2 = aiProviders.providers.find(
-    (p) => p.id === preferredProviderId
-  );
-  const provider = visionCandidate || fallback2;
-  if (!provider) {
-    throw new Error("No AI provider found");
-  }
-  return provider;
-}
-function overrideProviderModel(provider, overrideProviderId, actionPaletteModel, actionPaletteModelProviderId) {
-  if (actionPaletteModel && overrideProviderId && actionPaletteModelProviderId === overrideProviderId) {
-    return { ...provider, model: actionPaletteModel };
-  }
-  return provider;
-}
-async function executeProviderRequest({
-  aiProviders,
-  provider,
-  settings,
-  prompt,
-  system,
-  temperature,
-  selectedText,
-  context,
-  imagesInBase64,
-  abortController,
-  onUpdate
-}) {
-  try {
-    return await aiProviders.execute({
-      provider,
-      prompt: preparePrompt(prompt, selectedText, context),
-      images: imagesInBase64,
-      systemPrompt: system,
-      options: {
-        temperature: temperature != null ? temperature : CREATIVITY[settings.defaults.creativity].temperature
-      },
-      onProgress: (_chunk, accumulatedText) => {
-        onUpdate(accumulatedText);
-      },
-      abortController
-    });
-  } catch (error) {
-    if (!abortController.signal.aborted) {
-      new import_obsidian13.Notice(
-        I18n.t("notices.errorGenerating", {
-          message: error.message
-        })
-      );
-    }
-    logger.separator();
-    return "";
-  }
-}
-
 // src/textProcessing.ts
 function removeThinkingTags(text2) {
   return text2.replace(/^<think>[\s\S]*?<\/think>\s*/, "");
 }
 
 // src/main.ts
-var LocalGPT2 = class extends import_obsidian14.Plugin {
+var LocalGPT2 = class extends import_obsidian15.Plugin {
   constructor() {
     super(...arguments);
     this.actionPaletteProviderId = null;
@@ -48418,6 +49712,8 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
     this.actionPaletteCreativityKey = null;
     // "", "low", "medium", "high"
     this.abortControllers = [];
+    /** True when AI Providers service API supports reasoningMode (v5+). */
+    this.reasoningApiAvailable = false;
     this.escapeHandler = (event2) => {
       if (event2.key === "Escape") {
         this.abortControllers.forEach(
@@ -48430,21 +49726,29 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
     };
   }
   async onload() {
-    (0, import_sdk4.initAI)(this.app, this, async () => {
-      await this.loadSettings();
-      this.addSettingTab(new LocalGPTSettingTab(this.app, this));
-      this.reload();
-      this.app.workspace.onLayoutReady(async () => {
-        await fileCache.init(this.app.appId);
-        window.setTimeout(() => {
-          this.checkUpdates();
-        }, 5e3);
-      });
-      this.registerEditorExtension(spinnerPlugin);
-      this.registerEditorExtension(requestPositionTracker);
-      this.registerEditorExtension(actionPalettePlugin);
-      this.initializeStatusBar();
-    });
+    (0, import_sdk5.initAI)(
+      this.app,
+      this,
+      async () => {
+        const ai = await (await (0, import_sdk5.waitForAI)()).promise;
+        this.reasoningApiAvailable = supportsReasoningApi(ai);
+        maybeNoticeAiProvidersUpgrade(ai);
+        await this.loadSettings();
+        this.addSettingTab(new LocalGPTSettingTab(this.app, this));
+        this.reload();
+        this.app.workspace.onLayoutReady(async () => {
+          await fileCache.init(this.app.appId);
+          window.setTimeout(() => {
+            this.checkUpdates();
+          }, 5e3);
+        });
+        this.registerEditorExtension(spinnerPlugin);
+        this.registerEditorExtension(requestPositionTracker);
+        this.registerEditorExtension(actionPalettePlugin);
+        this.initializeStatusBar();
+      },
+      { minVersion: MINIMUM_AI_PROVIDERS_API_VERSION }
+    );
   }
   initializeStatusBar() {
     this.progressStatusBar = new ProgressStatusBar(this.addStatusBarItem());
@@ -48469,10 +49773,11 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
   getActionPaletteInitialSelectedFiles(editor) {
     return getActionPaletteInitialSelectedFiles(this, editor);
   }
-  async runFreeform(editor, userInput, selectedFiles = [], overrideProviderId, customTemperature, systemPrompt) {
+  async runFreeform(editor, userInput, selectedFiles = [], overrideProviderId, customTemperature, systemPrompt, reasoningSelection) {
     return this.executeAction(
       {
         prompt: userInput,
+        reasoningSelection,
         system: systemPrompt,
         replace: false,
         selectedFiles,
@@ -48487,9 +49792,10 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
     return this.executeAction(
       {
         prompt: action2.prompt,
+        reasoningEffort: action2.reasoningEffort,
         system: action2.system,
         replace: !!action2.replace,
-        temperature: action2.temperature || CREATIVITY[this.settings.defaults.creativity].temperature,
+        temperature: action2.temperature,
         selectionContextMode: "selection-or-document"
       },
       editor
@@ -48502,7 +49808,7 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
       cursorOffsetTo,
       selectedTextRef
     } = this.extractSelectionContext(editor, params.selectionContextMode);
-    const { abortController, hideSpinner, onUpdate } = this.createExecutionContext(
+    const { abortController, hideSpinner, onUpdate, onReasoningResolved } = this.createExecutionContext(
       editorView,
       cursorOffsetTo,
       selectedTextRef
@@ -48532,7 +49838,7 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
       logger.time("Processing Embeddings");
       logger.timeEnd("Processing Embeddings");
       logger.debug("Selected text", cleanedText);
-      const aiRequestWaiter = await (0, import_sdk4.waitForAI)();
+      const aiRequestWaiter = await (0, import_sdk5.waitForAI)();
       const aiProviders = await aiRequestWaiter.promise;
       const embeddingProvider = aiProviders.providers.find(
         (provider2) => provider2.id === this.settings.aiProviders.embedding
@@ -48567,6 +49873,9 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
           prompt: params.prompt,
           system: params.system,
           temperature: params.temperature,
+          reasoningEffort: params.reasoningEffort,
+          reasoningSelection: params.reasoningSelection,
+          onReasoningResolved,
           selectedText: cleanedText,
           context,
           imagesInBase64,
@@ -48576,8 +49885,11 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
       } finally {
         hideSpinner && hideSpinner();
         this.app.workspace.updateOptions();
+        this.abortControllers = this.abortControllers.filter(
+          (controller) => controller !== abortController
+        );
       }
-      if (abortController.signal.aborted) {
+      if (abortController.signal.aborted && !fullText.trim()) {
         return;
       }
       const finalText = removeThinkingTags(fullText).trim();
@@ -48628,15 +49940,26 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
       this.app.workspace.updateOptions();
     });
     const onUpdate = (updatedString) => {
+      var _a7;
       if (!spinner) return;
-      spinner.processText(
+      (_a7 = hideSpinner == null ? void 0 : hideSpinner.processText) == null ? void 0 : _a7.call(
+        hideSpinner,
         updatedString,
-        (text2) => this.processText(text2, selectedTextRef.value),
-        cursorOffsetTo
+        (text2) => this.processText(text2, selectedTextRef.value)
       );
       this.app.workspace.updateOptions();
     };
-    return { abortController, hideSpinner, onUpdate };
+    const onReasoningResolved = (provider, mode) => {
+      var _a7;
+      if (abortController.signal.aborted) return;
+      const base = provider.model || provider.name;
+      (_a7 = hideSpinner == null ? void 0 : hideSpinner.setStatus) == null ? void 0 : _a7.call(
+        hideSpinner,
+        mode ? `${base} \xB7 ${I18n.t("settings.reasoningEffort")}: ${reasoningEffortLabel(mode)}` : base
+      );
+      this.app.workspace.updateOptions();
+    };
+    return { abortController, hideSpinner, onUpdate, onReasoningResolved };
   }
   applyTextResult(editor, replaceSelection, finalText, selectedText, cursorOffsetFrom, cursorOffsetTo) {
     const cursorPositionFrom = editor.offsetToPos(cursorOffsetFrom);
@@ -48682,6 +50005,7 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
     const loadedData = await this.loadData();
     const { settings, changed } = await this.migrateSettings(loadedData);
     this.settings = Object.assign({}, DEFAULT_SETTINGS, settings);
+    this.settings.defaults = { ...this.settings.defaults };
     const { actions: actionsWithIds, changed: actionIdsChanged } = ensureActionIds(this.settings.actions || []);
     this.settings.actions = actionsWithIds;
     if (changed || actionIdsChanged) {
@@ -48696,7 +50020,7 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
   }
   async checkUpdates() {
     try {
-      const { json: response } = await (0, import_obsidian14.requestUrl)({
+      const { json: response } = await (0, import_obsidian15.requestUrl)({
         url: "https://api.github.com/repos/pfrankov/obsidian-local-gpt/releases/latest",
         method: "GET",
         headers: {
@@ -48705,7 +50029,7 @@ var LocalGPT2 = class extends import_obsidian14.Plugin {
         contentType: "application/json"
       });
       if (response.tag_name !== this.manifest.version) {
-        new import_obsidian14.Notice(I18n.t("notices.newVersion"));
+        new import_obsidian15.Notice(I18n.t("notices.newVersion"));
       }
     } catch (error) {
       console.error("Error checking for updates:", error);

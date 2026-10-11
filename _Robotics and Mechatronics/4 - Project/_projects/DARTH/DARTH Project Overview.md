@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: false
+---
 # Data Acquisition for Real-time Telemetry Handler
 
 ### Executive Summary

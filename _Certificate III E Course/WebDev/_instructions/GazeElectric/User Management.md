@@ -755,7 +755,7 @@ $user_id = $_SESSION['user_id'];
 > [!note] Notice that the `<style>...</style>` block is located *in between* the PHP blocks. This means that it is treated as HTML code.
 
 
-4. Create the form using HTML, with Bootstrap styles.
+4. Create the form using HTML, with Bootstrap styles. Ensure that this code is placed *after* the style block just added, and *before* the closing php block as shown in the screenshot.
 ![[userMgmtProfileForm.png]]
 
 ```html

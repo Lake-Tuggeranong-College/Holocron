@@ -49893,6 +49893,7 @@ var LocalGPT2 = class extends import_obsidian15.Plugin {
         return;
       }
       const finalText = removeThinkingTags(fullText).trim();
+      if (!finalText) return;
       const trackedRange = selectionTrackerId ? getTrackedRange(editorView, selectionTrackerId) : null;
       const mappedRange = trackedRange || {
         from: cursorOffsetFrom,

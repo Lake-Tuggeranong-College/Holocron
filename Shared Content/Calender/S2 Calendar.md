@@ -62,7 +62,7 @@ N/A
 
 ### School Events - Week 14
 
-N/A
+**Monday** - Hackathon Excursion
 
 ### School Events - Week 15
 

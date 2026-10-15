@@ -369,10 +369,10 @@ if ($user) {
 	$_SESSION['access_level'] = $user['access_level'];
 
 	$_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
+	header("Location: index.php");
 } else {
 	// Username and/or password is incorrect.
 	$_SESSION['error_message'] = "Invalid email/username or password.";
-	header("Location: index.php");
 }
 ```
 
@@ -495,7 +495,7 @@ if (isset($_POST['login'])) {
 				$_SESSION['access_level'] = $user['access_level'];
 
 				$_SESSION['success_message'] = "Welcome back, " . htmlspecialchars($user['first_name']) . "!";
-
+				header("Location: index.php");
 			} else {
 				// Username and/or password is incorrect.
 				$_SESSION['error_message'] = "Invalid email/username or password.";

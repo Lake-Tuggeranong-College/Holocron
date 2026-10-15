@@ -105,7 +105,7 @@ Add the following code after the HTML header code.
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-cog me-2"></i>Profile Settings</a></li>
-                            <li><a class="dropdown-item" href="order_form
+                            <li><a class="dropdown-item" href="invoice
                             .php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>

@@ -411,7 +411,7 @@ Below the category list inside our sidebar, we display the active contents of th
                         <?= htmlspecialchars(substr($singleProduct['description'], 0, 100)) ?>...
                     </p>
                     
-                    <!-- Step 11: Action Form goes here nested inside card-body -->
+                    <!-- Step 12: Action Form goes here nested inside card-body -->
                 </div>
             </div>
         </div>

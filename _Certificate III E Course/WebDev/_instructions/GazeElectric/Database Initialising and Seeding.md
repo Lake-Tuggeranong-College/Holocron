@@ -49,6 +49,7 @@ Follow these steps to extract your structure securely:
     - **Select Structure only.** (Do _not_ check "Data", as our mock data belongs in our seeding script in Step 3).
 ![[dbExportOnlyStructure.png]]
 6. Under the **Object creation options**, check the box for **Add CREATE TABLE / IF NOT EXISTS**. This is a critical security step that prevents your script from crashing if the tables already exist on startup.
+![[dbExportIfExists.png]]
 7. Scroll to the bottom and click **Export** (or **Go**).
 8. Move the downloaded `.sql` file into your local `_init_scripts/` folder, rename it to `01_schema.sql`, and ensure its structure looks similar to this:
 

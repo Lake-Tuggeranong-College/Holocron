@@ -22,15 +22,16 @@ Now that your user accounts are secure, you will build a dynamic dashboard to ma
 ![[prodMgmtSQL.png]]
 
 ```sql
-CREATE TABLE `products` (
-  `product_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `category` varchar(100) NOT NULL,
-  `image_path` varchar(255) DEFAULT 'placeholder.png',
-  `enabled` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT current_timestamp()
+CREATE TABLE products (
+  product_id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  description text DEFAULT NULL,
+  price decimal(10,2) NOT NULL,
+  category varchar(100) NOT NULL,
+  image_path varchar(255) DEFAULT 'placeholder.png',
+  enabled tinyint(1) DEFAULT 1,
+  created_at timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (product_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 ```
@@ -377,11 +378,11 @@ if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPL
 ![[prodMgmtSave3.png]]
 ```php
 if ($p_id) {
-	$sql = "UPDATE products SET name=?, category=?, price=?, description=?, enabled=?, image_path=? WHERE product_id=?";
+	$sql = "UPDATE products SET product_name=?, category=?, price=?, description=?, enabled=?, image_path=? WHERE product_id=?"
 	$db->prepare($sql)->execute([$p_name, $p_cat, $p_price, $p_desc, $p_enabled, $image_name, $p_id]);
 	$_SESSION['success_message'] = "Product updated.";
 } else {
-	$sql = "INSERT INTO products (name, category, price, description, enabled, image_path) VALUES (?, ?, ?, ?, ?, ?)";
+	$sql = "INSERT INTO products (product_name, category, price, description, enabled, image_path) VALUES (?, ?, ?, ?, ?, ?)";
 	$db->prepare($sql)->execute([$p_name, $p_cat, $p_price, $p_desc, $p_enabled, $image_name]);
 	$_SESSION['success_message'] = "New product added.";
 }

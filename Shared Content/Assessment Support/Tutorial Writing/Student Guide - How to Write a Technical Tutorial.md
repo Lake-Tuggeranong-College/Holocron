@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 This guide will teach you how to structure your assessment using the **Diátaxis framework**. Using this method ensures your tutorial is professional, organised, and academically rigorous.
 
 # 1. What is Diátaxis?

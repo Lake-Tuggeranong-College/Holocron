@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 Prior to implementing RBAC, some reorganisation of the site is needed. *Refactor* means to to change the code, without changing it's functionality.
 
 Initially, all the data is accessible through `index.php` with no intermediary or landing page. To enable the implementation of the security, rename `index.php` to `data.php`. Create a new file called `index.php`.

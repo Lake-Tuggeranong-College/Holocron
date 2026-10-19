@@ -5,6 +5,7 @@ css: css/holocronSlides.css
 isCurrent: true
 needsUpdating: false
 ---
+
 # MQTT vs HTTP
 
 ## Packet Architectures in IoT

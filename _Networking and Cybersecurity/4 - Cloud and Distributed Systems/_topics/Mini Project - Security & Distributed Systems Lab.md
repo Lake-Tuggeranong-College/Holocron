@@ -1,3 +1,9 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
+
 **Project Type:** Collaborative Red Team / Blue Team Security & Microservices Lab
 
 ## 1. Project Overview & Learning Objectives

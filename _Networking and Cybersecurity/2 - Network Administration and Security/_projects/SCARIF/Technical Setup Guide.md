@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 # **Technical Setup Guide: IoT Network Administration Infrastructure**
 
 This document provides the technical specifications, directory structures, and exact configuration files required to deploy the infrastructure for the "Network Administration and Security" unit.

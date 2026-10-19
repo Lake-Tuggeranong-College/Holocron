@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 ![[commonBlocks#^genAIverified]]
 
 ### What "Stateless" Means

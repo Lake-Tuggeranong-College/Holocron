@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: true
+---
+
 
 The galaxy’s trade routes are in flux. Across remote trading posts in the Outer Rim, market prices for vital supplies, starship parts, and provisions swing rapidly due to unpredictable hyperlane disruptions and central guild updates. Traditional, static paper shelf tags are obsolete—updating an entire supply depot manually takes days, leaving traders vulnerable to supply disruptions and pricing errors.
 

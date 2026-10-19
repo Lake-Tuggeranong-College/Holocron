@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 
 For a student analysing network traffic in Wireshark, understanding how packet headers are structured is critical. This guide breaks down the structural design of **MQTT (Message Queuing Telemetry Transport)** and **HTTP (Hypertext Transfer Protocol)**, illustrating why MQTT is the preferred standard for constrained edge devices like the ESP32, while HTTP remains the backbone of web-based environments.
 

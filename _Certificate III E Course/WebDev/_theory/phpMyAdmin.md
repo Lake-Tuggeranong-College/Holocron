@@ -1,3 +1,7 @@
+---
+isCurrent: true
+needsUpdating: false
+---
 # Introduction to phpMyAdmin
 
 **phpMyAdmin** is a free, open-source web application designed to provide a graphical user interface (GUI) for administering MySQL and MariaDB database servers. Written in PHP, its name literally highlights its foundational programming language.

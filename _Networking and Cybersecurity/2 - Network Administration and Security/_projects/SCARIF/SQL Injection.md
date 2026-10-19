@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 Here is an educational overview of **SQL Injection (SQLi)**, covering its underlying mechanics, theoretical code examples, potential impacts, and strategies for prevention.
 
   

@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 There are 5 dummy accounts on the server.
 
 Find their passwords. How? 

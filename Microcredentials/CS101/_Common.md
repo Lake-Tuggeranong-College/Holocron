@@ -1,3 +1,8 @@
+---
+isCurrent: false
+needsUpdating: true
+---
+
 # Vet Competencies
 
 ICTICT213: Use computer operating systems and hardware

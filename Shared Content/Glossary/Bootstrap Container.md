@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 ![[commonBlocks#^genAIverified]]
 
 A **Bootstrap container** as a virtual boundary box that neatly houses, centres, and aligns your website's content—much like the margins on a page in a printed textbook.

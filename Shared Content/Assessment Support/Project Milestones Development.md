@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 # Student Guide: Completing Your Project Management Tool Template
 
 Welcome to your **Project Management Tool Guide**! This step-by-step tutorial will help you translate initial project ideas into clear, highly detailed technical milestones required for Year 11 and Year 12 ACT BSSS assessment.

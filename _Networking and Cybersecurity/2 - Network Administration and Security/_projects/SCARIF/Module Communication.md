@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 # How-To Guide: Transmit Telemetry Data via MQTT on an ESP32
 
 This guide walks you through setting up Rapid Application Development (RAD) communication code for your Adafruit Huzzah32 Feather (ESP32) microcontroller. By the end of this guide, your device will connect to Wi-Fi, join an MQTT broker, and exchange telemetry data with a server.

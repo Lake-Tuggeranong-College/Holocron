@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 **Pagination** is a web development technique used to divide a large set of data into smaller, discrete, numbered pages. Instead of loading thousands of items onto a single webpage all at once—which would slow down the server and crash the browser—the website retrieves and displays only a small, manageable chunk of information at any one time.
 
 ### A Simple Example

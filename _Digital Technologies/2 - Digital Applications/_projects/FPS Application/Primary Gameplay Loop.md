@@ -1,3 +1,8 @@
+---
+isCurrent: true
+needsUpdating: false
+---
+
 Have you ever started playing a mobile game, a simple arcade game, or an indie game on your phone, only to realize you’ve been tapping away for 20 minutes straight?
 
 That happens because of a hidden design trick called the **Primary Gameplay Loop** (or "Core Loop"). A loop is a simple cycle of actions that a player does over and over again. When you are making smaller-scale games, nailing this loop is the most important step. If your core loop is fun, your whole game will be fun!

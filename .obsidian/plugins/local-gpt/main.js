@@ -49661,13 +49661,17 @@ function resolveContextLimit(settings) {
 }
 
 // src/selectionImages.ts
-async function extractImagesFromSelection(app, selectedText) {
-  const regexp = /!\[\[(.+?\.(?:png|jpe?g))]]/gi;
+var EMBEDDED_IMAGE_WIKILINK = /!\[\[(.+?\.(?:png|jpe?g|gif|webp))]]/gi;
+function collectEmbeddedImageWikilinks(selectedText) {
   const fileNames = Array.from(
-    selectedText.matchAll(regexp),
+    selectedText.matchAll(EMBEDDED_IMAGE_WIKILINK),
     (match) => match[1]
   );
-  const cleanedText = selectedText.replace(regexp, "");
+  const cleanedText = selectedText.replace(EMBEDDED_IMAGE_WIKILINK, "");
+  return { fileNames, cleanedText };
+}
+async function extractImagesFromSelection(app, selectedText) {
+  const { fileNames, cleanedText } = collectEmbeddedImageWikilinks(selectedText);
   const imagesInBase64 = (await Promise.all(
     fileNames.map((fileName) => readImageAsDataUrl(app, fileName))
   )).filter(Boolean) || [];

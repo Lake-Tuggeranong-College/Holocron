@@ -82,7 +82,7 @@ var require_dist = __commonJS({
       waitForAI: () => waitForAI5
     });
     module2.exports = __toCommonJS2(index_exports);
-    var import_obsidian16 = require("obsidian");
+    var import_obsidian17 = require("obsidian");
     var FALLBACK_TIMEOUT = 100;
     var REQUIRED_AI_PROVIDERS_VERSION = 5;
     var RECOMMENDED_AI_PROVIDERS_PLUGIN_VERSION = "1.12.0";
@@ -222,7 +222,7 @@ var require_dist = __commonJS({
       return waitForAIProviders(manager.getApp(), manager.getPlugin());
     }
     __name(waitForAI5, "waitForAI");
-    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian16.PluginSettingTab {
+    var _AIProvidersFallbackSettingsTab = class _AIProvidersFallbackSettingsTab extends import_obsidian17.PluginSettingTab {
       constructor(app, plugin, fallback2 = { reason: "missing" }) {
         super(app, plugin);
         this.plugin = plugin;
@@ -239,7 +239,7 @@ var require_dist = __commonJS({
           const current = this.fallback.currentVersion !== void 0 ? String(this.fallback.currentVersion) : "unknown";
           const pluginVersion = (_b3 = this.fallback.recommendedPluginVersion) != null ? _b3 : recommendedPluginVersionForApi(required);
           aiProvidersNotice.appendChild(
-            (0, import_obsidian16.sanitizeHTMLToDom)(`
+            (0, import_obsidian17.sanitizeHTMLToDom)(`
             <p>\u26A0\uFE0F <a href="obsidian://show-plugin?id=ai-providers">AI Providers</a> is outdated.</p>
             <p>This plugin needs <strong>AI Providers ${pluginVersion}</strong> (service API ${required}). Current service API: ${current}.</p>
             <p>Please update AI Providers from Community Plugins, then reload Obsidian.</p>
@@ -248,7 +248,7 @@ var require_dist = __commonJS({
           return;
         }
         aiProvidersNotice.appendChild(
-          (0, import_obsidian16.sanitizeHTMLToDom)(`
+          (0, import_obsidian17.sanitizeHTMLToDom)(`
             <p>\u26A0\uFE0F This plugin requires <a href="obsidian://show-plugin?id=ai-providers">AI Providers</a> plugin to be installed.</p>
             <p>Please install and configure AI Providers plugin first.</p>
         `)
@@ -290,7 +290,9 @@ var de_default = {
       hint: "Nutzen Sie / f\xFCr Befehle, @ f\xFCr Dateien",
       changeReasoning: "Denkmodus f\xFCr diese Anfrage",
       noMatchingCommands: "Keine passenden Befehle",
-      noMatchingFiles: "Keine passenden Dateien"
+      noMatchingFiles: "Keine passenden Dateien",
+      replaceSelectionOn: "Auswahl ersetzen: an ({{hotkey}})",
+      replaceSelectionOff: "Auswahl ersetzen: aus ({{hotkey}})"
     }
   },
   statusBar: {
@@ -429,7 +431,9 @@ var en_default = {
       hint: "Use / for commands, @ for files",
       changeReasoning: "Reasoning for this request",
       noMatchingCommands: "No matching commands",
-      noMatchingFiles: "No matching files"
+      noMatchingFiles: "No matching files",
+      replaceSelectionOn: "Replace selection: on ({{hotkey}})",
+      replaceSelectionOff: "Replace selection: off ({{hotkey}})"
     }
   },
   statusBar: {
@@ -568,7 +572,9 @@ var es_default = {
       hint: "Use / para comandos, @ para archivos",
       changeReasoning: "Razonamiento para esta solicitud",
       noMatchingCommands: "No hay comandos coincidentes",
-      noMatchingFiles: "No hay archivos coincidentes"
+      noMatchingFiles: "No hay archivos coincidentes",
+      replaceSelectionOn: "Reemplazar selecci\xF3n: activado ({{hotkey}})",
+      replaceSelectionOff: "Reemplazar selecci\xF3n: desactivado ({{hotkey}})"
     }
   },
   statusBar: {
@@ -707,7 +713,9 @@ var fr_default = {
       hint: "Utilisez / pour les commandes, @ pour les fichiers",
       changeReasoning: "Raisonnement pour cette requ\xEAte",
       noMatchingCommands: "Aucune commande correspondante",
-      noMatchingFiles: "Aucun fichier correspondant"
+      noMatchingFiles: "Aucun fichier correspondant",
+      replaceSelectionOn: "Remplacer la s\xE9lection : activ\xE9 ({{hotkey}})",
+      replaceSelectionOff: "Remplacer la s\xE9lection : d\xE9sactiv\xE9 ({{hotkey}})"
     }
   },
   statusBar: {
@@ -846,7 +854,9 @@ var it_default = {
       hint: "Usa / per i comandi, @ per i file",
       changeReasoning: "Ragionamento per questa richiesta",
       noMatchingCommands: "Nessun comando corrispondente",
-      noMatchingFiles: "Nessun file corrispondente"
+      noMatchingFiles: "Nessun file corrispondente",
+      replaceSelectionOn: "Sostituisci selezione: attivo ({{hotkey}})",
+      replaceSelectionOff: "Sostituisci selezione: disattivo ({{hotkey}})"
     }
   },
   statusBar: {
@@ -985,7 +995,9 @@ var ja_default = {
       hint: "\u30B3\u30DE\u30F3\u30C9\u306B\u306F /\u3001\u30D5\u30A1\u30A4\u30EB\u306B\u306F @ \u3092\u4F7F\u7528",
       changeReasoning: "\u3053\u306E\u30EA\u30AF\u30A8\u30B9\u30C8\u306E\u63A8\u8AD6",
       noMatchingCommands: "\u4E00\u81F4\u3059\u308B\u30B3\u30DE\u30F3\u30C9\u304C\u3042\u308A\u307E\u305B\u3093",
-      noMatchingFiles: "\u4E00\u81F4\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093"
+      noMatchingFiles: "\u4E00\u81F4\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093",
+      replaceSelectionOn: "\u9078\u629E\u7BC4\u56F2\u3092\u7F6E\u304D\u63DB\u3048: \u30AA\u30F3 ({{hotkey}})",
+      replaceSelectionOff: "\u9078\u629E\u7BC4\u56F2\u3092\u7F6E\u304D\u63DB\u3048: \u30AA\u30D5 ({{hotkey}})"
     }
   },
   statusBar: {
@@ -1124,7 +1136,9 @@ var ko_default = {
       hint: "\uBA85\uB839\uC5B4\uB294 /, \uD30C\uC77C\uC740 @ \uC0AC\uC6A9",
       changeReasoning: "\uC774 \uC694\uCCAD\uC758 \uCD94\uB860",
       noMatchingCommands: "\uC77C\uCE58\uD558\uB294 \uBA85\uB839\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
-      noMatchingFiles: "\uC77C\uCE58\uD558\uB294 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4"
+      noMatchingFiles: "\uC77C\uCE58\uD558\uB294 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+      replaceSelectionOn: "\uC120\uD0DD \uC601\uC5ED \uBC14\uAFB8\uAE30: \uCF1C\uC9D0 ({{hotkey}})",
+      replaceSelectionOff: "\uC120\uD0DD \uC601\uC5ED \uBC14\uAFB8\uAE30: \uAEBC\uC9D0 ({{hotkey}})"
     }
   },
   statusBar: {
@@ -1263,7 +1277,9 @@ var nl_default = {
       hint: "Gebruik / voor commando's, @ voor bestanden",
       changeReasoning: "Redeneren voor dit verzoek",
       noMatchingCommands: "Geen overeenkomende opdrachten",
-      noMatchingFiles: "Geen overeenkomende bestanden"
+      noMatchingFiles: "Geen overeenkomende bestanden",
+      replaceSelectionOn: "Selectie vervangen: aan ({{hotkey}})",
+      replaceSelectionOff: "Selectie vervangen: uit ({{hotkey}})"
     }
   },
   statusBar: {
@@ -1402,7 +1418,9 @@ var pt_default = {
       hint: "Use / para comandos, @ para arquivos",
       changeReasoning: "Racioc\xEDnio para esta solicita\xE7\xE3o",
       noMatchingCommands: "Nenhum comando correspondente",
-      noMatchingFiles: "Nenhum arquivo correspondente"
+      noMatchingFiles: "Nenhum arquivo correspondente",
+      replaceSelectionOn: "Substituir sele\xE7\xE3o: ativado ({{hotkey}})",
+      replaceSelectionOff: "Substituir sele\xE7\xE3o: desativado ({{hotkey}})"
     }
   },
   statusBar: {
@@ -1541,7 +1559,9 @@ var ru_default = {
       hint: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 / \u0434\u043B\u044F \u043A\u043E\u043C\u0430\u043D\u0434, @ \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432",
       changeReasoning: "\u0420\u0430\u0441\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0430",
       noMatchingCommands: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043A\u043E\u043C\u0430\u043D\u0434",
-      noMatchingFiles: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0444\u0430\u0439\u043B\u043E\u0432"
+      noMatchingFiles: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0444\u0430\u0439\u043B\u043E\u0432",
+      replaceSelectionOn: "\u0417\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435: \u0432\u043A\u043B. ({{hotkey}})",
+      replaceSelectionOff: "\u0417\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435: \u0432\u044B\u043A\u043B. ({{hotkey}})"
     }
   },
   statusBar: {
@@ -1680,7 +1700,9 @@ var zh_default = {
       hint: "\u4F7F\u7528 / \u8F93\u5165\u547D\u4EE4\uFF0C@ \u5F15\u7528\u6587\u4EF6",
       changeReasoning: "\u672C\u6B21\u8BF7\u6C42\u7684\u63A8\u7406",
       noMatchingCommands: "\u6CA1\u6709\u5339\u914D\u7684\u547D\u4EE4",
-      noMatchingFiles: "\u6CA1\u6709\u5339\u914D\u7684\u6587\u4EF6"
+      noMatchingFiles: "\u6CA1\u6709\u5339\u914D\u7684\u6587\u4EF6",
+      replaceSelectionOn: "\u66FF\u6362\u6240\u9009\u5185\u5BB9\uFF1A\u5F00 ({{hotkey}})",
+      replaceSelectionOff: "\u66FF\u6362\u6240\u9009\u5185\u5BB9\uFF1A\u5173 ({{hotkey}})"
     }
   },
   statusBar: {
@@ -2109,7 +2131,7 @@ function formatReasoningBadgeLabel(options) {
 }
 
 // src/main.ts
-var import_obsidian15 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 
 // src/LocalGPTSettingTab.ts
 var import_obsidian7 = require("obsidian");
@@ -12768,6 +12790,35 @@ function validate_each_keys(array, key_fn) {
   }
 }
 
+// node_modules/svelte/src/internal/client/dom/elements/actions.js
+function action(dom, action2, get_value) {
+  effect(() => {
+    var payload = untrack(() => action2(dom, get_value == null ? void 0 : get_value()) || {});
+    if (get_value && (payload == null ? void 0 : payload.update)) {
+      var inited = false;
+      var prev = (
+        /** @type {any} */
+        {}
+      );
+      render_effect(() => {
+        var value = get_value();
+        deep_read_state(value);
+        if (inited && safe_not_equal(prev, value)) {
+          prev = value;
+          payload.update(value);
+        }
+      });
+      inited = true;
+    }
+    if (payload == null ? void 0 : payload.destroy) {
+      return () => (
+        /** @type {Function} */
+        payload.destroy()
+      );
+    }
+  });
+}
+
 // node_modules/clsx/dist/clsx.mjs
 function r(e) {
   var t, f, n = "";
@@ -14164,7 +14215,7 @@ function restorePromptFocus(getContentElement, cursorPosition) {
   const run3 = () => {
     var _a7, _b3;
     const el = getContentElement();
-    if (!el) return;
+    if (!el || !el.isConnected) return;
     beginHoldingPromptFocus(el);
     const position = typeof cursorPosition === "number" ? cursorPosition : (_b3 = (_a7 = el.textContent) == null ? void 0 : _a7.length) != null ? _b3 : 0;
     focusPromptInput(el, position);
@@ -15063,6 +15114,9 @@ function showLoadedDropdown(context, kind, emptyMessage) {
 }
 
 // src/ui/actionPaletteNavigation.ts
+function isReplaceSelectionHotkey(event2) {
+  return !event2.isComposing && event2.altKey && !event2.ctrlKey && !event2.metaKey && !event2.shiftKey && event2.code === "KeyR";
+}
 function handleDropdownNavigation(context, event2) {
   if (event2.isComposing || event2.keyCode === 229) return true;
   if (!hasActiveDropdownItems(context)) {
@@ -15071,6 +15125,12 @@ function handleDropdownNavigation(context, event2) {
   return handleDropdownMove(context, event2) || handleDropdownSelection(context, event2) || handleDropdownEscape(context, event2);
 }
 function handlePaletteShortcuts(context, event2) {
+  var _a7;
+  if (isReplaceSelectionHotkey(event2) && ((_a7 = context.toggleReplaceSelection) == null ? void 0 : _a7.call(context))) {
+    event2.preventDefault();
+    event2.stopPropagation();
+    return true;
+  }
   const mod = event2.ctrlKey || event2.metaKey;
   if (!mod) return false;
   const key2 = event2.key.length === 1 ? event2.key.toLowerCase() : event2.key;
@@ -15301,6 +15361,31 @@ var ActionPaletteController = class {
       }
     };
   }
+  initializeReplaceSelection() {
+    var _a7, _b3, _c2, _d;
+    const available = ((_b3 = (_a7 = this.options).getCanReplaceSelection) == null ? void 0 : _b3.call(_a7)) === true;
+    this.state.replaceAvailable = available;
+    this.state.replaceSelection = available && ((_d = (_c2 = this.options).getInitialReplaceSelection) == null ? void 0 : _d.call(_c2)) === true;
+  }
+  /** Flip replace mode (click or Alt+R). No-op without a selection. */
+  toggleReplaceSelection() {
+    var _a7, _b3, _c2;
+    if (!this.state.replaceAvailable) return false;
+    this.state.replaceSelection = !this.state.replaceSelection;
+    (_c2 = (_b3 = (_a7 = this.options).onReplaceSelectionChange) == null ? void 0 : _b3.call(_a7)) == null ? void 0 : _c2(
+      this.state.replaceSelection
+    );
+    this.commit();
+    return true;
+  }
+  /** Footer icon click: toggle and keep typing in the prompt. */
+  handleReplaceToggleClick() {
+    this.toggleReplaceSelection();
+    restorePromptFocus(
+      () => this.options.getContentElement(),
+      this.state.cursorPosition >= 0 ? this.state.cursorPosition : this.state.textContent.length
+    );
+  }
   refreshReasoning() {
     return refreshReasoning(this);
   }
@@ -15465,7 +15550,8 @@ var ActionPaletteController = class {
       ...this.state.reasoningSelection ? { reasoningSelection: this.state.reasoningSelection } : {},
       text: this.state.textContent,
       selectedFiles: this.state.selectedFiles,
-      systemPrompt: this.state.selectedSystemPromptValue
+      systemPrompt: this.state.selectedSystemPromptValue,
+      ...this.state.replaceAvailable ? { replaceSelection: this.state.replaceSelection } : {}
     };
     (_a7 = this.options.onSubmit()) == null ? void 0 : _a7(payload);
     this.options.dispatchSubmit(payload);
@@ -15591,7 +15677,28 @@ function createActionPaletteState(value, providerLabel, providerDetails) {
     providerName,
     modelName,
     creativityBadge,
-    selectedSystemPromptName: ""
+    selectedSystemPromptName: "",
+    replaceAvailable: false,
+    replaceSelection: false
+  };
+}
+
+// src/ui/actionPaletteIcons.ts
+var import_obsidian10 = require("obsidian");
+var REPLACE_SELECTION_ICON = "list-restart";
+var REPLACE_SELECTION_FALLBACK_ICON = "refresh-cw";
+function getReplaceSelectionIconId() {
+  return typeof import_obsidian10.getIcon === "function" && (0, import_obsidian10.getIcon)(REPLACE_SELECTION_ICON) ? REPLACE_SELECTION_ICON : REPLACE_SELECTION_FALLBACK_ICON;
+}
+function getReplaceSelectionHotkeyLabel() {
+  return import_obsidian10.Platform.isMacOS ? "\u2325R" : "Alt+R";
+}
+function obsidianIcon(node, iconId) {
+  (0, import_obsidian10.setIcon)(node, iconId);
+  return {
+    update(nextIconId) {
+      (0, import_obsidian10.setIcon)(node, nextIconId);
+    }
   };
 }
 
@@ -15602,7 +15709,8 @@ var root_32 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
 var root_5 = from_html(`<div class="local-gpt-provider-badge-label"> </div>`);
 var root_62 = from_html(`<button type="button" class="local-gpt-creativity-badge"> </button>`);
 var root_7 = from_html(`<button type="button" class="local-gpt-reasoning-badge"> </button>`);
-var root_42 = from_html(`<div><!> <!> <!></div>`);
+var root_82 = from_html(`<button type="button"></button>`);
+var root_42 = from_html(`<div><!> <!> <!> <!></div>`);
 var root2 = from_html(`<div class="local-gpt-action-palette-shell"><span hidden=""> </span> <div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
 function ActionPalette($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPalette, ...$$anchor });
@@ -15627,6 +15735,11 @@ function ActionPalette($$anchor, $$props) {
   let onSystemPromptChange = prop($$props, "onSystemPromptChange", 12, void 0);
   let onSubmit = prop($$props, "onSubmit", 12, void 0);
   let onCancel = prop($$props, "onCancel", 12, void 0);
+  let canReplaceSelection = prop($$props, "canReplaceSelection", 12, false);
+  let replaceSelection = prop($$props, "replaceSelection", 12, false);
+  let onReplaceSelectionChange = prop($$props, "onReplaceSelectionChange", 12, void 0);
+  const replaceIconId = getReplaceSelectionIconId();
+  const replaceHotkey = getReplaceSelectionHotkeyLabel();
   const dispatch = createEventDispatcher();
   let contentElement = mutable_source(null);
   let dropdownElement = mutable_source(null);
@@ -15664,6 +15777,9 @@ function ActionPalette($$anchor, $$props) {
     onSystemPromptChange: () => onSystemPromptChange(),
     onSubmit: () => onSubmit(),
     onCancel: () => onCancel(),
+    getCanReplaceSelection: () => canReplaceSelection(),
+    getInitialReplaceSelection: () => replaceSelection(),
+    onReplaceSelectionChange: () => onReplaceSelectionChange(),
     setProviderLabel: (nextProviderLabel) => {
       providerLabel(nextProviderLabel);
     },
@@ -15686,6 +15802,7 @@ function ActionPalette($$anchor, $$props) {
     }
   });
   controller.restoreSelectedSystemPrompt();
+  controller.initializeReplaceSelection();
   if (includeReasoning() && getReasoningSnapshot()) void controller.refreshReasoning();
   onMount(() => {
     const stopModA = installPaletteModAGuard(() => get(contentElement));
@@ -15866,6 +15983,27 @@ function ActionPalette($$anchor, $$props) {
       onCancel($$value);
       flushSync();
     },
+    get canReplaceSelection() {
+      return canReplaceSelection();
+    },
+    set canReplaceSelection($$value) {
+      canReplaceSelection($$value);
+      flushSync();
+    },
+    get replaceSelection() {
+      return replaceSelection();
+    },
+    set replaceSelection($$value) {
+      replaceSelection($$value);
+      flushSync();
+    },
+    get onReplaceSelectionChange() {
+      return onReplaceSelectionChange();
+    },
+    set onReplaceSelectionChange($$value) {
+      onReplaceSelectionChange($$value);
+      flushSync();
+    },
     $set: update_legacy_props,
     $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
   };
@@ -15991,7 +16129,7 @@ function ActionPalette($$anchor, $$props) {
   }
   var node_2 = sibling(node_1, 2);
   {
-    var consequent_5 = ($$anchor2) => {
+    var consequent_6 = ($$anchor2) => {
       var div_5 = root_42();
       var node_3 = child(div_5);
       {
@@ -16053,12 +16191,40 @@ function ActionPalette($$anchor, $$props) {
           if (get(state2), untrack(() => get(state2).reasoningLabel)) $$render(consequent_4);
         });
       }
+      var node_6 = sibling(node_5, 2);
+      {
+        var consequent_5 = ($$anchor3) => {
+          var button_2 = root_82();
+          action(button_2, ($$node, $$action_arg) => {
+            var _a7;
+            return (_a7 = obsidianIcon) == null ? void 0 : _a7($$node, $$action_arg);
+          }, () => replaceIconId);
+          effect(() => event("click", button_2, () => controller.handleReplaceToggleClick()));
+          template_effect(
+            ($0) => {
+              set_class(button_2, 1, clsx2((get(state2), untrack(() => get(state2).replaceSelection ? "local-gpt-replace-toggle is-active" : "local-gpt-replace-toggle"))));
+              set_attribute2(button_2, "aria-pressed", (get(state2), untrack(() => get(state2).replaceSelection)));
+              set_attribute2(button_2, "title", $0);
+            },
+            [
+              () => (deep_read_state(I18n), get(state2), untrack(() => I18n.t(
+                get(state2).replaceSelection ? "commands.actionPalette.replaceSelectionOn" : "commands.actionPalette.replaceSelectionOff",
+                { hotkey: replaceHotkey }
+              )))
+            ]
+          );
+          append($$anchor3, button_2);
+        };
+        if_block(node_6, ($$render) => {
+          if (get(state2), untrack(() => get(state2).replaceAvailable)) $$render(consequent_5);
+        });
+      }
       reset(div_5);
       template_effect(() => set_class(div_5, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-meta local-gpt-badge-highlight" : "local-gpt-provider-badge-meta")))));
       append($$anchor2, div_5);
     };
     if_block(node_2, ($$render) => {
-      if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName || get(state2).creativityBadge || get(state2).reasoningLabel)) $$render(consequent_5);
+      if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName || get(state2).creativityBadge || get(state2).reasoningLabel || get(state2).replaceAvailable)) $$render(consequent_6);
     });
   }
   reset(div_2);
@@ -16117,6 +16283,14 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
   ignoreEvent() {
     return true;
   }
+  /** Stop the prompt from reclaiming focus (palette is about to close). */
+  releasePromptFocus() {
+    var _a7;
+    const input = (_a7 = this.container) == null ? void 0 : _a7.querySelector(
+      ".local-gpt-action-palette"
+    );
+    endHoldingPromptFocus(input != null ? input : null);
+  }
   toDOM(_view4) {
     this.container = document.createElement("div");
     this.container.addClass("local-gpt-action-palette-container");
@@ -16141,6 +16315,9 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
         selectedSystemPromptId: this.options.selectedSystemPromptId,
         onSystemPromptChange: this.options.onSystemPromptChange,
         initialSelectedFiles: this.options.initialSelectedFiles,
+        canReplaceSelection: this.options.canReplaceSelection === true,
+        replaceSelection: this.options.replaceSelection === true,
+        onReplaceSelectionChange: this.options.onReplaceSelectionChange,
         onSubmit: (event2) => {
           var _a7, _b3;
           (_b3 = (_a7 = this.options).onSubmit) == null ? void 0 : _b3.call(
@@ -16148,7 +16325,8 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
             event2.text,
             event2.selectedFiles,
             event2.systemPrompt,
-            event2.reasoningSelection
+            event2.reasoningSelection,
+            event2.replaceSelection
           );
         },
         onCancel: () => {
@@ -16278,22 +16456,24 @@ function showActionPalette(view, pos, options) {
   });
 }
 function hideActionPalette(view) {
+  var _a7, _b3;
   const state2 = view.state.field(actionPaletteStateField, false);
-  if (state2) {
-    if (state2.previousSelectionRanges && state2.previousSelectionRanges.length) {
-      const selection = import_state3.EditorSelection.create(
-        state2.previousSelectionRanges.map(
-          (r2) => import_state3.EditorSelection.range(r2.from, r2.to)
-        )
-      );
-      view.dispatch({ selection });
-      view.focus();
-    } else if (state2.previousCursor !== null) {
-      view.dispatch({ selection: { anchor: state2.previousCursor } });
-      view.focus();
-    }
+  (_a7 = state2 == null ? void 0 : state2.widget) == null ? void 0 : _a7.releasePromptFocus();
+  let selection;
+  if ((_b3 = state2 == null ? void 0 : state2.previousSelectionRanges) == null ? void 0 : _b3.length) {
+    selection = import_state3.EditorSelection.create(
+      state2.previousSelectionRanges.map(
+        (r2) => import_state3.EditorSelection.range(r2.from, r2.to)
+      )
+    );
+  } else if (state2 && state2.previousCursor !== null) {
+    selection = import_state3.EditorSelection.single(state2.previousCursor);
   }
-  view.dispatch({ effects: HideActionPaletteEffect.of(null) });
+  view.dispatch({
+    ...selection ? { selection } : {},
+    effects: HideActionPaletteEffect.of(null)
+  });
+  if (selection) view.focus();
 }
 
 // node_modules/idb/build/index.js
@@ -16746,7 +16926,7 @@ var ProgressStatusBar = class {
 };
 
 // src/settingsMigration.ts
-var import_obsidian10 = require("obsidian");
+var import_obsidian11 = require("obsidian");
 var import_sdk3 = __toESM(require_dist());
 var legacyDefaultProviders = {
   ollama: {
@@ -16868,7 +17048,7 @@ function migrateToVersion5(settings) {
   }
   settings._version = 5;
   setTimeout(() => {
-    new import_obsidian10.Notice(
+    new import_obsidian11.Notice(
       `\u{1F389} LocalGPT can finally use
 context from links!
 Check the Settings!`,
@@ -16901,7 +17081,7 @@ async function migrateToVersion7(settings) {
   if (settings._version && settings._version >= 7) {
     return false;
   }
-  new import_obsidian10.Notice(I18n.t("notices.importantUpdate"), 0);
+  new import_obsidian11.Notice(I18n.t("notices.importantUpdate"), 0);
   const aiRequestWaiter = await (0, import_sdk3.waitForAI)();
   const aiProviders = await aiRequestWaiter.promise;
   settings.aiProviders = {
@@ -17045,7 +17225,7 @@ function migrateToVersion11(settings) {
 }
 
 // src/providerRequest.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian12 = require("obsidian");
 
 // src/utils.ts
 function preparePrompt(prompt = "", selectedText, context) {
@@ -17164,7 +17344,7 @@ async function executeProviderRequest({
     });
   } catch (error) {
     if (!abortController.signal.aborted) {
-      new import_obsidian11.Notice(
+      new import_obsidian12.Notice(
         I18n.t("notices.errorGenerating", {
           message: error.message
         })
@@ -17176,7 +17356,7 @@ async function executeProviderRequest({
 }
 
 // src/localGptCommands.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian13 = require("obsidian");
 var import_sdk4 = __toESM(require_dist());
 
 // src/actionMenu.ts
@@ -17206,7 +17386,7 @@ function registerContextMenuCommand(plugin) {
       const editorView = editor.cm;
       const cursorPositionFrom = editor.getCursor("from");
       const cursorPositionTo = editor.getCursor("to");
-      const contextMenu = new import_obsidian12.Menu();
+      const contextMenu = new import_obsidian13.Menu();
       populateActionContextMenu(
         contextMenu,
         plugin.settings.actions,
@@ -17253,7 +17433,13 @@ function registerActionPaletteCommand(plugin) {
         editor
       );
       const paletteLabel = await getActionPaletteLabel(plugin);
+      const canReplaceSelection = Boolean(editor.getSelection());
       showActionPalette(editorView, insertPos, {
+        canReplaceSelection,
+        replaceSelection: plugin.actionPaletteReplaceSelection,
+        onReplaceSelectionChange: (replaceSelection) => {
+          plugin.actionPaletteReplaceSelection = replaceSelection;
+        },
         includeReasoning: plugin.reasoningApiAvailable,
         getReasoningSnapshot: plugin.reasoningApiAvailable ? async () => {
           const service = await (await (0, import_sdk4.waitForAI)()).promise;
@@ -17279,7 +17465,7 @@ function registerActionPaletteCommand(plugin) {
             )
           };
         } : void 0,
-        onSubmit: (text2, selectedFiles = [], systemPrompt, reasoningSelection) => {
+        onSubmit: (text2, selectedFiles = [], systemPrompt, reasoningSelection, replaceSelection) => {
           var _a8, _b4, _c2;
           const overrideProviderId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
           const creativityKey = (_a8 = plugin.actionPaletteCreativityKey) != null ? _a8 : getEffectiveCreativityKey(plugin.settings);
@@ -17291,7 +17477,8 @@ function registerActionPaletteCommand(plugin) {
             overrideProviderId,
             temperatureOverride,
             systemPrompt,
-            reasoningSelection
+            reasoningSelection,
+            canReplaceSelection && replaceSelection === true
           ).finally(() => {
           });
           hideActionPalette(editorView);
@@ -17420,10 +17607,10 @@ function getSystemPrompts(plugin) {
 }
 
 // src/contextEnhancer.ts
-var import_obsidian14 = require("obsidian");
+var import_obsidian15 = require("obsidian");
 
 // src/rag.ts
-var import_obsidian13 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // node_modules/pdfjs-dist/legacy/build/pdf.mjs
 var import_meta = {};
@@ -49381,7 +49568,7 @@ function getLinkedFiles(content, vault, metadataCache, currentFilePath, includeA
   }).filter(isSupportedRagFile);
 }
 function isSupportedRagFile(file) {
-  return file instanceof import_obsidian13.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
+  return file instanceof import_obsidian14.TFile && SUPPORTED_RAG_EXTENSIONS.has(file.extension);
 }
 function sanitizeMarkdownForLinks(content) {
   return content.replace(/```[\s\S]*?```/g, "").replace(/<!--[\s\S]*?-->/g, "").replace(/`[^`]*`/g, "");
@@ -49625,7 +49812,7 @@ function handleContextError(error, abortController, hideStatusBar) {
   hideStatusBar();
   if (!(abortController == null ? void 0 : abortController.signal.aborted)) {
     console.error("Error processing RAG:", error);
-    new import_obsidian14.Notice(
+    new import_obsidian15.Notice(
       I18n.t("notices.errorProcessingRag", {
         message: error.message
       })
@@ -49641,7 +49828,7 @@ function collectLinkedFilesForContext(app, selectedText, selectedFiles, activeFi
     activeFilePath
   );
   const additionalFiles = (selectedFiles == null ? void 0 : selectedFiles.map((filePath) => app.vault.getAbstractFileByPath(filePath)).filter(
-    (file) => file !== null && file instanceof import_obsidian14.TFile && (file.extension === "md" || file.extension === "pdf")
+    (file) => file !== null && file instanceof import_obsidian15.TFile && (file.extension === "md" || file.extension === "pdf")
   )) || [];
   return [...linkedFiles, ...additionalFiles];
 }
@@ -49661,7 +49848,7 @@ function resolveContextLimit(settings) {
 }
 
 // src/selectionImages.ts
-var EMBEDDED_IMAGE_WIKILINK = /!\[\[(.+?\.(?:png|jpe?g|gif|webp))]]/gi;
+var EMBEDDED_IMAGE_WIKILINK = /!\[\[([^\r\n\u2028\u2029[\]]+?\.(?:png|jpe?g|gif|webp))]]/gi;
 function collectEmbeddedImageWikilinks(selectedText) {
   const fileNames = Array.from(
     selectedText.matchAll(EMBEDDED_IMAGE_WIKILINK),
@@ -49707,7 +49894,7 @@ function removeThinkingTags(text2) {
 }
 
 // src/main.ts
-var LocalGPT2 = class extends import_obsidian15.Plugin {
+var LocalGPT2 = class extends import_obsidian16.Plugin {
   constructor() {
     super(...arguments);
     this.actionPaletteProviderId = null;
@@ -49715,6 +49902,8 @@ var LocalGPT2 = class extends import_obsidian15.Plugin {
     this.actionPaletteModelProviderId = null;
     this.actionPaletteCreativityKey = null;
     // "", "low", "medium", "high"
+    // Session-only (not saved): Action Palette replaces the selection.
+    this.actionPaletteReplaceSelection = false;
     this.abortControllers = [];
     /** True when AI Providers service API supports reasoningMode (v5+). */
     this.reasoningApiAvailable = false;
@@ -49777,13 +49966,13 @@ var LocalGPT2 = class extends import_obsidian15.Plugin {
   getActionPaletteInitialSelectedFiles(editor) {
     return getActionPaletteInitialSelectedFiles(this, editor);
   }
-  async runFreeform(editor, userInput, selectedFiles = [], overrideProviderId, customTemperature, systemPrompt, reasoningSelection) {
+  async runFreeform(editor, userInput, selectedFiles = [], overrideProviderId, customTemperature, systemPrompt, reasoningSelection, replaceSelection = false) {
     return this.executeAction(
       {
         prompt: userInput,
         reasoningSelection,
         system: systemPrompt,
-        replace: false,
+        replace: replaceSelection,
         selectedFiles,
         overrideProviderId: overrideProviderId || void 0,
         temperature: customTemperature,
@@ -50025,7 +50214,7 @@ var LocalGPT2 = class extends import_obsidian15.Plugin {
   }
   async checkUpdates() {
     try {
-      const { json: response } = await (0, import_obsidian15.requestUrl)({
+      const { json: response } = await (0, import_obsidian16.requestUrl)({
         url: "https://api.github.com/repos/pfrankov/obsidian-local-gpt/releases/latest",
         method: "GET",
         headers: {
@@ -50034,7 +50223,7 @@ var LocalGPT2 = class extends import_obsidian15.Plugin {
         contentType: "application/json"
       });
       if (response.tag_name !== this.manifest.version) {
-        new import_obsidian15.Notice(I18n.t("notices.newVersion"));
+        new import_obsidian16.Notice(I18n.t("notices.newVersion"));
       }
     } catch (error) {
       console.error("Error checking for updates:", error);

@@ -68,13 +68,16 @@ CREATE TABLE `orders` (
 -- Table structure for table `order_items`
 --
 
-CREATE TABLE `order_items` (
-  `order_item_id` int(11) NOT NULL,
+CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `price_at_time` decimal(10,2) NOT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `order_date` datetime DEFAULT current_timestamp(),
+  `paid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
 
 --
 -- Indexes for dumped tables

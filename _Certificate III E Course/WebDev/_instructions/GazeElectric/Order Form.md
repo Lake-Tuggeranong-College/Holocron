@@ -75,7 +75,7 @@ CREATE TABLE `orders` (
   `address` text NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `order_date` datetime DEFAULT current_timestamp(),
-  `paid` int(11) NOT NULL
+  `paid` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 

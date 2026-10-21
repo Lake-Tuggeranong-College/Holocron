@@ -1,5 +1,5 @@
 ---
-isCurrent: true
+isCurrent: false
 needsUpdating: true
 ---
 The initial codebase for the Rover project is split into two sketches:

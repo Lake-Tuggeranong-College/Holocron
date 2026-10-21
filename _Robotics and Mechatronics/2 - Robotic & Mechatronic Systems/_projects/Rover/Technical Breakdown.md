@@ -1,6 +1,6 @@
 ---
-isCurrent: true
-needsUpdating: true
+isCurrent: false
+needsUpdating: false
 ---
 > [!note] This page discusses the technical specifics of the project at the beginning of the project.
 

@@ -378,11 +378,11 @@ if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPL
 ![[prodMgmtSave3.png]]
 ```php
 if ($p_id) {
-	$sql = "UPDATE products SET product_name=?, category=?, price=?, description=?, enabled=?, image_path=? WHERE product_id=?"
+	$sql = "UPDATE products SET name=?, category=?, price=?, description=?, enabled=?, image_path=? WHERE product_id=?"
 	$db->prepare($sql)->execute([$p_name, $p_cat, $p_price, $p_desc, $p_enabled, $image_name, $p_id]);
 	$_SESSION['success_message'] = "Product updated.";
 } else {
-	$sql = "INSERT INTO products (product_name, category, price, description, enabled, image_path) VALUES (?, ?, ?, ?, ?, ?)";
+	$sql = "INSERT INTO products (name, category, price, description, enabled, image_path) VALUES (?, ?, ?, ?, ?, ?)";
 	$db->prepare($sql)->execute([$p_name, $p_cat, $p_price, $p_desc, $p_enabled, $image_name]);
 	$_SESSION['success_message'] = "New product added.";
 }

@@ -410,6 +410,8 @@ function mountVaultGraph(root, data, deps) {
   var countBars = deps.countBars === false ? false : true;
   var rootInOrder = deps.rootInOrder === true;
   var onRootInOrder = typeof deps.onRootInOrder === "function" ? deps.onRootInOrder : null;
+  var parentTagsOnly = deps.parentTagsOnly === true;
+  var onParentTagsOnly = typeof deps.onParentTagsOnly === "function" ? deps.onParentTagsOnly : null;
   var rootKey = "";
   var onCountBars = typeof deps.onCountBars === "function" ? deps.onCountBars : null;
   var devTools = typeof deps.devTools === "boolean" ? deps.devTools : !!(DATA && DATA.dev);
@@ -531,15 +533,104 @@ function mountVaultGraph(root, data, deps) {
   var EDGE_SHOWN = 0;
   var lazyEdges = false;
   var NODE_MIN = 2.6, NODE_MAX = 11, NODE_ORPHAN = 6;
-  var hubRank = dict();
+  var DOT_CLEAR = 0.92;
+  var visSrc = dict();
+  var visDst = dict();
+  var visEase = 1;
+  var countFloorFrom = 0, countFloorTo = 0;
+  var basisDegrees = dict();
+  var basisRanks = dict();
+  var basisCounts = dict();
+  function basisFiled(id) {
+    return !hiddenByDefault(fileGroup(id));
+  }
+  function basisDegree(id) {
+    var cache2 = basisDegrees[state.dim] || (basisDegrees[state.dim] = dict());
+    var key = noteOf(id);
+    if (cache2[key] === void 0) {
+      var n = 0, own = basisFiled(key);
+      (adj[key] || []).forEach(function(e) {
+        if (!own || basisFiled(e.o)) n += e.o === key ? 2 : 1;
+      });
+      cache2[key] = n;
+    }
+    return cache2[key];
+  }
+  function basisShown(id) {
+    return basisFiled(id) && !hiddenByDefault(!basisDegree(id) && !unlinkedByFolder ? UNLINKED : fileGroup(id));
+  }
+  function basisCount() {
+    var key = state.dim + "#" + unlinkedByFolder;
+    if (basisCounts[key] === void 0) {
+      var n = 0;
+      graph.forEachNode(function(id, a) {
+        if (!a.dupOf && basisShown(id)) n++;
+      });
+      basisCounts[key] = n;
+    }
+    return basisCounts[key];
+  }
+  function basisSize(id) {
+    var n = basisDegree(id);
+    return n === 0 ? NODE_ORPHAN : Math.min(NODE_MAX, NODE_MIN + 1.55 * Math.sqrt(n));
+  }
+  function basisRank(id) {
+    var ranks = basisRanks[state.dim];
+    if (!ranks) {
+      ranks = basisRanks[state.dim] = dict();
+      graph.nodes().filter(function(key) {
+        return !graph.getNodeAttribute(key, "dupOf");
+      }).sort(function(a, b) {
+        return basisDegree(b) - basisDegree(a) || String(graph.getNodeAttribute(a, "label")).localeCompare(String(graph.getNodeAttribute(b, "label")));
+      }).forEach(function(key, i) {
+        ranks[key] = i;
+      });
+    }
+    return ranks[noteOf(id)];
+  }
+  function rankVisible(on) {
+    var all = dict();
+    var vis = dict();
+    var seen = dict();
+    graph.forEachNode(function(id) {
+      seen[id] = !!on(id);
+    });
+    graph.forEachNode(function(id) {
+      var own = basisFiled(id);
+      (adj[id] || []).forEach(function(e) {
+        if (own && !basisFiled(e.o)) return;
+        var peer = !oldWorld && leaving[e.o] ? e.o + SAT_SEP + "s" : e.o;
+        var w = e.o === noteOf(id) ? 2 : 1;
+        all[id] = (all[id] || 0) + w;
+        if (seen[id] && seen[peer]) vis[id] = (vis[id] || 0) + w;
+      });
+    });
+    var out = dict();
+    graph.forEachNode(function(id) {
+      var n = all[id] || 0;
+      out[id] = n > 0 ? (vis[id] || 0) / n : 1;
+    });
+    return out;
+  }
+  function dotRamp(id) {
+    var t = (basisSize(id) - NODE_MIN) / (NODE_MAX - NODE_MIN);
+    t = t > 1 ? 1 : t < 0 ? 0 : t;
+    var a = visSrc[id], b = visDst[id];
+    if (a === void 0) a = b === void 0 ? 1 : b;
+    if (b === void 0) b = a;
+    return t * (a + (b - a) * visEase);
+  }
   var subOrder = dict();
   var subCount = dict();
   var idOfPath = dict();
   var nextId = 0;
   function ingest(src, keepId) {
+    restVer++;
     graph.clear();
+    basisDegrees = dict();
+    basisRanks = dict();
+    basisCounts = dict();
     adj = dict();
-    hubRank = dict();
     subOrder = dict();
     subCount = dict();
     idOfPath = dict();
@@ -600,11 +691,6 @@ function mountVaultGraph(root, data, deps) {
     graph.forEachNode(function(id, a) {
       graph.setNodeAttribute(id, "size", a.deg === 0 ? NODE_ORPHAN : Math.min(NODE_MAX, NODE_MIN + 1.55 * Math.sqrt(a.deg)));
     });
-    graph.nodes().slice().sort(function(a, b) {
-      return graph.getNodeAttribute(b, "deg") - graph.getNodeAttribute(a, "deg") || String(graph.getNodeAttribute(a, "label")).localeCompare(String(graph.getNodeAttribute(b, "label")));
-    }).forEach(function(id, i) {
-      hubRank[id] = i;
-    });
   }
   ingest(DATA, null);
   function buildSubOrder() {
@@ -612,6 +698,7 @@ function mountVaultGraph(root, data, deps) {
     subCount = dict();
     var tally = dict();
     graph.forEachNode(function(id, a) {
+      if (a.standIn) return;
       var f = fileGroup(id, a), sb = fileSub(id, a);
       if (!tally[f]) tally[f] = dict();
       tally[f][sb] = (tally[f][sb] || 0) + 1;
@@ -667,10 +754,14 @@ function mountVaultGraph(root, data, deps) {
   }
   function fileSub(id, a) {
     if (state.dim === "folder") return (a || graph.getNodeAttributes(id)).sub || "";
+    if (parentTagsOnly) return "";
     var f = tagFiling[id];
     return f ? f.sub : "";
   }
   function fileDirs(id, a) {
+    return state.dim === "tag" && parentTagsOnly ? [] : noteDirs(id, a);
+  }
+  function noteDirs(id, a) {
     if (state.dim === "folder") return (a || graph.getNodeAttributes(id)).dirs || [];
     var f = tagFiling[id];
     return f ? f.dirs : [];
@@ -688,7 +779,7 @@ function mountVaultGraph(root, data, deps) {
       if (mf !== void 0) return mf;
     }
     if (leftGroup[id] !== void 0) return leftGroup[id];
-    if (!adj[id]) return unlinkedByFolder ? fileGroup(id) : UNLINKED;
+    if (!basisDegree(id) && basisFiled(id)) return unlinkedByFolder ? fileGroup(id) : UNLINKED;
     return fileGroup(id);
   }
   var SAT_SEP = "\0";
@@ -723,7 +814,6 @@ function mountVaultGraph(root, data, deps) {
       });
       if (tagFiling[id]) tagFiling[sid] = tagFiling[id];
       if (adj[id]) adj[sid] = adj[id];
-      hubRank[sid] = hubRank[id];
       if (tlRank[id] !== void 0) tlRank[sid] = tlRank[id];
       if (tlMs[id] !== void 0) tlMs[sid] = tlMs[id];
       alpha[sid] = 0;
@@ -743,6 +833,7 @@ function mountVaultGraph(root, data, deps) {
   }
   function dropStandIns() {
     if (!standIns.length && !Object.keys(leaving).length) return;
+    foldSizes = null;
     standIns.forEach(function(sid) {
       var id = graph.getNodeAttribute(sid, "standIn");
       if (graph.hasNode(id)) {
@@ -754,14 +845,18 @@ function mountVaultGraph(root, data, deps) {
       graph.dropNode(sid);
       delete tagFiling[sid];
       delete adj[sid];
-      delete hubRank[sid];
       delete tlRank[sid];
       delete tlMs[sid];
       delete alpha[sid];
+      delete visSrc[sid];
+      delete visDst[sid];
     });
     standIns = [];
     leaving = dict();
     leftGroup = dict();
+    visSrc = visDst = rankVisible(willShow);
+    visEase = 1;
+    countFloorFrom = countFloorTo = measureCountFloor();
     lazyAdded = [];
     lazyShown = null;
     neighbourCache = null;
@@ -865,7 +960,7 @@ function mountVaultGraph(root, data, deps) {
     var filed = dict();
     graph.forEachNode(function(id, a) {
       if (a.standIn) return;
-      var g = leaving[id] ? !adj[id] && !unlinkedByFolder ? UNLINKED : fileGroup(id, a) : groupOf(id);
+      var g = leaving[id] ? !basisDegree(id) && basisFiled(id) && !unlinkedByFolder ? UNLINKED : fileGroup(id, a) : groupOf(id);
       count[g] = (count[g] || 0) + 1;
       var f = fileGroup(id, a);
       filed[f] = (filed[f] || 0) + 1;
@@ -946,6 +1041,10 @@ function mountVaultGraph(root, data, deps) {
   function applyFolderShown(map, dim) {
     var d = dim === "tag" ? "tag" : "folder";
     dimShown[d] = cleanFolderShown(map);
+    basisDegrees = dict();
+    basisRanks = dict();
+    basisCounts = dict();
+    restVer++;
     return dimShown[d];
   }
   function applyFolderColors(map, dim) {
@@ -1061,7 +1160,6 @@ function mountVaultGraph(root, data, deps) {
   var INNER_FILL = 0.8;
   var GAP_BAND = { i: 0.5, o: 1 };
   var CLEAR_OF_ROOM = 0.12;
-  var ROOM_PCTL = 0.5;
   var MIN_SPAN = 6 * Math.PI / 180;
   var HL_PUSH = 0.9;
   var DENSITY_MAX = 2.6;
@@ -1070,8 +1168,8 @@ function mountVaultGraph(root, data, deps) {
   function bandOf(k) {
     if (!BAND) {
       BAND = {
-        i: { key: "i", sp: 1, rows: 0, room: 0, ramp: { m: 1, b: 0, lo: 0 }, gapDeg: 0, nG: 0 },
-        o: { key: "o", sp: 1, rows: 0, room: 0, ramp: { m: 1, b: 0, lo: 0 }, gapDeg: 0, nG: 0 }
+        i: { key: "i", sp: 1, rows: 0, gapDeg: 0, nG: 0 },
+        o: { key: "o", sp: 1, rows: 0, gapDeg: 0, nG: 0 }
       };
     }
     return k === "i" ? BAND.i : BAND.o;
@@ -1215,7 +1313,7 @@ function mountVaultGraph(root, data, deps) {
     return t < 0 ? t + 2 * Math.PI : t;
   }
   function isOrphan(id) {
-    return !adj[id];
+    return basisDegree(id) === 0;
   }
   var SEAM_ROWS = 0.3;
   var SEAM_MAX_ROWS = 0.16;
@@ -1224,7 +1322,7 @@ function mountVaultGraph(root, data, deps) {
   var GAP_FULL_TO = 1e3;
   var GAP_ZERO_AT = 1e4;
   function gapScale() {
-    var n = graph.order;
+    var n = basisCount();
     if (n <= GAP_FULL_TO) return 1;
     if (n >= GAP_ZERO_AT) return 0;
     return 1 - (n - GAP_FULL_TO) / (GAP_ZERO_AT - GAP_FULL_TO);
@@ -1381,7 +1479,7 @@ function mountVaultGraph(root, data, deps) {
     var SEP = "\0";
     var byCell = dict();
     var cellsOf = dict();
-    var planTotal = 0;
+    var planTotal = 0, planCount = 0;
     var presMax = dict();
     var liveG = dict();
     var liveN = dict();
@@ -1390,13 +1488,13 @@ function mountVaultGraph(root, data, deps) {
     var useSkel = !!skel && skel.filled && skel.keep === planKeep && skel.dim === state.dim && skel.order === all && skel.pinned === state.pinned.join(SEP) && skel.onlyVisible === !!onlyVisible;
     var members = [];
     var memberG = [];
-    var leaving2 = [];
+    var leavers = [];
     var dropped = false;
     if (useSkel && skel) {
       var gone = dict();
-      for (var li = 0, ln = skel.leaving.length; li < ln; li++) {
-        var lid = skel.leaving[li];
-        if ((planKeep || willShow)(lid)) leaving2.push(lid);
+      for (var li = 0, ln = skel.leavers.length; li < ln; li++) {
+        var lid = skel.leavers[li];
+        if ((planKeep || willShow)(lid)) leavers.push(lid);
         else {
           gone[lid] = true;
           dropped = true;
@@ -1426,13 +1524,13 @@ function mountVaultGraph(root, data, deps) {
         liveG[gm] = (liveG[gm] || 0) + (wm > 1 ? 1 : wm < 0 ? 0 : wm);
       }
     } else graph.forEachNode(function(id) {
-      if (oldWorld ? !!graph.getNodeAttribute(id, "standIn") : !!leaving2[id]) return;
-      if (onlyVisible && !(planKeep || willShow)(id)) return;
+      if (oldWorld ? !!graph.getNodeAttribute(id, "standIn") : !!leaving[id]) return;
+      if (onlyVisible ? !(planKeep || willShow)(id) : !basisShown(id)) return;
       if (isPinned(id)) return;
       members.push(id);
       var g0 = groupOf(id);
       memberG.push(g0);
-      if (skel && onlyVisible && !willShow(id)) leaving2.push(id);
+      if (skel && onlyVisible && !willShow(id)) leavers.push(id);
       var wv = W(id);
       liveG[g0] = (liveG[g0] || 0) + (wv > 1 ? 1 : wv < 0 ? 0 : wv);
       liveN[g0] = (liveN[g0] || 0) + 1;
@@ -1479,7 +1577,8 @@ function mountVaultGraph(root, data, deps) {
         var mA = graph.getNodeAttributes(mId);
         var mSub = fileSub(mId, mA);
         var mBk = bandLock && bandLock[mG] ? "i" : "o";
-        var mKey = splitFor(mG) ? mG + SEP + subCellIndex(mG, mSub, liveSub[mG + "/" + mSub] || 0, bandDepth[mBk]) : mG;
+        var held = cellHold ? cellHold[mId] : void 0;
+        var mKey = held !== void 0 && held.split(SEP)[0] === mG ? held : splitFor(mG) ? mG + SEP + subCellIndex(mG, mSub, liveSub[mG + "/" + mSub] || 0, bandDepth[mBk]) : mG;
         if (!byCell[mKey]) {
           byCell[mKey] = [];
           (cellsOf[mG] || (cellsOf[mG] = [])).push(mKey);
@@ -1488,8 +1587,10 @@ function mountVaultGraph(root, data, deps) {
       }
       var pw = W(mId);
       planTotal += pw;
-      if (colWalk && colWalk[mG] !== void 0) pw = colWalk[mG].f;
-      if (!(presMax[mG] >= pw)) presMax[mG] = pw;
+      planCount++;
+      var pv = pw;
+      if (colWalk && colWalk[mG] !== void 0) pv = colWalk[mG].f;
+      if (!(presMax[mG] >= pv)) presMax[mG] = pv;
     }
     var big = useCells && skel ? skel.big : [];
     var smallIds = useCells && skel ? skel.smallIds : [];
@@ -1499,7 +1600,7 @@ function mountVaultGraph(root, data, deps) {
       all.filter(function(g) {
         return cellsOf[g];
       }).forEach(function(g) {
-        if ((counts[g] || 0) >= SMALL_GROUP) {
+        if (g === UNLINKED || g === UNTAGGED || (counts[g] || 0) >= SMALL_GROUP) {
           big.push(g);
           return;
         }
@@ -1531,7 +1632,7 @@ function mountVaultGraph(root, data, deps) {
     if (!cells.length) return null;
     cells.forEach(function(c) {
       if (!useCells) c.list.sort(function(a, b) {
-        return hubRank[a] - hubRank[b];
+        return basisRank(a) - basisRank(b);
       });
       c.wsum = 0;
       c.list.forEach(function(id) {
@@ -1542,7 +1643,7 @@ function mountVaultGraph(root, data, deps) {
       if (!useSkel || dropped) {
         skel.members = members;
         skel.memberG = memberG;
-        skel.leaving = leaving2;
+        skel.leavers = leavers;
         skel.liveN = liveN;
         skel.liveSub = liveSub;
         skel.keep = planKeep;
@@ -1563,12 +1664,12 @@ function mountVaultGraph(root, data, deps) {
       }
       skel.filled = true;
     }
-    var TOTAL = planTotal;
+    var TOTAL = planCount;
     var MIN = MIN_SPAN, TWO = arcSpan();
     var smallAt = TOTAL * (MIN / TWO);
     var groupInner = dict();
     cells.forEach(function(c) {
-      var small = c.wsum < smallAt;
+      var small = c.list.length < smallAt;
       if (groupInner[c.g] === void 0) groupInner[c.g] = small;
       else groupInner[c.g] = groupInner[c.g] || small;
     });
@@ -1591,10 +1692,10 @@ function mountVaultGraph(root, data, deps) {
       outer = cells;
       inner = [];
     }
-    var share = function(list, band) {
+    var share = function(list, band, wOf) {
       var a = allocateBand(
         list,
-        function(c) {
+        wOf || function(c) {
           return c.wsum;
         },
         { subGaps: false, clamp: null, totFloor: 1e-4, band }
@@ -1615,7 +1716,6 @@ function mountVaultGraph(root, data, deps) {
     var spDensity = typeof spIn === "number" ? spIn : 0;
     var density = given ? given.o || 1 : spDensity > 0 ? spDensity : planTotal > 1e-4 ? Math.min(DENSITY_MAX, Math.sqrt(fullTotal / planTotal)) : 1;
     var SP = density;
-    var givenRoom = given && given.room ? given.room : null;
     var SP_I = given && given.i > 0 ? given.i : SP;
     var SP_O = given && given.o > 0 ? given.o : SP;
     var bandDensity = function(cells2, key) {
@@ -1671,7 +1771,7 @@ function mountVaultGraph(root, data, deps) {
       });
       var pinnedInner = dict();
       names.forEach(function(g) {
-        if ((groupNotes[g] || 0) < PIN_BELOW) {
+        if (g === MERGED || (groupNotes[g] || 0) < PIN_BELOW) {
           pinnedInner[g] = true;
           assign[g] = true;
         }
@@ -1679,6 +1779,9 @@ function mountVaultGraph(root, data, deps) {
       var movable = names.filter(function(g) {
         return !pinnedInner[g];
       });
+      var countOf = function(c) {
+        return c.list.length;
+      };
       var applyAssign = function() {
         cells.forEach(function(c) {
           c.inner = !!assign[c.g];
@@ -1709,21 +1812,21 @@ function mountVaultGraph(root, data, deps) {
       var spanFor = function(ins, outs, rv) {
         var iR = 0;
         ins.forEach(function(c) {
-          var r = rowsNeeded(usableRef(c, rv), c.wsum, rv);
+          var r = rowsNeeded(usableRef(c, rv), countOf(c), rv);
           if (r > iR) iR = r;
         });
         var rOut = ins.length ? rv + iR * SP + GUTTER : rv;
         var oR = 0;
         outs.forEach(function(c) {
-          var r = rowsNeeded(usableRef(c, rOut), c.wsum, rOut);
+          var r = rowsNeeded(usableRef(c, rOut), countOf(c), rOut);
           if (r > oR) oR = r;
         });
         var nI = 0, nO = 0;
         ins.forEach(function(c) {
-          nI += c.wsum;
+          nI += countOf(c);
         });
         outs.forEach(function(c) {
-          nO += c.wsum;
+          nO += countOf(c);
         });
         var iHi = (rv + iR * SP) * INNER_SCALE, iLo = rv * INNER_SCALE;
         var oHi = rOut + oR * SP, oLo = rOut;
@@ -1747,8 +1850,8 @@ function mountVaultGraph(root, data, deps) {
           (a[c.g] ? ins : outs).push(c);
         });
         if (!ins.length || !outs.length) return { cost: Infinity, r0: R0_BASE };
-        share(ins, "i");
-        share(outs, "o");
+        share(ins, "i", countOf);
+        share(outs, "o", countOf);
         cells.forEach(function(c) {
           c.bandRef = c.band;
         });
@@ -1811,21 +1914,23 @@ function mountVaultGraph(root, data, deps) {
           best = bc;
         }
       }
-      applyAssign();
       r0 = evaluate(assign).r0;
+      applyAssign();
     })();
-    if (!given) {
-      SP_I = bandDensity(inner, "i");
-      SP_O = bandDensity(outer, "o");
-    }
-    var solveBand = function(list, base, thick, scale2, sp) {
+    var heldBand = function(k) {
+      if (!given) return false;
+      return given.hold ? !!given.hold[k] : true;
+    };
+    if (!heldBand("i")) SP_I = bandDensity(inner, "i");
+    if (!heldBand("o")) SP_O = bandDensity(outer, "o");
+    var solveBand = function(list, base, thick, scale2, sp, held2) {
       if (!list.length) return { sp, rows: 0 };
       var n = 0;
       list.forEach(function(c) {
         n += c.wsum;
       });
       if (!(n > 1e-4)) return { sp, rows: 0 };
-      if (given || !(thick > 0) || !(n > 0.5)) {
+      if (held2 || !(thick > 0) || !(n > 0.5)) {
         var rk = Math.round(thick > 0 && sp > 0 ? thick / sp : 1);
         return { sp, rows: rk > 0 ? rk : 1 };
       }
@@ -1846,7 +1951,7 @@ function mountVaultGraph(root, data, deps) {
     var thickI = geomLock ? (geomLock.rOuter - geomLock.r0) * INNER_FILL : 0;
     var innerRows = 0;
     if (geomLock && thickI > 0) {
-      var si = solveBand(inner, r0, thickI, INNER_SCALE, SP_I);
+      var si = solveBand(inner, r0, thickI, INNER_SCALE, SP_I, heldBand("i"));
       SP_I = si.sp;
       innerRows = si.rows;
       inner.forEach(function(c) {
@@ -1862,13 +1967,14 @@ function mountVaultGraph(root, data, deps) {
     var thickO = geomLock ? geomLock.maxR - geomLock.rOuter : 0;
     var maxR = rOuter, outerRows = 0;
     if (geomLock && thickO > 0) {
-      var so = solveBand(outer, rOuter, thickO, 1, SP_O);
+      var so = solveBand(outer, rOuter, thickO, 1, SP_O, heldBand("o"));
       SP_O = so.sp;
       outerRows = so.rows;
       outer.forEach(function(c) {
         c.rows = c.wsum > 1e-4 ? outerRows : 0;
       });
-      maxR = rOuter + outerRows * SP_O;
+      var depthO = spIn && typeof spIn === "object" && spIn.depth ? spIn.depth.o : 0;
+      maxR = rOuter + (depthO > 0 ? depthO : outerRows) * SP_O;
       if (maxR > geomLock.maxR) maxR = geomLock.maxR;
     } else {
       outer.forEach(function(c) {
@@ -1890,7 +1996,8 @@ function mountVaultGraph(root, data, deps) {
       var pad = typeof c.pad === "number" ? c.pad : padFor(base, c.bandRef);
       var span = 1 - 2 * pad;
       var centred = bandRows > 0 && nEff > 1e-4 && nEff < bandRows - 1e-4;
-      var cStart = centred ? Math.round((bandRows - nEff) / 2) : 0;
+      var cStart = centred ? Math.floor((bandRows - nEff) / 2) : 0;
+      var rowCap = Math.max(0, Math.floor(rows - 0.5 + 1e-9));
       var recs = [];
       var acc = 0;
       seq.forEach(function(id, idx) {
@@ -1901,26 +2008,22 @@ function mountVaultGraph(root, data, deps) {
         var target = s * total;
         var pp = SP2 > 1e-9 ? (-base + Math.sqrt(Math.max(0, base * base + 2 * SP2 * target))) / SP2 : target / Math.max(1e-9, base);
         if (pp < 0) pp = 0;
-        if (pp > rows - 1e-9) pp = Math.max(0, rows - 1e-9);
+        if (pp > rowCap) pp = rowCap;
         var cRow = 0;
         if (centred) {
           var top = Math.max(0, Math.ceil(nEff - 1e-4) - 1);
           cRow = cStart + Math.min(Math.floor(s * nEff), top);
+          if (cRow > rowCap) cRow = rowCap;
         }
         recs.push({ id, w, row: centred ? cRow : Math.floor(pp) });
       });
       var rowW = dict();
       var rowFirst = dict();
       var rowLast = dict();
-      var edgeA = dict();
-      var edgeB = dict();
       recs.forEach(function(r) {
         rowW[r.row] = (rowW[r.row] || 0) + r.w;
         if (rowFirst[r.row] === void 0) rowFirst[r.row] = r.w;
         rowLast[r.row] = r.w;
-        var dz = graph.getNodeAttribute(r.id, "size") || 4;
-        if (edgeA[r.row] === void 0) edgeA[r.row] = dz;
-        edgeB[r.row] = dz;
       });
       var rowAcc = dict();
       var out = [];
@@ -1952,7 +2055,7 @@ function mountVaultGraph(root, data, deps) {
           });
         }
         var u0 = r.row % 2 === 1 ? 1 - t : t;
-        var eA = edgeA[r.row] || 0, eB = edgeB[r.row] || 0;
+        var eA = 2 * hA, eB = 2 * hB;
         out.push({
           id: r.id,
           r: rr,
@@ -1970,27 +2073,6 @@ function mountVaultGraph(root, data, deps) {
       if (!rf) rf = c.rows;
       c.slots = placeCell(c, rf, base, c.inner ? innerRows : outerRows);
     });
-    var roomOf = function(list) {
-      var v = [];
-      list.forEach(function(c) {
-        if (!c.slots || !c.slots.length) return;
-        var rn = dict();
-        c.slots.forEach(function(sl) {
-          rn[sl.r] = (rn[sl.r] || 0) + 1;
-        });
-        c.slots.forEach(function(sl) {
-          var n = rn[sl.r] || 1;
-          var step = (c.band || 0) * sl.r * UNIT / n;
-          if (step > 1) v.push(step);
-        });
-      });
-      if (!v.length) return 0;
-      v.sort(function(x, y) {
-        return x - y;
-      });
-      return v[Math.floor(v.length * 0.1)];
-    };
-    var roomPlan = givenRoom || { i: roomOf(inner), o: roomOf(outer) };
     var depthOf = function(list, fallback, band) {
       var given2 = spIn && typeof spIn === "object" && spIn.depth ? spIn.depth[band] : 0;
       if (given2 > 0) return given2;
@@ -2005,7 +2087,6 @@ function mountVaultGraph(root, data, deps) {
       sp: SP_O,
       spInner: SP_I,
       density,
-      room: roomPlan,
       dbgLive: liveG,
       dbgSplit: splitOf,
       presMax,
@@ -2016,22 +2097,19 @@ function mountVaultGraph(root, data, deps) {
     };
   }
   var REPACK_BELOW = 0.55;
-  function ringsLayout(planIn, strict) {
+  var pathSeats = dict();
+  function ringsLayout(planIn, strict, walk) {
     if (trace) {
       tracePut({
         what: "pass",
-        roomIn_i: bandOf("i").room,
-        roomIn_o: bandOf("o").room,
-        hasRoomNow: !!roomNow,
+        roomIn_i: pitchUnits("i"),
+        roomIn_o: pitchUnits("o"),
+        hasRoomNow: false,
         hasCellNow: !!cellNow,
         hasEdgeNow: !!edgeNow,
         strict: !!strict,
         givenPlan: !!planIn
       });
-    }
-    if (roomNow) {
-      if (roomNow.i > 1) bandOf("i").room = roomNow.i;
-      if (roomNow.o > 1) bandOf("o").room = roomNow.o;
     }
     var plan = planIn || pinnedPlan || buildWedgePlan(
       true,
@@ -2083,10 +2161,7 @@ function mountVaultGraph(root, data, deps) {
     var fit2 = dict();
     var lastAt = null;
     var firstAt = null;
-    var roomPool = { i: [], o: [] };
     var cellRoomNext = dict();
-    var cellMin = dict();
-    var cellOf = dict();
     var edgeCapNext = dict();
     var hubRow0Next = dict();
     var dbgCells = DBG.on ? [] : null;
@@ -2207,16 +2282,11 @@ function mountVaultGraph(root, data, deps) {
           var w = alpha[sl.id] || 0;
           if (w > 0) rowN[sl.r] = (rowN[sl.r] || 0) + w;
         });
-        var rowsUsed = 0;
-        Object.keys(rowN).forEach(function(rk) {
-          rowsUsed += rowN[rk] > 1 ? 1 : rowN[rk];
-        });
-        if (!(rowsUsed > 0)) rowsUsed = 1;
-        var maxRowR = -1;
-        Object.keys(rowN).forEach(function(rk) {
-          if (+rk > maxRowR) maxRowR = +rk;
-        });
+        var cellMin = Infinity;
         c.slots.forEach(function(sl) {
+          var slotR = sl.r;
+          if (walk) sl = walk(c, sl);
+          else pathSeats[sl.id] = { cell: c.k, at: 2 * sl.row + (sl.row % 2 ? 1 - sl.u : sl.u) };
           if (!present(sl.id)) return;
           var rs = rowShare ? rowShare[Math.round(sl.r * 1e3)] : null;
           var sm = seamAt(sl.r * UNIT, rs ? rs.nB : nB, isInner ? "i" : "o");
@@ -2231,6 +2301,11 @@ function mountVaultGraph(root, data, deps) {
             a0 = arcFrom() + sm.gap * seamsBefore + sm.avail * fracBefore - sm.gap / 2;
             a1 = a0 + sm.avail * frac * open;
           }
+          if (planArc) {
+            a0 = Math.max(planArc.from, Math.min(planArc.to, a0));
+            a1 = Math.max(planArc.from, Math.min(planArc.to, a1));
+          }
+          if (walk && a1 < a0) a0 = a1 = (a0 + a1) / 2;
           if (probe && probe.watch === sl.id) {
             probe.watched = {
               k: c.k,
@@ -2251,20 +2326,18 @@ function mountVaultGraph(root, data, deps) {
           var rGraph = Math.max(1e-6, sl.r * UNIT);
           if (isInner && sl.row === 0) hubRow0Next[sl.id] = true;
           var bk = isInner ? "i" : "o";
-          var room = bandOf(bk).room > 1 ? bandOf(bk).room : pitchUnits(bk);
-          var clear = CLEAR_OF_ROOM * room * (GAP_BAND[bk] || 1);
-          var nRow = rowN[sl.r] > 1e-3 ? rowN[sl.r] : 1;
-          if (nRow > 1.5) {
-            var ownStep = arc * rGraph / nRow;
-            roomPool[isInner ? "i" : "o"].push(ownStep);
-            if (cellMin[c.k] === void 0 || ownStep < cellMin[c.k]) cellMin[c.k] = ownStep;
-          }
-          cellOf[sl.id] = c.k;
-          var side = function(z) {
-            var f = (z || NODE_MAX) / NODE_MAX;
-            if (f > 1) f = 1;
-            else if (f < 0.15) f = 0.15;
-            return (clear + DOT_OF_PITCH * room * f) / rGraph;
+          var pitU = pitchUnits(bk);
+          var rowWs = rowN[slotR] > 1e-9 ? rowN[slotR] : 0;
+          var wSelf = alpha[sl.id] || 0;
+          var slotOf = function(shr) {
+            return arc * rGraph * (shr > 0 ? shr : 1);
+          };
+          var own = slotOf(rowWs > 1e-9 && wSelf > 0 ? wSelf / rowWs : 1);
+          if (own > 0 && own < cellMin) cellMin = own;
+          var side = function(shr) {
+            var u = slotOf(shr);
+            if (u > pitU) u = pitU;
+            return (CLEAR_OF_ROOM * u * (GAP_BAND[bk] || 1) + DOT_OF_PITCH * u) / rGraph;
           };
           var mgA = side(sl.eA), mgB = side(sl.eB);
           var arcCap = arc * 0.66;
@@ -2276,7 +2349,8 @@ function mountVaultGraph(root, data, deps) {
           var t = sweepAngle(a0 + mgA + (arc - mgA - mgB) * sl.u);
           var spanArc = arc - mgA - mgB;
           var dEdge = Math.min(mgA + spanArc * sl.u, mgB + spanArc * (1 - sl.u)) * rGraph;
-          if (dEdge > 0) edgeCapNext[sl.id] = dEdge;
+          if (planArc) dEdge = rGraph * Math.sin(Math.min(Math.PI / 2, Math.max(0, dEdge / rGraph)));
+          if (dEdge >= 0) edgeCapNext[sl.id] = dEdge;
           if (trace && trace.id === sl.id) {
             tracePut({
               what: "edge",
@@ -2291,12 +2365,12 @@ function mountVaultGraph(root, data, deps) {
               slotR: sl.r,
               dEdge,
               a0,
-              nRow,
+              nRow: rowWs,
               geom: c.geom,
               live: c.live,
               span: c.span,
-              sideClear: clear,
-              sideRoom: room,
+              sideClear: CLEAR_OF_ROOM * slotOf(1),
+              sideRoom: slotOf(1),
               sideEA: sl.eA,
               sideEB: sl.eB
             });
@@ -2319,6 +2393,14 @@ function mountVaultGraph(root, data, deps) {
           if (firstAt[sl.r] === void 0) firstAt[sl.r] = { t, id: sl.id };
           var rr = sl.r + (pushOn && isPushed(sl.id) ? HL_PUSH : 0);
           pos[sl.id] = { x: rr * Math.cos(t), y: rr * Math.sin(t) };
+        });
+        if (cellMin < Infinity && fitCap && c.slots.filter(function(sl) {
+          return present(sl.id);
+        }).length <= FEW_IN_CELL) {
+          cellMin = Math.max(cellMin, pitchUnits(isInner ? "i" : "o"));
+        }
+        if (cellMin < Infinity) c.slots.forEach(function(sl) {
+          if (present(sl.id)) cellRoomNext[sl.id] = cellMin;
         });
         fracBefore += frac * open;
       });
@@ -2344,25 +2426,10 @@ function mountVaultGraph(root, data, deps) {
         y: graph.getNodeAttribute(id, "y")
       };
     });
-    var pool = roomPool;
-    var pick = function(v) {
-      if (!v.length) return void 0;
-      v.sort(function(x, y) {
-        return x - y;
-      });
-      return v[Math.floor(v.length * ROOM_PCTL)];
-    };
-    if (!roomNow) {
-      bandOf("i").room = pick(pool.i);
-      bandOf("o").room = pick(pool.o);
-    }
     var insetO = 0;
-    var roomO = roomNow ? roomNow.o : bandOf("o").room;
-    if (plan.sp > 0 && plan.rows && plan.rows.o > 0 && roomO > 1) {
+    if (plan.sp > 0 && plan.rows && plan.rows.o > 0) {
       var pitO = UNIT * plan.sp;
-      var hiO = DOT_OF_PITCH * Math.min(pitO, UNIT * DOT_MAX_SPREAD);
-      var fO = Math.min(roomO * 0.92 / pitO, DOT_ROOM_MAX);
-      insetO = hiO * fO / UNIT;
+      insetO = DOT_OF_PITCH * DOT_CLEAR * Math.min(pitO, UNIT * DOT_MAX_SPREAD) / UNIT;
       var slackO = plan.maxR - plan.rOuter - (plan.rows.o - 1) * plan.sp - 2 * insetO;
       if (slackO < 0) insetO = Math.max(0, insetO + slackO);
       if (insetO > 0) {
@@ -2383,15 +2450,11 @@ function mountVaultGraph(root, data, deps) {
     if (trace) {
       tracePut({
         what: "passEnd",
-        roomOut_i: bandOf("i").room,
-        roomOut_o: bandOf("o").room,
-        measured: !roomNow
+        roomOut_i: pitchUnits("i"),
+        roomOut_o: pitchUnits("o"),
+        measured: true
       });
     }
-    Object.keys(cellOf).forEach(function(id) {
-      var m = cellMin[cellOf[id]];
-      if (m > 1) cellRoomNext[id] = m;
-    });
     cellRoom = cellNow || cellRoomNext;
     edgeCap = edgeNow || edgeCapNext;
     hubRow0 = hubRow0Next;
@@ -2942,6 +3005,13 @@ function mountVaultGraph(root, data, deps) {
         }
         runs.push({ g: c.g, band: bk, a: c, b: c });
       });
+      var drawnFrac = function(run) {
+        var d = 0;
+        band.forEach(function(c) {
+          if (c.g === run.g && c.f0 >= run.a.f0 - 1e-12 && c.f1 <= run.b.f1 + 1e-12) d += c.f1 - c.f0;
+        });
+        return d;
+      };
       var noteFrac = function(run) {
         var lo = Infinity, hi = -Infinity;
         band.filter(function(c) {
@@ -2984,6 +3054,7 @@ function mountVaultGraph(root, data, deps) {
           start: deg(sw(run.a, "f0")),
           end: deg(sw(run.b, "f1")),
           arc: (sw(run.b, "f1") - sw(run.a, "f0")) * 180 / Math.PI,
+          drawn: drawnFrac(run) * sm.avail * 180 / Math.PI,
           centre: deg((lo + hi) / 2)
         });
       });
@@ -3324,6 +3395,9 @@ function mountVaultGraph(root, data, deps) {
     graph.forEachNode(function(id) {
       alpha[id] = visible(id) ? timeFactor(id) : 0;
     });
+    visSrc = visDst = rankVisible(willShow);
+    visEase = 1;
+    countFloorFrom = countFloorTo = measureCountFloor();
     trailRefresh();
   }
   function clearAlpha() {
@@ -3355,6 +3429,13 @@ function mountVaultGraph(root, data, deps) {
   var HAND_BLADE_DEG = 20;
   var HAND_FADE_DEG = 12;
   var RADIAL_EASE = 0.25;
+  var RADIAL_STEP_MAX = 0.12;
+  var FIT_RIDE_AT = 0.66;
+  var LEAVE_EDGE_BY = 0.35;
+  var departing = null;
+  var leaveEdgeK = 1;
+  var foldSwitch = true;
+  var FOLD_ROOM_AT = 0.25;
   var SPREAD_MAX = 78;
   var SPREAD_PER = 0.17;
   var SPREAD_MIN = 24;
@@ -3388,7 +3469,7 @@ function mountVaultGraph(root, data, deps) {
       depthO: 0,
       members: [],
       memberG: [],
-      leaving: [],
+      leavers: [],
       liveN: dict(),
       liveSub: dict(),
       splitOf: dict(),
@@ -3526,10 +3607,22 @@ function mountVaultGraph(root, data, deps) {
     return fitCap;
   }
   var lastMinArc = 0;
-  var roomNow = null;
   var colWalk = null;
   var shrinkFade = false;
   var splitHold = null;
+  var cellHold = null;
+  var foldSizes = null;
+  function clearHolds() {
+    moveFrom = null;
+    splitHold = null;
+    cellHold = null;
+    leftColor = null;
+    shrinkFade = false;
+    colWalk = null;
+    departing = null;
+    leaveEdgeK = 1;
+    foldSizes = null;
+  }
   var posSrc = null;
   var cellRoom = dict();
   var cellNow = null;
@@ -3565,6 +3658,10 @@ function mountVaultGraph(root, data, deps) {
   function cascade(done, opts) {
     if (dead) return;
     opts = opts || {};
+    var seatsFrom = Object.assign(dict(), pathSeats);
+    var folding = !!(opts.fold && opts.hand && opts.from);
+    var foldA = null;
+    var foldB = null;
     stopPlay();
     trailRefresh();
     if (anim) {
@@ -3580,19 +3677,33 @@ function mountVaultGraph(root, data, deps) {
       WIN.clearTimeout(cascadeRun.guard);
       cascadeRun = null;
     }
-    moveFrom = null;
-    splitHold = null;
-    leftColor = null;
+    clearHolds();
+    (function() {
+      var cur = dict();
+      graph.forEachNode(function(id) {
+        var a = visSrc[id], b = visDst[id];
+        if (a === void 0) a = b === void 0 ? 1 : b;
+        if (b === void 0) b = a;
+        cur[id] = a + (b - a) * visEase;
+      });
+      countFloorFrom = countFloorPx();
+      countFloorTo = measureCountFloor();
+      visSrc = cur;
+      visDst = rankVisible(willShow);
+      visEase = 0;
+    })();
     if (!opts.hand && standIns.length) dropStandIns();
     if (opts.from && opts.from.color) leftColor = opts.from.color;
-    shrinkFade = !!opts.hand;
+    shrinkFade = !!opts.hand && !folding;
     fullRing = false;
     graph.forEachNode(function(id) {
       if (present(id)) fullRing = true;
     });
     if (opts.fullRing !== void 0) fullRing = !!opts.fullRing;
     planKeep = function(id) {
-      return willShow(id) || present(id);
+      if (willShow(id) || present(id)) return true;
+      if (!wasPresent || !bandGone || !wasPresent[id]) return false;
+      return !!bandGone[bandLock && bandLock[groupOf(id)] ? "i" : "o"];
     };
     pinPlan();
     colWalk = null;
@@ -3601,23 +3712,27 @@ function mountVaultGraph(root, data, deps) {
       keep[id] = alpha[id] || 0;
       alpha[id] = visible(id) ? timeFactor(id) : 0;
     });
-    var pinWas = pinnedPlan, keepWas = planKeep, roomWas = roomNow;
+    var pinWas = pinnedPlan, keepWas = planKeep;
     pinnedPlan = null;
     planKeep = null;
-    roomNow = null;
     cellNow = null;
     edgeNow = null;
     colWalk = null;
     ringsLayout();
     var finalPos = ringsLayout() || {};
     var deferredAutoFit = false;
+    var deferredFitTo = null;
+    var fitRode = false;
+    var sourceSizeRatio = renderer.getCamera().getState().ratio || 1;
+    var targetSizeRatio = opts.colToggle && camAtRest ? fitRatio() : sourceSizeRatio;
     if (opts.colToggle && camAtRest) {
-      if (fitRatio() < renderer.getCamera().getState().ratio) deferredAutoFit = true;
-      else fit();
+      if (fitRatio() < renderer.getCamera().getState().ratio) {
+        deferredAutoFit = true;
+        deferredFitTo = fitTarget();
+      } else fit();
     }
     pinnedPlan = pinWas;
     planKeep = keepWas;
-    roomNow = roomWas;
     graph.forEachNode(function(id) {
       alpha[id] = keep[id];
     });
@@ -3683,7 +3798,6 @@ function mountVaultGraph(root, data, deps) {
         skelFirst: ""
       };
       pinnedPlan = null;
-      roomNow = null;
       cellNow = null;
       edgeNow = null;
       posSrc = null;
@@ -3708,6 +3822,8 @@ function mountVaultGraph(root, data, deps) {
       return Math.max(SPREAD_MIN, Math.min(SPREAD_MAX, n * SPREAD_PER)) * TIME_SCALE;
     };
     var delay = dict();
+    var fadeOf = dict();
+    var byDate = dict();
     [ins, outs].forEach(function(set) {
       var w = windowFor(set.length);
       set.forEach(function(id, i) {
@@ -3796,6 +3912,8 @@ function mountVaultGraph(root, data, deps) {
     var tglDir = dict();
     var tglN = dict();
     var tglMv = dict();
+    var tglIds = dict();
+    var tglFull = dict();
     if (opts.colToggle) (function() {
       var startN = dict();
       var outN = dict();
@@ -3848,6 +3966,12 @@ function mountVaultGraph(root, data, deps) {
           if (mvInN[g0]) tglMv[g0] = true;
         }
       });
+      graph.forEachNode(function(id) {
+        var g0 = groupOf(id);
+        if (tglDir[g0] === void 0 || tglMv[g0]) return;
+        (tglIds[g0] || (tglIds[g0] = [])).push(id);
+        tglFull[g0] = (tglFull[g0] || 0) + (tglDir[g0] === "out" ? alpha[id] || 0 : to[id] || 0);
+      });
     })();
     if (moves.length && !opts.cross && !opts.hand) (function() {
       var byG = dict();
@@ -3894,6 +4018,11 @@ function mountVaultGraph(root, data, deps) {
       });
     })();
     var moving = ins.concat(outs).concat(moves);
+    departing = dict();
+    outs.forEach(function(id) {
+      if (!isMove[id]) departing[id] = true;
+    });
+    leaveEdgeK = 1;
     lastCascade = {
       ins: ins.length,
       outs: outs.length,
@@ -3908,10 +4037,9 @@ function mountVaultGraph(root, data, deps) {
     };
     var settle = function() {
       if (!lastCascade.exit) lastCascade.exit = "settle() called from outside the loop";
-      moveFrom = null;
-      splitHold = null;
-      leftColor = null;
-      shrinkFade = false;
+      clearHolds();
+      visSrc = visDst;
+      visEase = 1;
       if (cascadeRun) {
         WIN.cancelAnimationFrame(cascadeRun.raf);
         WIN.clearTimeout(cascadeRun.guard);
@@ -3925,31 +4053,37 @@ function mountVaultGraph(root, data, deps) {
       heatSig = "";
       pinnedPlan = null;
       planKeep = null;
-      roomNow = null;
       cellNow = null;
       edgeNow = null;
       posSrc = null;
       colWalk = null;
       assignPositions(finalPos);
+      if (opts.hand && standIns.length) dropStandIns();
       ringsLayout();
       ringsLayout();
+      takeRestDots();
       renderer.refresh({ skipIndexation: false });
       probeSample("settled");
-      if (deferredAutoFit && camAtRest) fit();
+      if (deferredAutoFit && !fitRode && camAtRest) fit();
       if (done) done();
     };
     var weightOf = function(id) {
       return alpha[id] || 0;
     };
+    var foldWeightOf = function(id) {
+      var q = Math.min(1, (alpha[id] || 0) / FOLD_ROOM_AT);
+      return q * q * (3 - 2 * q);
+    };
     var wasPresent = dict();
     graph.forEachNode(function(id) {
       wasPresent[id] = present(id);
+      if (!wasPresent[id]) delete seatsFrom[id];
     });
     var ovAfter = true;
     var spSrcB = { i: 1, o: 1 };
     var spDstB = { i: 1, o: 1 };
-    var roomSrcB = { i: 0, o: 0 };
-    var roomDstB = { i: 0, o: 0 };
+    var bandGone = { i: false, o: false };
+    var bandBorn = { i: false, o: false };
     var cellSrc = null;
     var cellDst = null;
     var edgeSrc = null;
@@ -3977,10 +4111,12 @@ function mountVaultGraph(root, data, deps) {
       var w = opts.from;
       if (!w) return fn();
       var sDim = state.dim, sSub = subOrder, sBand = bandLock, sGeom = geomLock, sMove = moveFrom;
+      var sCounts = counts;
       state.dim = w.dim;
       subOrder = w.subOrder;
       bandLock = w.bandLock;
       geomLock = w.geomLock;
+      if (folding) counts = w.counts;
       moveFrom = null;
       oldWorld = true;
       try {
@@ -3991,8 +4127,21 @@ function mountVaultGraph(root, data, deps) {
         bandLock = sBand;
         geomLock = sGeom;
         moveFrom = sMove;
+        counts = sCounts;
         oldWorld = false;
       }
+    };
+    var holdFold = function(plan) {
+      if (!plan) return null;
+      var held = { plan, members: dict(), cells: dict(), seats: dict() };
+      plan.cells.forEach(function(c) {
+        c.list.forEach(function(id) {
+          held.members[id] = true;
+          held.cells[id] = c.k;
+          if (seatsFrom[id]) held.seats[id] = seatsFrom[id];
+        });
+      });
+      return held;
     };
     (function() {
       var a = inWorld(function() {
@@ -4019,6 +4168,10 @@ function mountVaultGraph(root, data, deps) {
         }
       }();
       var aCells = cellsOfG(a), bCells = cellsOfG(b);
+      if (folding) {
+        foldA = holdFold(a);
+        foldB = holdFold(b);
+      }
       if (moves.length) {
         splitHold = dict();
         Object.keys(bCells).forEach(function(g0) {
@@ -4026,6 +4179,19 @@ function mountVaultGraph(root, data, deps) {
         });
         Object.keys(aCells).forEach(function(g0) {
           if (splitHold[g0] === void 0) splitHold[g0] = aCells[g0] > 1;
+        });
+      }
+      if (!opts.hand) {
+        cellHold = dict();
+        if (a) a.cells.forEach(function(c) {
+          c.list.forEach(function(id) {
+            if (!isMove[id]) cellHold[id] = c.k;
+          });
+        });
+        if (b) b.cells.forEach(function(c) {
+          c.list.forEach(function(id) {
+            if (!isMove[id]) cellHold[id] = c.k;
+          });
         });
       }
       Object.keys(tglDir).forEach(function(g0) {
@@ -4045,14 +4211,68 @@ function mountVaultGraph(root, data, deps) {
       };
       if (a) a.cells.forEach(record(rowsSrc, bandSrc));
       if (b) b.cells.forEach(record(rowsDst, bandDst));
-      ["i", "o"].forEach(function(k) {
-        if (bandSrc[k] === void 0 && bandDst[k] !== void 0) bandSrc[k] = 1;
-      });
       if (a) {
         spSrcB = { i: a.spInner || a.sp || 1, o: a.sp || 1 };
       }
       if (b) {
         spDstB = { i: b.spInner || b.sp || 1, o: b.sp || 1 };
+      }
+      bandGone = {
+        i: bandSrc.i !== void 0 && bandDst.i === void 0,
+        o: bandSrc.o !== void 0 && bandDst.o === void 0
+      };
+      var whole = !opts.hand && !rank;
+      bandBorn = {
+        i: whole && bandSrc.i === void 0 && bandDst.i !== void 0,
+        o: whole && bandSrc.o === void 0 && bandDst.o !== void 0
+      };
+      ["i", "o"].forEach(function(k) {
+        if (bandSrc[k] === void 0 && bandDst[k] !== void 0) {
+          bandSrc[k] = 1;
+          spSrcB[k] = spDstB[k];
+          return;
+        }
+        if (bandGone[k]) {
+          bandDst[k] = whole ? 1 : bandSrc[k];
+          spDstB[k] = spSrcB[k];
+        }
+      });
+      if (whole && !opts.cross) {
+        var lapW = windowFor(Math.max(outs.length, ins.length)) + fadeLen;
+        var byCell = function(pl, skip) {
+          if (!pl) return;
+          pl.cells.forEach(function(c) {
+            if (skip[c.inner ? "i" : "o"]) return;
+            var ids = c.list.filter(function(id) {
+              return !isMove[id] && to[id] !== void 0;
+            });
+            var n = ids.length;
+            var fadeC = Math.min(lapW, Math.max(fadeLen, lapW * 3 / Math.max(1, n)));
+            ids.forEach(function(id, i) {
+              delay[id] = n < 2 ? 0 : (lapW - fadeC) * (i * 0.6180339887 % 1);
+              fadeOf[id] = fadeC;
+            });
+          });
+        };
+        byCell(a, bandGone);
+        byCell(b, bandBorn);
+        ["i", "o"].forEach(function(k) {
+          var gone = k === "i" ? bandGone.i : bandGone.o;
+          var born = k === "i" ? bandBorn.i : bandBorn.o;
+          if (!gone && !born) return;
+          var ids = (gone ? outs : ins).filter(function(id) {
+            return !isMove[id] && (bandLock && bandLock[groupOf(id)] ? "i" : "o") === k;
+          });
+          ids.sort(function(x, y) {
+            var d = (tlRank[x] || 0) - (tlRank[y] || 0);
+            return gone ? -d : d;
+          });
+          ids.forEach(function(id, i) {
+            delay[id] = ids.length < 2 ? 0 : (lapW - fadeLen) * i / (ids.length - 1);
+            fadeOf[id] = fadeLen;
+            byDate[id] = true;
+          });
+        });
       }
       var roomOf = function(pl, alphaFn) {
         if (!pl) return null;
@@ -4065,15 +4285,12 @@ function mountVaultGraph(root, data, deps) {
             alpha[id] = alphaFn(id);
           });
         }
-        var keepI = bandOf("i").room, keepO = bandOf("o").room;
         var keepFit = dotFit, keepCell = cellRoom, keepEdge = edgeCap, keepHub = hubRow0;
-        var keepRampI = bandOf("i").ramp, keepRampO = bandOf("o").ramp, keepScale = sizeScale;
+        var keepScale = sizeScale;
         var keepPin = pinnedPlan, keepKeep = planKeep;
         var keepOv = ovCells;
-        var saved = roomNow, savedCell = cellNow, savedEdge = edgeNow;
-        roomNow = null;
+        var savedCell = cellNow, savedEdge = edgeNow;
         cellNow = null;
-        edgeNow = null;
         edgeNow = null;
         var keepTag = trace ? trace.tag : "";
         traceTag(alphaFn ? "endpoint-B" : "endpoint-A");
@@ -4083,26 +4300,20 @@ function mountVaultGraph(root, data, deps) {
         fitPos = outPos;
         fitVer = -1;
         var sizes = dict();
+        var keepEase = visEase;
+        var keepRatio = dotMeasureRatio;
+        dotMeasureRatio = alphaFn ? targetSizeRatio : sourceSizeRatio;
+        visEase = alphaFn ? 1 : 0;
         graph.forEachNode(function(id, at) {
           if ((alpha[id] || 0) > 4e-3) sizes[id] = dotPx(at.size, id);
         });
+        visEase = keepEase;
+        dotMeasureRatio = keepRatio;
         fitPos = null;
         fitVer = -1;
-        var got = {
-          i: bandOf("i").room,
-          o: bandOf("o").room,
-          pos: outPos,
-          cells: cellRoom,
-          edges: edgeCap,
-          sizes
-        };
-        roomNow = saved;
+        var got = { pos: outPos, cells: cellRoom, edges: edgeCap, sizes };
         cellNow = savedCell;
         edgeNow = savedEdge;
-        bandOf("i").room = keepI;
-        bandOf("o").room = keepO;
-        bandOf("i").ramp = keepRampI;
-        bandOf("o").ramp = keepRampO;
         sizeScale = keepScale;
         dotFit = keepFit;
         cellRoom = keepCell;
@@ -4122,8 +4333,6 @@ function mountVaultGraph(root, data, deps) {
       var rB = roomOf(b, function(id) {
         return willShow(id) ? timeFactor(id) : 0;
       });
-      if (rA) roomSrcB = { i: rA.i || 0, o: rA.o || 0 };
-      if (rB) roomDstB = { i: rB.i || 0, o: rB.o || 0 };
       cellSrc = rA && rA.cells || null;
       cellDst = rB && rB.cells || null;
       edgeSrc = rA && rA.edges || null;
@@ -4182,7 +4391,6 @@ function mountVaultGraph(root, data, deps) {
     var maxAdv = Math.max(1, span) / MIN_FRAMES;
     var frame = 0, tPrev = NOW(), tailFrames = 0;
     if (!opts.hand) (function() {
-      var stretch = Math.max(1, span - FADE_FRAMES * TIME_SCALE);
       var radiusOf = function(id, out) {
         var pt = out ? posSrc[id] : finalPos[id];
         if (!pt) {
@@ -4196,14 +4404,17 @@ function mountVaultGraph(root, data, deps) {
         var set = (out ? outs : ins).filter(function(id) {
           return groupOf(id) === g0;
         });
-        if (!set.length) return;
+        if (!set.length || byDate[set[0]]) return;
         set.sort(function(p, q) {
           var d = radiusOf(p, out) - radiusOf(q, out);
           return out ? d : -d;
         });
         if (out) {
+          var fadeC = Math.min(span, Math.max(fadeLen, span * 3 / Math.max(1, set.length)));
+          var room = Math.max(1, span - fadeC);
           set.forEach(function(id, i) {
-            delay[id] = set.length < 2 ? stretch : stretch * i / (set.length - 1);
+            delay[id] = set.length < 2 ? 0 : room * i / (set.length - 1);
+            fadeOf[id] = fadeC;
           });
         } else {
           var base0 = set.map(function(id) {
@@ -4217,6 +4428,63 @@ function mountVaultGraph(root, data, deps) {
         }
       });
     })();
+    if (folding) {
+      [outs, ins].forEach(function(ids, direction) {
+        ids.sort(function(x, y) {
+          var d = (tlRank[x] || 0) - (tlRank[y] || 0);
+          return direction ? d : -d;
+        });
+        var fade = span * FADE_FRAMES * TIME_SCALE / (windowFor(ids.length) + FADE_FRAMES * TIME_SCALE);
+        ids.forEach(function(id, index) {
+          delay[id] = ids.length < 2 ? 0 : (span - fade) * index / (ids.length - 1);
+          fadeOf[id] = fade;
+        });
+      });
+      handLap = 0;
+      foldSizes = sizeCap;
+      lastCascade.path = "parallel refresh";
+    }
+    var packFold = function(held, amount, start, end, walk) {
+      if (!held || end - start < 1e-9) return {};
+      var savedKeep = planKeep, savedCell = cellHold, savedPin = pinnedPlan;
+      var savedArc = planArc;
+      planArc = end - start >= 2 * Math.PI - 1e-9 ? null : { from: start, to: end };
+      planKeep = function(id) {
+        return !!held.members[id];
+      };
+      cellHold = held.cells;
+      pinnedPlan = null;
+      var endpoint = held.plan;
+      var rows = dict();
+      endpoint.cells.forEach(function(c) {
+        rows[c.k] = 1 + (c.rows - 1) * amount;
+      });
+      var depths = {
+        i: 1 + ((endpoint.rows.i || 1) - 1) * amount,
+        o: 1 + ((endpoint.rows.o || 1) - 1) * amount
+      };
+      try {
+        var planned = buildWedgePlan(
+          true,
+          foldWeightOf,
+          function(c) {
+            return rows[c.k] || 1;
+          },
+          { i: endpoint.spInner, o: endpoint.sp, depth: depths }
+        );
+        var positions = planned ? walk(planned, held.seats) : null;
+        var out = dict();
+        if (positions) Object.keys(positions).forEach(function(id) {
+          if (held.members[id]) out[id] = positions[id];
+        });
+        return out;
+      } finally {
+        planKeep = savedKeep;
+        cellHold = savedCell;
+        pinnedPlan = savedPin;
+        planArc = savedArc;
+      }
+    };
     cascadeRun = {
       raf: 0,
       tick: NOW(),
@@ -4239,6 +4507,13 @@ function mountVaultGraph(root, data, deps) {
         lastCascade.handLap = handLap;
       }
       var ease = pr * pr * (3 - 2 * pr);
+      visEase = ease;
+      var qe = Math.min(1, pr / LEAVE_EDGE_BY);
+      leaveEdgeK = 1 - qe * qe * (3 - 2 * qe);
+      if (deferredAutoFit && !fitRode && pr >= FIT_RIDE_AT && camAtRest) {
+        fitRode = true;
+        fit(Math.max(120, (span - frame) * msPerFrame), deferredFitTo);
+      }
       if (barWalking) barWalkTick(ease);
       var busy = false;
       for (var i = 0; i < moving.length; i++) {
@@ -4257,7 +4532,7 @@ function mountVaultGraph(root, data, deps) {
           if (frame < arriveAt[id] + fadeLen) busy = true;
           continue;
         }
-        var q = (frame - delay[id]) / fadeLen;
+        var q = (frame - delay[id]) / (fadeOf[id] || fadeLen);
         q = q < 0 ? 0 : q > 1 ? 1 : q;
         alpha[id] = from[id] + (to[id] - from[id]) * (q * q * (3 - 2 * q));
         if (q < 1) busy = true;
@@ -4272,12 +4547,6 @@ function mountVaultGraph(root, data, deps) {
         if (d === void 0) d = bandDst[bk] !== void 0 ? bandDst[bk] : s;
         return s + (d - s) * ease;
       };
-      var roomWalk = function(k) {
-        var sv = roomSrcB[k], dv = roomDstB[k];
-        if (!(sv > 1)) return dv;
-        if (!(dv > 1)) return sv;
-        return sv + (dv - sv) * ease;
-      };
       var depthWalk = function(k) {
         var a2 = bandSrc[k], b2 = bandDst[k];
         if (a2 === void 0 && b2 === void 0) return 0;
@@ -4285,13 +4554,21 @@ function mountVaultGraph(root, data, deps) {
         if (b2 === void 0) b2 = a2;
         return a2 + (b2 - a2) * ease;
       };
+      var thickLock = function(k) {
+        if (!geomLock) return Infinity;
+        return k === "i" ? (geomLock.rOuter - geomLock.r0) * INNER_FILL : geomLock.maxR - geomLock.rOuter;
+      };
       var thickAt = function(k) {
         var ds = bandSrc[k], dd = bandDst[k];
         if (ds === void 0 && dd === void 0) return 0;
         if (ds === void 0) ds = dd;
         if (dd === void 0) dd = ds;
         var ts = ds * spSrcB[k], td = dd * spDstB[k];
-        return ts + (td - ts) * ease;
+        var t = ts + (td - ts) * ease;
+        var lock = thickLock(k);
+        var e8 = Math.pow(ease, 8), f8 = Math.pow(1 - ease, 8);
+        var cap = lock + Math.max(0, ts - lock) * f8 + Math.max(0, td - lock) * e8;
+        return t > cap ? cap : t;
       };
       var spWalk = function(k) {
         var rows = depthWalk(k), T = thickAt(k);
@@ -4303,13 +4580,18 @@ function mountVaultGraph(root, data, deps) {
         o: spWalk("o"),
         depth: { i: depthWalk("i"), o: depthWalk("o") }
       };
-      roomNow = { i: roomWalk("i"), o: roomWalk("o") };
       colWalk = dict();
       Object.keys(tglDir).forEach(function(g0) {
         var fRamp = tglDir[g0] === "out" ? 1 - pr : pr;
         if (tglMv[g0]) {
           var mvEdge = Math.min(0.45, FADE_FRAMES * TIME_SCALE * 2 / Math.max(1, span));
           fRamp = tglDir[g0] === "out" ? Math.max(0, Math.min(1, (1 - mvEdge - pr) / (1 - mvEdge))) : Math.max(0, Math.min(1, (pr - mvEdge) / (0.55 - mvEdge)));
+        } else if (tglFull[g0] > 1e-9) {
+          var wLive = 0, wIds = tglIds[g0] || [];
+          for (var wi = 0; wi < wIds.length; wi++) wLive += weightOf(wIds[wi]);
+          fRamp = wLive / tglFull[g0];
+          if (fRamp > 1) fRamp = 1;
+          else if (!(fRamp > 0)) fRamp = 0;
         }
         colWalk[g0] = { f: fRamp, n: tglN[g0] || 1 };
       });
@@ -4325,13 +4607,70 @@ function mountVaultGraph(root, data, deps) {
       if (edgePair) edgeNow = walkPair(edgePair);
       var plan = null;
       var targets = null;
-      if (opts.hand && opts.from) {
+      var pathResid = 0;
+      var walkPlan = function(plan2, walkSeats) {
+        plan2.cells.forEach(function(c) {
+          var slots2 = c.slots, lo = null;
+          for (var first = 0; first < slots2.length; ) {
+            var old = walkSeats[slots2[first].id];
+            if (old && old.cell === c.k) {
+              lo = old.at;
+              first++;
+              continue;
+            }
+            var end = first + 1;
+            while (end < slots2.length && (!walkSeats[slots2[end].id] || walkSeats[slots2[end].id].cell !== c.k)) end++;
+            var hi = end < slots2.length ? walkSeats[slots2[end].id].at : null;
+            for (var j = first; j < end; j++) {
+              var seat = slots2[j], target = 2 * seat.row + (seat.row % 2 ? 1 - seat.u : seat.u);
+              var start = lo !== null && hi !== null ? lo + (hi - lo) * (j - first + 1) / (end - first + 1) : lo !== null ? Math.max(lo, target) : hi !== null ? Math.min(hi, target) : target;
+              walkSeats[seat.id] = { cell: c.k, at: start };
+            }
+            first = end;
+          }
+        });
+        return ringsLayout(plan2, true, function(c, sl) {
+          var at = 2 * sl.row + (sl.row % 2 ? 1 - sl.u : sl.u);
+          var before = walkSeats[sl.id];
+          var ezPath = reduced ? 1 : pr < 1 ? RADIAL_EASE : Math.min(1, RADIAL_EASE + tailFrames * 0.15);
+          var now = !before || before.cell !== c.k ? at : before.at + (at - before.at) * ezPath;
+          walkSeats[sl.id] = pathSeats[sl.id] = { cell: c.k, at: now };
+          var pitch = c.inner ? plan2.spInner * INNER_SCALE : plan2.sp;
+          pathResid = Math.max(pathResid, Math.abs(at - now) * UNIT * Math.max(pitch, sl.r * 2 * Math.PI));
+          var row = Math.floor(now / 2), along = now - 2 * row;
+          var tPath = Math.min(1, along), radial = Math.max(0, along - 1);
+          return Object.assign({}, sl, {
+            row,
+            r: sl.r + (row + radial - sl.row) * pitch,
+            u: row % 2 ? 1 - tPath : tPath
+          });
+        });
+      };
+      if (folding) {
+        cellNow = null;
+        edgeNow = null;
+        colWalk = null;
+        var outWeight = 0, inWeight = 0;
+        outs.forEach(function(id2) {
+          outWeight += foldWeightOf(id2);
+        });
+        ins.forEach(function(id2) {
+          inWeight += foldWeightOf(id2);
+        });
+        var split = 2 * Math.PI * outWeight / Math.max(1e-9, outWeight + inWeight);
+        var oldSeats = pr < 1 ? inWorld(function() {
+          return packFold(foldA, 1, 0, split, walkPlan);
+        }) : {};
+        var oldFit = dotFit, oldEdges = edgeCap;
+        var newSeats = packFold(foldB, 1, split, 2 * Math.PI, walkPlan);
+        dotFit = Object.assign({}, oldFit, dotFit);
+        edgeCap = Object.assign({}, oldEdges, edgeCap);
+        targets = Object.assign({}, oldSeats, newSeats);
+      } else if (opts.hand && opts.from) {
         var mf = moveFrom;
         colWalk = null;
         cellNow = null;
         edgeNow = null;
-        if (roomDstB.i > 1) bandOf("i").room = roomDstB.i;
-        if (roomDstB.o > 1) bandOf("o").room = roomDstB.o;
         var seats = dict();
         for (var mi = 0; mi < moving.length; mi++) {
           var mid = moving[mi];
@@ -4361,14 +4700,18 @@ function mountVaultGraph(root, data, deps) {
           }
         }
         traceTag("frame");
-        targets = plan ? ringsLayout(plan, true) : null;
+        targets = plan ? walkPlan(plan, seatsFrom) : null;
         traceTag("");
       }
       var ez = reduced ? 1 : pr < 1 ? RADIAL_EASE : Math.min(1, RADIAL_EASE + tailFrames * 0.15);
-      var resid = 0;
+      var resid = pathResid;
       if (targets) graph.forEachNode(function(id2) {
         var q3 = targets[id2];
         if (!q3) return;
+        if (plan || folding) {
+          graph.mergeNodeAttributes(id2, { x: q3.x, y: q3.y });
+          return;
+        }
         var h = Math.atan2(q3.y, q3.x);
         if ((alpha[id2] || 0) < 0.05) {
           graph.mergeNodeAttributes(id2, { x: q3.x, y: q3.y });
@@ -4378,8 +4721,24 @@ function mountVaultGraph(root, data, deps) {
         var rNow = Math.hypot(x, y), rWant = Math.hypot(q3.x, q3.y);
         var gap = rWant - rNow;
         if (gap < 0 ? -gap > resid : gap > resid) resid = gap < 0 ? -gap : gap;
-        var r = rNow + gap * ez;
-        graph.mergeNodeAttributes(id2, { x: r * Math.cos(h), y: r * Math.sin(h) });
+        var move = gap * ez;
+        var hNow = rNow > 1e-6 ? Math.atan2(y, x) : h;
+        var dh = h - hNow;
+        if (dh > Math.PI) dh -= 2 * Math.PI;
+        else if (dh < -Math.PI) dh += 2 * Math.PI;
+        var arc = dh * rWant;
+        if (arc < 0 ? -arc > resid : arc > resid) resid = arc < 0 ? -arc : arc;
+        var turn = arc * ez;
+        if (pr < 1) {
+          var lim = RADIAL_STEP_MAX * UNIT * (bandLock && bandLock[groupOf(id2)] ? bandOf("i").sp * INNER_SCALE : bandOf("o").sp);
+          if (lim > 0 && move > lim) move = lim;
+          else if (lim > 0 && move < -lim) move = -lim;
+          if (lim > 0 && turn > lim) turn = lim;
+          else if (lim > 0 && turn < -lim) turn = -lim;
+        }
+        var r = rNow + move;
+        var hh = rWant > 1e-6 ? hNow + turn / rWant : h;
+        graph.mergeNodeAttributes(id2, { x: r * Math.cos(hh), y: r * Math.sin(hh) });
       });
       posVer++;
       if (pr >= 1) tailFrames++;
@@ -4582,11 +4941,130 @@ function mountVaultGraph(root, data, deps) {
       if (done) done();
       return;
     }
-    if (animate) animateTo(targets, done);
-    else {
-      assignPositions(targets);
+    if (animate) animateTo(targets, function() {
+      takeRestDots();
       renderer.refresh({ skipIndexation: false });
       if (done) done();
+    });
+    else {
+      assignPositions(targets);
+      takeRestDots();
+      renderer.refresh({ skipIndexation: false });
+      if (done) done();
+    }
+  }
+  function filterOn() {
+    if (state.from !== null || state.to !== null || state.until !== null) return true;
+    var h = state.hidden[state.dim];
+    if (h) {
+      for (var g in h) if (h[g]) return true;
+    }
+    for (var k in state.hiddenSub) if (state.hiddenSub[k]) return true;
+    return false;
+  }
+  var restHiU = dict();
+  var restCapU = dict();
+  var restT = dict();
+  var restTaking = false;
+  var restVer = 0, restSig = "";
+  function takeRestDots() {
+    if (!renderer || cascadeRun) return;
+    var sig = state.dim + "#" + restVer;
+    var filtered = filterOn();
+    if (filtered && sig === restSig) return;
+    if (sig !== restSig) {
+      restHiU = dict();
+      restCapU = dict();
+      restT = dict();
+    }
+    restTaking = true;
+    try {
+      if (filtered) unfilteredRest();
+      else graph.forEachNode(takeRest);
+      restSig = sig;
+    } finally {
+      restTaking = false;
+    }
+  }
+  function takeRest(id, a) {
+    var t = (basisSize(id) - NODE_MIN) / (NODE_MAX - NODE_MIN);
+    t = t > 1 ? 1 : t < 0 ? 0 : t;
+    restT[id] = t = Math.pow(t, DOT_RAMP_CURVE);
+    var v = dotPx(a.size || NODE_MIN, id), hi = lastDotHi, lo = Math.min(hi, floorPx());
+    restHiU[id] = hi / pxPerUnit;
+    if (v < lo + (hi - lo) * t - 1e-9) restCapU[id] = v / pxPerUnit;
+    else delete restCapU[id];
+  }
+  function restAt(id) {
+    var hi = restHiU[id] * pxPerUnit, lo = Math.min(hi, floorPx());
+    var v = lo + (hi - lo) * (restT[id] || 0), cap = restCapU[id];
+    return cap !== void 0 && cap * pxPerUnit < v ? cap * pxPerUnit : v;
+  }
+  function unfilteredRest() {
+    var sFrom = state.from, sTo = state.to, sUntil = state.until;
+    var sHid = state.hidden[state.dim], sSub = state.hiddenSub;
+    var sAlpha = alpha, sSrc = visSrc, sDst = visDst, sEase = visEase;
+    var sBand = BAND ? { i: Object.assign({}, BAND.i), o: Object.assign({}, BAND.o) } : null;
+    var sFit = dotFit, sCell = cellRoom, sEdge = edgeCap, sHub = hubRow0, sOv = ovCells;
+    var sMaxR = lastMaxR, sScale = sizeScale, sPin = pinnedPlan, sKeep = planKeep;
+    var sCellNow = cellNow, sEdgeNow = edgeNow, sFitPos = fitPos;
+    var sTrace = trace, sProbe = probe, sDbg = DBG.cells;
+    var sSeats = pathSeats;
+    try {
+      pathSeats = dict();
+      state.from = state.to = state.until = null;
+      seedHidden();
+      state.hiddenSub = dict();
+      alpha = dict();
+      graph.forEachNode(function(id) {
+        alpha[id] = visible(id) ? 1 : 0;
+      });
+      visSrc = visDst = dict();
+      visEase = 1;
+      cellNow = edgeNow = null;
+      pinnedPlan = planKeep = null;
+      trace = null;
+      probe = null;
+      var pos = ringsLayout(null, true);
+      if (!pos) return;
+      measureSizeScale();
+      fitPos = pos;
+      fitVer = -1;
+      graph.forEachNode(function(id, a) {
+        if (alpha[id] > 0) takeRest(id, a);
+      });
+    } finally {
+      state.from = sFrom;
+      state.to = sTo;
+      state.until = sUntil;
+      if (sHid) state.hidden[state.dim] = sHid;
+      else delete state.hidden[state.dim];
+      state.hiddenSub = sSub;
+      alpha = sAlpha;
+      visSrc = sSrc;
+      visDst = sDst;
+      visEase = sEase;
+      if (sBand && BAND) {
+        Object.assign(BAND.i, sBand.i);
+        Object.assign(BAND.o, sBand.o);
+      }
+      dotFit = sFit;
+      cellRoom = sCell;
+      edgeCap = sEdge;
+      hubRow0 = sHub;
+      ovCells = sOv;
+      lastMaxR = sMaxR;
+      sizeScale = sScale;
+      pinnedPlan = sPin;
+      planKeep = sKeep;
+      cellNow = sCellNow;
+      edgeNow = sEdgeNow;
+      fitPos = sFitPos;
+      fitVer = -1;
+      trace = sTrace;
+      probe = sProbe;
+      DBG.cells = sDbg;
+      pathSeats = sSeats;
     }
   }
   var renderer;
@@ -4629,8 +5107,9 @@ function mountVaultGraph(root, data, deps) {
   function visible(id) {
     if (leaving[id] && !oldWorld) return false;
     var a = graph.getNodeAttributes(id);
+    if (isHidden(fileGroup(id, a))) return false;
     if (isHidden(groupOf(id))) return false;
-    var d = fileDirs(id, a);
+    var d = noteDirs(id, a);
     if (!d.length) {
       if (state.hiddenSub[fileGroup(id, a) + "/"]) return false;
     } else {
@@ -5041,12 +5520,40 @@ function mountVaultGraph(root, data, deps) {
   }
   var DOT_OF_PITCH = 11 / 28;
   var DOT_MIN_PX = 1.5;
+  var DOT_REF_DISC_PX = 340;
+  function floorPx() {
+    var discPx = geomLock ? geomLock.maxR * UNIT * pxPerUnit : 0;
+    return DOT_MIN_PX * Math.max(1, discPx / DOT_REF_DISC_PX);
+  }
+  var DOT_GROW_MAX = 3;
+  var DOT_RAMP_CURVE = 0.5;
+  var FEW_IN_CELL = 3;
+  var DOT_COUNT_GAIN = 0.7, DOT_COUNT_MAX_PX = 7.5;
+  var dotMeasureRatio = null;
   var DOT_MAX_SPREAD = DENSITY_MAX;
-  var DOT_ROOM_MAX = DENSITY_MAX;
+  var DOT_OVER_PITCH = DENSITY_MAX;
   var sizeScale = 1;
-  var PREVIEW_R_PX = [0.35, 0.65, 1.38, 2.19, 4.06];
+  var pxPerUnit = 1;
+  function measureCountFloor() {
+    if (!filterOn()) return 0;
+    var weights = dict();
+    graph.forEachNode(function(id) {
+      if (!visible(id)) return;
+      var key2 = noteOf(id);
+      weights[key2] = Math.max(weights[key2] || 0, timeFactor(id));
+    });
+    var n = 0;
+    for (var key in weights) n += weights[key];
+    var baseline = basisCount();
+    if (n >= baseline) return 0;
+    return Math.min(DOT_COUNT_MAX_PX, DOT_MIN_PX + DOT_COUNT_GAIN * Math.log2(baseline / Math.max(1, n)));
+  }
+  function countFloorPx() {
+    return countFloorFrom + (countFloorTo - countFloorFrom) * visEase;
+  }
+  var PREVIEW_R_PX = [0.35, 0.8, 1.6, 3, 5.4];
   var PREVIEW_W = 48;
-  var PREVIEW_H = 40;
+  var PREVIEW_H = 52;
   var PREVIEW_ROW_H = PREVIEW_H / SUB_SLOTS;
   var PREVIEW_CX = function() {
     var i, wide = 0;
@@ -5063,107 +5570,90 @@ function mountVaultGraph(root, data, deps) {
   function measureSizeScale() {
     if (!renderer) return sizeScale;
     var a = renderer.graphToViewport({ x: 0, y: 0 });
-    var b = renderer.graphToViewport({ x: UNIT * (bandOf("o").sp || 1), y: 0 });
-    var pitch = Math.hypot(b.x - a.x, b.y - a.y);
-    if (!(pitch > 0)) return sizeScale;
+    var b = renderer.graphToViewport({ x: 1e3, y: 0 });
     var cam = renderer.getCamera().getState().ratio || 1;
-    pitch *= cam;
-    var rampFor = function(units) {
-      var bb = renderer.graphToViewport({ x: units, y: 0 });
-      var pit = Math.hypot(bb.x - a.x, bb.y - a.y) * cam;
-      var hi = DOT_OF_PITCH * pit;
-      var hiCap = DOT_OF_PITCH * UNIT * DOT_MAX_SPREAD * cam;
-      if (hi > hiCap) hi = hiCap;
-      var lo = Math.min(hi, DOT_MIN_PX * cam);
-      return {
-        m: (hi - lo) / Math.max(1e-6, NODE_MAX - NODE_MIN),
-        b: lo - (hi - lo) / Math.max(1e-6, NODE_MAX - NODE_MIN) * NODE_MIN,
-        lo,
-        hi
-      };
-    };
-    var ro = rampFor(UNIT * (bandOf("o").sp || 1) * bandScale("o"));
-    var ri = rampFor(UNIT * (bandOf("i").sp || 1) * bandScale("i"));
-    bandOf("o").ramp = ro;
-    bandOf("i").ramp = ri;
-    return ro.hi / NODE_MAX;
+    var per = Math.hypot(b.x - a.x, b.y - a.y) * cam / 1e3;
+    if (!(per > 0)) return sizeScale;
+    pxPerUnit = per;
+    return DOT_OF_PITCH * Math.min(pitchUnits("o"), UNIT * DOT_MAX_SPREAD) * per / NODE_MAX;
   }
   function dotWhy(size, id) {
     var isIn = !!bandLock && !!bandLock[groupOf(id)];
     var bk = isIn ? "i" : "o";
-    var rp = bandOf(bk).ramp;
     var cwd = colWalk ? colWalk[groupOf(id)] : void 0;
     return {
       id,
       band: bk,
       size,
-      ramp: { m: rp.m, b: rp.b, lo: rp.lo },
-      rampV: rp.m * (size || 4) + rp.b,
-      bandRoom: bandOf(bk).room,
+      // github#186
+      ramp: { m: 1 / (NODE_MAX - NODE_MIN), b: 0, lo: 0 },
+      rampV: dotRamp(id),
+      bandRoom: pitchUnits(bk),
       cellRoom: cellRoom[id],
       colWalk: cwd ? cwd.f : null,
       pitch: pitchUnits(bk),
       edgeCap: edgeCap[id],
       hubRow0: !!hubRow0[id],
-      walking: { room: !!roomNow, cell: !!cellNow, edge: !!edgeNow },
+      walking: { room: false, cell: !!cellNow, edge: !!edgeNow },
       out: dotPx(size, id),
+      ceil: lastDotHi,
+      floorPx: lastDotLo,
+      countFloorPx: countFloorPx(),
       fit: fitNow ? fitNow[id] : void 0
     };
   }
+  var lastDotHi = 0;
+  var lastDotLo = 0;
   function dotPx(size, id) {
+    if (foldSizes && id !== void 0 && foldSizes[id] !== void 0) {
+      var folded = foldSizes[id];
+      if (edgeCap[id] !== void 0) folded = Math.min(folded, edgeCap[id] * pxPerUnit);
+      lastDotHi = folded;
+      lastDotLo = 0;
+      if (fitCap) {
+        if (fitVer !== posVer) measureFit();
+        var foldFit = fitNow ? fitNow[id] : void 0;
+        if (foldFit !== void 0 && foldFit > 0) folded = Math.min(folded, FIT_SHARE * foldFit * pxPerUnit);
+      }
+      return folded;
+    }
     var isIn = id !== void 0 && bandLock && !!bandLock[groupOf(id)];
-    var rp = bandOf(isIn ? "i" : "o").ramp;
-    var v = rp.m * (size || 4) + rp.b;
-    if (id !== void 0) {
-      var room = bandOf(isIn ? "i" : "o").room;
-      var mine = cellRoom[id];
-      if (colWalk) {
-        var cwd = colWalk[groupOf(id)];
-        if (cwd !== void 0) mine = (mine === void 0 ? room : mine) * cwd.f;
-      }
-      if (mine !== void 0 && mine > 1 && (!(room > 1) || mine < room)) room = mine;
-      if (room !== void 0) room *= 0.92;
-      var pit = pitchUnits(isIn ? "i" : "o");
-      if (room !== void 0 && pit > 1e-9) {
-        var f = room / pit;
-        if (f > DOT_ROOM_MAX) f = DOT_ROOM_MAX;
-        v *= f;
-      }
+    var pit = pitchUnits(isIn ? "i" : "o");
+    var mine = id !== void 0 ? cellRoom[id] : void 0;
+    if (colWalk && id !== void 0) {
+      var cwd = colWalk[groupOf(id)];
+      if (cwd !== void 0) mine = (mine === void 0 ? pit : mine) * cwd.f;
     }
-    var lo = rp.lo || DOT_MIN_PX;
+    var u = DOT_OVER_PITCH * Math.min(pit, UNIT * DOT_MAX_SPREAD * DOT_OVER_PITCH);
+    if (mine !== void 0 && mine > 0 && mine * DOT_CLEAR < u) u = mine * DOT_CLEAR;
+    var hi = DOT_OF_PITCH * u * pxPerUnit;
+    if (isIn && geomLock) hi = Math.min(hi, HUB_ROW0_FRAC * geomLock.r0 * INNER_SCALE * UNIT * pxPerUnit);
+    lastDotHi = hi;
+    var cameraRatio = dotMeasureRatio !== null ? dotMeasureRatio : renderer ? renderer.getCamera().getState().ratio || 1 : 1;
+    var floor = floorPx();
+    var camLo = restTaking ? floor : floor * cameraRatio;
+    var lo = Math.min(hi, camLo);
+    lastDotLo = lo;
+    var v = lo + (hi - lo) * (id !== void 0 ? Math.pow(dotRamp(id), DOT_RAMP_CURVE) : 1);
     if (v < lo) v = lo;
+    var rest = id !== void 0 && !restTaking && restHiU[id] !== void 0 ? restAt(id) + (camLo - floor) * (1 - (restT[id] || 0)) : void 0;
+    if (rest !== void 0 && v < rest && filterOn()) v = rest;
+    var countFloor = restTaking ? 0 : countFloorPx() * cameraRatio;
+    if (v < countFloor) v = countFloor;
     var capU = edgeCap[id];
-    if (capU !== void 0 && capU > 0) {
-      var pitU = pitchUnits(isIn ? "i" : "o");
-      var hiU = DOT_OF_PITCH * pitU;
-      if (hiU > 1e-6) {
-        var capV = rp.m * NODE_MAX + rp.b;
-        var vMax = capV * (capU / hiU);
-        if (v > vMax) v = vMax;
-      }
-    }
+    if (capU !== void 0 && capU > 0 && v > capU * pxPerUnit) v = capU * pxPerUnit;
     if (fitCap && id !== void 0) {
       if (fitVer !== posVer) measureFit();
       var nnU = fitNow ? fitNow[id] : void 0;
-      if (nnU !== void 0 && nnU > 0) {
-        var pitF = pitchUnits(isIn ? "i" : "o");
-        var hiF = DOT_OF_PITCH * pitF;
-        if (hiF > 1e-6) {
-          var fitV = (rp.m * NODE_MAX + rp.b) * (FIT_SHARE * nnU / hiF);
-          if (v > fitV) v = fitV;
-        }
+      if (nnU !== void 0 && nnU > 0 && v > FIT_SHARE * nnU * pxPerUnit) {
+        v = FIT_SHARE * nnU * pxPerUnit;
       }
     }
     if (isIn && geomLock && hubRow0[id]) {
       var hubU = HUB_ROW0_FRAC * geomLock.r0 * INNER_SCALE * UNIT;
-      var pitH = pitchUnits("i");
-      var hiH = DOT_OF_PITCH * pitH;
-      if (hiH > 1e-6) {
-        var hubCapV = rp.m * NODE_MAX + rp.b;
-        var hubVMax = hubCapV * (hubU / hiH);
-        if (v > hubVMax) v = hubVMax;
-      }
+      if (v > hubU * pxPerUnit) v = hubU * pxPerUnit;
     }
+    if (rest !== void 0 && v > Math.max(DOT_GROW_MAX * rest, countFloor)) v = Math.max(DOT_GROW_MAX * rest, countFloor);
     if (id !== void 0 && cascadeRun && cascadeRun.sizeCap) {
       var scap = cascadeRun.sizeCap[id];
       if (scap !== void 0 && v > scap) v = scap;
@@ -5296,7 +5786,7 @@ function mountVaultGraph(root, data, deps) {
         var r = nodeStyle(id, a);
         if (al < 0.999) {
           r.color = withAlpha(r.color, al);
-          r.size = (r.size || a.size) * (shrinkFade ? al : 0.45 + 0.55 * al);
+          r.size = (r.size || a.size) * (foldSizes ? 1 : shrinkFade ? al : 0.45 + 0.55 * al);
           if (al < 0.62) {
             r.label = "";
             r.forceLabel = false;
@@ -5311,6 +5801,8 @@ function mountVaultGraph(root, data, deps) {
         }
         var base = a.size || 4;
         r.size = dotPx(base, id) * ((r.size === void 0 ? base : r.size) / base);
+        if (foldSizes && edgeCap[id] !== void 0) r.size = Math.min(r.size, edgeCap[id] * pxPerUnit);
+        if (foldSizes && r.size === 0) r.hidden = true;
         if (isPinned(id)) {
           r.size = (r.size || a.size) * hubSizeMult();
           r.zIndex = 3;
@@ -5352,6 +5844,11 @@ function mountVaultGraph(root, data, deps) {
             r.color = mixHex(THEME.edge, THEME.dim, ht);
             r.zIndex = 0;
           }
+        }
+        if (departing && leaveEdgeK < 1 && (departing[x[0]] || departing[x[1]])) al *= leaveEdgeK;
+        if (al <= 4e-3) {
+          r.hidden = true;
+          return r;
         }
         if (al < 0.999) r.color = withAlpha(r.color, al * al);
         return capEdge(r, a);
@@ -5741,7 +6238,58 @@ function mountVaultGraph(root, data, deps) {
   function centerOn(id) {
     var d = renderer.getNodeDisplayData(id);
     if (!d) return;
-    renderer.getCamera().animate({ x: d.x, y: d.y, ratio: 0.22 }, { duration: 420 });
+    var camera = renderer.getCamera(), cam = camera.getState();
+    var dim = renderer.getDimensions(), pad = 24, radius = 0;
+    var left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+    var nx0 = Infinity, nx1 = -Infinity, ny0 = Infinity, ny1 = -Infinity;
+    var set = dict(), seen = dict();
+    function include(n, p) {
+      nx0 = Math.min(nx0, n.x);
+      nx1 = Math.max(nx1, n.x);
+      ny0 = Math.min(ny0, n.y);
+      ny1 = Math.max(ny1, n.y);
+      left = Math.min(left, p.x);
+      right = Math.max(right, p.x);
+      top = Math.min(top, p.y);
+      bottom = Math.max(bottom, p.y);
+    }
+    [id].concat(neighboursOf(id)).forEach(function(n) {
+      var nd = renderer.getNodeDisplayData(n);
+      if (!nd || nd.hidden || (alpha[n] || 0) <= 4e-3) return;
+      set[n] = true;
+      include(nd, renderer.graphToViewport(graph.getNodeAttributes(n)));
+      radius = Math.max(radius, renderer.scaleSize(nd.size));
+    });
+    Object.keys(set).forEach(function(n) {
+      graph.forEachEdge(n, function(e, attrs, s, t) {
+        if (seen[e] || !set[s] || !set[t]) return;
+        seen[e] = true;
+        var geo = edgeCurveGeom(e, s, t);
+        if (!geo || !geo.k) return;
+        var ns = renderer.getNodeDisplayData(s), nt = renderer.getNodeDisplayData(t);
+        include({
+          x: (ns.x + nt.x) / 2 - (nt.y - ns.y) * geo.k,
+          y: (ns.y + nt.y) / 2 + (nt.x - ns.x) * geo.k
+        }, geo.cp);
+      });
+    });
+    var x = d.x, y = d.y, ratio = 0.22;
+    if (Number.isFinite(left)) {
+      var width = right - left, height = bottom - top;
+      x = (nx0 + nx1) / 2;
+      y = (ny0 + ny1) / 2;
+      if (!renderer.getSetting("enableCameraPanning")) {
+        x = cam.x;
+        y = cam.y;
+        width = 2 * Math.max(Math.abs(left - dim.width / 2), Math.abs(right - dim.width / 2));
+        height = 2 * Math.max(Math.abs(top - dim.height / 2), Math.abs(bottom - dim.height / 2));
+      }
+      ratio = Math.max(ratio, cam.ratio * Math.max(
+        (width + 2 * radius) / Math.max(1, dim.width - 2 * pad),
+        (height + 2 * radius) / Math.max(1, dim.height - 2 * pad)
+      ));
+    }
+    camera.animate({ x, y, ratio }, { duration: 420 });
   }
   var refreshSettingsPanel = null;
   function swatchFill(g) {
@@ -5826,7 +6374,12 @@ function mountVaultGraph(root, data, deps) {
   }
   var ptr = null;
   function lgrHTML(o) {
-    return '<div class="' + o.cls + '" data-row="' + esc(o.g) + '"' + (o.old ? ' data-old="1"' : "") + ">" + o.tw + o.eye + "<button" + o.lgAttrs + (o.old ? "" : ' data-g="' + esc(o.g) + '"') + ' data-hl="' + (o.hl ? "on" : "off") + '" aria-pressed="' + o.vis + '" title="' + esc(o.title) + '"><span class="' + o.swClass + '" title="' + o.swTitle + '" style="background:' + o.swFill + '"></span><span class="nm" title="' + esc(o.g) + '">' + esc(o.g) + "</span>" + o.only + '<span class="ct"' + o.ctTitle + ">" + o.ct + "</span></button></div>";
+    return '<div class="' + o.cls + '" data-row="' + esc(o.g) + '"' + (o.old ? ' data-old="1"' : "") + ">" + o.tw + o.eye + "<button" + o.lgAttrs + (o.old ? "" : ' data-g="' + esc(o.g) + '"') + ' data-hl="' + (o.hl ? "on" : "off") + '" aria-pressed="' + o.vis + '" title="' + esc(o.title) + '"><span class="' + o.swClass + '" title="' + o.swTitle + '" style="background:' + o.swFill + '"></span><span class="nm" title="' + esc(o.g) + '">' + esc(o.g) + "</span>" + o.only + '<span class="ct"' + o.ctTitle + ">" + (o.mark || "") + o.ct + "</span></button></div>";
+  }
+  function subTagsHidden(g) {
+    if (state.dim !== "tag" || !parentTagsOnly) return false;
+    for (var k in state.hiddenSub) if (state.hiddenSub[k] && k.indexOf(g + "/") === 0) return true;
+    return false;
   }
   function buildLegend() {
     hoverHighlight(null, null);
@@ -5951,7 +6504,9 @@ function mountVaultGraph(root, data, deps) {
         only: live ? w.inert ? '<span class="only" aria-hidden="true">only</span>' : '<span class="only" data-only="1" title="Show only ' + esc(g) + '">only</span>' : '<span class="only none" aria-hidden="true"></span>',
         // github#50, github#78
         ctTitle,
-        ct: w.inert ? String(w.counts[g]) : countText(g)
+        ct: w.inert ? String(w.counts[g]) : countText(g),
+        // github#203
+        mark: !w.inert && vis && subTagsHidden(g) ? '<span class="subhid" title="Some sub-tags of ' + esc(g) + ' are hidden. Turn off Parent tags only to show them.">some sub-tags hidden</span>' : ""
       });
       if (open && vis && !w.inert) {
         var subs = subOrder[g];
@@ -6279,6 +6834,11 @@ function mountVaultGraph(root, data, deps) {
     if (bandHint) Object.keys(bandHint).forEach(function(g) {
       bandLock[g] = bandHint[g];
     });
+    base.cells.forEach(function(c) {
+      if (c.g === MERGED) c.list.forEach(function(id) {
+        bandLock[groupOf(id)] = bandLock[c.g];
+      });
+    });
     var bandTotal = { i: 0, o: 0 };
     base.cells.forEach(function(c) {
       bandTotal[c.inner ? "i" : "o"] += c.wsum;
@@ -6372,14 +6932,12 @@ function mountVaultGraph(root, data, deps) {
       WIN.clearTimeout(animGuard);
       animGuard = null;
     }
-    moveFrom = null;
-    splitHold = null;
+    dropStandIns();
+    clearHolds();
     pinnedPlan = null;
     planKeep = null;
-    roomNow = null;
     cellNow = null;
     edgeNow = null;
-    colWalk = null;
     posSrc = null;
     var prevBand = bandLock, prevGeom = geomLock;
     bandLock = null;
@@ -6482,9 +7040,10 @@ function mountVaultGraph(root, data, deps) {
         WIN.clearTimeout(animGuard);
         animGuard = null;
       }
+      if (foldSizes) dropStandIns();
+      clearHolds();
       pinnedPlan = null;
       planKeep = null;
-      roomNow = null;
       cellNow = null;
       edgeNow = null;
       colWalk = null;
@@ -6511,13 +7070,12 @@ function mountVaultGraph(root, data, deps) {
       WIN.clearTimeout(cascadeRun.guard);
       cascadeRun = null;
     }
+    clearHolds();
     pinnedPlan = null;
     planKeep = null;
-    roomNow = null;
     cellNow = null;
     edgeNow = null;
     posSrc = null;
-    colWalk = null;
     state.until = null;
     timelineFrame(true);
   }
@@ -6543,9 +7101,9 @@ function mountVaultGraph(root, data, deps) {
       WIN.clearTimeout(animGuard);
       animGuard = null;
     }
+    clearHolds();
     pinnedPlan = null;
     planKeep = null;
-    roomNow = null;
     cellNow = null;
     edgeNow = null;
     colWalk = null;
@@ -6569,7 +7127,7 @@ function mountVaultGraph(root, data, deps) {
         sweepTo(pr);
       }
     });
-    play = { raf: 0, guard: 0, viaCascade: true };
+    play = cascadeRun ? { raf: 0, guard: 0, viaCascade: true } : null;
   }
   function sweepTo(pr) {
     if (!dateSpan || !tlMax) return;
@@ -6654,6 +7212,11 @@ function mountVaultGraph(root, data, deps) {
       );
       b.setAttribute("aria-pressed", b.getAttribute("data-dim") === state.dim ? "true" : "false");
     }
+    var chip = $("parents");
+    if (chip) {
+      chip.hidden = state.dim !== "tag";
+      chip.setAttribute("aria-pressed", parentTagsOnly ? "true" : "false");
+    }
   }
   function buildTools() {
     refreshSettingsPanel = buildSettings;
@@ -6666,6 +7229,9 @@ function mountVaultGraph(root, data, deps) {
       if (t) setDim(t.getAttribute("data-dim") || "folder", true);
     });
     syncDimUI();
+    if ($("parents")) $("parents").onclick = function() {
+      setParentTagsOnly(!parentTagsOnly, true);
+    };
     if ($("tabgroups")) $("tabgroups").onclick = function() {
       setReading("groups");
     };
@@ -6698,10 +7264,13 @@ function mountVaultGraph(root, data, deps) {
         return;
       }
       resetView();
+      hardRelayout(false);
       fit();
       playTimeline();
     };
-    if ($("reset")) $("reset").onclick = fit;
+    if ($("reset")) $("reset").onclick = function() {
+      fit();
+    };
     if ($("zin")) $("zin").onclick = function() {
       zoomBy(1);
     };
@@ -6712,7 +7281,9 @@ function mountVaultGraph(root, data, deps) {
       storedPan = !panEnabled;
       setPan(storedPan, true);
     };
-    if ($("ov")) $("ov").onclick = fit;
+    if ($("ov")) $("ov").onclick = function() {
+      fit();
+    };
     setPan(panEnabled, false);
     if ($("compact")) $("compact").onclick = function() {
       setCompactAxis(!compactAxis, true);
@@ -6726,6 +7297,7 @@ function mountVaultGraph(root, data, deps) {
     };
     setSheet(sheetOpen, true);
     setBand(bandOpen, true);
+    ROOT.setAttribute("data-ov", ovOn ? "on" : "off");
     $("png").onclick = savePng;
     if ($("dbg")) $("dbg").onclick = function() {
       var txt = JSON.stringify(API.debugDump(), null, 2);
@@ -7059,8 +7631,7 @@ function mountVaultGraph(root, data, deps) {
         var h = state.hidden[state.dim] || (state.hidden[state.dim] = dict());
         if (hiddenByDefault(folder)) h[folder] = true;
         else delete h[folder];
-        buildLegend();
-        cascade(null, { colToggle: true });
+        hardRelayout(true);
       }
       buildSettings();
     }
@@ -7258,7 +7829,7 @@ function mountVaultGraph(root, data, deps) {
     }
   }
   var FIT_RATIO = 0.954;
-  var camAtRest = true, fitting = false;
+  var camAtRest = true, fitting = false, fitSeq = 0;
   function fitRatio() {
     var locked = geomLock && geomLock.maxR ? geomLock.maxR : 0;
     var live = lastMaxR;
@@ -7276,17 +7847,19 @@ function mountVaultGraph(root, data, deps) {
     var to = fitTarget(), st = renderer.getCamera().getState();
     return Math.abs(st.ratio - to.ratio) <= to.ratio * 5e-3 && Math.abs(st.x - to.x) <= 1e-3 && Math.abs(st.y - to.y) <= 1e-3 && Math.abs((st.angle || 0) - to.angle) <= 1e-3;
   }
-  function fit() {
-    var to = fitTarget();
+  function fit(ms, at) {
+    var to = at || fitTarget();
     fitting = true;
+    var seq = ++fitSeq;
     var landed = function() {
+      if (seq !== fitSeq) return;
       fitting = false;
       camAtRest = true;
       renderer.setSetting("enableCameraPanning", panEnabled);
       syncPhonePan();
     };
     if (!panEnabled) renderer.setSetting("enableCameraPanning", true);
-    renderer.getCamera().animate(to, { duration: 380 }, landed);
+    renderer.getCamera().animate(to, { duration: ms > 0 ? ms : 380 }, landed);
   }
   function zoomBy(dir) {
     var cam = renderer.getCamera();
@@ -7745,7 +8318,8 @@ function mountVaultGraph(root, data, deps) {
       subOrder,
       bandLock,
       geomLock,
-      color: leftColors
+      color: leftColors,
+      counts: Object.assign(dict(), counts)
     };
     var rings = geomLock;
     stashDimNav(state.dim);
@@ -7757,14 +8331,11 @@ function mountVaultGraph(root, data, deps) {
     buildSubOrder();
     syncDimUI();
     if (n) {
-      moveFrom = null;
-      splitHold = null;
+      clearHolds();
       pinnedPlan = null;
       planKeep = null;
-      roomNow = null;
       cellNow = null;
       edgeNow = null;
-      colWalk = null;
       posSrc = null;
       bandLock = null;
       geomLock = null;
@@ -7781,7 +8352,13 @@ function mountVaultGraph(root, data, deps) {
     attempt2(buildLegend);
     if (refreshSettingsPanel) refreshSettingsPanel();
     if (persist && onDim) onDim(state.dim);
-    if (n) cascade(dropStandIns, { colToggle: true, hand: true, from });
+    if (n) cascade(dropStandIns, {
+      colToggle: true,
+      hand: true,
+      fold: foldSwitch,
+      from,
+      totalMs: foldSwitch ? TIMELINE_MS * TIME_SCALE : void 0
+    });
     return state.dim;
   }
   function setUnlinkedByFolder(on, persist, instant) {
@@ -7884,6 +8461,31 @@ function mountVaultGraph(root, data, deps) {
     attempt2(buildLegend);
     if (persist && onRootInOrder) onRootInOrder(rootInOrder);
     return rootInOrder;
+  }
+  function setParentTagsOnly(on, persist, instant) {
+    var next = !!on;
+    if (next === parentTagsOnly) return parentTagsOnly;
+    parentTagsOnly = next;
+    syncDimUI();
+    if (state.dim === "tag") {
+      var walk = !!(renderer && !instant && geomLock);
+      var rings = geomLock;
+      buildSubOrder();
+      if (walk) hardRelayout(false, true);
+      else {
+        hardRelayout(false, false);
+        keepRings(rings);
+        applyLayout(false);
+        applyLayout(false);
+      }
+      attempt2(placeLogo);
+      attempt2(heatBuild);
+      attempt2(buildLegend);
+      if (refreshSettingsPanel) refreshSettingsPanel();
+    }
+    if (persist && onParentTagsOnly) onParentTagsOnly(parentTagsOnly);
+    if (walk) cascade(null, { colToggle: true });
+    return parentTagsOnly;
   }
   function setCountBars(on, persist) {
     countBars = !!on;
@@ -9427,6 +10029,13 @@ function mountVaultGraph(root, data, deps) {
           return setRootInOrder(v, false, true);
         }
       ),
+      // github#203
+      setParentTagsOnly: (
+        /** @param {boolean} v */
+        function(v) {
+          return setParentTagsOnly(v === true, false, true);
+        }
+      ),
       // github#165
       setDevTools: (
         /** @param {boolean} v */
@@ -9448,8 +10057,7 @@ function mountVaultGraph(root, data, deps) {
       ),
       applyHiddenDefaults: function() {
         seedHidden();
-        buildLegend();
-        cascade(null, { colToggle: true });
+        hardRelayout(true);
       },
       heatBuild,
       // github#70 -- heatDateOf is the seam a day-contents list reads,
@@ -9502,7 +10110,8 @@ function mountVaultGraph(root, data, deps) {
         return out;
       },
       checkFocusWeb: function() {
-        var best = null, bd = -1;
+        var best = null;
+        var bd = -1;
         graph.forEachNode(function(id) {
           var d = renderer.getNodeDisplayData(id);
           if (!d || d.hidden) return;
@@ -9516,93 +10125,102 @@ function mountVaultGraph(root, data, deps) {
         state.hovered = null;
         renderer.refresh({ skipIndexation: true });
         renderer.render();
-        var cv = renderer.getCanvases();
-        var order2 = ["edges", "nodes", "edgeLabels", "labels", "hovers", "hoverNodes"];
-        var W = cv.nodes.width, H = cv.nodes.height, dpr = W / renderer.getDimensions().width;
-        var off = DOC.createElement("canvas");
-        off.width = W;
-        off.height = H;
-        var ctx = off.getContext("2d");
-        ctx.fillStyle = css("--surface-1");
-        ctx.fillRect(0, 0, W, H);
-        order2.forEach(function(k) {
-          if (cv[k]) ctx.drawImage(cv[k], 0, 0);
-        });
-        var img = ctx.getImageData(0, 0, W, H).data;
-        var hov = DOC.createElement("canvas");
-        hov.width = W;
-        hov.height = H;
-        var hctx = hov.getContext("2d");
-        hctx.drawImage(cv.hovers, 0, 0);
-        var himg = hctx.getImageData(0, 0, W, H).data;
-        var at = function(data2, x, y) {
-          var X = Math.round(x * dpr), Y = Math.round(y * dpr);
-          if (X < 0 || Y < 0 || X >= W || Y >= H) return null;
-          var i = (Y * W + X) * 4;
-          return [data2[i], data2[i + 1], data2[i + 2], data2[i + 3]];
-        };
-        var hi = toRgb(THEME.edgeHi), dm = toRgb(THEME.dim);
-        var dist = function(c, t) {
-          return c ? Math.abs(c[0] - t[0]) + Math.abs(c[1] - t[1]) + Math.abs(c[2] - t[2]) : 1e9;
-        };
-        var set = focusSet() || {};
-        var dims = [];
-        graph.forEachNode(function(id) {
-          if (set[id]) return;
-          var d = renderer.getNodeDisplayData(id);
-          if (!d || d.hidden) return;
-          var p = renderer.graphToViewport(graph.getNodeAttributes(id));
-          dims.push({ x: p.x, y: p.y, rad: renderer.scaleSize(d.size) });
-        });
-        var res = {
-          node: best,
-          degree: bd,
-          edges: 0,
-          samples: 0,
-          geomGaps: 0,
-          blueAtGaps: 0,
-          dimAtGaps: 0,
-          underLabel: 0,
-          otherAtGaps: 0
-        };
-        var seen = dict();
-        Object.keys(set).forEach(function(n) {
-          graph.forEachEdge(n, function(e, attrs, s, t) {
-            if (seen[e] || !set[s] || !set[t]) return;
-            seen[e] = true;
-            var geo = edgeCurveGeom(e, s, t);
-            if (!geo) return;
-            res.edges++;
-            var ps = geo.ps, pt = geo.pt, cp = geo.cp;
-            for (var u = 0.05; u <= 0.95; u += 0.01) {
-              var x = (1 - u) * (1 - u) * ps.x + 2 * (1 - u) * u * cp.x + u * u * pt.x;
-              var y = (1 - u) * (1 - u) * ps.y + 2 * (1 - u) * u * cp.y + u * u * pt.y;
-              res.samples++;
-              var covered = dims.some(function(d) {
-                var ddx = d.x - x, ddy = d.y - y;
-                return ddx * ddx + ddy * ddy <= (d.rad - 0.5) * (d.rad - 0.5);
-              });
-              if (!covered) continue;
-              res.geomGaps++;
-              var c = at(img, x, y), blue = dist(c, hi) < 60;
-              for (var ox = -1; ox <= 1 && !blue; ox++) {
-                for (var oy = -1; oy <= 1 && !blue; oy++) {
-                  if (ox || oy) blue = dist(at(img, x + ox / dpr, y + oy / dpr), hi) < 60;
+        function sample() {
+          var cv = renderer.getCanvases();
+          var order2 = ["edges", "nodes", "edgeLabels", "labels", "hovers", "hoverNodes"];
+          var W = cv.nodes.width, H = cv.nodes.height, dpr = W / renderer.getDimensions().width;
+          var off = DOC.createElement("canvas");
+          off.width = W;
+          off.height = H;
+          var ctx = off.getContext("2d");
+          ctx.fillStyle = css("--surface-1");
+          ctx.fillRect(0, 0, W, H);
+          order2.forEach(function(k) {
+            if (cv[k]) ctx.drawImage(cv[k], 0, 0);
+          });
+          var img = ctx.getImageData(0, 0, W, H).data;
+          var hov = DOC.createElement("canvas");
+          hov.width = W;
+          hov.height = H;
+          var hctx = hov.getContext("2d");
+          hctx.drawImage(cv.hovers, 0, 0);
+          var himg = hctx.getImageData(0, 0, W, H).data;
+          var at = function(data2, x, y) {
+            var X = Math.round(x * dpr), Y = Math.round(y * dpr);
+            if (X < 0 || Y < 0 || X >= W || Y >= H) return null;
+            var i = (Y * W + X) * 4;
+            return [data2[i], data2[i + 1], data2[i + 2], data2[i + 3]];
+          };
+          var hi = toRgb(THEME.edgeHi), dm = toRgb(THEME.dim);
+          var dist = function(c, t) {
+            return c ? Math.abs(c[0] - t[0]) + Math.abs(c[1] - t[1]) + Math.abs(c[2] - t[2]) : 1e9;
+          };
+          var set = focusSet() || {};
+          var dims = [];
+          graph.forEachNode(function(id) {
+            if (set[id]) return;
+            var d = renderer.getNodeDisplayData(id);
+            if (!d || d.hidden) return;
+            var p = renderer.graphToViewport(graph.getNodeAttributes(id));
+            dims.push({ x: p.x, y: p.y, rad: renderer.scaleSize(d.size) });
+          });
+          var res = {
+            node: best,
+            degree: bd,
+            edges: 0,
+            samples: 0,
+            geomGaps: 0,
+            blueAtGaps: 0,
+            dimAtGaps: 0,
+            underLabel: 0,
+            otherAtGaps: 0
+          };
+          var seen = dict();
+          Object.keys(set).forEach(function(n) {
+            graph.forEachEdge(n, function(e, attrs, s, t) {
+              if (seen[e] || !set[s] || !set[t]) return;
+              seen[e] = true;
+              var geo = edgeCurveGeom(e, s, t);
+              if (!geo) return;
+              res.edges++;
+              var ps = geo.ps, pt = geo.pt, cp = geo.cp;
+              for (var u = 0.05; u <= 0.95; u += 0.01) {
+                var x = (1 - u) * (1 - u) * ps.x + 2 * (1 - u) * u * cp.x + u * u * pt.x;
+                var y = (1 - u) * (1 - u) * ps.y + 2 * (1 - u) * u * cp.y + u * u * pt.y;
+                res.samples++;
+                var covered = dims.some(function(d) {
+                  var ddx = d.x - x, ddy = d.y - y;
+                  return ddx * ddx + ddy * ddy <= (d.rad - 0.5) * (d.rad - 0.5);
+                });
+                if (!covered) continue;
+                res.geomGaps++;
+                var c = at(img, x, y), blue = dist(c, hi) < 60;
+                for (var ox = -1; ox <= 1 && !blue; ox++) {
+                  for (var oy = -1; oy <= 1 && !blue; oy++) {
+                    if (ox || oy) blue = dist(at(img, x + ox / dpr, y + oy / dpr), hi) < 60;
+                  }
                 }
+                var h = at(himg, x, y);
+                if (blue) res.blueAtGaps++;
+                else if (h && h[3] >= 250) res.underLabel++;
+                else if (dist(c, dm) < 60) res.dimAtGaps++;
+                else res.otherAtGaps++;
               }
-              var h = at(himg, x, y);
-              if (blue) res.blueAtGaps++;
-              else if (h && h[3] >= 250) res.underLabel++;
-              else if (dist(c, dm) < 60) res.dimAtGaps++;
-              else res.otherAtGaps++;
-            }
+            });
+          });
+          state.selected = keepSel;
+          state.hovered = keepHov;
+          renderer.refresh();
+          res.webOK = res.dimAtGaps === 0;
+          return res;
+        }
+        return new Promise(function(resolve) {
+          WIN.requestAnimationFrame(function() {
+            WIN.requestAnimationFrame(function() {
+              resolve(sample());
+            });
           });
         });
-        state.selected = keepSel;
-        state.hovered = keepHov;
-        renderer.refresh();
-        res.webOK = res.dimAtGaps === 0;
-        return res;
       },
       debugDump: function() {
         var a0 = renderer ? renderer.graphToViewport({ x: 0, y: 0 }) : null;
@@ -9724,7 +10342,7 @@ function mountVaultGraph(root, data, deps) {
             heatSource: state.heatSource,
             recent: state.recent
           },
-          room: { i: r3n(bandOf("i").room), o: r3n(bandOf("o").room) },
+          room: { i: r3n(pitchUnits("i")), o: r3n(pitchUnits("o")) },
           minArcDeg: r3(lastMinArc * 180 / Math.PI),
           spacing: {
             spOuter: r3(bandOf("o").sp),
@@ -9755,10 +10373,16 @@ function mountVaultGraph(root, data, deps) {
           dots: {
             ofPitch: r3(DOT_OF_PITCH),
             minPx: DOT_MIN_PX,
+            growMax: DOT_GROW_MAX,
+            countGain: DOT_COUNT_GAIN,
+            countMaxPx: DOT_COUNT_MAX_PX,
+            countFloorPx: countFloorPx(),
             maxSpread: DOT_MAX_SPREAD,
-            m: r3(bandOf("o").ramp.m),
-            b: r3(bandOf("o").ramp.b),
-            lo: r3(bandOf("o").ramp.lo)
+            clear: DOT_CLEAR,
+            overPitch: DOT_OVER_PITCH,
+            m: r3(1 / (NODE_MAX - NODE_MIN)),
+            b: 0,
+            lo: 0
           }
         };
       }
@@ -9814,6 +10438,7 @@ function mountVaultGraph(root, data, deps) {
       WIN.clearTimeout(cascadeRun.guard);
       cascadeRun = null;
     }
+    clearHolds();
     if (anim) {
       WIN.cancelAnimationFrame(anim);
       anim = null;
@@ -10863,6 +11488,8 @@ void main() {
 
   v_color = a_color;
   v_color.a *= bias;
+  // github#190 -- premultiplied for the ONE / ONE_MINUS_SRC_ALPHA blend
+  v_color.rgb *= v_color.a;
 }
 `;
 var CIRCLE_FRAGMENT = `
@@ -10990,9 +11617,13 @@ void main(void) {
   vec4 borderColor_0 = transparent;
   vec4 borderColor_1 = v_borderColor_1;
   borderColor_1.a *= bias;
+  // github#190 -- premultiplied for the ONE / ONE_MINUS_SRC_ALPHA blend
+  borderColor_1.rgb *= borderColor_1.a;
   if (borderSize_1 <= 1.0 * u_correctionRatio) { borderColor_1 = borderColor_0; }
   vec4 borderColor_2 = v_borderColor_2;
   borderColor_2.a *= bias;
+  // github#190 -- premultiplied for the ONE / ONE_MINUS_SRC_ALPHA blend
+  borderColor_2.rgb *= borderColor_2.a;
   if (borderSize_2 <= 1.0 * u_correctionRatio) { borderColor_2 = borderColor_1; }
 
   if (dist > adjustedBorderSize_0) {
@@ -11106,6 +11737,8 @@ void main() {
 
   v_color = a_color;
   v_color.a *= bias;
+  // github#190 -- premultiplied for the ONE / ONE_MINUS_SRC_ALPHA blend
+  v_color.rgb *= v_color.a;
 }
 `;
 var LINE_FRAGMENT = `
@@ -11261,6 +11894,8 @@ void main() {
 
   v_color = a_color;
   v_color.a *= bias;
+  // github#190 -- premultiplied for the ONE / ONE_MINUS_SRC_ALPHA blend
+  v_color.rgb *= v_color.a;
 }
 `;
 var CURVE_FRAGMENT = `
@@ -11819,14 +12454,14 @@ var Renderer = class extends Emitter {
   renderLabels() {
     const ctx = this.ctx.labels;
     const { labelSize, labelFont, labelWeight, labelColor } = this.settings;
+    ctx.fillStyle = labelColor;
+    ctx.font = `${labelWeight} ${labelSize}px ${labelFont}`;
     for (const id of this.forcedLabels) {
       const data = this.nodeData.get(id);
       if (!data || data.hidden || !data.label) continue;
       const { x, y } = this.framedGraphToViewport(data);
       const size = this.scaleSize(data.size);
       if (x < -X_LABEL_MARGIN || x > this.width + X_LABEL_MARGIN || y < -Y_LABEL_MARGIN || y > this.height + Y_LABEL_MARGIN) continue;
-      ctx.fillStyle = labelColor;
-      ctx.font = `${labelWeight} ${labelSize}px ${labelFont}`;
       ctx.fillText(data.label, x + size + 3, y + labelSize / 3);
     }
   }
@@ -12083,6 +12718,336 @@ function ghostLabel(canonical) {
   return segs.length ? segs[segs.length - 1] : String(canonical);
 }
 
+// src/taxonomy.mjs
+var MONTHISH = /^\d{4}(?:[-_ ]?(?:\d{2}|Q[1-4]|W\d{1,2}))?$/i;
+function isMonthFolder(seg) {
+  return MONTHISH.test(seg);
+}
+var TYPE_ALIAS = Object.assign(/* @__PURE__ */ Object.create(null), {
+  people: "person",
+  person: "person",
+  "zettel/permanent": "zettel",
+  "zettel/fleeting": "zettel",
+  "zettel/literature": "zettel"
+});
+var SKIP_FILES = /* @__PURE__ */ new Set(["claude.md", "readme.md", "license.md"]);
+function isSkippedFile(name) {
+  return SKIP_FILES.has(String(name).toLowerCase());
+}
+var deNumber = (s) => String(s).replace(/^[\s\d._)-]+/, "").trim();
+var slug = (s) => deNumber(s).toLowerCase().replace(/[\s_]+/g, "-");
+var singular = (s) => s.replace(/ies$/, "y").replace(/([^aeious])s$/, "$1");
+function folderType(s) {
+  return singular(slug(s));
+}
+function normSlashes(s) {
+  return String(s).split(/[\\/]/).filter(Boolean).join("/");
+}
+function under(rel, dir) {
+  return !!dir && (rel === dir || rel.startsWith(dir + "/"));
+}
+function paraFolder(path) {
+  const seg = String(path).split("/");
+  return seg.length > 1 ? seg[0] : "(vault root)";
+}
+function paraDirs(path, flatMonths) {
+  const seg = String(path).split("/").slice(1, -1);
+  const out = [];
+  for (let i = 0; i < seg.length; i++) {
+    if (isMonthFolder(seg[i])) {
+      if (i === 0 && !flatMonths) out.push(seg[i]);
+      break;
+    }
+    out.push(seg[i]);
+  }
+  return out;
+}
+function inferType(fm, path, tags, dailyDir, isTemplate) {
+  const raw = typeof fm.type === "string" ? fm.type.toLowerCase() : "";
+  if (raw) return TYPE_ALIAS[raw] ?? raw;
+  if (tags.indexOf("daily-note") >= 0) return "daily";
+  if (under(path, dailyDir)) return "daily";
+  if (isTemplate(path)) return "template";
+  const dirs = String(path).split("/").slice(0, -1).filter(Boolean);
+  const named = dirs.filter((d) => !isMonthFolder(d));
+  const pick = named.length ? named[named.length - 1] : dirs[0];
+  const type = pick ? folderType(pick) : "";
+  return type || "note";
+}
+function normalizeTags(fm) {
+  const raw = [];
+  return raw.concat(fm.tags || [], fm.tag || []).flatMap((t) => String(t).split(/[,\s]+/)).map((t) => t.replace(/^#/, "").trim()).filter(Boolean);
+}
+function noteBody(raw) {
+  const text = String(raw).replace(/^\uFEFF/, "");
+  const m = /^---\r?\n[\s\S]*?\r?\n---/.exec(text);
+  return m ? text.slice(m[0].length) : text;
+}
+function countWords(body) {
+  return String(body).split(/\s+/).filter(Boolean).length;
+}
+function ghostNode(dest) {
+  return {
+    id: ghostId(dest),
+    label: ghostLabel(dest),
+    folder: "(unresolved)",
+    sub: "",
+    dirs: [],
+    type: "ghost",
+    tags: [],
+    created: "",
+    touched: "",
+    words: 0,
+    ghost: true
+  };
+}
+function edgeBook() {
+  const weight = /* @__PURE__ */ new Map();
+  return {
+    /** @param {number} i @param {number} j @param {number} [w] */
+    add(i, j, w) {
+      if (i === j) return;
+      const key = i < j ? i + " " + j : j + " " + i;
+      weight.set(key, (weight.get(key) ?? 0) + (w ?? 1));
+    },
+    /** @returns {{ s: number, t: number, w: number }[]} */
+    edges() {
+      return Array.from(weight, (entry) => {
+        const ab = entry[0].split(" ");
+        return { s: Number(ab[0]), t: Number(ab[1]), w: entry[1] };
+      });
+    }
+  };
+}
+function degrees(edges, count) {
+  const degree = (
+    /** @type {number[]} */
+    new Array(count).fill(0)
+  );
+  for (const e of edges) {
+    degree[e.s]++;
+    degree[e.t]++;
+  }
+  return degree;
+}
+function generatedStamp(now) {
+  const d = now ?? /* @__PURE__ */ new Date(), p2 = (n) => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes());
+}
+
+// plugin/build-data.mjs
+var walkOrder = (a, b) => {
+  const sa = a.split("/"), sb = b.split("/");
+  const n = Math.min(sa.length, sb.length);
+  for (let i = 0; i < n; i++) {
+    if (sa[i] !== sb[i]) return sa[i] < sb[i] ? -1 : 1;
+  }
+  return sa.length - sb.length;
+};
+async function readConfigJson(host, name) {
+  try {
+    const app = host.app;
+    const p = host.normalizePath(app.vault.configDir + "/" + name);
+    if (!await app.vault.adapter.exists(p)) return null;
+    const parsed = JSON.parse(await app.vault.adapter.read(p));
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+var strField = (obj, key) => {
+  if (!obj || typeof obj !== "object" || !(key in obj)) return "";
+  const v = (
+    /** @type {Record<string, unknown>} */
+    obj[key]
+  );
+  return typeof v === "string" ? v : "";
+};
+async function readFolders(host) {
+  const dirs = /* @__PURE__ */ new Set();
+  const core = strField(await readConfigJson(host, "templates.json"), "folder");
+  if (core.trim()) dirs.add(normSlashes(core));
+  const templater = strField(await readConfigJson(host, "plugins/templater-obsidian/data.json"), "templates_folder");
+  if (templater.trim()) dirs.add(normSlashes(templater));
+  const dn = strField(await readConfigJson(host, "daily-notes.json"), "folder");
+  const dailyDir = dn.trim() ? normSlashes(dn) : "";
+  return { templateDirs: Array.from(dirs), dailyDir };
+}
+async function readSortSpecs(host) {
+  const app = host.app;
+  const out = [];
+  const seen = /* @__PURE__ */ new Set();
+  const add = (file) => {
+    if (!file || seen.has(file.path)) return;
+    seen.add(file.path);
+    const fm = (app.metadataCache.getFileCache(file) || {}).frontmatter || {};
+    const text = typeof fm["sorting-spec"] === "string" ? fm["sorting-spec"] : "";
+    if (!text.trim()) return;
+    const dir = file.parent && file.parent.path && file.parent.path !== "/" ? file.parent.path : "";
+    out.push({ folder: dir, text, origin: file.path });
+  };
+  for (const file of app.vault.getMarkdownFiles()) {
+    const dir = file.parent && file.parent.path && file.parent.path !== "/" ? file.parent.path : "";
+    const parent = dir.indexOf("/") < 0 ? dir : dir.slice(dir.lastIndexOf("/") + 1);
+    if (file.basename.toLowerCase() === "sortspec" || parent && file.basename === parent) add(file);
+  }
+  const extra = strField(await readConfigJson(host, "plugins/custom-sort/data.json"), "additionalSortspecFile");
+  if (extra.trim()) {
+    const f = app.vault.getFileByPath(host.normalizePath(normSlashes(extra)));
+    if (f) add(
+      /** @type {import("obsidian").TFile} */
+      f
+    );
+  }
+  return out;
+}
+async function buildData(host, opts, version) {
+  const app = host.app;
+  const t0 = performance.now();
+  const folders = await readFolders(host);
+  const sortSpecs = await readSortSpecs(host);
+  const templateDirs = folders.templateDirs, dailyDir = folders.dailyDir;
+  const isTemplate = (path) => templateDirs.some((d) => under(path, d));
+  const files = app.vault.getMarkdownFiles().filter((f) => {
+    if (isSkippedFile(f.name)) return false;
+    return opts.templates ? true : !isTemplate(f.path);
+  });
+  files.sort((a, b) => walkOrder(a.path, b.path));
+  const index = /* @__PURE__ */ new Map();
+  const nodes = [];
+  const dates = dateTally();
+  for (const file of files) {
+    const cache2 = app.metadataCache.getFileCache(file) || {};
+    const fm = cache2.frontmatter || {};
+    const tags = normalizeTags(fm);
+    const dirs = paraDirs(file.path, opts.flatMonths);
+    const dated = resolveCreated(fm, file.basename, file.stat.ctime, file.stat.mtime);
+    dates[dated.source]++;
+    index.set(file.path, nodes.length);
+    nodes.push({
+      id: file.path,
+      label: file.basename,
+      folder: paraFolder(file.path),
+      dirs,
+      sub: dirs[0] || "",
+      type: inferType(fm, file.path, tags, dailyDir, isTemplate),
+      tags,
+      created: dated.day,
+      touched: localDay(file.stat.mtime),
+      words: 0,
+      _file: file
+    });
+  }
+  const tIndex = performance.now();
+  const book = edgeBook();
+  const addEdge = (i, j, w) => book.add(i, j, w);
+  let attachmentLinks = 0, filteredLinks = 0;
+  const resolved = app.metadataCache.resolvedLinks || {};
+  for (const src of Object.keys(resolved)) {
+    const i = index.get(src);
+    if (i === void 0) continue;
+    for (const dest of Object.keys(resolved[src])) {
+      const j = index.get(dest);
+      if (j === void 0) {
+        if (dest.toLowerCase().endsWith(".md")) filteredLinks++;
+        else attachmentLinks++;
+        continue;
+      }
+      addEdge(i, j, resolved[src][dest]);
+    }
+  }
+  const unresolvedMap = app.metadataCache.unresolvedLinks || {};
+  let unresolved = 0;
+  const ghosts = /* @__PURE__ */ new Map();
+  for (const src of Object.keys(unresolvedMap)) {
+    const i = index.get(src);
+    if (i === void 0) continue;
+    for (const target of Object.keys(unresolvedMap[src])) {
+      const n = unresolvedMap[src][target];
+      unresolved += n;
+      if (!opts.ghosts) continue;
+      const dest = canonicalDest(src, target);
+      const key = ghostKey(dest);
+      let slot = ghosts.get(key);
+      if (!slot) {
+        slot = { dest, sources: [] };
+        ghosts.set(key, slot);
+      } else if (dest < slot.dest) slot.dest = dest;
+      slot.sources.push([i, n]);
+    }
+  }
+  if (opts.ghosts) {
+    for (const slot of ghosts.values()) {
+      const j = nodes.length;
+      nodes.push(ghostNode(slot.dest));
+      for (const pair of slot.sources) addEdge(pair[0], j, pair[1]);
+    }
+  }
+  const tEdges = performance.now();
+  const wordFiles = opts.words ? nodes.map((n) => n._file || null) : null;
+  const readWords = async (apply, only) => {
+    const t = performance.now();
+    if (!wordFiles) return 0;
+    await Promise.all(wordFiles.map(async (file, i) => {
+      if (!file) return;
+      if (only && !only.has(file.path)) return;
+      let words = 0;
+      try {
+        const raw = await app.vault.cachedRead(file);
+        words = countWords(noteBody(raw));
+      } catch {
+        words = 0;
+      }
+      apply(i, words);
+    }));
+    return Math.round(performance.now() - t);
+  };
+  const tWords = performance.now();
+  const edges = book.edges();
+  const degree = degrees(edges, nodes.length);
+  const out = nodes.map((n, i) => {
+    const clean = Object.assign({}, n, { deg: degree[i] });
+    delete clean._file;
+    return clean;
+  });
+  return {
+    vault: app.vault.getName(),
+    version,
+    // github#149
+    generated: generatedStamp(),
+    nodes: out,
+    edges,
+    stats: {
+      files: files.length,
+      nodes: out.length,
+      edges: edges.length,
+      unresolved,
+      orphans: degree.filter((d) => d === 0).length,
+      // github#6
+      dates,
+      templatesExcluded: !opts.templates,
+      ghostsIncluded: !!opts.ghosts
+    },
+    readWords,
+    // github#71
+    sortSpecs,
+    _spike: {
+      msIndex: Math.round(tIndex - t0),
+      msEdges: Math.round(tEdges - tIndex),
+      msWords: Math.round(tWords - tEdges),
+      msWordsBackground: (
+        /** @type {number | null} */
+        null
+      ),
+      msTotal: Math.round(tWords - t0),
+      templateDirs,
+      dailyDir,
+      attachmentLinks,
+      filteredLinks
+    }
+  };
+}
+
 // raw::src/page.html
 var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
   <aside id="vg-sidebar">
@@ -12131,7 +13096,7 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
       </div>
       <div id="vg-readgroups" role="tabpanel" aria-labelledby="vg-tabgroups">
         <span id="vg-dim" class="dimseg dimfull" role="group" aria-label="Group the disc by"><button type="button" data-dim="folder" aria-pressed="true" title="Cut the disc by folder"><span class="dimnm">Folders</span><span class="dimct"></span></button><button type="button" data-dim="tag" aria-pressed="false" title="Cut the disc by tag: the first tag a note lists files it"><span class="dimnm">Tags</span><span class="dimct"></span></button></span>
-        <div class="mini dimall"><button id="vg-allon">All</button><button id="vg-alloff">None</button></div>
+        <div class="mini dimall"><button id="vg-allon">All</button><button id="vg-alloff">None</button><button id="vg-parents" type="button" aria-pressed="false" hidden title="Parent tags only: draw each parent tag as one solid wedge, with no sub-wedges or sub-tints for its nested tags (area/health and area/finance both join area). Shown in the tag view only. Off by default.">Parent tags only</button></div>
         <div id="vg-legend"></div>
       </div>
       <div id="vg-readnote" role="tabpanel" aria-labelledby="vg-tabnote" hidden></div>
@@ -12309,10 +13274,10 @@ var page_default = `<div id="vg-app" class="vault-graph" data-theme="dark">
 var logo_mask_default = "iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAJ95SURBVHhe7b0HvGZVdff/T31jiUrvHaQjIgICih0VK4q9a4wxxsQaC0ajsURjNEYNtmjU5FWMGmMLRsEkig0FcaQMDDN3yu3l6c85Z5fn//muvdZ59j3zzDD4KiK5289xLvc+zzn77L3W2qv+1v/3/62NtbE21sbaWBtrY22sjbWxNtbG2lgba2Nt3F7GaDSqr7WxNv5XjZz415hgbfyvGE2CXyP6tfFzjV8nAmoSfPNaG2vjFo9fJyJqzrV5rY21scujSTzN67Y4mnPc2bU21saqceGFF/7GZz7zmd8cjUa/eemll/7WD3/4w9/mWnfxxb/zlfXrf/crX/nK765bt+53Lr744t/h7/rZ3/hVE5U9m/nYvJnr+vXrZb42Z35/0UUX/Taf4R1l/hdeKPNfG/9LR044l1566f9Zt27dnb73ve/9/pVXXnnXdevW7XbNNdfsvn79+j3XrVu3z4arr977x+vX78nvrtiw4S7rLlt3pyuuuOIOl19++e/pd38HwvplExT3v3A0EmZl3jx348aNMvf169f/PvO2OV9zzTX78u9VV121F7/fsGHDXXg/PnvVVVfdkbnD4MbMzWetjdvJaBz/v2GEAwFDEFdfffXdIJJrr712vxtuuOHAqampwzZu3HjM1NTUcZs3bz5+y5YtJ83MzBzP77betPXu119//WHr168/YNOmTftu2LBhbwgOxrj22mvvjKTlNPllnAw2d6Q7BLzhiivuct111+3BvDdu3HjIhg1bj9q2bdvR09PTx27evPmELVu2nMjcufR9Dt903XWHMndjDGXy37/qkkvuyMkx+sxnftPmvzZuJyMR4oW/AXEirWXDr7pqrxt+esOBmzdvPmLTpk3Hbt269R7T09P3mp2dPX1hYeGc+fn581ZWVh67uLj4+KWlpScuLi4+bn5+/hFLc3Pnzs7OPnBubu4+i7Ozp89s2XIa34XwbvrZzw7evHnzbhAnz1F14/+JmHKmRdIzdxgORt2yZcuRs7OzJ26Z3XL6/Pz8fZnX4uzig5eXl89bWlp6QqvVelKr1Xry0sLCU1ZWVh4zNzf3kPn5+fvNzMww55NhjOlNm45dv3794TARpwRzhxF4HozQnM/a+DUamRT+TSQ+m4vEu+mm6YO3bt0I0Z65sLDwwIWFhUevrKw8r9frXVgUxXurqvp0VVXfcM5d4Zxb55z7mauqq51z33fOfassyy8VRfGxwWDwrk6n85qVlZXnLCwsPHJpbu4+MzMzx23atOnQjRs37oPKsXnz5t8bjUY1Md2SU0E/+1vcg3shtWHYubm5k5aWls5YXFx8cKvVuqDd7f7JsD98U1EUHyjL6l+rqrrUOfcj59w1zrnreIeyLH9QluU3h8PhZ4aDwbt7vd4rVlZWnru4uPhYmGJ6evqUm2666e6cajACpxknjal1t2Tea+M2MNgsdFs1BO+km7rf3NzcEQvT0/daXl5+ZKvVetFwMHxPVVVfdc7d6L3vjW7B8CGU3vtZ59zlg8Hgg91u90VLS0vnzs/Pn42EhRFuvPHGvVQ3/51dVY1M6kOAED7MNDs7e9jc3Nw9lpeXz261lh7a6XSeWxbFe51z/+2cn/beF8357WjEGEfe+7b3fn1Zlv/e6/Vey0nHyQcjbN0qat7+GzduvCvM11Tr1savwYD41TjE+DsINQcVZ25u6T7tdvsZVVF92ns/BTHUhBHiKPjgvVzj4ZzLf+GCD84770MITaLaXBTFx/udzh+icizPz5/NicDzIabcUL6ZS+aOOrVt27aDsD8g/Ha7fV6/339RVVWfcs5N1Q8fjUbMJc3OLse89T/qf5g1P4XR+LX53tA7d2VRFO9rLbeeOjs7++DNmzffGwZG3YKBxT4YrTHBbX6wOeivGLg//vGP99ywYcNRc9u2nYn+3m63n4Pq4r2fzjY/J+5VhLGzoQRv34VDam5wzm0riuITnU7nhTDC0uzsGTMzM4dOTU3dTb1G2AZNoq/nPto2usP09PSefGdlZeUeKysr9+/1es+pqvJzIYRFe449X1g2Y8abG8w9MYcXRo7ZS3vnrh8MBu9rt9tPRzXCvrn22msP4SQy22CNAW6jIyd+VA+8IRiGGIP9fv+dzrkbbKMhGJXsqyjHe9/y3m8IIVwRQvhWCOErIYTPB+//PXh/afDhB977jU2VQ+gQonLj+3nnfjoYDP6i0+k8vr20dB/UmG3btu2xbdu2O6jrMSd+MXRROSD+hYWFo9vt9n16rda5g8Hg5d77n2bPMok+ae7Xe+8vDyF8Ocb4qRDCJ0IIMM7/hBDWBR82Bu+7je8pG+dz99/tdrsvWVxcfMj09PSpeJnEwL/kEgz8moHXxm1kGPFDQDdedeNeuP0WFxcfJLpyKZJTCNakZq76hBA2C4GH8Dbv/R9575/inHtMjPFc59yDnHMPcM492Dn3cOfced77p3rvX+Oce5/3/j+DD3M14dTEmUQyNkJZlu/udDqPa7cXT5ufnz+y3W7jesTARKWw6zdjjL/barV2a7fbR3Y6nfv1+/3Hl2X5XpP6mSo2JlTvp5TA36xzf4Jz7iFVVZ1dVdUZet3PRfcI7/0TvfdP996/Mrjwce/9d0MIK6vmnp0m3vtt/X7/LdhLeMdwo3Kqop79v3q31sYveJjRuPWaa3aH+DHo8OyUZflf+QZDRPwMA4QQfhRifHt07iFlWZ4cYzypLMsTY1EcMxwOD4sxHtjv9w+IMR4wGo0OicPhEUWMR8YYj4oxHl9V1SlVVd3HOff4EML7TbUS9Qht2wevz+2VZfm3vV4PHf407t0ate4GwePl4YKoWq3W3drt9lGDwUCIv6qqj4VQ30PUFXuXEMKPY4yvd849oqqqezP3oiiOHY1GMu8Y4/5cg8HgwMFocFCM8eAY4+Gj0ejoshzdQ+f90Bjjc5xzHwwhbK3nrkOfUw6Hw/+bXMIzpxEj0UAh9swaE9wWBpvAhqCnzk5N4S05q9vtPrUsy/+WTQ1CkIF/dZO3hBD+0jl3LsRTluVxMcYjhcgT4ewZY9xtNBrdbTQa3ZWL/44x7q4Xf993MBhBWEfGsjwZguJkCCF8yU4XoSIl2hBCxzn3puFweG6/37/XYDA4GIKfmZm5IyoRPw+Hw0MHg8HZg8HgiVVVfdCIUPV1u08RQ/iwc+6Bo9HoHmVZnhCLAoaEwPcdjUZ76Lzvohfzh9mYP/PeO8a433A4OiQxgzD+GdH7p4QQLvbeV825M4qi+HBrqXUuMQRiEHjW8A6tMcCveJjqMzc3d6ebbrrp4MXFxXuvrKycX1XVF4VgvBfVwTYy+HBZ9PHpVVWdGmM8QQkfQt5bCeXOo9HoDqPRiGN+Z9cd9LMQ3EEwUVVVp6EmhRDeHkJYqAlpTLxTVVX92XA4fFDRKY7t9/v7dzqdPVB7+LnX692z6Pcf7Zz7axhmwvc3ee9fhXpTluU9hPli5ITaUwn9TjovYg//hxMmu/gd73WnGOPvK5PsEfvC8NznxBir+4YQ3opKKM92PsB8+uzhcDh8u6pDJ2KnEFfBlmnuydq4FUZuPKL6zMzMYPTi3380np4YY4i4Bp0TfT8wnHt3rOIZSE0jepX0EAZHOhJNksV2cOV/E72d7yhx3UWZ6GhUIx/9M4L3m5pE7L3/QVEU6Pb3LIriyMFgcBBqSlEUfA+9/Q+9fU89mPwcY/yeqizHo8qoNIeQYcabm3fz4rN853dijHfUNdhnOBweEdNJxmkgp6fZHTr3Vr/ff+PKwsID5ubmDscoVlWo3o+1cSuMhvfktxcWFu6Mh6W1uPiQfr//Bu99LT2he5VgHy3L8iT0e9Qck5iqhxtB7+oljJddOSPsYRLVe//CEEJrwlzexmmB+lEUxTFcMA1qjff+8zXhjdUnfP6PiUW8exzGQ1UN41kQcXPuzbnd3MU9EACoS8z9CDkdXXxkCOG78nz8Buoh8s6vJ44yPz9/8sLCwn52Cqwxwa04bJPRQdGhN83P74vq0+12n+bK8tuZ1DVPzFfw5sQY0fUxaDn+Teqb5MwJKCeiJsNNunLJeqder7cvhnJVVfdyzr1dibiWpMH7n6in5j4QG59TG+J53vsV3PJ8NsbA9wbe+z/nM6ORGOZ7qapjxG9zb86pSeiT3o1LvE/KUNwXle6w0Wh0ivf+SbhVs9NI1rMoin/ES7WwsHB3ToEUJBvff238EoZtnGVy4u4kurply5YDSBHot9uPKsvyr/HPmydDCe8HEH9ZlqgOqCioKiY9m8Q/iUiahLWjyz6PWiG2gaoqJ3vvv5CdAsyJH1/pnLu/c+6cqqru66L8/E+19FdiCyF8gNNEvVIYsnecIPl3NJdJ79X8nJxephKpYMDox5N0YvTxacH7OWFKPZG891uGveHzCdC1Wq0jtm7dujs2GJ6sH1500W9zIqxllP4ChxF+ng3J8Ts/P39Uq9W6V6/Xe+hwOHy+d0701iQ9I96fvo/xaTFG1B42FMI0nTnXiZuE0vzvXb2MoEy3Rlof5qI713s/nzNmDOFLxBqcc4/CcEbahlraquHp/Q0xxvuod6qp9jSf3ZxH82p+Jp+vnV5iG5hNo889JoTwN3oK1IxZVdUner3e07vd7gOWl5dPxCaYn5/fV1M+7nTpxo0pG3aNEX7+oVLkt0gfgPCJ7s5smjmU3BgIv9PpnMkGDAaDJ+NihMjsuFbp+TnVx3ETQoxIt0kGY5NYdnQ1CWjSJXNWL8zu6pe/Oy5GY06d203R+z+K3j+99CUBqj8PIfRTDCF5rUII7x4Oh5wieHoweE1lu7m5NOc9af72u3wdjBHsJNgH+yS6+BCkfr623vuri6J4yWAweBLR6uXl5bOW5+ZOIlgmbtKN6/YhXpClfqylVu/qsA1C1SEtF8JnYefn5++5sLBwf/LdB93uk4qi/2dlUb7Xe//VEMJ1olg4sTWDnADeP380HCLFDla93wjIGKD2hmReILvyzxmTNAltR5cwAScOPncMS1QeVSPEFg4hdENwqGwv9N4/N4TwIZOyelIM8cbEKEYvqhsEuavzyIm+Sdz5O+fvma8Jc8cu2G00kvU7Ijj3AWPg4NHhQj/48CPv/RcJ8g0Gg5d2W60LVhZW7j83N3fmtm3b7nnDDTccQcGQVqFJNmxzr9dGY+gGUu73f5AgVC+R00PBB4UpvV7v1VVR/DMSCCJiU2yknDSTsH7LyLlzRkl3xihFguabLUe9qkUSLFLdl8/hHULXzl2Mu0J4q4hQ74+P/rCk4oQOMTJNXuP6WPTxZd77PyOAlt6hjvxuwD5Q5sWewNBsPmNHV078Quxm5Or7ot7Y+0rcI49KZ+sDA+MqPiC6+DgM8izKnS89niLykMgo/Ydut/tikgBJC6cq7Wc33XTwFVdcIcl05jFaGxMGEsKS2Sj1Ix0Xd9vS3NKZJLSVZflZ770EmGxYbg9qA2LJNobkLzwZqvvjMzfjUaSbBr32ShHdwYHD4fAQfPKqKu0ROx0JLqkub8QxSZXY2SVqEERM1HmsRtTBpc/4qnqV9/4VIYRL09+80/f6Ea7SmFIx8NMz9+b9d3QZ8Zsqk1yc3e5enU5nT/5FvckuPD9N5wD/ildIo+Onex/W67zH655+yLcEI34KT1G3230CJzbJdKR1U3rK3q5llE4YbBpuzW9/+9t3piqJ/H3y6TsrnccOh0N8+1k2pEjPVSnINmpfu3MfR/fXDTa3JwTJJouXYxiHhxOQ0iSxl3rvX+1L/4xYVfcru10JlnVjFwn4+1m8YJfVkIzRIKAzUdNk/mMb5V/R/VGPYgiSs5QxwLc1Ug2xQsAQ5C491yS/SvA9iTKTZjGqqlOic4/0pX9ujPH5McbH4oaF+TUwiEBAUJhKKMxjpxiZsTrvVWvOsLhFnqjnnP8uJzbFNrOzs2egxqISWRrFmkqkg41DKhBUoWqLaqqlJal6eiHlfUbUaZFTZNdGCGGb5N+E+O4Qwhu993/ifXyeqg+oPrgOIQQ2FhVgNyQ9SW/e+z8NIXwnhNDOMiCp8toaY/yPsiyf1+l0LHAGEeYepJsjRv6O6oFKBROeEkL4mb6HqTmfJ6tUsjO3Z4D/1jQNmBdJvCtqGH83/f3OsdfbF+KuBtXZIYR3hRB+mmyPYElv/RDCNSEEKsvOVWeBuYo5+SR9Qt9hDzJivfd/QNZpVVWvc859yHv/XyGE2fF+eLUTajdubzgcfr7dbj9zYWbmAZtvvPEEQau47LK1XCIGC4BeqPW6+85u2XKipjFjHP6YRTT3oSWzEZcMPnw3hvB27z1uztMlizPGY/GX91JSmBztE4j/4FhV9w4hfJxTJBGdG1VlNSrKIlRVJc/T55LA9k6itGrMWurBrhIjUhTG2SfGyElzTc4AYcwAeICEAbK/fSsW2zFA8xnNi2ea6rJPHA4P995fEEK42gjUOTcqy3JUFsXIVfL6MkKI12KMxzjE6IbhObmwYbgkXUJVSf4mni0yUKvB4ExO0BDCO73368b3k+hxrRuVZXkpqelUm5Gtiysbdeh/tU3Ai7MAuMo2rlu3DwaTEv8LvPc/YeGSfj9eSCR2VVWvRhpxpGsmp2RC6gbheqwNPCN+/e/9UHlCCJ/kXhDDcDh0ZVn6qqq8q5z8WxSFHwyGdV58cO7DknWZ9HmzJXaZAbLnCoHUKlAUFei1vvKvsdyb2oj3/lJ14aL/7yoDENWVdAwkf1FImrbkFQ2Hw1AMh74qS++qSt6T9+Z3w8FAnhljmPY+PrlI2aUIEYRGzgQIANaRdUBdQrVDjZTU8BjjeSGEvw0hbNC9Qg3y5GQxSue+1emsPA+HBh4ihWSRKHKTNm73w4gfbw9FFuj8s7OzIvlBYTBiMJUANcV7fyHSXlIaBuIdQbKyGZbBWWdCZnosej86PLr83ZG4RvxsvqQa13W0yajjdxBHv9/nP2TzyMI0yaj3ncQAzd+hh/PsA0iZDiHUTK3v9Flf+dd671+nRnvOAN9USSsq3C4wgOj+fBajntQKy+UxJl891HdQOV8MC9fv9031AgXjIXjP9BQwJ0DuJka1s/QJGAIb47CiKDgVjnHOPQz7RlzRUn6ZrDZhgrL8r6WlpSfNLi6ePjW1/nACZyDW/a+LHPOy6IAEuCi3A2dnaWmJgJYRglSeK6EsV1V1oao5FtU1wjAXnm3OKleeMgMbeSB2QQjhe9xzMBiINExF8GPiN9KACWCQXq9nc/g2Kci9pFrBbE0CnHSNGSCWJ4cYrmoQeToBvL8w+MQAPFs/802NAdwSBuAzvCuqzyshPpP8VlOw3XC+ZvZ+v296+5vJTlXjl9PH4ieTYgqsryXScQoz55NgIhcCBT2qZo4rzaqi+iA2HlVmBM2+eMUVFuNoksntc9iGoQMC+aE4N+cWRfHBtAEx8+fHrUjI6NyDJSqZjt08hTkn+NxLY54Qjm8+f4iP8Zmk9KLnDwdjomgSh2Y/iiokp4D3EMVsURSPVnULguQZTYnfJEhTgQ5UI1h0cXODemOAqnq9nQCZDQADEAW2E25nDGBz+W3ct2SZhhAk/6g/GCTpb6+Yvaq9N+oQalCv19PT1l9K8l2WeGfrbOtq/xojyEmbJdMdpNmtjw7B/b2Vo2bG/8pgMHgFWEog2OEeXa8JdU1auV0ONu2iH1702xx/IKqh9wPUFEJYkoUaqwgLvvLAgNyPcj/V71nk3BDd0SWbY8Eo9Gm8ROijg/6A6o7VhN8UkKhBRek5KYqiYNMIAj1Xj3kYKn9WkyCFKM0NmgzveNrYCNb3c+7TvvKv9t7/xTj1uD4dLqO2QHVtGGBVHMDWMWMA3lfiDiTZhRCu5T6DnTCA/bcwAKddt2vJelPkJ3Vih3XDjtrVlHHLLMVO4kTANjg7uPAOZJrGD+T9XFX9tN1uvwR7YGpqaj80ATSCJq3c7oZt2Pr1X/ndjRvX7TMzM3PvVqv1RFDLVDrU+qJz4R0SDIpigIpRlrkid0p82YYkBigkH+fvRSr2+344TCrQjobYAWIM92ECyc/x3r9c6glawgD5aTNpHvwOgkSFwfN0hhEl54syOAxAHIAT4PImA6i6tysMYJL4/8RWazdcmiHELXjNBv2+26kKVJ8AiQE4HUMIc3iPMi9azgDN92y+s5y8qprui9paVdVZIYR/s/21WMFgMPgspwAQj3iFsAft3W63gxfE+KUOFt1/eXn5vgRLvPfdPFuSyqno3EMljRkJmggJoys/jpsb0NyMOqdF8llCeIcxQGKCMWHUYU2GSkUIp9/rCQPo516uHhJLq9glBpATIMbT8bnruxkDfNZX1at9Vb02eG+2jxmj39A4gBBhUwWytdRrzAAxwgDYOteTe4RaA3HzPjsaZgN0u10xu4itOOfOl6jxODB2Sxggj7bz7tgEj9bCnloFrKpqa6fTeT4q8PWbr98fV7i92+16EPSaunqKgvDjQDuryupfTTpQyqj4Nn+kBdukAqD6NDM5d2UzTD9FDz84+vgcDcyMup2OqDdsfvIEJSQ1rtoV2u/7XrfH70QqOuceNxjIhu5qTn5KhRgMDuYk88GnQNhYyn9B4gCVfzUYRPI3y7as/CVxKCgOxgCrToAJz2IueGewGU4IIXyN+3R7Xcd7cJrh/qxPAnll3rVM6k+v5zqdjjHm91BdYIBs3Xd1zWsm0FOAvTtIPVp40kYpkJ8M4uFw+J7FxcXTwDwF1OB2X2PMQuH7nZ2d3bvVat273++/wDl3kzGAbsDnq6rC3XlE5nvPpdCOiK65GTkDHKCuwR/xjE6n6/DwsPkQOxdEMuQaDv2gPxDp3+12bU6A4uKFQiXhJNrVE0AYIFbx1OBTHKA2dEP4YlX513lfEQizXCD729fwqCgDcOLsLPZgc8Do340UahwH3GfQ7wfewU48ec+Sdy3lZzV+RfpnHq+/xeGgBu0tYYB8LsaQuFGFCUQIeC9qIE6hxOjVN1dWVh44Ozt7AoX2l45ux3lCukAA1t6J5KhOp3PfsixJX5AqLoEvSeNlUr+bpH9exJIT/81thjEA371r7McDuGcI4a9jjA7pz6YbccjV039F8nd9p9PhhBBJ5Sv/elQZzRzlnjsjfnm+qV+qAp1aB8LGKtAXIVRfVX8eYzQbKP3N+/9UqYkAuDkGqN9XdfYDh849yPvkdep2Oo4TT9S5/kBOPi55z15P3pUTQAxgH0CWe0qMUkHHs5u1x83nTrpsXUwFVVdwPJYM2MQAqeYBYC9KWRdbi/emuk8DY3Kf283IFwdLH+8P6Ge9Xg9Aqot0IcwHDZw3v7cSRgtqNaX/zjaDv/F5JKKE8QdRiBDV4K9ijOKWw+/NsQ8TQAT8a1ev28V7IsSPsargU7lOvCtz4HMEzpB+29sA3n8JDxCuUFOBMhvg0jiMRzROgOYzms8TLwxQK3jNvPcviDEKqhwEPuk9YXKYQLOwedcfk9pQZo6HnyMbtmYA3QMcEZycBCJfYGnVWvvcLwaDVy0vL9+PqjJKK2932aKyKJrqjPGL+tNb7p3U7/fP995/WTfcjN+Ly9HoHhqI4ehs6v0724T87+aS4wQhYkxRyssIqulGL5giOhwMRkhHk/5IR0kYC6Fyzl0E8ff7fXKBmqnRzec35wIDEClF/TojBC/ZoOYF4t1DCGS6XphFgscMMDaCd5UBuITpZb6FENwLY4xifCbVrpb6QY17I/xl77xwPNiipJqoAWvBMDsFduUkqPcgOwU4TUjteID3XjBa2XIYoSjLv+v1eg9bmlk6HngbgA5uFy5RFsNy/LVp253Q8yik7na75wyHQzILr5DFUNgNF8J7kP7DBOOH9GwyQHOxJy08FwsPwe5JXkz0/qWUHOrCU8n08hACkID0BUhUoEND+FuDC28cDAb30bQAop15RLT57OaVMwDMc+8Qkv6b1QP8Gy5QSYXwXnKBauYIgWYW2EAWCb45FcieaXbPHVTtO8F7/4w8IS4f1E2Tii2nkAsErYb8nn2BWC2jNou97MpJkO+D2ALqEToUYeK9/w7PMMAy59ynqPCjxBV4G2gEWuFZv5YpEvlCwMlIfaDBKWQHSqPdbp9R9PuPK4qC4JdIA1uMEMKbRkn6I3121d2YL7aoPuYSBHzKOffGDBz3EtyEJKexGYUrKEj/Y2yDEMKHQwhf1XlsJKdFo8/or6g+uyoBbV6WCgER3csMwIwBKPD586ryFMUQ+BqrRyF8XavZcgZoPqN52RoYE+wBbOJoNMIPn+IMIfx3COEfwDJFHSzL8vkKAHx/hWb5sxhCW+dCV5yHcZpkts+u2gP5ntg6HBjL8njv/b/r/e3U/9pwOHxBv99/3FK7fQbI2NAKwbGs1VSTzG6bwxbAurOg01EEQWeWVr9/CpJ/MBg8hTpSfP1IHHHD6wkA4KsclX3B70EK7Ij4m0SfH7cQ610BkQrOvQOMONl877+sEWV0eS700v20IuxwxfF5ZAh+E5j51BZoSSIqFMbgpHns7EpGaS/uG6t4LwuEZQzwf7UQh5JIjN4xA3hxY1KPa9mgu8IAXDUTKPMcGJ07H/evJhQ+RzI3AdnqxwNUtYPByeE5grWIUQSCgYttAPM0SwTEK3RLTgETSNgS+xJJ9xlAgOIlrVBXAIp2v995YbvdfiSuUfojcBpQF06r2l+L1Gl9ecny1ES3fRYXF49ZWlq6DxDhZVkCKX695dznJY1KFG9W7wdS06TupMWexAAstODaaAXTe+Qh6b7/nBFUjqPJM6TqSVN7MZQ/YQSqiMqWADdpHju76hNAc4GSC9AYwDlqm/8URgshfn0SA1hGphJd8/6TrprohAH6cT+K7/V9/gf//qiQFAspfNF14GINdrcSURglhDCjc5rFMAbRWj/XrI7LL5vDJAYgIxdbLNU/E5IgXVppISAGnb+uKIr3d7vdJ9OEcGHrVsC39idfCFic23ScQF9e8vsBS9JI74lY+MP+8EX00jKCVKkvOYL2u7QI4Q1ZMUsudZtXLfV1ga3wmw061jn3cbunc+5jo6EQP6qEpVOgIvA9U5cMI5PSwD+MISKdKKwHUQ4VwE4jkUK7eHFvqQdA6poXKGOAT3nvXxJhAB++sepvqfyQABLMalJ31f2zNc8vWxvecQ9NjJM0bBCxc4ZWQrZ14F9JaNOTA4FAPYEA5Wp0+PEaG5iUIdrcnyYDWFBsH+BqbG8Ymp/E/5sQJBj5zV6v9yzt2HnyNm0zdZuuH7DiFgraN27ciB53Dl0Mi6LAuDK0ZCX8ce0ozdqo0EIXV/DXpuE36TLiF8K3Yg1Sli3vRBfznTH285LGfNNyJkr36ca9YiX1uylvJ4S3a4+AW4LLI4SYpQOgZkCIzUDYJ2EALc1MgbCxXvyVrBRzIgNMuGxtzAGwV1VVf6zP2oInStU51jYn4CaxSg0Fcwe4K3gvBS4xhmVfVX9mKBuN1JTmvex+sr66FnLSMA/1fH1WhIwOjQG5TDvY2O/3395ZWTkfSBxSpzdeeeVdQZe4zRnHvDDcCZcqhs99W60Wuv6/2QullIOay7m+MwrhDYLbiU6aNjxPwMqJbRIDGIoZnhYk1nFEkW1BYwxv0r9Z+nSuuzbvZW7T3SnucM6ZGvQ9IAIzBtplIzBz/+2/uiKsZoBPIP3VBkhG8DhlmEiwlWHeEgZgbgLPiPcrhAS2S4EKtdDZybqztRAmqPP8nQMY6/tpTWMBeICeIoYkYadI857bCxitkY4pqxbYyCeEEC4KISFO6LvXKjFZuMVg8FHqB4DABAIfdcjwSJt0eKuOfPHx9mCsbN269UAMmJWVFSDAJccH8hepp7XsHMl4PxSz82RFP2OzBfJbid8IzRbQ1BX7XS2p5HsVbsYgMYUYI3kuRHzFh53l7tjGNIkm33iBOVcduFIj/RlqAN4SBvj/MgY4MMbq1NCsCXbuEz5GGAAX7SovkPf+61r4Y5J2VxlA1A1Vnc7x3oseX1XVK3u9hJCR6fCT3qFeCyVYhNFuOAgo0tH94wQn1YL7iUqZqVN2Gth+GWNwPz6DKsQJvx/7TnS+qqoz5aQJ8T3Bp3ZQUhBVC4pIl5q3KcTKvWjaB2bUr7SoPl80VB+KW4AzkfTmpaUn0JBZJh+lGZ1JPAjqI9HF+6t7EXx8NhkimVTdxUayYVbna5d0P9HvoV/f1/sUSY0xdr33QH6wcUY8RrTNzc43XTZen3/XWJYneZ90Z+fce9vjtIBcDZrEUPWl99qD8k3F3V+F/ckpE2P8k+gjDJAiwRqZUgbAA2VSdmcMkDOxpH5AnFb+CWQka6TrKP71nc07u6edJggQ9gGJfYnuJTbSOwVuJc2RtZ50WV123rCD92EednKjYh4utRYuPlZcwDzDp/4O6R1Cr9/v//XK4uJjp6emTgE9RKDZdV9v9VEvlNb1YvROb9x4zNzc3EMHg8HfiyRLUIBG/EBwvBF0BAJd6uFAHzXE41yKcInbDHVEc2lYoKMJDo1SU4mDkSCcIkQu9RlI6z8gkqgLb8S/qxsuEpTv4h40LxLFKoqdk9cjmAS1+066vxiiELL62BUXaKwCqQ0wPgGsBtoHbABcwbkNMOkZ+dz5DOu2FwKmjmkkdQpCheBYk50Jg+Z9hQn0vrtXFQBZyY+v7/A+Yi3qKGA/98Jm0lOdfdsvxh5eMHl2xgQ5I8BceKUOiWV5Ak0JST/R++d4pCvdfvfNdK6kmTdF9aoKyXxv9cECofejk83MzByC9O90OkR3BScmk/wl7k2CQUb8qp7Y5tYeGV0YJIe07imce2SM8Z0xxq/GEL8VYvg3AjiKqIz+KDW+VJN57//Qkscakn9Hx33zMgYQAxL0ZvJWCKLRjE7110m5MfmV3w+m3pMUajIhm7hAYgRHcYO+FBQIZQD7279nvQwsDtC8fz5vLtbxroOB+P4fgueGe1UJTAAVMy9uad5jR5cxlqmb+1YppiEnvL7PR1SNYU/+Iibj9j810Hehnj4wgZxmmaCz/RbECS3BPAywrlTUEyxgVjcLca66od1uPwtawx4gYvwriQ/wQCJ06P1Y58DftVqtJ+C+0kknlFrpTOT+NkplVzxSPSqS3z9Bb0yBo6Fg0xDCBy5EdNjmwHNkOSXqonus3tfchk0vR3NjJ1222XfodrsEyU40uJLgwrvVSEfKmWGau1PzE0Eu3WwY/ZCUC9RgAO8/AyyiQCN6n4Cxxl6gS9RlablAPCd/Bj+bbm2wJZL3hCoxGo3+XNfmRm2oZ7EMu0/z3Xd02fN4R5hA0OYU8VoAc3W+37HWTs0RQ7i2LMtnSEpKW/bITtF637P32E3gIFGRq8ipWUeNLVugKIp/WlhYeABNvK+++uq9s5azTTL95Q0eyINxeU5NTR23vLDwyOFw+O4QY5VXdikXn4VvPssryQnUiDRFcXtSRncSuSkxRknOIomLwpWyqnPYaxcqxI+RqlFdi5rmC5wTZXNzm1fNABBekQJGeJJ4zs80QQzbxaLDgkOkBGou1vx5MDmfgaFr12p2AtTQiMErMtyYAUiGw1MiJ2Umue2q1RINMLG29Bqj3RLMJpFllzCN8jqGn5cB+I553QRlo0rv9LEQw0AIPUYAt9grMmldURQOVAp5n+Aps3yWJjmai7u5R1LDreoSJ8bRMG9QW6xWhUKYo45E64kP33DFFXe51Q1iTXW4E+jNc9u2ndlptV7gvLsy30SCKN77J+MCzJo85BmV+YYm3/VAgGTpTyV9a1nEOkyig4otsjb1WZdVtPkcG4xiT0w4AZpXc6Nts00F2jOW8fjoIw3jgF/kKKMXMM2on4VKNCrLe2AEqrpmVWu2oTxXGEDsnWp0Fv21ZF3ykkhjgLEXSE+HcGmRoApNVTQGM5+6EMlwNDwEO2lUCRDwo2P0IF9wvw4X6cfaERMmaVayNd+/edl7rDpt9NlkuJ4dowfEbJppF0M8pAn5Ot8r6qr1vckyvb/SQX7650zG78z5wdoe7335vLp3guZtV1X52aX5+UdwCoAoSPzpVmMAHoT6gyvqpptuujuQJoPBAGxOdH3R2XSDaQbHxpDVaOV1zZeWF9cFuQsERatOvo/kr1wlaPT1SIglUt0EnKHmkTxLI7jidVDCW6VrNhiuyQS2+HxOQvaCFF2WeD0wUKViLXjPDmNog5UyS2oBto3quLwjUtj0bNOZ9+adkqfK39gQEIkBqAu2bNBaPQqcAMep6iIo1bp+BvGItD9KdWXQ2L6Pt4faau+8SGSgXEgupLukRpVze2KSYLC1yAlSCF/XESZMWKG90T560rxP9mowAFYy4XPbhmmqQ1GAPjfkNHIVTUHSqWj706SFmtH0cyTzEUWX6LGtnfd+rt1uv3R6evq+oIhr4txvNWn1Fzpy6UCiG40raISwsrLyuLIqV0UyVWV4eIy4O/tIyEmZnflLm3/4KAtm5dg9uVRhFIUUckszCc1qBCLR1CDLWandcNmCN49d22gj/v0gLKQmLltNIgPRDBSJUVU5NrLGD9V3vbKqqhdp796DY1cQpSXhjoZ5mmh3P2OALPNVs0Er0qENGMtOB3CBUF3wrpjrVyDdkfg6P7JcJdefAeQLc3MVOKdS62z1tz8oy/JZIlG7chKYCtLcDyN4I0JhZN0bcSurjbUHjUdgaqraZK+GQ6mrtpN6DDjmRG21cstRCG9TY9dswOZe1PPQZxJEPMGX5bPpQaDqtazfcDi8eH5m5rxN6zcdC7ogNNmk2V/4MCnBkYPxC6KbqD/OWeKU5Xj/PVVQ5vFRCdZccLtq3RIDzhZV0NsUzSBnAJgiITb0Dcfmi5X3rwLJAAQCOQ3SRsMMEA6bZgxhKphJQSF+fT4Gp2SFmhsuHe3JBgFGhfkIrqbWDheq48YYlyvvX4u6p4BWGPucCPtnKcmpImwc5bxYYFEqgUZsVoR9U6viuAcqA+/C/A7tV32qy6S0kCE1zcNU01yVlcwTASG2UyFZ4MwPLxlNukk0tABhLhAE7lBPLjGq9TMQva2hgV4RFLtAnRRXQZS2VxrtT83EyG5zijmkDBBD+DtVx5oxlfz0MUZMNdWcruyJNRtUW6CqqmuWlpaeghpEDIpkuVxI/9KG6f9TU1OHzczMnEOAQh0+sthyFJf+OWXCt8+ju5O4XRjAPAz4+enpy32o0hJVRxeWy4hPq5ryvBHQo2diCN8Kzr0vev8i5+JDNLfoiL52VDemUCkomZAqaXYjvgDgrmaOotMKgNaYCS17Nw2Ijb+bPSJVVd5zEqC6oJJJqrE0z44RFUgZQFVE7zkBXlOBDKcqUOYh+oaeahYhl9RtzVaV1qsK7jtGtmgMA7yqdfAQ5tGn1UePFLaTRdJFMi/aXWNsQ3hiiMYY7xdjpGXqa2OInwwh/NByu3TtZa9ylA272CuttEuFRt6/3NIxJtBEzgR2CrE3rMGR0fsXawBOnltVVbfb7f7J9PT0KRs2bDjoVoNVMfcnwQiCEnRuMSLUf7+BsSPG2WqvTJPw85cV40dTcXlRVxblCFgSFjYhGiQ0Yxa0024nuBLvF4L3PwshrNiG2OB3oEwTEArO/UMk8zLGhyljopZBWOZBOZhaAU3HFghxEBOE+BO4a3Lr5haJgujyuYwJQK8+S08+iJ9eBMdrE2wJhGVEDjz6hYoMl/obj3OB/lP7GhMpt5x9inseh/7LZ1YR/5j+pbbC/kPmtxrj9KfOufMU34h7H4jbWYpvioIsWkoWnxa9QLX8k9oWq7ry2PDeL4I/hEbKSUON8XivDF1D8IYk5dn7sEnXxgJyTdduftUnswqtQ6gVt+S51AkoUtf9ls2bZ+6NNwg7gO826fUXPgTXZ2rqbjNLS+D6PLzU9qQQifyLfzjpw0iQHRm+zZc178YeGjSSvJ5erxc67Y4Wqvd8V6FKpGY3Rjwz7yFNl3x1CDyE8I/Bh++FEKZzPd1GMhTD5SRgYeDy3RirM3mmGpRSOghBC5bOavhEIy6tYfC+Uh23P+gLhCKMW1UVqsYRGs+QfBdlgFQQM9bzgX95PYgT3mu8Yfy3ryHttWk1nh4i4SAvv5e/Y3Ty3Hp+43mOGUCxfwzjFILUe7/HRffQoRvSFIPuOFSBYUj/Rwxhi6mx+fDeU0xDX7bPcQLFGF/oS2mk/QyfahdQxcAhWlV0DxoFv2c4596lcaAc6ePmGECcI+J2TXbPqnLKoig+SlM+nDEEZH/p9QIcMYrqvCfZeZ1Oh8J2gzM3446oL+FxjtE8Ipu/YO6BGb/wwgJHHptNLjrBFfEls4gAWukhwzPodPIujTEcFfspSJXckuU9kRbe+6d7X4G4AErxty0xLB/eh26IkRPky4DVBh8GRVFQMC4qTj6sgXXNAOmXNYYoiAvcM4b4z/jesWcUXwdhAF6nrZOmO8gJ8LrKV2MbYJwLRCAM9/HRZE5m/n2JfOMg2B7yXEbGAOkfPicwKAZ9EsK1xGdISgwhJZ/lQ6ERr0AVDCG8JUaJsD9U3L50q09ETCXdQQSslLlFP2cAr1gUQ2EI1jIGySD9jNiEvZ4F5HJnxCoHS0YTZpvcMfb7qH8EJle1m62q6osrCwvnEIsiNeKXXj5pHiAqvQhHt9u9Z3uXmr+pVOZ6jSIiWwDn5nzPNRPokbc/hlZVVRSuW2keEohrGuloQZV+Ivy8sskaOIhOq1cqjI/xtOj9M0niUgK4LvhUK2wDIhdpuWM4wdUMYGpGYgAh3hjCf+P1QYJLEKoUhpzEAJ9TZLjX0BEm/5sPEgg7g++LMZyCg8QkFtj7Vah244HV2fCXYQuM1SDeK39fmUcIM6Q7Uys8Go2eQMqKxVVG27ZJxFultqWW8y+CKv2uK7lHR2tS33eFgZxD/TQQgi0pUi85Q9gy0IQ5IHZEE0YXYgx3Y9ybdbDoswlbMGUB1sIQRihbQOyXxgTGAFjdi4uLp/f7fXJ/RLIa+i+qhSVyNRig+YJNBiB9AG6X/HnQAvRlqUulldAfF0VxPrEFVAyOUzXkLC3BLil1VA8GrsOaGdQAQ+c/PFbx7NFo9CziFTFGjvbNqPn9fm7QNagp2cLj/1I7AMApsHfUTYcL+DGkemsQkFjI/Se0SMIIJgaAvr06GS74b5FfowBhxyN9vffPw8+PhFXU6poBdE605loVNBRDVBg0MQASmVhGCOGSEMLfEdiDOdXgNuj5Ouu2EVeRSxmiTmizPB7pR1ZV98Eb571/NusaPG7kiDB5pbZfwvhmj3aVAfgMp8Be6gAQgGNjAPpJLC0tPWxu69ytxwBk4CkD3LvX6z3Xey9JV5q5xwL/qXhUkqS4uROgJv7M97sfxl7QpLpALlGM91SYEMs6hKBlc7Jglx2r/LvKrZcxhUgt3WCYgbz0Q8sY69ZJhhK3HZ7mmNCMvBKOqBrmxgAxxHV0f5cgoKJPSEjfToBxKsTFvqpgbJig6Qa9rBqNztIT4Dht6vc0An/EI7A5cg+VjWbDjxrnVCEQVQWixpcTlPQUDGw7KREQdpqa5Lf9yy/WuF5nJWgrpdxX9fwjBAqxSrk8wQu0JC5q9q7pEm/SxCoGUEbDWUHB0/tVUBgDfIciegB2iUvdKgxADhDV+isrvZNBeCAxTV9SVCB632YF6DeXl2Ncnof490c6KSFsRZ/PuqWblLd7Nm0Lu5/ccweX1Q9zPzacTaF/wBvEp93vY3yL1BT/f84ERl8NEF2DU1TC/p+iKB6F9OcUQHeXPKJGgwzpEJNaJKECWY8wM4K/rmoURHM0xEqKiA+eU6p2O/L8VfPTsWp+Sf/PPUGcUGS3Sg9lFQai1mQOi3z9bD1zqT1pvQ0LVNzKMAOIEooExwQB6WIfd1ZT3KQL9hnhxalNjEgYIMMUuqzT6TwaexSa1Hv+chkAFajdbu++srJyD7BcLB8fq0sXmPRly2Q0I7jJAM0FlBfV71A/a5mTdI0RdIRs0ZqE35QazY3ZjgHsZLAUXxiALokiYatKXHqcAjmRrYpHSLBpLFkFX7PbtfcnPfjeGK5Ib/Uw0WJUeh1nJ8C/EgXWgJIlw9WBMPzvmj5O8IoAHeC+EjHmeYZiVwfqrNFfqQ3w1BVpGKBZ/hTYSA805LdM7bFimSbBN4l+R2ttsDSsK8y0RywiEI1yulHorzEISx7ckRDLGUDKOyOFU9Q4OPcv+g7yLlQd9nqtc5fn5k76pTOA3djQnfv9/ilFUTzGPABZLvsXJZFsdcSv+ZKrFs/cXRSigNqmLzmDX9oilztYsJz4J21KzgSWf24qkaQP40XSVp//jk2LhE0uPAGNrX3b5t9OkdcMZhDXbIdCNMHWXy69fyYqAL51/O1qzzwwaBvRjMjzLpGrGID/jlUkx4iMUCQ1xEqRi+RJDQYDQX0Wwu5htDf874NE+IZwzWVZtBSbq93zAKlWS4Ypkjkvl2xeTQLd0Xqb6xJhxqmyHxoBHmnMK+/LZ2pE2U5z9nTSM7iMoThRyKeimP4H+g5mBL+n2+0+EPQRGOCXpgLZy/KAdXNzdwK0CHTnwWDwROccSGPiHZHNS42mH6Yb18TTbF5jLk8GEpFY6Q/MSaIqimVDNheqSfyTNiQnfMEAMm8G0pkiGhg28zbxHmVZlaN2u+0lBqGMkNCj9V8jfPV1Q5A65/dmFW8HgfGPGkTlWtMLFEO8WJvk4QZNKtC4+umyWMUzGgErKuDOiSHKZwXwtqOM2k3zyS+bGwC4MIOCfdU+for0QcRjbqKypvSRvNaBK1dVdrTuzTXPC132jFFSJ2RPaQ4uwmGc4GfCsckAch89qTmlgXzHYdEFRVydDR1a5oIrutxdPhGhvHnz5t8zV+gvlAm4GTcG6W1+06Z9V1ZW7ln0++i5zwZ3h0xQkrGsvZHq07hCMY5MDcpfMF8sFkLyTCgR1O8PIynHYxArkxQ72oTmZgjxZxKfe5hXA/sElGLaEBk98ExceG8PIXxKGXoE8XAZoXGl/9bfIVmHAqcJ49NY4n6aBoFHhetQyvyog7Z4SRbs4gSgYopIcJMBvhlJYy4knoJReQCOBT1RnhmCn+dzEhxkLt0ULMznx78wcb/XM8l/HUEwqdbyKYdff7+FmAoqVmYTNHOnmgJsZ+teEy/3Ig0FRtdntdT+4MSxiPCO1C4zsO9C2aW6acWLpkmQC865NxRF8bh2u32flZWVQzdv3rzbL5QJ7Aa8HLkWoHShb/V6vXPLYfncqqoIlnSS/y0N3dwrNZ9b0nizo3U7Dtejl1669ww+/IcuFFB5wJFMatKwsw3IGcuOYsn3wYtEcMyKrnWeqDyXUEhPpFHdeBRmfwjjjc8MhgNViYwZ0kWU2vgHXJ+yLJ8IpDmdGmNbcmmQqPjTjyZ33jqpmxvUe095JxmdXKsaZZNOMhold696arjXXiC94Q6s6CmgmaB4TpkLga6k7mjknPkFRV3z4Qe8O2qP1lFz8n3C+3HFHWnfnLpWwki/MWWEXFLn65/vQ3P9c/WFuE7dH8GF8I4UTBPM0bxMMleHzFaT9GsF1ZV4k/m4lAmmnXNvLfr9x4A5S0qE4lJBVzK/n3vYyxng1fz8/L4rc3P3aLfbD+v1evikJQQuL+Xwf6bTNcaIROEEMHxPgSbJfMimityN0sMUURRj6flyxMVIzv0LFBx2UpueSVctNXRBJZtRF5ggEtg7NTIdurpz7kMYp6QsqwsQe4DAGunGHNsEdkCSFomt7zmiw0p2HwJzb8dnr1mfFpew9O4DwTyqqkjqsFaE1UT+xRjCG51zbw7Bay5QLUC+ri2iECKsgQWfpMaAKLP03XIC3yiQ71VVSXqEzU3vQzHPh4nC9lNaOuqURM31vUk7eUdeehqSp+n9pIZkdQR5CevO9PaaATIChoEPBglb7u/D9QkLqjhW9j6pvgg6U4ssziAnt64jHiBOLwuujYWtD72iqj7W7XYvWFpaOgMc2nXrNu+Gs4b5NOl6lwfEDwKXlT7S06vVWjq31+s9vyxLgfJDwphE0wX/IkEfzQOSelbLI1dfMwYXncUP4Vgjhx7pKHk4PghmZPCBRLAzFW3A8tcn6aK22GyIEX6dt07sIMb4Zqsd1vktAYsOwWb+7vq4z5gGINdjh8MhKRUwAifdj2KIS5KDFAJ5MVSIPUUJn41EYjIXuSymEYtIfcH9pHGdvN/YWSDSXxggJcPVQbIQgEXBkYD6Y2Wkdt87quA4WOHPCTp9VNrMJmOTuoPLQgh/Q29jorRKYPa+ciqaLaSeoAcEJ6deXV/gvV+m37D3HsNV/PcZEzYr+5p7Igygn0PSk1X6AEOZw26kXkSDcCcP4xBgXpjNkEIMgIBnCXQKAlGFpLiTcVbYenEaFEXx8eXl5fNgAmxUeo4pEzRJe9eGSX+y7GY2bTp0eW7urG63+9SqqsTrYy2NdDKD4ByF46dirKlr0fLxISgBQ8qkK2Vu78M1hrqk+Sl9DDVd9GdrPrxkbU7wAtkim6rD3wVDSPFrQJmuCd8HyVz8eIwR9x8LWm+kGXzKQLWHqNfrkVsEo0LAIEc/3GoVQgj/ol1j6s71DYMOzxb3luYcwC3W6dBNBgjuTc0GGSGgAo0gXKsI4x2NwFgHgT9hfhosQ7WbB3upqirqqR8IcyikjNRjZBJcgoSZwLBagwM04/ItJL7Z2pHgp3vypMy9bVhNk05nE0r8jT1JRS3JiL1K7wlzkYOFasY6/C2qJyqfpq0IeK/ukdAOqRRlGU9wRfEor4gRjEylHJbl8A1oKKTpUK9C1vLPXSnGy6BLofeD+tBeXn5kWRYQrRPAK3pqqlSl+wpFCxxVFqlVA9akDCfCYa4AAUzycOQoy0dZluyeJWzRweVDpM8Oh3XHdNEVs2tcuNGRTUZ3pTZBShgZZGCqOgYqhdUmsOl5QUZNtA0CNs/RXVXa0mNMsIJIV9biF/B2IATzUtWSUOdnUB+oGhIHyKQ868AJ8MYQVrdJ1YqwvCZYjvOcwHiPbqo+I4bxR0qo065w5yP1YWBllFxSN6/cVoLgWCOEFynjnHxjQOOUi8+8XqjAZhCpoVbUKpLdT/dsfxfdA8MogIDRQU2uShrv1FplPTJ1kgRHK6O1tAxOMN6H9HJiK9hqZLBWDfyp6cGgd+Hy8vKjaLxHdBjcKjSZJn3vcJjuLy7Pdet2m9m8+filpaVH9Ho9XHYGcmsbhb7+Ck1/rjdMF4V/d+/3+/sjRZH6MUQ5AlM+i9SKjn3rCUWAq7YnVAcH9YF7W6jeKpSkRFDTDMCXnLbFjDH+jBQDXUg2BAJt+p7zY3tHRrUd5WwmhPYKndc1MUa8Jtg53Hc7I9EYIOuMMpEBfOX/YrtIsPffVBeoMK3OOZ+XqEKmH1NTkL4Xvh85mQYD8cDt4F2bV80MdvrVa1wURwuCdQj/E4M2Ekvz+y5rwWmrDCPEmu07zclZL5C2rT+wZLGmOoaCeg9DjhA3snnkEAakqRM0M5VI91vsRmwXgX4pR/eACXQtgwnkqqo2dbvdl87Pz58NQvktPgVM9QHukGNkfn7+fisrK88ry1JScTnCrfwL15Tq03Zcm9dAdEx+hzSqvH9RiGGJ70DkRTEEOiOLrq4O32tgx56xUWtaj1fMG45IikPw1uCCbdnGxNTk7dUqnSFaiMQM8El2RJPwcwYwwuA7vBenwNO8D6T3rqg7D7VupwwwGkoklxOgiQ79BVygnoqw7QNhpEOLFJzAAPnptEcsIyfTh/R7X9EEOgxP3tneYWfva+9qhmvtqFDi2wdbzZf+eTHGz4vU1aElka+uYryPFQGp4W6nknSbsYj66j13GrlOUWuNbJvLlnQNQNHMCSAubL3YV9ROTikq7UQdsnR1fh4Oh19Ymp9/OHYr9iu2wC4hStui8AWR/lMzxy0sLDxmMBj8HUymRq8RJsjP6NTSUzZTLZCyMADH1mFlWT7JYE7ImqR+dVUSl9aQpp+17FFz2Ln0Wd9RownAV4w+dNIajyaE8A1gETXIYicQc9jVYM6kKycMKZiXtGYfNmkg5rnqUTEG4HP1vTMViCxJwHubDEBBDH2CX2u4QJla+ZUi1VRYIwsx5poMAHGoizHhaYbwPq1J5rnbMeUOLvu7vWtuW4kb0lQj3kUR+YiViPdJn3uDFNoU7mG8K2nVIUQBypLiIghfib6Gi7D/zwSflk+aTv81or/anlYEq17s7R6jgTgeKDY6z2yWLI6y3O12/3hpbu7MmY0bD5kBR3RHCHLNBeGD+PzB/JmdnT1jZWXluc45A4q1aC+IYw9XXdCS3sTA0p+R/hRQk78iKNGWTlBuX2iy6r+l0qpKlUwqOeTAkUX34Uvmn9c6ZHoBPEalhCW55VHMScf/du+8gysnCghhr1hKRqKhJL8dXJ7G6ZLfnzlYITkR7pQLVKs54XOVF0gUGmVbNqht4JcVQtxQIXbEAHurULBqs+ejIuh3ODV25Z2bf1/FEMoIuZMBhthdnQKkVGc2V9iqMRTBJZX0jKbAs5oKJwjQIvvS6U/dgjCBGw4LVCK+9DpOHwUnlpNc19vmw0lARP+FCmNZr2FVVV9dSb0FTgY1wvoKNOl/1WAB0P0pL7vxxhuPXJidfeBwOMRP7EIQSZsYwLm3UKShfuLcQyN1nGy89INKlj/4NKtz2C25Mi/fmJTHrslcGMi2yPL8VBRDYAcvBydPHWdoEOPPQ/g5IZgKIQygRfuSNg0+phr9uaGZP69mAC22bzbKNmS4vEmeMcB/qIfJenOtYgBVU8TNiis2GZi+CwZQdmrsKgNMulYxQcNYNvUWAtwvJhcvEXRx8+q7CZTMqsId219NmzEmsBxbTgj9jrPiIj35z8kN+symE08Ye6B9mFNOGmuIYex9p9frvRoVnqL5b3/72zdvC/Dy+P2xnmdnZ08E84eig8bmXBuje6Dmk1vCmxGKGFJIIVxWhmCAbjdxMazgfDX9y38hNWAASU0eDr2mWlxFqx99thjFmWQwN1+TEP+fiYD7swlEekNwf6Obg4fkFCUEOwVsHeQ7qhrCpLh+GyqQJMMJAzQ7xIQEjy5xAL0/72ZzkhPJ7BJLHsRWijGerUYpakK+Ds13u7krX7f6ncxOaNgI4qER700IfxN82CBp5Zqg10zXVpGXMYHjqoWeMECvR20177TiS/9sqyXO9tgYEi8j6ysVc1QNYkrbOg6Hw88vLCw8enp6+lhsATxCE5Sg8eDlMX5V/Tm9N+gB3iqGDOkOutDvUgOEBzf936Yvg4gMV0r6KscaL8YLWpmVaILy8kby+REA7Igcia7f6ztJ5opif/zfrHWnGdxWuGEq2I4YoHk1N7151ZuvDCbBsQx3n8J7DDUjUvO1IwQsCEQ5pgBZgVAhDFCN06G1GAYGsJpgY4D/iGU82SAlzc2Y6+XqITkuuCRkvA8/ospNDVEznJn/rr5v892bDFDbB3YC5R45RW54WPBJElshPvu4aoz3O/FCtu2q9goDYC+C/EDmqsYzrJieOdh8WAuE8N3VTS294UzIuMptarVaL9qyZcvpOHSA89mpGoT+j9sIzB/AR4ui+Ee9oRE/9aPPK8sE29dYaDkBhFOH4voDT0Z0QWMA9MFVOr8xgBnCZIoll5CpQBC/MIESxpcpudMcGUuoagazaimRbVpOCM2rufk5AchCKzGjbxJkez71rlp8+McEeRQj1Hz2knukc2NzyOXHC5QimGMV6LN4UFbbAHVQh4IYMD0xaGsviBLbHpYfr+5VsbHUq3RWpIfCOIdq0rs337X5zpMI32w7iySLuzRze+4GmHAKlqWgHrlJ6dRv7vn4x3zwGfUACgOQ6Ke092F1iVpWsL0TF3u+GxD02oOYmm/KMEUN47b9Xu+d09PT94OmL7vsMtZvx8gRP7wo+f6np6dpbfpwV65Wf8gkJAeFRTY3Y2NCwgBaH0r+C90OEwP0B+LzbRhE9cjLDcUrMKyrmWRB1Pt6dQjuQ/iXSZ+IUfJl8kYSBnRlXiA2qukCza/mpq8ifNt48bcnvzzNG0heExwiUhiCC28dOQzxuuibdbHoagJ12jE6dKoIMzdong2agnfC6HpPy1dCGt575Ed/gNfHB6vJ9v+h0VraTuF6zQF7d/auk95bTrGM6C0tIU9R4N2OGY09c2+nBWqIcQbdnj0jdbw2gied9Nm+1xVsWl9NQp+u00eIiahAMXXb5spJa6chEXsQ+H6U0ywuURq3bL3pprt///vf3x0bt0n3MpACuD8pLgbzs9Pp4P1JbTJ9MBxOCilO0weaTtZkgDuis1Ux4p6TZnO9fk8keV5hVUv9fGg8IDeAMYhYECMcJZQhuiZoCuTBRFDLfMQo5tThdDqEfBmLRmeSGYZtJnbZKZEfrWbMI90g6iN95V8eQ7giiL3mAACqw5ngDWEUIxxSBZcknu2vEeTjFHBKSkeNyPFgkbKhyHCrgLEQNKBC4EggkIj6NUhuPzJa6V/2PeoW+KzlY1m9L2tOSaadSvrOJgB43+Y1sX46Eya7KxYo6SBgCT1vNBq9LQQBEiDush20ChF93TeJ6YjtN6F00wa/p5LN6qtTRR7ZthGHyzvkBFiRfYQhcwGWQ6pL3zGS/2Qtx96gHy/Nzz8B5Ih169btY11lthv8Ujq+bNiwN+7PXq/3OufcYGQROh9aLD5HjUo4ywPZjgEgGq1jlTpbgGzlpayML6tltUWRRdAYgFRcCdRIT1KQMaKlzZL3RIapaEpJ+I0BJAfEQRNq58JfEkVWz8gxkqbMvFst9HXxHDWO9Py/k5stEd/xwYX3UNfKM0CNs6COVmDBx/L8GOKm0pckCwoko+bv3yO6SFKd5CbxqjJXH77I+nAF7wXwKUOGQwU6UwFyBReIn4kbxBB7fAZ07BRBH89DnXR8/zpOA4NBVIltfvScuOUy4WA+dk1ERJiQY/RXIYQv+eCvDX7s+88HqjF5PQqcJXUWqYhIBJ8fCE5po77aDN98z7XKjnRzjGDvfQ+4SRUCxsg5A8gpoPNnfw+OaqNZbQpCfGVl5TkzW7achh1gUOrbMQG/wEoGb53Et8FgQK5Fvqj4/gVWL9PHtmMAJaC7ogZptFYCR51OR441YwKJCSghZcQk6RGyEBR7dFOBhz7/avoNKDAruPSvAYSXIJAEYrzvrt4WadKHZGRzvqNR69f4siS14kyFbkSqCPHr5ouvGyLoxz5I0VmagU9whHkkU5lWwvljeERgXJ6OxCQjFf0/JuNQGSAlwgD2KpFggUZUBjBPW5UYgDiK/nsWHeVjCEL8KZ6iOJz8b9U86uq0nxCthpgBpMrUKCl40XfdM50s1anR+wuARIwxflyJeTvJzqBUNfhAKsS/UlGG+kM6ir7vvbwvydik8GXU1T1HrZGYQLbfdqU9H6wifmoaeFbw/sd66uSdZUwFMjVITmuEG3vqqwraKKwrKRhFBMW2bt16H+wAwxCdxAC/gQeI5Dd8p0VR2FFiCwrgE/kvROaQkKZCTOLIO7Rard20WRsIbuIVsAWxIm0WRhYHos8XQQmfK0uJeBP6rWDYJMmGt0Py9/m9IJRF0YFfG1z4tPf+Ku+9pF/kA472XnLe/xsoRfXEPI1MSFDcuJ8lvymqgeQYTbRfVJgZ8bGR+ozPETUeudE5qD+oRnYCNGwAwwZddQLgBtU08fszL4V/lEAa6ySS1J6faRVNJvDefzZW1X0VZpF0FfJnQHJ7ZozhL2Nq1Eeez5YYV4VamB/JdRsI/IHHIwwY4yM11cJ6OptNQE4STgmS1XAUCF6sFOl0Oq7XGws+uyQvKKtdptDfCo5A3dZ9eo0w8JjeELaT7Bb+Rn8JVMQLgmJVqeew6PV6r9y2bdtZxLZ2CKJrEWCCBvRkLYoiAVONm1t/gRwbBaTKw/85R8qEVKe8E+5KNhKQVe7R7XZhAK1cGl9S05rhSQJ+ywUz6EZ+F+YbprwawbJRCWaoxnmK7l212IOOg4/gtCDFF5eslj1uB5HI8MGvKFwglVofUAxMwSjNJe6qMT7NhfjYWIQ4mEYwjxLvw1NqQGoGbQwAkWjH9DfUDJDlAhEAomBHXIsaT1GYyMY8xpaUqBT0Tuj15KAhZ4k6ZefcRSFI2vGPcmTnfKgdA67qp6L3rxc0N4pyUitUq+3Io7HmebMAGacKnztU0yWkggtbIEn1bL/z+uWs2o49t1SI4MM38IQpnKJ5f4zGmp4r/gYj4jR4BKh/cg9t2NLr9S6EAbbceOOR2xLaXZP8EwN873vf+32OCRigKgrByDcXKHj2wgCxZoBc/WlypNkC+MHhyqfZkYpBKwTe4eo6k/S2AFKMngq5jfFuVCAn9NK65aZ5KJo6rR3vuhm4EC2VFp+6GaSUBKLikZH5Q/Hpa/lgPmi6jUFXxzB2MowBrHEHxI3ur0ldoE5IpLQ+ARIDvF7Sob0VxNT2wdcUuuRh1Eabb50TMsVSVj9bGEJ/x99NqprB3Ryawv5TMFGpCJNMXRdB4JD8I05vcyCY9ycj/jzgaJcEpnQvSJ4DyIsqPIkhqXRn39lvORXG9dbjGut6z33YCBNppJ39M90/J/5JDABwAN0qpfYCBuBk6/V6fzG3det9OAHQciYygLU92rJly5F04SvLUlphWkMH59w/k/6gRSq8qDFATvyrTgE9IjkWqWP9U6Qg4hJVQaW9LIhdSAtNfUB3p16X2uBna7o1kp/7NYMhzWs774YyivisM+YQ9UnTjske5bT4E+fc+0hFQGWhPBMGwIO1Ci16OwIcg9BSi6uLT4GQMAAGKXZKWs/aCwQ2KF4g7IDkbh6fDpwA8l0XRX2SCjxBrMtOotVIdWkYA7C+8pnUtwBE7A/HGEnnhrCouKNKa7+s9tfUmTylJPeS5WpuU+DZuvMd7L8jVIUkyLcZIbr9niszdBNqhe45L4at91yN9SDwUH+MziYRvz2fz2F3kqNUnwBkEODQIbC7UwbgRtb3a3Fx8UFFUUijiMwG+GyWapv7//OJrZqULiYp0QRt0GmpfhL3nQ11r+a/koH+XlXVHxBRViK1pLsdMd2kedhcbJHMt81iWRTT3KSSvs3Ca+QWMNrrMKZSgtb2NoDlMtU+7IwBYgjvdlFUGBgLGHKpheDz/KsZra8XNUgZgN3Xz9Bj4WHOuUdpv2JlgJ4fFvk80vONDWweygBpHjF+VFPWcaNafbFVw1mcxFSZfG1zYtvZlRNhCoRqn2fNgn1fXktgY9KeU9VWVf7FrL9F+zPX56Tn2rNhvjup4wWBsdGegcAZ9HqvnJmZOW3z5s1HTGQAuyFR4IwBkhE8tgG+oZLSGCC3yJuT4hIGQDfXPlkEKSQyrFjzn1AD61rv/ZSm1H5Dgjvei7pA5ZU1oVPJbarXJKJvXvlnmptkKQUc6xY44/4SaKpbdCpag4TmV8UwVOVoxC3UuCeCLyoQ99A0bgBj0ztl9QAYwAKLUjNA/bdv6vfOU4kmsODcP0VXmy5FL372FEhKMI3WlQX7R1ulQpTWGUaChBMk/c7Wc2eX7LeeuqynGMSKh2TuXzxx1G+w5z9VNeea4AWo95PYIFpv/XcqaHHfWvrDzTGABMQURgZ1O9l5aR8G3W73JTAADfUmdpS0G5Ixd8MNNxxBGsSw38dwzN2g1xqkXmaVN4/D/KoZgFA1xxpd12OMWIpw+f20kwxE8lDcXZwSSI2qql5q+f40VtATACPXnps/p7kwk66JjKD3qmtkVRWQImzUPQrLmYPp1MYE4sKr1JWnSHGAZqHTWkBKYxBixGpnl5SyPO53+2+BGEAygjXiXqtAxgDnqtcG8KwwGAwx6LZ3I0v3HI2iom+3QZL33GdbWZbULVh6hETMs5ylXL3Z1bWcdNX7rScMjHZ0DAp0kFyyj+Y0r/oCfQ9e6gPY+8FgAB1QlC/Iz6hM9COIUZqV5wzQpC/byzoDGQFNcmDwXtqq6loutNsrz6FOeMO6dQdJQtyOGIBkIcrI4JZ+p09PXDFiBG3AB4ISVAXlcYCdqSOWQwO2O5mhgvkTgv9SLMvj0EGJVoIzqkeyVB/hy8WVZkBIqsOit4r00pdtLkhzQ3Z2NedpKpIY7qIK9cSQo7URxyl1xfi0TbKucudp6L7GCtI5fwzppycAfuzHWSpEpudrUbxczZQTVCCI/xyIRos+JJnOjEZjyPEckuTXjjoY4jgyP6GBQIRWM2HvF0H4+ZoKurelgOBk0HfBe/D0hJY3OIg6ZotF1MErGqmnVrJmvIIIbrUQnFQ7orMaf0hPHFJVhG4yBOn1Kysrj5+amjrl+iuv3H9iJJhfkCUHqhaZoDQea7fbT3fOSVVPZgf8jeapWyR4Z6eAGESSyecFia1CZ47eP9+waXRT6gxKNcJgCLJJKaYR9ymYkBm8djPV9+fZwPy7NQPoOwmSAYyODm5pzEQma89FAsNdFbPIENh+iN7f7/dPU+LFnfmY0GyR5D2R4L9Uu6gJjPVNF+MDCC5J6neySV6BjixMoK7DXuZetLkZE+p+fYFTSLMp5QTN1jvft+b63JJr1X5D1OoGlcAkyIFZVmudvm62mLqy92WOnIb6/sBr0gDdToHmfG3f8lPnCFUXV9VWlGX5LXoIbN68+fgcQn07BuCy/r9btmw5SWoByrIJ2Xe5Vu1bA4xJ0thUDIiJPHHajlrJ3lfV+8BL58ebXcIERoQsJHB6upDvoomeGnLNY7G5Kbt62XxZFCsyQSrtrzbAd2Xe3tOZRRLgaP2DUSwZi5K2m9ye+n7fxXMDsypcyUl63D+yPgHG0Cf/FgKIEJKy0USFuITvFUhGgn5FQdEHTEAwSoSSqwQRDuKv86zweOj3AcSy04SqOZp0mP4/KYbTXJddvfL1Q7XaHVd5LbgS2gUePIQapyv7xmflsniROSAUGVwCfuSd4XLX7zZzzuy5SfdPjEKqOv2Exd1uqRCDweCjuPUxgCn04nsTiZ+LWACeIMsGLYoC8CcBxFAcII6zl7KxGhBDFTLutMu8LXehgEQ7xiD9e0QSdRPM+MpfSr6bB1ZIaGMhdEE6uSo0QQVrbs7OrpxZLXffMGgo93tkVIIN3m8CGcFXFbGDb8bUn0wSvkBjE50/1ghsp6HWacziyNGoABbxVPVNb9clkoCTRoKbDEBx+z00CnoIKM4c8QomhnT9cggRbB2+g0soVYQnwv94ys4UySsDr5JmlxoKdJ5Xc0vXLl/DnPh3AwyY6Lq+31bUmp2oXrngEdWTexCZt++rzZkDD+TfFSGrAguXKSnnUg+QnaTLvV7vz+lnTYAXFZ95r2IAG7wUapDZAcBKkEPhvU9qkPmvvf9vxeCxIMV2UlyN371UjREXXvDhX/VlYJqmBMoJMg+q3EUQCbwTfJrgw08158Ry5FnU/PvNTWpe+We5xE7RTeKe+2hqr3Sn8T6gzki7I01GQwq/CI+GLjB5RlSoPRY7J1UudST4JpVZKY+d9IOHmgq0KhWCong6xY9VIFOPYIDjNa1Z0g5USjJPOiYCFc48/xldH0OPvCjcrWVKFyEH6YwYIo4MSRz03n8PHVlVT0OK+3mYoLl+dTamBr8ENYIeb62UeIhgmSTB5fs6Bzt9kfacAhY0fJ92ymSuucdKVGburWkrnDIXkAyZ02pZlJcvLy8/FYwgspwneoDywR8Bw0INmpmZOb7dXn5kURT/pAuI11sdQ+ENFIjr5thC5qBIEgBTaIxhDBHMTyKiptM1GSBfXH5vTHBnMjLJhQk+EaXiYUqhiN6ryUjNDdvh5umiSsqzzvf1MaTGedqlBfQ3yzkSF6nq9WwMnhw8Y6SNHBn7qRJL5806sPno3sfFpE5Zp/iaAUBxo03ShHqAr+IoUJh1qYe1Ndb5HkFBDAU5iWHCTYaspmtsAFfAk9BsUHKimAN2jb5Ljrh3c+s2aQ1N2Jnb8xwSH3X+l2i9uKnJk3R4u4cRM6eE2ANkoOp8ZzmNs1MkT8Uw6U+Q9Wwi6/ps8cR558p+v/+Xi4uLD0agg3CIit+k+VVDX1AaYW/ZsuUAGuEBhziuZ61PASrDLhDrPRVsWLEEkgBjh/xxSiKl1jU46b4ukHc3c/zmC2Nu1N3wyvhKmEmCaADKanMHK/qwo7W5wDu66nx/ldaHmxtO7/8vydhvc3+rOrsDablI1xroNYSrOeUGUaA7LGRv74KBJw2uFRu0qQIRCX41GPfBe2WA2kP0FZ6vxqs1lpO565pA3DQVf47OYz1EkK2H5fbfjRay9PQ13E/cjN5HkgbNnspdy01i39neiP6e9P5INZYVpU8J+O1qnX9HAqq+n84ZOuLdOOEUSCy8H+zQzCvEnkkVGoJA28e+TbvIiyYo86iqf1tstR5sCHEq/SerP/ngQ/hKKSJeXFw8ptfr0Q3+beiamuNiEuxqVxSPVWksUpILaahw4H9OLg26P7k8GqSwHlH5ouxsoc01CZEeGJz7qD6bXJYnxCgQICZlcqba2ZUXuyBBgDoR3VHv/X6rd1amHhNUL9Xh8m6JiMOVPQHh6ht6Axsp75GkleSxs0lUxzUDYeQCgQjxymCoEGMG+BrCxaK3Smx2X06Yvemd60sBroWZYAB0fAhIPCzKKEjM3YFVFzRpA+gNYZHTQ5nAcDhzdbK5F/memOtRJLbAvqC3J2BeInP0AuMUmiT5m3tdM0F94qdAKy1RUxzKS/PuZ5O+ofvC37kOBRQsJrVLHBT1Cer84nA4/AMg02dnZw/Drp3o/Zk0dFK/xZHBl7vd7jmDweAZVVWJLm+F7LqQPyXQo4UbNIJ4VIyRCO86897gxycPX7DzE3c33VqTFsQWu84p0kXlVDF4ke/w31l437xKtY6YnQxyrwbx707gJHgv0WmZa5T+Zlbsby7DPFAmxd/W8IHsSi1WQUojmWoGSEe0MABBPHzc5gWytaNDzCvVvSlYQ5l9kFAhBtJkpD5ZdH+Yz56xJ03onqH3JG8JBqhdjDp3cTVyDykqAYVbSwaJq6mQOoC/6buZOpTvgb2/XdxfPDcQojJWqhwM4aIJYME7I36uep9lX1IGMQYt+EJ24hMLAkz3IuwptAs66MQoWoG4hiU677145Mqy/Gy/33kMjVzQZMhy3iEwVnMYEV6+efPvLS4uHtBqtcjLeLxz5Ru9c9dpqx0Z8tI+/DTGeH70ERed5GDopHEZChAqdgBqCwUmmUS7OQaoJU6uq5NYRqWQLvh7RcdO5X8HaBo0apYAt6ruaHkvkv+T6cekaScVLQQyx16m3xXizzbQiMA2fo/6BAAyPZ2AnBY8QxZ5zAByIsIgMMBqWJQoDJBOAINFGQsWGm6cpG5f1Joaz0aZWPLvfZkYgIxZrdXIid8Y3wxVKfbRIKOkeafUA/cWTufM1mCtxTNjaq1+d5x63q0xT8/2ar8AE5O5uC1X7OaIn7+N1Z9eb19xm/vwOe5ZlWXQLFwjKxG6gjka44t98NLayrojqwr0P/Ql7rXbD19cXBQ4lJHCpN8SBpCYgDTFWFk5ud/vgzNP4ciVslH6MM01+VyM8WWW7DUshrgHE4do5idMoDlbL9PGF83jsbkoq04BU4XMRw/h6zzoSE53l9Otq7p6BE5W7CCkubQYkpZNCneuiW5CkHgOYowQkjGMuewmnRwSuMkY4EoMT5WGomPaIisDHKCloRiITXDcz/rK/zndXmoVaOy++2/NgBU/eIMBmBfz3FsjrHz+JuIz+kw5tRrSl7U258Rd8U5ZvbbO5SMiSNL6cjJyQeRcCAVOIjJnjxTPVEpNIb7zEb4fY2zH6J9s6RYNdWpnTFCrPp1O3FMLqKRFLqWnhiII4QCvkmGHAqvO6alxGk0KFAaoLhkOhy+med78/PxR6vuXk3mXhk2O+mBlgHv2er3zXOneLdHc5AiyjWLjBJ0AZiAnBuKXeWSZkgRqdKFonUQfLVuk5kY1LyNAkxJIlwOQduaKxIceYyTPiKDSB/GuEHDDRYiPPe/arm7Ml5i7DCh1PEyZa9D8zcacq55vRt9YBfJXKmCvpYbUG62MBAMcI5ii6gVa1SOsqsQI9mE1A4hb9JYwgPObtD+ZSfCm7i1MnBmauw1GA1IHpO+uzuvfxMU8jGD009yPgiKA0chV+iRRZeYcQ/wbqQ2PkXVMmFEh/J2uA7aaJUo297LJDPxbp5/wruIuDkG0CPKblKiTMCUIVUjSIetEqvy7sWPIM+LzIMulXDrfG5bDN6+srDxgYWHh7vQN22X93waTIy1iampqv4WFhVP7nc7jnPOCDp1VNF0fY/xDDXuLB4BEMePYfGgWJd8hSwuDRjqfmJHZkLhN4hcC1M/cVTBxEiG/MCbpzX3pJ2B7uWpg8DE/pLwmlSXbxHsStLBfUrH8OOdkEkPWXg9RgapUJ+y9RwXCtrE6BdtcOQFoS6QNNs4OfnWneLwmzAdmytChVa30l6pExobYEQPsF6MQIu+I5+XBy8vLkuy2E8GS44rCCOjwlEYmvFXvL6d4qUp5/CBP1M308gHsoEXGNXEPpGzUKOZlp/vEfTT7TNczBdCSUUsnyBc65yq6dKLS18SvCILQHhFvnssJplm2LwrBL4UUDxHhUlXVV3q91kOWl5dP2rhx4z4I811Ch7YxuvRScYUuLS0duNhePL0YDF5OBw4lNokKY6Vr0QYpr4L/Q4Ziqk7SyxhgSMF7AfPAuX/vhkN850fFlBhV56fr4uXGq12igojkSr74szwGkE9+Z1IAyqIQqZGQEup+A+IT1gWbzgzzb0nL0eTfN/VlZyoZv2dewgCcNrr5Vyj8yEQGUFtDmlxHA8cdMwCwKH/hKw88uqacjI3gUSFthaz8c5UNYBJTEbE5iYiantcw3plz/h75u+TOAIxpJKn1fpjn4OZnV1V1GWYNWjAcBtIwsnUFrAwVGftud5XorFW9d/rfZldI+rk6Le6mXW6o1CNn6r3cl2eIJiFIaeMCJKu60+f+kyYMkklqtStpbZ3bNuh2nwa6yfT09MGUQZoRfLNMwAfgmGuuuWb3+fn5I1dWVu5PN8hVDwAhIrrHQohVJbqguCd7/f44Z77W3aq66zqfUYl1fdKBaaIsnhzSKizaaQUqcjKYpOD3tNzUdjsgO4hKYWgD6Igwn13MYYw6MKytKPRHiIX7EGTTe7NJJrWaRMNlKgTERXrGm/RenADYGeZ+XMUAEnBKHW6IiMsJkNkAn08VYcIAq/sDeP+f2lfLGECOcL342XKlwOjhXjQVf6yqIIbXNIkBjAkgTMujYU3voQh1otIo4YvK4VyO528QJqn4h591vl/Vug189RI30TkgFFgHcUCop0mi7tIKyUVUHpIBsSPRKGSPVhUgKQPws9ZcWGLm+y2lnhwpTnahLU8ZZBwNiuIvlpaWztyy5cYj8WjucutUPoD6syHhA53Q6XQeb/DoxgDBuY+p1+FeWvpGWL6L4UKBeyoiL5AcwTCBlPA3mdvKhoI5URTxTh/jk2m1pDkwspm6oJIqTXBIi8RF/5dmG8AtVlmNYqNc0RaOQhGmr/nmz9F8JhjAcoq4dsoAzAdPUwjhzWnu/qoYRfKZ5yg/QYQBtEUSxUDNVAgYAFSI123XISYBYxk6dDPABuHujipYVf4P9PNbi6Kgr7IVr98cAxhDcwLgacK9/PcxxhIkbhNicprnQwuBTLhoXYKlHX9Y6zZq0ALzPKk3DGcA9dhkBgNn8195cxN9jxtjiOQzScarMJnWPLCH/A5HGTk+3AfVcpAgOB+iQqOm0aqqPrewsPBAgHE3btx4111uksGHKBvbtGnTvgsLC/fq9/t/YuhfmnzFqrxcif9EGkEjQSwPm2xJ6Vvb74det0v/2vRyXlSQZ0sAy0d0cYzV2m3KQABwumDExhBIFX64gkwRaYWQgBgUDxAeARhgXB5om5T+EdTpkPRG26zBoMbu+RIRRA3XNxmgyQSiuypR3QXXZHB1qB61hkxL2/Sa6PREkPoGYQC/XSAMG4BG2ayF1QQLA5C8JvAv4yquOlKrp+LeqF7ov/L5EDaSONZJ4F+mjk1S54wBuLgnBHpodO58BJFITiG6CQgYjSHll8MCiSyVnN6HdvTxyeyXQtVwMpJD9WSMZAie3Klsu0cxSq3AT4Jzn6y8fznCTd3CQjTdTicIpIoiSFhvseDCX2vG7XEl8acqnkqTRv5Wgzg4d83S0tITyGxGm0GrsfXY6eBD1hSbVIjBYPB675zo/3Jj74kiPpOmD+h9ij5GlPfUENw/S/VMY8QQ11MRhpcB1UMlhUkEghl4b74XVEe3oRmkPwCsKSZp+SJzX4I1ugoiZPV+JespOz4Ndk9dskCPvUANWAvM5QyQXyYtJd2XlkemAhENR3qqHUBU2o7ZukmexihQgSQVIlNz6LBzoSbDrc4G9dKMDgRupHPNALo/6NK0mj3CV/4l6XsOI5j+zdYcwwz65rvk78R9kM5HYc9xH9H3J9Q+1yM/aAWCpSAdXHBfdT2+xD5rcI/WrcDZJ6rV4b3nxP9PxRK9wLCYtJvQ8dCV9/5P6Tedf49BRSGCNivxpI4A0AVQKDDcGfJZV7ltnU7nedPT0/ciFYIcN+yAJr1vN1ggMkK3bt16IAzQ7/cxdqV7I4PsUCdgsJE2nJJPov5ieuKSk00onKZ1eF4EPUyaLif/v4XeOdY5rsXXrOrNETExBET+D/h4fQgS6KgXwPtteCZEpcn7DWRDKD81XkjDGKDRggeppDiiufsTooE47KoNcDMYNRXiQr3HVei+RYr2YseYISxtUtWHTsDo9KDVTqYCRS2Kr6rqQoNFyVQgIsO4QTn5DBdHGFEhS4RYcOnq90BeeJw1F8/UoOb72DuJQc/aS/2tBsZY09yGs/Vr/JD+SxnAELyTyuTRM1eruN5v5UQLzr0H96msVzKYpQWuqo8WaBM6IgdKekenHJ/PKOTiB6qqelFV9ckGFptRGXjfxADVi8VrNRbUy912W2qB8QSh1ewyA4APdNNNNx0MlMSw36f1KO9sxsd1eH8UIlHSapVAxFDld91u3BvO5EX0WGaiuYfCNsayPuX7mXtud4pA9EgkW5LWSILQBkxLvz8YQ29X9NpZtTfjob+34xri58jW9/hX6aiYDDfTnc0LZZf4zfXvhnSAPv8O7oHhRmQ6ZY3KqSbZrplvW7xA6rYVePSGDZCK4puNsr3/JjELCToldASkeioaIeMzwcycliXloV4+NxbxGO0Qacaw4Phkl0WzJWlR3aDUHIt6xvrIqZrbVBOGBZ7KsnTDQWIAYM21HhrV8waFl3mK9I7WHgpqCOdgxbnXr/YW1UZzp0MKxwHSD6yfJL7SHMLIki8puSVB8cW1TZFU6V6v13kVDADc5y4zgHaIvAsMQCHxYDB4V0Ig1iw779ejumgHP7g2JxrJ69aXlE0zF2cWoGlKJZOy5u2xPB05WYDH0CPv8TFKdZNslEkrPBOTRo2ZI802kiFsEHxKNJfiO1d9lcU1l6yBxiakiJ7o8USQwQklMxYsUpLxGLh1p2KMpDU8Mcvf50TbW1OkUQ/pECNNok3KEwcILgCO+8asvsD+BsAsxTWoaLLxpvbEKE6HF4QojoMFPe0caSjYRxIRHo4Ok442Y8FjIFeSzmBry7tLZxUndQ2COzSGM8/1nfGP9a8aeP4aoALF+N2amk32L8+TS+dggToj+iYt1CdUJgz5rkh7vUednKh/31vVJrIRehC/uuu7nU7nVTTHuEUMYCeAQiSe0u/3/4oXrsvtvN8iKk0iHGMAexmT6OIC03+bL9vUR00nzb8vmYyWeiBEQGG99oU1VSZ5m7ZXg8aGsOxUggtJmD3CAMlo89OAfeEDhxFiGY/PCraloCWrwsL1+mcxRDnesSOQftx37A+PmwjMqNtTUjBSOrMc9+DjCAOMpXz4vPQIBhXCbweNeJlmdx4xGgwO4lKwgONccH9pjcZ5D/XR11FArUl+PPPWDotklEov3xi7GM+kqp9ChFyq0bz0W+vj/clhV5prmuP6J8eCete0pxfOD+Isla9opE0aisDTZydiM0K9M1qotQNzpSpNGDKd0QkMgApElJ+gojeEP+/9XGu59UfTmzefunHdun1uUTo0NgDF8fNbt57c73Zf4pyrdXE4C0moiU/WIwzincTNdjVfcpJnwv41ZjBJwP3vhn6rvuoMbn3ghxID2N5lV6Mmm/QHLKqXCtmtTZENyQcK8dvomRA6BCRF2aTbxoiqQRdCOV7F8+SkClHuI8w1bu25Tk+VQ6IQvxjAx+K9ajbKBl0Z/V/xQZslkZfh2RAGSHiohxcdac9E6m+Z0k4yiPlK9HHiLaamXjEauQdpbtSJ6mwgXQSdGjhEMJik8McGRG+gxasES8PJkNZUe/sOkkoJ2pu6mHHHPk7pwopXcpX35migeeWnQn4Zg1gc457O1b3b5H1I3DQv0FVXXZXqAXbWHskGD+a40DjAicvLy09zVSURVzJ8WHyaOqiXwgJJTQZovsikF5505S8uJ4Lp4Rr5lLI3FtsaMIgqlOPPV5X8m3zVKXpp0h+mUTx/JDfwhxD9djDg0osgBNJvAcrFhfcDfo+0gwJE50AnVGYrSuyLOkDzduwjJLadHjFVLKXku7EXiHoASiJfT3d0fgdP6T3kBCCPiG7tCtFCPpEkf/FOadR5kPJvClDJ+wGJ8mHSh5P7MWzL30+f0Q8+XCf2lYdh0smaMwHvtXpNEw6SrSkqpQHf6j2/BbOr3deMru8qDeR00LxyoSoMoMVXFMV8njmYrQqgw9zc3LkbN248hq5Hu9wmlcsiwdu2bTt6aWkegKYmbg0eHhoio+c1SxwnMUDzBXd22XdylUjyVkbJABWPhaEyCBMIxLqCVlkqhG1SBrmebRRJcOdLkUXC/gHviGQ6sHqIUqfgRTZU1VDCW60XQyAQg94bNLt7S8ZkSoXmFKEgRvsE4xaMeIGIhAOOmwFjjW0ACKmrGa4K+PT8ECQAJNLaXLz5fCBS3reqylWuR7mn80sAAccYpcVUjPHRGMCUMkpVWggF+VqA1BoTaKArrWdO+I01Vf0fF+RbNRvXCmJyyd/c551d9vkmHdWCUU8WvEdHuRgfa9nI5gcthsXH5rdtO3v91NTh2LT6vSbJrx42gYsuuui3yQXatmHDQRTHDwaDD8jNFWpCm+U9kbpV1fWa3p2fl/jzlzYulxwgikO0UQR5SR3yUQwPR3B6dNPqC6CobJPYWCLVUrVU+VcpYWGgYqiyYdgaSC7wgPCMoPb8Pfnu1DMURQZN3iA+CJJnSitXKuWco4ruhLLXgxhOdVEAm1Z5gTCC1QMEA4gXKDsd/quqBHiAYM8JMYrHh35iJbo2XWFWGak6pLNmSj8nM5IEwa/QYkizN89WgSUGqbxrXyK0eNt4X0FxY93SmnZ8d7s1zSDNFZvIhIp1pdH2rrtS+Tfpyj83ifiFAVQoYlug/4Pg90ZqG9BOtF6l6Ha7L928efO96QojPQFuSUEM1jI6E2oQnqBWq/VHzqVmE2OsUAcMCEGgw0ajTp4G2zwFmi+5syt/4XEGaHJVHqZqAH5hIRSIIQerGhN7Qk/LodeRUrpRXybVWA1EfOzmqaovlSx0iDnGFRIlpSwvwZNXqw1E8YZomF7TPTBCa/2bk5LmejEEqaWojeAQPic2QOYGzWyA/8JfLsTPKZLSTV7snRuQ9IcUFvevZkvyL9LfPF16j89i7GI/aCmnET7vh8ASVy1eNgSZFhrdKEzQT0wwXtf0b76eikBXG50h+FaGQ4orFo+NRdmbtLArdLEjBoDGJC1dYkep3npVOnlVVdctLq48Fv3/6quv3psS311Kg2DYBMidoJqGmywsLDyqLItVzZw1a/CZWhgvSVDZC/+8p0D9skr8EnxSTwZlcv8uq52eT7MHMeRIvdBNWoU9L0hpXUqSk80LoRVFgepTI6WZC7fhcYARONnQLzl1xAZIx32KP2BcW4BNbIyxevUvSCWJk6SMTprLcQL8mL/XDJAqwl69g0gwKtBZOBpg/GGMh+aN9iBynjvWz9UoTSeendJvjgmfSKrKGu5o8czZGiMINLCGL13svaIYJgS6rvZw0KYl9HWQLi5FsqFVOIgNoeh/7xMYmXbcPS7UZao5E+wqTUwifu7D/UQoFhJ4rYg6S0sZE87D4fBfZmZm7g/QM6r8xRdfzPs2SX3ysAmQPXfFFRvusmHDhqO4WafTAcSJ1ASpwNENk4AN+q5K07xAvckIzRdsXvY5vlfDbagf/MGWABdjxEAlT+ihGiSTJLNEOKIfy8mAPsvPKiHpfvIRvqOJduZPZp42R1tkU70kkovbUL0v4uuGKFapBYrGnNQfv1SW5VMLWqYOh4fLs5DCLj7YvEBZLtBnfFXRKf41sYkLFMJ/xOQGPZIqNgTAMEqXegnAMQ+I3Z7PyWRSW78vBTIUw6vk31kMxjxtNMfD0wT4GJ4iwruhksosXVMnWdJprUPA5//v0iNs5B4DXE32N1A1JE5kmb2N5+c00WSMSZfp/czTAoyoqkDPp9ZT6tmrqmpqaWnphbNbtpz+s5/97OBblAlqgw9qQOwO119//f5ghS4uLj6+LEsBuBWiMnvAuXer4YO/25LCmjW1zRfa0SUcrsSPPk6kEhVEJB/puujCSFc2q+x2TwSUKoZAHvl3o0B+SFugthbCVCEGMjko1n6gIrZZTfKOPBT8zO+Zv6Qd0yoohPBphAzEx4kjurDBoSfGhNEAyQL097AYBwer7z4BY9XZoLUj4dOUQwIYsF06NMmAkeosybNCAOw3SDYQ7lQwdwQaEWlval+v1xdixV2rxe4QoNhnO5DAdtkeSQ0zJwGZpahyOhfKTsn/Yl2xK+gb9mVfVS/B+4KahRtSAAacoylIfhLek2BgHpmesO67cplA4iRjPYCKxCFSZ4AaPRaDwd/Nzs4+aNOmTcea+3OXC+JtGDFwdAApcf311x82Ozv7wG63+6dAbstDnRedl/ahAmSU9E2D8sCotMLoXOo0X8ykkF3J5ZncaLg9SZ1NgFgh3ODL8rkEg/QZLMTBMILCD56rXSSpEX4JCVWmuuDdSSgCQhSWX59Lo+ZJJAxg3ictD/wrnItC7Y2hof+3avAK/Rede1/wgmIKCt0/BINHr08AGvm9CmAsb7hAYwYAS5X1FFwgZVrJK1IA2C9Sh9uYhgwCfDgoFFTLbLMdMXq9B0qc+3CaSwpDiOj0uFOBx3xBWZbPBJaxKIrzOF2qfp9kyGNGw9EhkqpAzIOAYWJoiRt5L32En6wSO0f3Zv2bJ5LNJZ+rzc2IH3UObeMU1k/fVwwhfi7L8ttL8/NPJP0BwQ3cv5VD3iIGYNgpQBbd1q1bd5/etOlY8quH/T5grlIqZw9mmYDm07yPYzRDlE1bpXPqJUeuvlR+SYWQehBIIcY4FFgM8HcwJMXYHqf8YgjdWeH3yD2CWETtSB4e8ZxcmFQ2Px2de7gSp+GZTmKAfOGNAUAqwI2Z2u74cKk20MPH/h7vKwJnnC6Wv295OxCfpEKMRqNJ9QCfgQHUBfktXU9zg1IPgDEppaN6T4lQKxQgnRjpO0ZU+B8UjoScLcs4/ewweXwMiW9nJ4CoF3UBTyyODK6Gpv+J9CkryxM4zTT5cX+yTvH1855zc3OcMJZfBJMCkUhHHBGUMQSS4S7o60mm7yFGuAXLJtCIXOrtgYbI/4GhwVplLwQ1AuK39XSV29Jttf4YQb1x48ajKYZfn/n+bzEDMPgSHIQbSeESj2stLj5oOBzWiAI2AXnZGD5NApuqRDABnI/ExTaQHBslcslt0evA2O+TNoBUh4jODM4JwKq+5Nel5ehYl8z1WdMNLX3CCmhgEkoRgT6RSiyIRQkqxyWSo3GC9OeSInyYEYwavce0j2L439tUHYiCvBvd2DpPxXRVSRlJiWtNBsAIxgYAGsW8GIkBKn+JGsB2X8mh0fuKB4S/kSimOTeodhixpJZzIuOmolrMvg9xNQm/ZoDMrbi3uETVEKbF7TDto6H/mUDLT2257B7K+MDXPDGGKF4ldZv/YZGq3Aw36G6dTmePrCEfdCFpE/qcnKlget6PwivDNcoFcLvf7f7V/Pz8I3Da1Nmfo1uo+jSHEQUeoYVrFwQucWF64dTl5eVnDIdD8RvLhqVopPxMOFwbRDyal1UUaUkO41+RIsnt9tRIFRJZmTH+k/YBfiGoaHZf5xzNrSmZZNHyWlMjUrtqRsi8OPi4j8YrofO6XKVqM3A3iQFgEAgNXNLzrUM6qd1i9Kc6AphpXzZwBycd30dKHoR6CLBTWqs64/NzGMExRuIaCiBcnwAgwxmSHkRQqw0mFfUdLYUYIjkgRoE7kYgoEOUphlBDK+aqhV120tWJZb7yNNLj+ysktalg4sRt5nRNWn/mmdLGh0M6NgKaJR6imKLrpERjZNP0+31iLIfw3sK5x+lzeBdUHUug26coBN+U+AJtbiVAqR5oI/6VQW/w3vn5+SdNT0+fSh0LuWw/t+qTD7tBrQpds3V3ukjSSLvVaj2lqqp/tMQs9Y3XOrIaoW9DSlIwMlRcGQhI+4Ml61GHZvBJWkKMkcKHd2o2pPmUc6nd3EjbzHwjIBzwM0Gt6AUv1UdEfFlg81TZvXL1h3tIsYiASPkgRieqD4aexg8knVeZzQzqVYShRCWJfOT2B684RGNXJ7AoSP+XGYJ2lgrxVWUACALC5BmriK2hSsLUAhwWo3tIjDHFbLx/Xa9Xo/FNckrUMIesF6pr8AngwDn3Kc3bN3hye7/muudrzzMsdYVT+OAYBRj4izofsmm269NMOa1z7i2qxiJYcKZweiLAQMCuI/OagiI/+xC2DIfDNywvLD96aXb2DDKYKX/Mq7/+nxiAYTfBlYQqRGCBZgNLS0tntNvthw8GAxK6xo2JFcJC//u/QJE2wKpRJYadRJUlpC++7Dq/xIC28KbgS8azILg4GQE0F96unIC5LIIMEZ+QAU9hPEJY5pHImUC+l50gbIJg1Y9GYSX1rVoFy74zgqAizOIYSOeTrCAmM3Q/E6NEtWEAi7GM3aCpyAYiMuKd9K71yWfSF6lZtyfyfqviBYnbtzFvIVpTHZVZcSR08J5h8OrpjUqzo/Vvnpx2mRt7T5L5FOpQ2u5KIl9R8IC6Uk/2PQb+pZgKlYt3R/hRR2GI0xJ9T/vBf7sf9vv9P1taWjp3bm7uJLSTqauvvtsuV37d0mFMgG5FgGxubu7w9uLiab1e79zhcIjqQtEKzSMkPllvclnesxyN7iGG22hExxfJZ6HBhB1lFsmkzjfB9YWPaxTTAmxNQp20CflmiBTXU4AGfULIiqNPLYPosw3JmgO0wnRsmumwIKdZ4Yx5t2w+zefbHMyIhojpkba6Q4xzn44phx0GEGxQ2+AQPNigOQPAmM1n2fsbIZsdtKe6Sw2NmkYZFvFuRuvFvWgGNiqezvFqteM4PVB/Jj1/R3Ox+bC+MBVSnfcX5BBJJ1mVxEQSX0Lt0GKr+xvKn6aRSwKg0gljm3PuI71e77ntdvthED/pDmL0rl//u7fY5bmrw16WB4Aacc3WrbvPzMwc2mq1KJx/ZDWUDioJ/9KnwmQpY0ueIYqjQfwVNAVC9pZOoBJffiaiml42/ERbMQn6c6azN4l/0qbIRkAQC3EB4tknVuCAeoEHV2aQ6qRMt85VJ/EqOS2yJq+cQFxWNdaUhs3n2xxWMYAZwbWeH/xnYsprIpKZMErHUXY6uuTIGDsjwFVMoO+FC5nOPOxBn3QOC0plp0BtuFIHoURq+UqcIAAG5Ay/s+dvxwB64sAAnOLEUcQWyMstZe99SNA5gzqeQj3wcbEsaUiCEBKVjM/r9784GAye3ul0Hk29ikj+qam74e/f5XSHn3fYS1uuEO7RlZWVQ4ChHvR6IK8lj4tis5CkhM4vPu3E0YYcgds0EX6G/kUiF/odkmA4HFJ0wyZArGZgTlI7drQhps7shh2Cq1DmFgKo0hiHqDhWNgjhm+oDMTw8xNRUIsYIAgQG2qSwfvPZ9RyU0JC66PEUbTd6hNXw6BRzN/sDwAACupslle30eRkT8C4QLu2prE0pRrWVSorBnqlNdkq+WD+7eTgcPliFj0XMbwkDmC2Q8nX6faAsSSe5EZpQsNtVgk9rEcYpHFHUZvqrcQJ8it8b2kPlqy8NBoMndDqd+4Fejs5vwa4mvf7CR/7iqEP4gMEPBYKuIwjSTk6A6CUrMkTvX4Mqo+rMCTGmI1aSynQhIHyYQaBLKCxJjAPsusDtCay3Qn0oUdkRni/8pMuIwYxh/OZEMzl66FSJiiFeFv1MqjxLKAkidaQwRUFjM/frzlSfmih0rpwmFJ7XDJAnw2mDDIp8LA5gDEAc4NDMBWo2QPM5q56pc7OTB0Y+PwTfjexESoGWzNcsVpEi3anQXwzVGMKnVUCY+pMz/aRn5sTP+vD5VMlHot1wSPdGaruFAfLTX7YfAOVUsGSOkJdrQt2Joj2E8MmcAXxVfa3T6TwWyE6gO9FGfmlqz46GvTwPn56e3nNpaem4fr//KOeclP1hDOvLvF5QB6isKkUKggs0JLeE3BXJNR9ao2nyWepMRpKbvhSjv0DxcSzl2gInuR67I2YY2wGDCJ4ox6l4dNjsqooUnR9BNqT60zG6aDv0UjFjQElL6BcYgrkXahIhbHdlJ8CebGjdImlM5F/wviLFGQbQBhn137ABcga4uRNA9iN7b06zPYlCAyGoa3p9VcX7ETnXoBJllkTGj5QWVCEsxhBLX/k/007t4j3KVCa7vz3L1sL2ACaVU1QZixP2dMU+/S4ZA9CE7bvVbVi1ns5RIB4TA0jhPx7D5Na1dauqr7Tb7UcA2gbtqcdH1uBWHTyQ+ADouwsLC0czKdqo6kbacUbDY1J6SQfABUotqsAswgQpg7Nu/Myv+Y70l9WfcYdSufVH3MeCJVlAzHzTzc0waSRIFSL5EgP8leTseDkJPhpi+IDi0xCQwpB/VlZYQV4LhehW9JMzW5P4Jl3YFJbTdGLw1iOs9vWDDfo6+oQFv7pPsBrBwgCZDt68f/MyAjVivCuJdJyklktFXIVaBdSdGCRybFVj8nxt83ou+0TuUWYzTBI4FndhHyD85IpNPd0e6ELg/qISp3cLnRBGAqiLtLdcKlQfRZOAxl8tAg/Aq4QRdJr3tYMgqUBF9Y/Ly8v327p161Ho/r8Qf//PO9iYDRs23GVubu6IxcXFh1RVJdVatpES5KoiNgBRTfRogG1Bd/uspTnkA7x9rZEFKeFbdXSNe/K3qnodvniVMneKcaFZcC3Gnao/Ukmm6AhHFEXx+BjC53HxWQ57PigMx8PAz855KsYeQRCGXrXKSPnp0iS+SRfzsLx1ToAUCBvbAMCivFa654S4Gh06BLEBMh0comvev3nlDMBaGOwhejTEiN7R9iFcY8/Jh3pYbiL+oj2+pGlGZoTb2hrhJ+iSMcQJJwaBL4KaNTaQInf/C0KMzpGWFp6PGCPeQwxvIsVyKiU1THA/DZbTUp3furi4eBr6P5me+drc6oOHU0A/MzNzyPL8PMfrB/PJUgfrXDxXq4TYDEmBoK9WgvaI1Nt+gjK94MIbSfTi2BPIO45h74HV+6TP6na1oPttWnwuxqlukuHMwAymh9J04WhfiUck4c6XpVNEB+k+wsXPOU3AfHoU30OhTbhvfuw3iW/SJQyghueYAcY2AIEwbKSxCmQMkGBRpPHGLWSA/PQT41Z7KaBq1SerpjcHw900VSTGOpp/Od0kjQmyGIKsq6pm4klTaJWna/+AutAet6+AohXFI3Q/JRakYLZAa9IC6VMQPnUl6vZkrTl16U9AERB2m6BWoz4BnT7o9V4xPz9/T4Jec9r3l/f/lQyMD4Jj0lFydvZ0mhLTnlKzRFkE6gderFLbkMAM30UMRHRFDF01dvelObZ+DiNuL22bcx8Xwt+QipstMI2ikaJPUogWua+eDikqmlqJkp0oPjarb63RFDIkaSMCiELv/9UMAKyZQNckvkkXp5AZo7gBlQFqPf9fva/oukOnk2aTPBjgqCzNYldVIJPQEg8YxiGY+3TD2WQGqNRNT0LSzuDP9f0p7XxMBoBm6G17atoCWEcvjTHVaeh3GN+ISWXFdttdkhcVHE2L5S11Ay+TtGvl6qa2S1wIySOJH1m71Npucm7LysrKs/H9k++DDforZQAeTLkZk5mfnz+51Wo90blK9M3sOP8kxeyW2qsLaZJadEdTaTLdHo8PG28gWcIo0vw5Cpy4+Kuzhf+2+r2RItJsQSRIlGYcIkFwsU7Cu6lhRK26K6GjyX0JIqGHau8xixzvyCPSvEwN4bs049v+BKAiLIHBJj13fAJ8U2FnrLbi5hjApH+t+iFQUqva1NgkZ/5GHGq1J05AhGusz2/RWE89ZvuDOqfp2GC55sKoHWME4vyJlrqizIIAkL3O7QU9nXNbzk7s3VOz8XicljquypIl3XlxcfFx5PpT6QXSQ74Ot/rgoVY6CQz1wuwCacHit603M4QtoLqpfmfpvfWCZMywSofPdE0zZJPkACIvtWEljfi/LO1Cn/UT1CMS7ZBeMUYpoaxR5IT4s93XH0US+vFJgFeC6XPKkD9EAp8S4s5cgs0LZjFvCNJMKsKyFkm4QakFeCV5RmnNLFEu/CfQkMr8NxeI4jIGEEQ1fS4FNIJhKp62okhI2tk7r2IEZQIt8RTQL77rgvuoujFRR8n9ksRAfYdNIcQPoi5qHo9keapAs4q7fE9lX3WeMKpcNm8VkJzmeAxJi+irN1GOln6//9G5ubmHrl+//nAiv7kBzPUrGcQDmMzU1NThc3NzZ/V6vVc552TiGPayiE7C4BRQ4ILj2LM0hBw9ztSL3NgUqWbMoN+zLEiOTlyXj6VZgrXqTIQkhtelpF2AeJbQziZAKCrwU30qZFLQ+pq54P6lUUa5Sy5JnS8EDCFiiGqQsE6G+3xMJ0AdCWYK/BtD+KrCLJoKZM+c9Fz7PesEg3LqkA5B4xJJHba4y/anXzZENiQhYO+fvDOeKrvvUAJp6yvBRO//RAF8eUcjfNtX28vca5TvqdkpeS22RLBxgWoa+yq7yDm3sbW8/OJt27adReoDxS6/UgPYBnYAECpMatu2bfdstVpP4KiyySsHU8pIQ4MzFBrdJJu5Mk06TDIy88XLc16EGXTh91XEiLebpNVFo3ZWgHRJvrJR44bWO28/JtQz1KUMRPfHqEGWCpEFpZrzbM4Z5t4TVyTVaNvlAmkgTBjA+1UMQK2t5c1PYIDms42oWD8YdA/sptKXzw4+FBi8BndoUCo7YYMxuoQA3g7Fd69zAgf169FHg5Wv0SUahN+c544uPmsZrajBnPCUOt7bOZfg51OagHl/PjU7O/uojRs33gO0Ekt9aNLjrT7YBOwA6i+3bthw1Pz8/H17vR44jQm/clwDewUQ3gRHFJ+G6KpFOXeVAWrJkdkJUjShALb0HADjBqQFvEVSu0uLJPJNVo0mFah2ZCeANX6IMZJ8Rf8tixrDtE2p1ryYd8YAgly2IwZ4+SQGUEOzmQox6TKJagloshbWwwD4SCAMJ50A8l+1VpiEgjFAAhzrqwATG+slCoYmOUIqsXMhdnNr0pyz5S6Jp0yDc7RqwvMjp7nRjnPuppWVlecBzjA1NXUYQFe3uPPjL3OgBnEKXH/llftTkbO4uPjYshxqTECQBM2zQEO1x3A8q66Xg2rxQje3iPVm56pRZieA5UPQ7cwQUvE4iA0iAfNmGjUFNAhCMO9JyRhIoXlZVTDAsi8F5tvgRfIEuh3O1zwxGaTL6ppg7/FgJRugEQkOqwtiLBhlz7I1sHVgLqZOYPxKb+IYwjsTAwjCmyPavh2S9nbrkQSAnoB5fs47JJ0l9USWfgo3o7o259mcO/M1lyr3Y43YN1odidHOXLQZI/N/z/z09MM2bNhw4s9d6P7LHBxFWOQU0G/atOnQLTMzD2i1Wn/sKifpxLyMhPuSlPsiElULyO+eCqp3ehrc3KLa75PRCTpzJT2vpLIMBoAIisKaruWbPkH9MSBd+lGlLvdgkT6Z4hDtKWYN/JrGe3NufGYvkJ2RnH77ovgv+Io2qVJELpFYGFDX6OuaAiKwJvosu+8qxjcVxLwoWk+NzSEMoJAp0shi0ilQD3MHaz81RbwwBvgrrS6zyrxJe9O8bK75lQfR5OTWpD+8d2OAK50iP5dlednK4uKztm3bdub6n/zkgGuvTYXuv/TMz1symIikSV9++e+tX79+z6mpqePm5+cf1u1232z9ZPGyZPokTPBojB0tfEHakW8PcdmRmnuFmsTVZABbcAnMKAFI3bLB+ZknqI4BrNr7MeIxfcQS9F/H7JcbyrJ8UtkrSelO7sBxLAPpnNcW2Fz5F4LkhEsMYNmg9QkQSIV4vQJjNdukfilrk4oaZMZ3LjnF1ai2icVNDlSUDIzIt/Ju1Fj0umIH4dlJnVwaHWDqWMDYASBrUAyHYrRXVfUKZQAEAHvTVE1t/VcxqX429/hIcqI6QvAIHgVKn3PukaOx0VujPIDx02q1Xjs9Pf3wLTfeeOTll1++2y73+rq1h9oCv0Vk+Nprr91v69at9wBRrtcbvKuu5UwngTHBDyUimApUTssigUg8S3Fg40XaZovYPHrrSz8nfnfFi3dACSbcnAxJWqqRSiH6PBJqko/cpAzp7SYgVhQDh/Y8HNUCfWK1zmrAGaHahkuevaAzVPG0ZoskkKdTn2BaJCk6dF0THL6kcQDp+aUMJmnbanxK4bk+GyYhme8wAn/MUdsLfST1KC9CtyNI2qmTS+rgKe+OXYR3zBLT1Pap4SXVk7e5LEugTY5RdYW1zhmA/xbm1L0R17bOWWI8OmcYFhUSJuXdjiXbU5MBk6YA8Y/1/q3tdvvN09PTj0f1QbBecskld7zFIFe35mBSHE8YKXiFCI7Nzy+fNxgO3hN83Y0c4WtHK5lQH6FLoWJh2mkAUgQnQk5kqEnWS9hUELMbaskjAZaiOBqD2/JODMTVAHTZaPRciXymwE/KRs0234pzdJ6bNWT/ZDGIvX+m9rel3ScNRC6wCi47GZRwMUhpkYQRrH2CqzEDVP4vvJceAavg0b33/6ECQXLyLdUjuyeJco9RYN13xRhB7XsazaYVQh70bonmUZshGP4JTl6YQN4/RX0T42drIKdfgpSUPXJ0cKyqs9TPj1BaJfUzGyylQGvQUrNNDxuikrIGyZUM4dPVEZQMItR4u2SNc7XHe39Tp9N5JSgPGzduPPmaH16zL4IVnCpTfW6TDMAwe4DYwLXXXnsIfcZoVNDv9z+GO1Q3peZ0JQba+5Aw9UK8OAIvXsbjBBokSYsjh1E2/RBtBGd4Nyx8fhLwMxJoLyS2cw63aIUun5hAIdW7NapbMvb4724ifuAFLT2X3llshs2TNkfkyUwo6F+mQcNwKN0O6/A+P0uadRUpUZx0AqACXRhCo0/wGBfIuj5K6gj30xThT1pTaxuK3AakoUhT/d2VFrhSoFthhH6v72hqbkxviM92sQ76/RsIKioYGcIH9StnAASQqWM14WPbpYKW0SnEf/Du6MkEnCXp5jCozEtOGS/1wDJn59wNwHDOz8+ft2nTpnsiSBGoBFzN8L3NEr8NqxijMQGoclu3br3PwsLCU9rt9lu8T0230wKn9nb23wppCOgtG/l3uAm1bPDPgwtvBm6FIIwL7gPqIUEimu5tF+rRHXAjSlpugkWkYTCqkBCAEINdDVTpzPAja5LOg5R6fj74McFpi6RgenMtxbx/ZRzEg9VYhhH2gwG0Imq1G9SHL0ZlgPoEqFUgT5tUawUqzKSnIPn9X9DPSHUVaowk843hmZg7jS/erHn+bw0+qaB2EqSr8e56Zbn5gB8Df3hqjNJ+1eyQ3M6BIdiD44MPX4ghkhAHTOVb9L1IWyFxkbTzL9PP2NZK3wGzx9ab5MT/XFlZeens7OxjIf5169Yd9P3vf3933Oym99/miZ9hRjETxzMkNsFNN919bmnuPktLSxcUxeAfidbmC8FaTEpTnjQ0bfkc9UlbioIZzhY1vrP2kCUR7W/ogs53B4OBoR7rVatH5qji/j9C3UEtIyVXsT3BsRkNhwMhfBu46SxtgKonPiu9gSWLdHBgLBIyXFaknqlAFV0iUV9S4HDsBQKChfoHg4A8UE++l/F3gH9tDimoF6y53ch5TwO/V2AHkX1J+jk1BzHGrXxXG5mPGQF1R09Dvq9z20i7WhLeUOFGc3UsIr8M/oT642fo1tzsAETYls5+572fQk3GfT4zM/OAm2666SQatf/P//zP3a744i42t7stDeNUYwJiBD/+8Y/xDh0+s2XLaXNLS+d2u92XlGWJpBcvUVodWQzNTiMSL0OKIcxASohggvHzgljEu2cpCuaSzL0ld0V3xeUK7gx6eL7wzYHLE8SBGCMpvCdoUcap6lX5OJ9BZ7Y8GutGj0E56A8C0izG+CrDM6JPmEa++X6DASQOQD0AFVOS9JUBY8EAnADo3RjcNOtDFfwX/g6xK/XXA5ANmFvnRCd1gINpr3ScNijHbqHD5areYPmIIdJ76ZKyLJ/Od/Q98HhZoKt2Zao9gDF+eAhRgm5Zf2ZJLwevlt9RziitpjXd2oZzbnNVFJ/qdDovnJ+ffzi9KIA0R2ACbgXtvOHSN4jR+2s3jAk4utDfMGKUCQ7bOj9/8sLCwjmLi4vn93q915bD4eedc6gcEwFfbZjLjp+Dc+/T9kNiDzSyNc0gRj26i3ZGPJ2iGIxWUp1V1bqaCDUpvFSIYUgqtj+JaPi89wMsNmVVJjxKGEB22Ir5rah77DX6ay1mOYgosN7rvtaLNzsBAMdVVAhv2aAWJf4mJ5dGzIUBtFZZ1B+Zg/rzbR6cCJn69iEBrmUOKQ5BdizMzGnwUu89uKTfJW1EEgi9/75mp9IQ8RyerQBgeeTbGCBHksMDhfqTgp7MSfO/Jg2Zq/MIme8Wg+LDxIqWlpYeQQ7Zli1bTiTHn0AXxI8d+Wuj8+9o2OQxjNU7dAdUIvq2Aq61devWk+njBLhRq9V6EujTZVm+s6qqTxENlSSstDm4TKdQkdhsFpNmESTCIaVUEjXRz3LP0O/RvFsb1+Enp7MNuf70P7s/RjcEI7CNqR6hxqtEl4d4DB8Uo9HSKsx/TqoFJZ0aZEJNOUxx/Q/DmAdglm7uOu9U+O8Ea4gyTFCsUyrEOEZwWYXxmNQeXMMwI7CHH+bvqGvNnH5NX7A6jLeo9JZ3Me9Msk0GnCZH9av+6WAkccEYQM3jXVL7JbetVq2lMoTUW2gxDJ1lWhIzEaAPYUiM5++j2vFuvqo+hx3Q7w/f1O12/6TVaj15aWnpoXNzc2ca4a9f/+M9IXxsxzzQ9WtL/Iz8BUwl4jS46qpL7oiBTFU/kWPyu+lBsLS0hLFMFPkhvXb7EZ1O5/zBYPDUqqoop/sgwlbD40nSufCOTFXYXTetyQD5xpnHAqNyf6Sc5txIB3LLX8/82ZJajB6M9wKaVx06uVKHyX2YSX9g0oEUoaxP0KoVEeJpIK4pcUtPR04KBQkAAl7gS4y5g/dXUwQk+reWkgJD7n38Q4Q+CW71HNSFiS6v36Vf8aOk9dH2sC8ICfPHS/GJea2U2S2/Z6IgUWEiacu8Y1nG45xzopZlgokM3L8py/L5g8HgSf1O/zGtVuvclZWVB4IuzskPfDlo49PT0wcDukxpI4hu9KbLCf/XmvibIz8NCGYQ0cM2wF0K3KIAHM3OHra4uHjM3NwcQbRTQJ7rdDr37fc7gKe+zDuDFqkX+1rpv1UIqjQBMMudn7R5ZhvUKbgZYUjQTX+f2xEQAv7tA6iTJX+H51bJoxQ67XbodVOloTbIeKOpHniD6sIchWlHQioD08QC9YfO80+LMX7Q3IHKJJ0Y4+Pwnwuuahweqs02jo9RcXK8gwlw75Lwl88BkOG7Ly8vWw5R7RzI1Bd737yE1LCC7DvN9TMPGycjqhnVdsCgJ+k/Tlv+Tr/ffzFgaSsrK+eoULsXLXfpOorAA7ufPUcboKoLoZgHuG53xJ+P/ERgcTnu4P5t27bdYf367/0+lf7btm3bY2ZmZi9OCAruW63WKb1eD3WFqHIyjMfBtA+RqKVGouQUZYRsG2cMkP93829cTcbhSjlGhaBaYMziDaLlEkYj3pgqxnitQsCg7hwM8SuRoP+fEbyn4UWeGcvnn4GbEgRmBceiqkqYRD+D5wrGPhxViGs4Sh1nBMnB++mqLO2zeFfWV1X1ym63e5wCAezoNDTGbqab5OvQ/D2fNa8PDUNOwsUcfN3cz6LGK4PB4BW9Xu+hS0tLJ4AcuLi4uD8Vg+ypxobujCqMgdtUdW63RL+z0TwZWPCLk9H8OzAF2C8gALRarXv3+/3zresLDKCLjkvktTGlKVivMsPqz6XfpI1tXhBIHuixUD+bj9pApuUxvvQXQPCjUXgbUH7o0YqxwymEzs7PijMk3pduLiVxgRJRpryQtAX110sXyUyVACfzYRiZ9AcTmJTh8BBUNvR7UCtGKY0ARnk1No1CuBAv2FnC2s4IvblWeSGSwBxq5/lznAum+gi+Hz9XVfVp8DoRWBA+iCEQO3vJ/dlf1ODbVCLbbWXkUsAWyNDnkCCoRisrK/cfDAZg+KRag5qgfEeCZilh6whqeCdkbebVZ83LCGFnRGPGH4xg9Qd315PHilf4m7Tx0eQxjGdBRRY3YHLhMt6kQbpz1BB9kHNOEDXyIhCCgakOuiQmgEFs7ZfEoCXyjJ0gdbSpqJzn50U7rGfzXUylWVWW2LwyFdGgXWhSwQlH1uYnFMGvTlzzzm/Cnbm4uPhgymOBzRSk5vS8Vfv7v1ri72g0F8YujkmMJGyElZUVKs7OBX4Fiaoqg0nVoXPuPVWM9wVYSVEmzJsDM/BvnsGZF+LncYRJjLCKaIw4Fsaw4gY8CxEeocjK1rEltfAcS3YgRyQdXFGQSdwjUPZU6qeVWbT/Wlik9FA70qAOYVdIBDx7F0PLs8RB895MYgBRgTLCtnUwmBNbI7xAED3OAmosYOh7FkXxuOBTmnneoYXuof1+/53Ly8uPBLKEvcqbU0+61sYuDhaLIxTsd2II5Ba12+3zqrIUv3xSLcZ5AMmv796kSBQHKMa99JfCa4HUNv967f1ppzZOGQHJkT1Bf85VJWMIPCsC8YKh2iP6mtKfSfaS6CvuTVXXhr4SPNDTmAdeKDVuAYKl95UA+FrQT99nA11qpL9CSpEWkNuM+JunGkzcZGA5xfSzkrSmJ8m+inuEynZULCLdN+XSpERKFMnhoVMnsDTWOomgn82vKoriQ62lpSfQmhSXJqrPrxSx7fY22ED8w7jMtm3ceDSBk6WlpSeVZSkgtgxJMVX3qBIb8QNy4snnEZQI3IPkngPfEUaSSflPlGiq7i79zCy/X4kpJ/ycAewa2wYJy4aCbtohPcMHL0BcmuUo86JLfVmWF/R6vZM5oeiRBVYO9gOxCCKw3nvJYJUvjRuNfD9G93DtHCnYnsq8uaenadTmjJsHr1LbpuTDf47kOSXPEW2IHpBSTFDJiscTNFMkCAni2bwyWwbi/9jS0tKTp6en74uAmrp6ahVO/xoD/AIGi2i1BuvWrduHLoBz27ad1WotXTAcFvSOsq6VCXFec3p0k1A/lsDH1CQxUA7qbE5BQRtKl0eaWyMJ8Z8T5DGfuKlIpmLkee41onRZxpO1GR4NL0SVWZXi6/yV5bB8PtDjRbt95GjUutvMzEy6VzfuTYBuOBw+CPhA7720EcqJLYZwtff+j6mdiKVUUGEYGxMwF8mONb9/5v9HzeMzzHXv4VCYh75bLwgh1hCGuF6DD2S//gT3Mu2q8twsDF3mYsls3vst/V7vnSuLi+cTzKShOlg9t7lyxdvLsGgyuiU4RJtvuOGI2dnZM0in6Hb7f20xAtksjRhnh8Lqoe7GTJJR9PJnqeu9FLzgvjxS273i0kRi1leWnsDfSf092UfJw78Yqcg95enq0qTNT1EUf4J7sNfrnQSkvBKnuIBp9UqfhV6vd09197513GtXIs5mFJOx976Rcw8qYzw59ekdHqbpDtKGNLv4b9QbiSTLqVHEo0hRjjGCv9qq57mD/CjT8/N0Zd6vqqqv9Xq95ywsLNyf/B1yvK674oo9qAg0f/7a+AUPM+goijAmkCN3auqs+fn5C1ZWVl4+GAz+3Tk3Y5uVDzOa86GbXx/nmg9DIthZ6Nzo5mWqVz0WCS3F5qnoHqxLMi2B8Hh0iAGM09QXV92dxnje+dZwOHxHr90+r9VavPfy8vJBCwsL1sBZVBTcvahC0naq3T693+8/tizL93tNY87nqXO9JoZwEZFkqa0uI4l7J+gc8Uyhx/PvsRjao5HM9SwgTawhX5pbOqLsv22NJgkN0o3I16JAHegbsja3bdp0T9LdyfFiT9aI/5c4Mg+CnAQctQRWrrvuukOnpqbuNT09fe7CwsLTV9rtlw8Hg3eBVK0JduS1A/UGAi4xg573YcES76BVM+gYFJDEGL8e6Azv/bMJVGm+zFnqtnwUDTbItyEJzDrZy70ylUfvfTUE0+71nt5qtU5ttVqHASevfnHz0nD9FuoQTNBut49cXl4+u9vtXgDjeO/FkIYoNdeopk7SDogp0APZV/4P1MY5p55rUTyatGa8Y9RRsAZyL0+WpiTu2H3mvXOg4A1IN/HBk23bpdm1c+4nZVl+sdvtvmVlaeV5CwsLjwScavPmzcdbby58/bcpmJLb+2CZ7TRg8dE92QxsA8C5VDV60MrKCtmmz+73+y8qiuIlRVG8wq6yLCnYrzFGm1JWfzcI3s8FH25S/XiD937Wyjvrz6FOra53HlZV9Zler/es9vLyea2FhVOJihLUmwTomjMBEXD6LVgXTubtvf+vSK64MmyT0fSZtIKlR/P1isy8AeY0omcg3ZWJcib9ZlVUrxkMBq8uisHraTs6GAxe1+/3/7Tdbj8d1+bi4txDwOQhhwfCR+iQtbnuMrHJ6kqttXErDxadxcfroAbybmSabty48RAS7Kamp+/FpmlZ5hnLy8v3bbVaD15ZWSFB68n9fv8lriz/O/iktytByJDo5gRVygY0tL2NgW3hrun1eh9YXl5+JkyoOTAHERiCwCepCflJYNFvGGZheuGUVqv10Hav/ayiKCgiquEfTdVKk52gs+jQz9V5+vZ7To+qqj7Z6/We3+12n9zpdB5DajJZmiQkbts2fzZrR8YuRI+Ru2HDhoN++MMfUp+7G4LnootuJ1mbv84jLf6Fv0EmIYzAxpBWi166fv36A1RFOpwG35wQMzMzx09PT99rfn7+7OXl5fM6rdYLer3e3znnLkc9alBPrRPjkUwOpu1pjXpc58ofEKDrttsvWV5efiqZj0REyWfCL46xO4n4bWRMIF04UZVgHBhodnb2QUtLS0+kiIjm5DQjpPH3hHlYlYLMtGnz6GcWy7L8JnUYpKAvLCzQbfH+dFmn7dDM1NRx09PTx5Cujk//J+vXH0DiGkRPQFJ1fXmXNeK/jQ3dDIl4cjRjJ1x22WV3YuOu2HAFRHhXNnJ6/fSeRCtRNVCX5hbnHrKysvK4XqfzurIsP1O68nvAcjgntkPFaUApn0pTOlx2qG91zl1WluW7+53OCyFQJOj89DTdC0+AeEzqN1GMd0YwxgRm41w7NbWfAg+TIUt25SPa7fazhsPhW6qqBF+JKrcZ0q1lrjpP9eCg7/TwQjnnvlUUxUXdbvdlwNhzOuHB0bSFAzl11q3bTIr63bSM9c4QuyWurbv4YsvYzG2Xnb7L2vgVDjYGCaVlmZKIZZepTBAopwRleNQjIGlxqy4vLz+93W6/tN1tv33Q671nMBi8vxgMLioGxQf6/f47yEeCCCHGhZmFcwjMCTFt2nQsagIeKjw9O2rc3Pzv5uDvfI+qKAgRpp3dMLu3oO5t2YIb9b5LS0sPby0tPXF5efmP2r02GZjo7389GAzeVwwG/1AMBh8YDAbv7vf7b2q1Wi/CcwPMiEj7hel70WOLuYK3M3PVDPUZdcKaJa1ZFHktee3XcDSlVH5ZTAEpC4FBsGZET01NnbJtbttZ27ZteyhoxAsLC4+Zm1s8f3Fu7nw8IODTz87OPhCoPpgG/fjGG288csO6dQdhGK7XqibDsGnOa1dGNlfJkFXwYaTxXbSA5PDNmzefsHXr1jN0Lg+dm547d35++uHMEbVmdnYW1YbcHGptxV9P9RWqzZVXXrk/hI+kVwm/Sp2xa23cTsaONrQmsI0bpXAflQPCuP76K8lhP2TzDaIH3x2oR9DJbrjhhuNgkg3XXHMUtgWFHTAPOj4nipXzcd/ms27JaBKinWRWO4FKR+AJg3/DhnWcOIfecMMNR2zcuPGYG2+88QTmuvnGzcfjCGD+vAuF5rwb7wgzcTqtqTRro950U5XMdoBIaMKgBRx3AZcSmA6VmkLwluueEdIvTVVoEOlvcsJAxDZX5sncwNHhQm26+n+uvhsnEn9XnCaZaw4zskb8a6MeTYlLOi//Nu0I+duFF67SjW9NImoSbaYq/RanhF14xmCWPDHt1pjf2rgdjF83QpnAFGsEvzbWxtpYG2tjbayNtbE21sbaWBtrY22sjbWxNtbG2lgba2NtrI3/1eP/B1lSxDFdCFH9AAAAAElFTkSuQmCC";
 
 // raw::plugin/whats-new.md
-var whats_new_default = "<!--\n  The update note the plugin shows ONCE, on the first open after a MINOR or MAJOR update\n  (github#83, design/0016). Three line kinds, in any order after the heading:\n\n    # 2.6.0          the release this note is for -- one per file, and it must be the one\n                     being cut, or the strip stays silent rather than showing a stale note\n    - <text>         up to five bullets, plain text: what you can now do, not how it was\n                     built. No markup, no images, no links -- the strip builds its own\n    > vg-dim         up to four control ids from src/page.html: what this release ADDED.\n                     They pulse while the note is up and stop when it is dismissed. Leave\n                     the line out when a release adds no control of its own\n\n  The strip links out on its own: one link per release between the version last seen and\n  this one, oldest first, plus the feature gallery. The release branch rewrites this file\n  beside the CHANGELOG entry; a PATCH leaves it as it is, and shows nothing.\n  scripts/build-plugin.mjs refuses a file that breaks any of that.\n-->\n# 2.9.0\n- On a phone the panel now sits below the disc in the page's own scroll, instead of covering the circle.\n- Panning is off on a phone -- the disc doesn't drift under your thumb -- and buttons throughout are sized for a finger.\n- A new Folder order setting lays wedges and the legend out the way your vault's own file explorer already sorts them.\n- Root notes take their place among the folders instead of always sitting first or last.\n- The heatmap band's own controls fit their row on a phone instead of spilling out of it.\n> vg-gear\n";
+var whats_new_default = "<!--\n  The update note the plugin shows ONCE, on the first open after a MINOR or MAJOR update\n  (github#83, design/0016). Three line kinds, in any order after the heading:\n\n    # 2.6.0          the release this note is for -- one per file, and it must be the one\n                     being cut, or the strip stays silent rather than showing a stale note\n    - <text>         up to five bullets, plain text: what you can now do, not how it was\n                     built. No markup, no images, no links -- the strip builds its own\n    > vg-dim         up to four control ids from src/page.html: what this release ADDED.\n                     They pulse while the note is up and stop when it is dismissed. Leave\n                     the line out when a release adds no control of its own\n\n  The strip links out on its own: one link per release between the version last seen and\n  this one, oldest first, plus the feature gallery. The release branch rewrites this file\n  beside the CHANGELOG entry; a PATCH leaves it as it is, and shows nothing.\n  scripts/build-plugin.mjs refuses a file that breaks any of that.\n-->\n# 2.10.0\n- The layout engine under the disc was rebuilt to make room for what comes next; most views look just as they did.\n- A typical dot now draws at about the size its space allows, and it scales with the disc when you resize the window.\n- A filtered band fills the ring it owns, and a long tail of small tags or folders keeps its own wedges without drowning in gaps.\n- In the tag view, a new Parent tags chip folds every parent tag into one solid wedge.\n- Walking from note to note frames the whole visible neighbourhood in one camera move.\n> vg-parents\n";
 
 // vg::vg:releases
-var vg_releases_default = [{ "version": "2.9.0", "name": "Mobile & Sort" }, { "version": "2.8.0", "name": "Recent" }, { "version": "2.7.0", "name": "Reader" }, { "version": "2.6.0", "name": "Minimap" }, { "version": "2.5.0", "name": "Tags" }, { "version": "2.4.1", "name": "" }, { "version": "2.4.0", "name": "Auto" }, { "version": "2.3.0", "name": "Gauge" }, { "version": "2.2.0", "name": "Fold" }, { "version": "2.1.0", "name": "Mobile" }, { "version": "2.0.0", "name": "Own Engine" }, { "version": "1.9.0", "name": "Belonging" }, { "version": "1.8.0", "name": "The Hub" }, { "version": "1.7.0", "name": "" }, { "version": "1.6.1", "name": "" }, { "version": "1.6.0", "name": "" }, { "version": "1.5.3", "name": "" }, { "version": "1.5.2", "name": "" }, { "version": "1.5.1", "name": "" }, { "version": "1.5.0", "name": "" }, { "version": "1.4.4", "name": "" }, { "version": "1.4.3", "name": "" }, { "version": "1.4.2", "name": "" }, { "version": "1.4.1", "name": "" }, { "version": "1.4.0", "name": "" }, { "version": "1.3.0", "name": "" }, { "version": "1.2.0", "name": "" }, { "version": "1.1.1", "name": "" }, { "version": "1.1.0", "name": "" }];
+var vg_releases_default = [{ "version": "2.10.0", "name": "Groundwork" }, { "version": "2.9.0", "name": "Mobile & Sort" }, { "version": "2.8.0", "name": "Recent" }, { "version": "2.7.0", "name": "Reader" }, { "version": "2.6.0", "name": "Minimap" }, { "version": "2.5.0", "name": "Tags" }, { "version": "2.4.1", "name": "" }, { "version": "2.4.0", "name": "Auto" }, { "version": "2.3.0", "name": "Gauge" }, { "version": "2.2.0", "name": "Fold" }, { "version": "2.1.0", "name": "Mobile" }, { "version": "2.0.0", "name": "Own Engine" }, { "version": "1.9.0", "name": "Belonging" }, { "version": "1.8.0", "name": "The Hub" }, { "version": "1.7.0", "name": "" }, { "version": "1.6.1", "name": "" }, { "version": "1.6.0", "name": "" }, { "version": "1.5.3", "name": "" }, { "version": "1.5.2", "name": "" }, { "version": "1.5.1", "name": "" }, { "version": "1.5.0", "name": "" }, { "version": "1.4.4", "name": "" }, { "version": "1.4.3", "name": "" }, { "version": "1.4.2", "name": "" }, { "version": "1.4.1", "name": "" }, { "version": "1.4.0", "name": "" }, { "version": "1.3.0", "name": "" }, { "version": "1.2.0", "name": "" }, { "version": "1.1.1", "name": "" }, { "version": "1.1.0", "name": "" }];
 
 // plugin/update-note.mjs
 var NOTE_MAX_BYTES = 4096;
@@ -12482,20 +13447,6 @@ function discIcon() {
   };
   return '<g fill="currentColor" stroke="none">' + ring(36, 8.5, 8, 0) + ring(16, 6.5, 4, 22.5) + "</g>";
 }
-var MONTHISH = /^\d{4}(?:[-_ ]?(?:\d{2}|Q[1-4]|W\d{1,2}))?$/i;
-var TYPE_ALIAS = {
-  people: "person",
-  person: "person",
-  "zettel/permanent": "zettel",
-  "zettel/fleeting": "zettel",
-  "zettel/literature": "zettel"
-};
-var SKIP_FILES = /* @__PURE__ */ new Set(["claude.md", "readme.md", "license.md"]);
-var deNumber = (s) => String(s).replace(/^[\s\d._)-]+/, "").trim();
-var slug = (s) => deNumber(s).toLowerCase().replace(/[\s_]+/g, "-");
-var singular = (s) => s.replace(/ies$/, "y").replace(/([^aeious])s$/, "$1");
-var norm = (s) => String(s).split(/[\\/]/).filter(Boolean).join("/");
-var under = (rel, dir) => !!dir && (rel === dir || rel.startsWith(dir + "/"));
 var attempt = (fn) => {
   try {
     fn();
@@ -12508,272 +13459,6 @@ var RELEASE_URL = "https://github.com/luke321/vault-graph/releases/tag/";
 var RELEASES_URL = "https://github.com/luke321/vault-graph/releases";
 var NEW_CLASS = "vg-new";
 var GALLERY_URL = "https://luke321.github.io/vault-graph/features.html";
-var walkOrder = (a, b) => {
-  const sa = a.split("/"), sb = b.split("/");
-  const n = Math.min(sa.length, sb.length);
-  for (let i = 0; i < n; i++) {
-    if (sa[i] !== sb[i]) return sa[i] < sb[i] ? -1 : 1;
-  }
-  return sa.length - sb.length;
-};
-var paraFolder = (path) => {
-  const seg = path.split("/");
-  return seg.length > 1 ? seg[0] : "(vault root)";
-};
-var paraDirs = (path, flatMonths) => {
-  const seg = path.split("/").slice(1, -1);
-  const out = [];
-  for (let i = 0; i < seg.length; i++) {
-    if (MONTHISH.test(seg[i])) {
-      if (i === 0 && !flatMonths) out.push(seg[i]);
-      break;
-    }
-    out.push(seg[i]);
-  }
-  return out;
-};
-function inferType(fm, path, tags, dailyDir, isTemplate) {
-  const raw = typeof fm.type === "string" ? fm.type.toLowerCase() : "";
-  if (raw) return TYPE_ALIAS[raw] || raw;
-  if (tags.indexOf("daily-note") >= 0) return "daily";
-  if (under(path, dailyDir)) return "daily";
-  if (isTemplate(path)) return "template";
-  const dirs = path.split("/").slice(0, -1).filter(Boolean);
-  const named = dirs.filter((d) => !MONTHISH.test(d));
-  const pick = named.length ? named[named.length - 1] : dirs[0];
-  const type = pick ? singular(slug(pick)) : "";
-  return type || "note";
-}
-async function readConfigJson(app, name) {
-  try {
-    const p = (0, import_obsidian.normalizePath)(app.vault.configDir + "/" + name);
-    if (!await app.vault.adapter.exists(p)) return null;
-    const parsed = JSON.parse(await app.vault.adapter.read(p));
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-var strField = (obj, key) => {
-  if (!obj || typeof obj !== "object" || !(key in obj)) return "";
-  const v = (
-    /** @type {Record<string, unknown>} */
-    obj[key]
-  );
-  return typeof v === "string" ? v : "";
-};
-async function readFolders(app) {
-  const dirs = /* @__PURE__ */ new Set();
-  const core = strField(await readConfigJson(app, "templates.json"), "folder");
-  if (core.trim()) dirs.add(norm(core));
-  const templater = strField(await readConfigJson(app, "plugins/templater-obsidian/data.json"), "templates_folder");
-  if (templater.trim()) dirs.add(norm(templater));
-  const dn = strField(await readConfigJson(app, "daily-notes.json"), "folder");
-  const dailyDir = dn.trim() ? norm(dn) : "";
-  return { templateDirs: Array.from(dirs), dailyDir };
-}
-async function readSortSpecs(app) {
-  const out = [];
-  const seen = /* @__PURE__ */ new Set();
-  const add = (file) => {
-    if (!file || seen.has(file.path)) return;
-    seen.add(file.path);
-    const fm = (app.metadataCache.getFileCache(file) || {}).frontmatter || {};
-    const text = typeof fm["sorting-spec"] === "string" ? fm["sorting-spec"] : "";
-    if (!text.trim()) return;
-    const dir = file.parent && file.parent.path && file.parent.path !== "/" ? file.parent.path : "";
-    out.push({ folder: dir, text, origin: file.path });
-  };
-  for (const file of app.vault.getMarkdownFiles()) {
-    const dir = file.parent && file.parent.path && file.parent.path !== "/" ? file.parent.path : "";
-    const parent = dir.indexOf("/") < 0 ? dir : dir.slice(dir.lastIndexOf("/") + 1);
-    if (file.basename.toLowerCase() === "sortspec" || parent && file.basename === parent) add(file);
-  }
-  const extra = strField(await readConfigJson(app, "plugins/custom-sort/data.json"), "additionalSortspecFile");
-  if (extra.trim()) {
-    const f = app.vault.getFileByPath((0, import_obsidian.normalizePath)(norm(extra)));
-    if (f) add(
-      /** @type {import("obsidian").TFile} */
-      f
-    );
-  }
-  return out;
-}
-async function buildData(app, opts, version) {
-  const t0 = performance.now();
-  const folders = await readFolders(app);
-  const sortSpecs = await readSortSpecs(app);
-  const templateDirs = folders.templateDirs, dailyDir = folders.dailyDir;
-  const isTemplate = (path) => templateDirs.some((d) => under(path, d));
-  const files = app.vault.getMarkdownFiles().filter((f) => {
-    if (SKIP_FILES.has(f.name.toLowerCase())) return false;
-    return opts.templates ? true : !isTemplate(f.path);
-  });
-  files.sort((a, b) => walkOrder(a.path, b.path));
-  const index = /* @__PURE__ */ new Map();
-  const nodes = [];
-  const dates = dateTally();
-  for (const file of files) {
-    const cache2 = app.metadataCache.getFileCache(file) || {};
-    const fm = cache2.frontmatter || {};
-    const rawTags = [];
-    const tags = rawTags.concat(fm.tags || [], fm.tag || []).flatMap((t) => String(t).split(/[,\s]+/)).map((t) => t.replace(/^#/, "").trim()).filter(Boolean);
-    const dirs = paraDirs(file.path, opts.flatMonths);
-    const dated = resolveCreated(fm, file.basename, file.stat.ctime, file.stat.mtime);
-    dates[dated.source]++;
-    index.set(file.path, nodes.length);
-    nodes.push({
-      id: file.path,
-      label: file.basename,
-      folder: paraFolder(file.path),
-      dirs,
-      sub: dirs[0] || "",
-      type: inferType(fm, file.path, tags, dailyDir, isTemplate),
-      tags,
-      created: dated.day,
-      touched: localDay(file.stat.mtime),
-      words: 0,
-      _file: file
-    });
-  }
-  const tIndex = performance.now();
-  const weight = /* @__PURE__ */ new Map();
-  const addEdge = (i, j, w) => {
-    if (i === j) return;
-    const key = i < j ? i + " " + j : j + " " + i;
-    weight.set(key, (weight.get(key) || 0) + w);
-  };
-  let attachmentLinks = 0, filteredLinks = 0;
-  const resolved = app.metadataCache.resolvedLinks || {};
-  for (const src of Object.keys(resolved)) {
-    const i = index.get(src);
-    if (i === void 0) continue;
-    for (const dest of Object.keys(resolved[src])) {
-      const j = index.get(dest);
-      if (j === void 0) {
-        if (dest.toLowerCase().endsWith(".md")) filteredLinks++;
-        else attachmentLinks++;
-        continue;
-      }
-      addEdge(i, j, resolved[src][dest]);
-    }
-  }
-  const unresolvedMap = app.metadataCache.unresolvedLinks || {};
-  let unresolved = 0;
-  const ghosts = /* @__PURE__ */ new Map();
-  for (const src of Object.keys(unresolvedMap)) {
-    const i = index.get(src);
-    if (i === void 0) continue;
-    for (const target of Object.keys(unresolvedMap[src])) {
-      const n = unresolvedMap[src][target];
-      unresolved += n;
-      if (!opts.ghosts) continue;
-      const dest = canonicalDest(src, target);
-      const key = ghostKey(dest);
-      let slot = ghosts.get(key);
-      if (!slot) {
-        slot = { dest, sources: [] };
-        ghosts.set(key, slot);
-      } else if (dest < slot.dest) slot.dest = dest;
-      slot.sources.push([i, n]);
-    }
-  }
-  if (opts.ghosts) {
-    for (const slot of ghosts.values()) {
-      const j = nodes.length;
-      nodes.push({
-        id: ghostId(slot.dest),
-        label: ghostLabel(slot.dest),
-        folder: "(unresolved)",
-        sub: "",
-        dirs: [],
-        type: "ghost",
-        tags: [],
-        created: "",
-        touched: "",
-        words: 0,
-        ghost: true
-      });
-      for (const pair of slot.sources) addEdge(pair[0], j, pair[1]);
-    }
-  }
-  const tEdges = performance.now();
-  const wordFiles = opts.words ? nodes.map((n) => n._file || null) : null;
-  const readWords = async (apply, only) => {
-    const t = performance.now();
-    if (!wordFiles) return 0;
-    await Promise.all(wordFiles.map(async (file, i) => {
-      if (!file) return;
-      if (only && !only.has(file.path)) return;
-      let words = 0;
-      try {
-        const raw = await app.vault.cachedRead(file);
-        const m = /^---\r?\n[\s\S]*?\r?\n---/.exec(raw.replace(/^\uFEFF/, ""));
-        const body = m ? raw.slice(m[0].length) : raw;
-        words = body.split(/\s+/).filter(Boolean).length;
-      } catch {
-        words = 0;
-      }
-      apply(i, words);
-    }));
-    return Math.round(performance.now() - t);
-  };
-  const tWords = performance.now();
-  const edges = Array.from(weight).map((entry) => {
-    const ab = entry[0].split(" ");
-    return { s: Number(ab[0]), t: Number(ab[1]), w: entry[1] };
-  });
-  const degree = (
-    /** @type {number[]} */
-    new Array(nodes.length).fill(0)
-  );
-  for (const e of edges) {
-    degree[e.s]++;
-    degree[e.t]++;
-  }
-  const out = nodes.map((n, i) => {
-    const clean = Object.assign({}, n, { deg: degree[i] });
-    delete clean._file;
-    return clean;
-  });
-  const p2 = (n) => String(n).padStart(2, "0");
-  const now = /* @__PURE__ */ new Date();
-  return {
-    vault: app.vault.getName(),
-    version,
-    generated: now.getFullYear() + "-" + p2(now.getMonth() + 1) + "-" + p2(now.getDate()) + " " + p2(now.getHours()) + ":" + p2(now.getMinutes()),
-    nodes: out,
-    edges,
-    stats: {
-      files: files.length,
-      nodes: out.length,
-      edges: edges.length,
-      unresolved,
-      orphans: degree.filter((d) => d === 0).length,
-      // github#6
-      dates,
-      templatesExcluded: !opts.templates,
-      ghostsIncluded: !!opts.ghosts
-    },
-    readWords,
-    // github#71
-    sortSpecs,
-    _spike: {
-      msIndex: Math.round(tIndex - t0),
-      msEdges: Math.round(tEdges - tIndex),
-      msWords: Math.round(tWords - tEdges),
-      msWordsBackground: (
-        /** @type {number | null} */
-        null
-      ),
-      msTotal: Math.round(tWords - t0),
-      templateDirs,
-      dailyDir,
-      attachmentLinks,
-      filteredLinks
-    }
-  };
-}
 var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
   /**
    * @param {import("obsidian").WorkspaceLeaf} leaf
@@ -12954,7 +13639,7 @@ var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
     const renames = this.pendingRenames;
     this.pendingRenames = pathMap();
     try {
-      const next = await buildData(this.app, this.plugin.settings, this.plugin.manifest.version);
+      const next = await buildData({ app: this.app, normalizePath: import_obsidian.normalizePath }, this.plugin.settings, this.plugin.manifest.version);
       if (this.handle !== handle || handle.api !== api) return;
       const had = /* @__PURE__ */ new Map();
       for (const n of this.lastData ? this.lastData.nodes : []) had.set(n.id, n.words || 0);
@@ -13112,7 +13797,7 @@ var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
     const root = this.contentEl;
     root.addClass("vault-graph-view");
     this.mountNote();
-    const data = await buildData(this.app, opts, this.plugin.manifest.version);
+    const data = await buildData({ app: this.app, normalizePath: import_obsidian.normalizePath }, opts, this.plugin.manifest.version);
     if (this.renderGen !== gen) return;
     this.lastData = data;
     const parsed = new DOMParser().parseFromString(page_default, "text/html");
@@ -13215,6 +13900,13 @@ var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
       /** @param {boolean} v */
       onRootInOrder: async (v) => {
         this.plugin.settings.rootInOrder = !!v;
+        await this.plugin.saveSettings();
+      },
+      // github#203
+      parentTagsOnly: this.plugin.settings.parentTagsOnly === true,
+      /** @param {boolean} v */
+      onParentTagsOnly: async (v) => {
+        this.plugin.settings.parentTagsOnly = !!v;
         await this.plugin.saveSettings();
       },
       // github#165
@@ -13324,6 +14016,8 @@ var DEFAULTS = {
   countBars: true,
   // github#164 -- off is the order the disc has always drawn
   rootInOrder: false,
+  // github#203 -- off is today's tag view
+  parentTagsOnly: false,
   // github#165 -- off; the disc's right-click stays the host's
   devTools: false,
   // github#41, design/0011
@@ -13457,7 +14151,7 @@ var ARCHIVE_SLOT = "g11";
 function topFolders(app) {
   const count = /* @__PURE__ */ new Map();
   for (const file of app.vault.getMarkdownFiles()) {
-    if (SKIP_FILES.has(file.name.toLowerCase())) continue;
+    if (isSkippedFile(file.name)) continue;
     const g = paraFolder(file.path);
     count.set(g, (count.get(g) || 0) + 1);
   }
@@ -13467,7 +14161,7 @@ function topFolders(app) {
 function allSubfolders(app, flatMonths) {
   const byFolder = /* @__PURE__ */ new Map();
   for (const file of app.vault.getMarkdownFiles()) {
-    if (SKIP_FILES.has(file.name.toLowerCase())) continue;
+    if (isSkippedFile(file.name)) continue;
     const g = paraFolder(file.path);
     let count = byFolder.get(g);
     if (!count) {
@@ -14047,6 +14741,7 @@ var VaultGraphPlugin = class extends import_obsidian.Plugin {
     if (api.setUnlinkedTintByFolder) api.setUnlinkedTintByFolder(this.settings.unlinkedTintByFolder === true);
     if (api.setCountBars) api.setCountBars(this.settings.countBars !== false);
     if (api.setRootInOrder) api.setRootInOrder(this.settings.rootInOrder === true);
+    if (api.setParentTagsOnly) api.setParentTagsOnly(this.settings.parentTagsOnly === true);
     if (api.setDevTools) api.setDevTools(this.settings.devTools === true);
     if (api.setFitCap) api.setFitCap(this.settings.fitCap !== false);
     if (api.setFolderOrder && this.settings.folderOrder) api.setFolderOrder(this.settings.folderOrder);

@@ -14403,10 +14403,16 @@ function getFullFileName(file) {
 }
 function findMatchingFile(fileName, availableFiles, selectedFiles) {
   const normalizedFileName = fileName.toLowerCase();
-  const matchingFiles = availableFiles.filter(
-    (file) => getFullFileName(file).toLowerCase() === normalizedFileName
-  );
-  return matchingFiles.find((file) => selectedFiles.includes(file.path)) || matchingFiles[0];
+  let firstMatch;
+  for (const file of availableFiles) {
+    if (getFullFileName(file).toLowerCase() !== normalizedFileName)
+      continue;
+    firstMatch != null ? firstMatch : firstMatch = file;
+    if (selectedFiles.length === 0 || selectedFiles.includes(file.path)) {
+      return file;
+    }
+  }
+  return firstMatch;
 }
 function getFileMention(file) {
   return `${MENTION_PREFIX}${getFullFileName(file)}`;
@@ -14641,12 +14647,16 @@ function filterAvailableCommands(query, includeReasoning = true) {
 }
 function filterAvailableFiles(query, availableFiles, selectedFiles) {
   const normalizedQuery = query.toLowerCase();
-  return availableFiles.filter((file) => {
+  const matches2 = [];
+  for (const file of availableFiles) {
     const fullFileName = getFullFileName(file);
     const isQueryMatch = file.basename.toLowerCase().includes(normalizedQuery) || fullFileName.toLowerCase().includes(normalizedQuery);
-    const isNotAlreadySelected = !selectedFiles.includes(file.path);
-    return isQueryMatch && isNotAlreadySelected;
-  }).slice(0, MAX_DROPDOWN_RESULTS);
+    if (isQueryMatch && !selectedFiles.includes(file.path)) {
+      matches2.push(file);
+      if (matches2.length === MAX_DROPDOWN_RESULTS) break;
+    }
+  }
+  return matches2;
 }
 function filterProviderItems(providers, query) {
   return providers.filter(
@@ -15565,7 +15575,7 @@ var ActionPaletteController = class {
     var _a7, _b3, _c2;
     const result = parseTextToTokens(
       text2,
-      this.getFiles(),
+      text2.includes(MENTION_PREFIX) ? this.getFiles() : [],
       this.state.selectedFiles,
       getAvailableCommands((_c2 = (_b3 = (_a7 = this.options).includeReasoning) == null ? void 0 : _b3.call(_a7)) != null ? _c2 : true)
     );
@@ -16292,10 +16302,12 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
     endHoldingPromptFocus(input != null ? input : null);
   }
   toDOM(_view4) {
+    var _a7, _b3, _c2, _d;
     this.container = document.createElement("div");
     this.container.addClass("local-gpt-action-palette-container");
     const mountTarget = document.createElement("div");
     this.container.appendChild(mountTarget);
+    this.fileSource = (_b3 = (_a7 = this.options).createFileSource) == null ? void 0 : _b3.call(_a7);
     this.app = new ActionPalette({
       target: mountTarget,
       props: {
@@ -16305,7 +16317,7 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
         providerId: this.options.providerId,
         getReasoningSnapshot: this.options.getReasoningSnapshot,
         includeReasoning: this.options.includeReasoning !== false && Boolean(this.options.getReasoningSnapshot),
-        getFiles: this.options.getFiles,
+        getFiles: (_d = (_c2 = this.fileSource) == null ? void 0 : _c2.getFiles) != null ? _d : this.options.getFiles,
         getProviders: this.options.getProviders,
         onProviderChange: this.options.onProviderChange,
         getModels: this.options.getModels,
@@ -16319,9 +16331,9 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
         replaceSelection: this.options.replaceSelection === true,
         onReplaceSelectionChange: this.options.onReplaceSelectionChange,
         onSubmit: (event2) => {
-          var _a7, _b3;
-          (_b3 = (_a7 = this.options).onSubmit) == null ? void 0 : _b3.call(
-            _a7,
+          var _a8, _b4;
+          (_b4 = (_a8 = this.options).onSubmit) == null ? void 0 : _b4.call(
+            _a8,
             event2.text,
             event2.selectedFiles,
             event2.systemPrompt,
@@ -16330,16 +16342,18 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
           );
         },
         onCancel: () => {
-          var _a7, _b3;
-          (_b3 = (_a7 = this.options).onCancel) == null ? void 0 : _b3.call(_a7);
+          var _a8, _b4;
+          (_b4 = (_a8 = this.options).onCancel) == null ? void 0 : _b4.call(_a8);
         }
       }
     });
     return this.container;
   }
   destroy(_dom) {
-    var _a7;
-    (_a7 = this.app) == null ? void 0 : _a7.$destroy();
+    var _a7, _b3;
+    (_a7 = this.fileSource) == null ? void 0 : _a7.dispose();
+    this.fileSource = void 0;
+    (_b3 = this.app) == null ? void 0 : _b3.$destroy();
     this.app = null;
     this.container = null;
   }
@@ -17224,6 +17238,34 @@ function migrateToVersion11(settings) {
   return true;
 }
 
+// src/ui/actionPaletteFiles.ts
+function createPaletteFileSource(vault) {
+  let files;
+  const invalidate = () => {
+    files = void 0;
+  };
+  const refs = [
+    vault.on("create", invalidate),
+    vault.on("delete", invalidate),
+    vault.on("rename", invalidate)
+  ];
+  return {
+    getFiles() {
+      return files != null ? files : files = vault.getMarkdownFiles().concat(
+        vault.getFiles().filter((file) => file.extension === "pdf")
+      ).map(({ path, basename, extension }) => ({
+        path,
+        basename,
+        extension
+      }));
+    },
+    dispose() {
+      refs.forEach((ref) => vault.offref(ref));
+      files = void 0;
+    }
+  };
+}
+
 // src/providerRequest.ts
 var import_obsidian12 = require("obsidian");
 
@@ -17492,7 +17534,7 @@ function registerActionPaletteCommand(plugin) {
         modelLabel: paletteLabel.modelLabel,
         providerDetails: paletteLabel.providerDetails,
         providerId: paletteLabel.currentProviderId,
-        getFiles: () => getActionPaletteFiles(plugin),
+        createFileSource: () => createPaletteFileSource(plugin.app.vault),
         getProviders: () => getActionPaletteProviders(),
         getModels: (providerId) => getActionPaletteModels(providerId),
         onProviderChange: async (providerId) => {
@@ -17558,15 +17600,6 @@ async function getActionPaletteLabel(plugin) {
     void error;
   }
   return { modelLabel, currentProviderId, providerDetails };
-}
-function getActionPaletteFiles(plugin) {
-  return plugin.app.vault.getMarkdownFiles().concat(
-    plugin.app.vault.getFiles().filter((f) => f.extension === "pdf")
-  ).map((file) => ({
-    path: file.path,
-    basename: file.basename,
-    extension: file.extension
-  }));
 }
 async function getActionPaletteProviders() {
   try {

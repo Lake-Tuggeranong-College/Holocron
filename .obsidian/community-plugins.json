@@ -12,5 +12,6 @@
   "ai-providers",
   "slides-extended",
   "obsidian-excalidraw-plugin",
-  "vault-graph"
+  "vault-graph",
+  "document-exporter"
 ]

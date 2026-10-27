@@ -292,7 +292,11 @@ var de_default = {
       noMatchingCommands: "Keine passenden Befehle",
       noMatchingFiles: "Keine passenden Dateien",
       replaceSelectionOn: "Auswahl ersetzen: an ({{hotkey}})",
-      replaceSelectionOff: "Auswahl ersetzen: aus ({{hotkey}})"
+      replaceSelectionOff: "Auswahl ersetzen: aus ({{hotkey}})",
+      actionModelDefault: "Standard verwenden",
+      changeActionModel: "AI-Provider f\xFCr diese Aktion w\xE4hlen",
+      actionModelUnavailable: "Das gespeicherte Modell oder der Anbieter ist nicht verf\xFCgbar. W\xE4hlen Sie ein Modell in der Aktionspalette.",
+      actionModelNoVision: "Das gew\xE4hlte Modell unterst\xFCtzt keine Bilder. W\xE4hlen Sie ein Bildmodell f\xFCr diese Aktion."
     }
   },
   statusBar: {
@@ -322,6 +326,7 @@ var de_default = {
     visionProvider: "Vision AI Provider",
     visionProviderDesc: "Optional. Dies wird f\xFCr Bilder verwendet. Wenn nicht festgelegt, wird der Haupt-AI-Provider verwendet.",
     creativity: "Kreativit\xE4t",
+    actionModel: "AI-Provider",
     creativityNone: "\u26AA Keine",
     creativityLow: "\uFE0F\u{1F4A1} Niedrig",
     creativityMedium: "\u{1F3A8} Mittel",
@@ -433,7 +438,11 @@ var en_default = {
       noMatchingCommands: "No matching commands",
       noMatchingFiles: "No matching files",
       replaceSelectionOn: "Replace selection: on ({{hotkey}})",
-      replaceSelectionOff: "Replace selection: off ({{hotkey}})"
+      replaceSelectionOff: "Replace selection: off ({{hotkey}})",
+      actionModelDefault: "Use default",
+      changeActionModel: "Choose AI provider for this action",
+      actionModelUnavailable: "The saved model or provider is unavailable. Choose a model for this action in the Action Palette.",
+      actionModelNoVision: "The selected model does not support images. Choose a vision model for this action."
     }
   },
   statusBar: {
@@ -463,6 +472,7 @@ var en_default = {
     visionProvider: "Vision AI Provider",
     visionProviderDesc: "Optional. This is used for images. If not set, the main AI provider will be used.",
     creativity: "Creativity",
+    actionModel: "AI provider",
     creativityNone: "\u26AA None",
     creativityLow: "\uFE0F\u{1F4A1} Low",
     creativityMedium: "\u{1F3A8} Medium",
@@ -574,7 +584,11 @@ var es_default = {
       noMatchingCommands: "No hay comandos coincidentes",
       noMatchingFiles: "No hay archivos coincidentes",
       replaceSelectionOn: "Reemplazar selecci\xF3n: activado ({{hotkey}})",
-      replaceSelectionOff: "Reemplazar selecci\xF3n: desactivado ({{hotkey}})"
+      replaceSelectionOff: "Reemplazar selecci\xF3n: desactivado ({{hotkey}})",
+      actionModelDefault: "Usar predeterminado",
+      changeActionModel: "Elegir proveedor de IA para esta acci\xF3n",
+      actionModelUnavailable: "El modelo o proveedor guardado no est\xE1 disponible. Elija un modelo en la paleta de acciones.",
+      actionModelNoVision: "El modelo seleccionado no admite im\xE1genes. Elija un modelo de visi\xF3n para esta acci\xF3n."
     }
   },
   statusBar: {
@@ -604,6 +618,7 @@ var es_default = {
     visionProvider: "Proveedor de visi\xF3n",
     visionProviderDesc: "Opcional. Se utiliza para im\xE1genes. Si no se establece, se usar\xE1 el proveedor principal.",
     creativity: "Creatividad",
+    actionModel: "Proveedor de IA",
     creativityNone: "\u26AA Ninguna",
     creativityLow: "\uFE0F\u{1F4A1} Baja",
     creativityMedium: "\u{1F3A8} Media",
@@ -715,7 +730,11 @@ var fr_default = {
       noMatchingCommands: "Aucune commande correspondante",
       noMatchingFiles: "Aucun fichier correspondant",
       replaceSelectionOn: "Remplacer la s\xE9lection : activ\xE9 ({{hotkey}})",
-      replaceSelectionOff: "Remplacer la s\xE9lection : d\xE9sactiv\xE9 ({{hotkey}})"
+      replaceSelectionOff: "Remplacer la s\xE9lection : d\xE9sactiv\xE9 ({{hotkey}})",
+      actionModelDefault: "Utiliser le mod\xE8le par d\xE9faut",
+      changeActionModel: "Choisir le fournisseur d'IA de cette action",
+      actionModelUnavailable: "Le mod\xE8le ou fournisseur enregistr\xE9 est indisponible. Choisissez un mod\xE8le dans la palette d\u2019actions.",
+      actionModelNoVision: "Le mod\xE8le choisi ne prend pas en charge les images. Choisissez un mod\xE8le de vision."
     }
   },
   statusBar: {
@@ -745,6 +764,7 @@ var fr_default = {
     visionProvider: "Fournisseur d'IA de vision",
     visionProviderDesc: "Facultatif. Utilis\xE9 pour les images. Si non d\xE9fini, le fournisseur principal sera utilis\xE9.",
     creativity: "Cr\xE9ativit\xE9",
+    actionModel: "Fournisseur d'IA",
     creativityNone: "\u26AA Aucune",
     creativityLow: "\uFE0F\u{1F4A1} Basse",
     creativityMedium: "\u{1F3A8} Moyenne",
@@ -856,7 +876,11 @@ var it_default = {
       noMatchingCommands: "Nessun comando corrispondente",
       noMatchingFiles: "Nessun file corrispondente",
       replaceSelectionOn: "Sostituisci selezione: attivo ({{hotkey}})",
-      replaceSelectionOff: "Sostituisci selezione: disattivo ({{hotkey}})"
+      replaceSelectionOff: "Sostituisci selezione: disattivo ({{hotkey}})",
+      actionModelDefault: "Usa predefinito",
+      changeActionModel: "Scegli fornitore AI per questa azione",
+      actionModelUnavailable: "Il modello o fornitore salvato non \xE8 disponibile. Scegli un modello nella tavolozza delle azioni.",
+      actionModelNoVision: "Il modello selezionato non supporta immagini. Scegli un modello visivo."
     }
   },
   statusBar: {
@@ -886,6 +910,7 @@ var it_default = {
     visionProvider: "Fornitore AI per visione",
     visionProviderDesc: "Opzionale. Usato per le immagini. Se non impostato, verr\xE0 usato il fornitore principale.",
     creativity: "Creativit\xE0",
+    actionModel: "Fornitore AI",
     creativityNone: "\u26AA Nessuna",
     creativityLow: "\uFE0F\u{1F4A1} Bassa",
     creativityMedium: "\u{1F3A8} Media",
@@ -997,7 +1022,11 @@ var ja_default = {
       noMatchingCommands: "\u4E00\u81F4\u3059\u308B\u30B3\u30DE\u30F3\u30C9\u304C\u3042\u308A\u307E\u305B\u3093",
       noMatchingFiles: "\u4E00\u81F4\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093",
       replaceSelectionOn: "\u9078\u629E\u7BC4\u56F2\u3092\u7F6E\u304D\u63DB\u3048: \u30AA\u30F3 ({{hotkey}})",
-      replaceSelectionOff: "\u9078\u629E\u7BC4\u56F2\u3092\u7F6E\u304D\u63DB\u3048: \u30AA\u30D5 ({{hotkey}})"
+      replaceSelectionOff: "\u9078\u629E\u7BC4\u56F2\u3092\u7F6E\u304D\u63DB\u3048: \u30AA\u30D5 ({{hotkey}})",
+      actionModelDefault: "\u65E2\u5B9A\u3092\u4F7F\u7528",
+      changeActionModel: "\u3053\u306E\u30A2\u30AF\u30B7\u30E7\u30F3\u306EAI\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC\u3092\u9078\u629E",
+      actionModelUnavailable: "\u4FDD\u5B58\u3055\u308C\u305F\u30E2\u30C7\u30EB\u307E\u305F\u306F\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC\u3092\u5229\u7528\u3067\u304D\u307E\u305B\u3093\u3002\u30A2\u30AF\u30B7\u30E7\u30F3\u30D1\u30EC\u30C3\u30C8\u3067\u30E2\u30C7\u30EB\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+      actionModelNoVision: "\u9078\u629E\u3057\u305F\u30E2\u30C7\u30EB\u306F\u753B\u50CF\u306B\u5BFE\u5FDC\u3057\u3066\u3044\u307E\u305B\u3093\u3002\u753B\u50CF\u5BFE\u5FDC\u30E2\u30C7\u30EB\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
     }
   },
   statusBar: {
@@ -1027,6 +1056,7 @@ var ja_default = {
     visionProvider: "\u30D3\u30B8\u30E7\u30F3AI\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC",
     visionProviderDesc: "\u30AA\u30D7\u30B7\u30E7\u30F3\u3002\u753B\u50CF\u306B\u4F7F\u7528\u3055\u308C\u307E\u3059\u3002\u8A2D\u5B9A\u3055\u308C\u3066\u3044\u306A\u3044\u5834\u5408\u306F\u3001\u30E1\u30A4\u30F3\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC\u304C\u4F7F\u7528\u3055\u308C\u307E\u3059\u3002",
     creativity: "\u5275\u9020\u6027",
+    actionModel: "AI\u30D7\u30ED\u30D0\u30A4\u30C0\u30FC",
     creativityNone: "\u26AA \u306A\u3057",
     creativityLow: "\uFE0F\u{1F4A1} \u4F4E",
     creativityMedium: "\u{1F3A8} \u4E2D",
@@ -1138,7 +1168,11 @@ var ko_default = {
       noMatchingCommands: "\uC77C\uCE58\uD558\uB294 \uBA85\uB839\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
       noMatchingFiles: "\uC77C\uCE58\uD558\uB294 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
       replaceSelectionOn: "\uC120\uD0DD \uC601\uC5ED \uBC14\uAFB8\uAE30: \uCF1C\uC9D0 ({{hotkey}})",
-      replaceSelectionOff: "\uC120\uD0DD \uC601\uC5ED \uBC14\uAFB8\uAE30: \uAEBC\uC9D0 ({{hotkey}})"
+      replaceSelectionOff: "\uC120\uD0DD \uC601\uC5ED \uBC14\uAFB8\uAE30: \uAEBC\uC9D0 ({{hotkey}})",
+      actionModelDefault: "\uAE30\uBCF8\uAC12 \uC0AC\uC6A9",
+      changeActionModel: "\uC774 \uC791\uC5C5\uC758 AI \uC81C\uACF5\uC5C5\uCCB4 \uC120\uD0DD",
+      actionModelUnavailable: "\uC800\uC7A5\uB41C \uBAA8\uB378\uC774\uB098 \uC81C\uACF5\uC790\uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC791\uC5C5 \uD314\uB808\uD2B8\uC5D0\uC11C \uBAA8\uB378\uC744 \uC120\uD0DD\uD558\uC138\uC694.",
+      actionModelNoVision: "\uC120\uD0DD\uD55C \uBAA8\uB378\uC740 \uC774\uBBF8\uC9C0\uB97C \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uC774\uBBF8\uC9C0 \uC9C0\uC6D0 \uBAA8\uB378\uC744 \uC120\uD0DD\uD558\uC138\uC694."
     }
   },
   statusBar: {
@@ -1168,6 +1202,7 @@ var ko_default = {
     visionProvider: "\uBE44\uC804 AI \uC81C\uACF5\uC5C5\uCCB4",
     visionProviderDesc: "\uC120\uD0DD \uC0AC\uD56D. \uC774\uBBF8\uC9C0\uC5D0 \uC0AC\uC6A9\uB429\uB2C8\uB2E4. \uC124\uC815\uD558\uC9C0 \uC54A\uC73C\uBA74 \uBA54\uC778 \uC81C\uACF5\uC5C5\uCCB4\uAC00 \uC0AC\uC6A9\uB429\uB2C8\uB2E4.",
     creativity: "\uCC3D\uC758\uC131",
+    actionModel: "AI \uC81C\uACF5\uC5C5\uCCB4",
     creativityNone: "\u26AA \uC5C6\uC74C",
     creativityLow: "\uFE0F\u{1F4A1} \uB0AE\uC74C",
     creativityMedium: "\u{1F3A8} \uC911\uAC04",
@@ -1279,7 +1314,11 @@ var nl_default = {
       noMatchingCommands: "Geen overeenkomende opdrachten",
       noMatchingFiles: "Geen overeenkomende bestanden",
       replaceSelectionOn: "Selectie vervangen: aan ({{hotkey}})",
-      replaceSelectionOff: "Selectie vervangen: uit ({{hotkey}})"
+      replaceSelectionOff: "Selectie vervangen: uit ({{hotkey}})",
+      actionModelDefault: "Standaard gebruiken",
+      changeActionModel: "AI-provider voor deze actie kiezen",
+      actionModelUnavailable: "Het opgeslagen model of de provider is niet beschikbaar. Kies een model in het actiepalet.",
+      actionModelNoVision: "Het gekozen model ondersteunt geen afbeeldingen. Kies een visiemodel."
     }
   },
   statusBar: {
@@ -1309,6 +1348,7 @@ var nl_default = {
     visionProvider: "Visie AI-provider",
     visionProviderDesc: "Optioneel. Gebruikt voor afbeeldingen. Indien niet ingesteld, wordt de hoofdprovider gebruikt.",
     creativity: "Creativiteit",
+    actionModel: "AI-provider",
     creativityNone: "\u26AA Geen",
     creativityLow: "\uFE0F\u{1F4A1} Laag",
     creativityMedium: "\u{1F3A8} Gemiddeld",
@@ -1420,7 +1460,11 @@ var pt_default = {
       noMatchingCommands: "Nenhum comando correspondente",
       noMatchingFiles: "Nenhum arquivo correspondente",
       replaceSelectionOn: "Substituir sele\xE7\xE3o: ativado ({{hotkey}})",
-      replaceSelectionOff: "Substituir sele\xE7\xE3o: desativado ({{hotkey}})"
+      replaceSelectionOff: "Substituir sele\xE7\xE3o: desativado ({{hotkey}})",
+      actionModelDefault: "Usar padr\xE3o",
+      changeActionModel: "Escolher provedor de IA para esta a\xE7\xE3o",
+      actionModelUnavailable: "O modelo ou provedor salvo n\xE3o est\xE1 dispon\xEDvel. Escolha um modelo na paleta de a\xE7\xF5es.",
+      actionModelNoVision: "O modelo selecionado n\xE3o aceita imagens. Escolha um modelo de vis\xE3o."
     }
   },
   statusBar: {
@@ -1450,6 +1494,7 @@ var pt_default = {
     visionProvider: "Provedor de IA de Vis\xE3o",
     visionProviderDesc: "Opcional. Usado para imagens. Se n\xE3o definido, o provedor principal ser\xE1 usado.",
     creativity: "Criatividade",
+    actionModel: "Provedor de IA",
     creativityNone: "\u26AA Nenhuma",
     creativityLow: "\uFE0F\u{1F4A1} Baixa",
     creativityMedium: "\u{1F3A8} M\xE9dia",
@@ -1561,7 +1606,11 @@ var ru_default = {
       noMatchingCommands: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043A\u043E\u043C\u0430\u043D\u0434",
       noMatchingFiles: "\u041D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0444\u0430\u0439\u043B\u043E\u0432",
       replaceSelectionOn: "\u0417\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435: \u0432\u043A\u043B. ({{hotkey}})",
-      replaceSelectionOff: "\u0417\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435: \u0432\u044B\u043A\u043B. ({{hotkey}})"
+      replaceSelectionOff: "\u0417\u0430\u043C\u0435\u043D\u044F\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435: \u0432\u044B\u043A\u043B. ({{hotkey}})",
+      actionModelDefault: "\u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
+      changeActionModel: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C AI-\u043F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440\u0430 \u0434\u043B\u044F \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
+      actionModelUnavailable: "\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u0438\u043B\u0438 \u043F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u043E\u0434\u0435\u043B\u044C \u0434\u043B\u044F \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0432 \u043F\u0430\u043B\u0438\u0442\u0440\u0435.",
+      actionModelNoVision: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C \u043D\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043C\u043E\u0434\u0435\u043B\u044C \u0441 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u043E\u0439 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439."
     }
   },
   statusBar: {
@@ -1591,6 +1640,7 @@ var ru_default = {
     visionProvider: "\u041F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440 \u0434\u043B\u044F \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439",
     visionProviderDesc: "\u041E\u043F\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E. \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F\u043C\u0438. \u0415\u0441\u043B\u0438 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D, \u0431\u0443\u0434\u0435\u0442 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 AI-\u043F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440.",
     creativity: "\u041A\u0440\u0435\u0430\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C",
+    actionModel: "AI-\u043F\u0440\u043E\u0432\u0430\u0439\u0434\u0435\u0440",
     creativityNone: "\u26AA \u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442",
     creativityLow: "\uFE0F\u{1F4A1} \u041D\u0438\u0437\u043A\u0430\u044F",
     creativityMedium: "\u{1F3A8} \u0421\u0440\u0435\u0434\u043D\u044F\u044F",
@@ -1702,7 +1752,11 @@ var zh_default = {
       noMatchingCommands: "\u6CA1\u6709\u5339\u914D\u7684\u547D\u4EE4",
       noMatchingFiles: "\u6CA1\u6709\u5339\u914D\u7684\u6587\u4EF6",
       replaceSelectionOn: "\u66FF\u6362\u6240\u9009\u5185\u5BB9\uFF1A\u5F00 ({{hotkey}})",
-      replaceSelectionOff: "\u66FF\u6362\u6240\u9009\u5185\u5BB9\uFF1A\u5173 ({{hotkey}})"
+      replaceSelectionOff: "\u66FF\u6362\u6240\u9009\u5185\u5BB9\uFF1A\u5173 ({{hotkey}})",
+      actionModelDefault: "\u4F7F\u7528\u9ED8\u8BA4\u6A21\u578B",
+      changeActionModel: "\u4E3A\u6B64\u64CD\u4F5C\u9009\u62E9 AI \u63D0\u4F9B\u5546",
+      actionModelUnavailable: "\u4FDD\u5B58\u7684\u6A21\u578B\u6216\u63D0\u4F9B\u5546\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u64CD\u4F5C\u9762\u677F\u4E2D\u9009\u62E9\u6A21\u578B\u3002",
+      actionModelNoVision: "\u6240\u9009\u6A21\u578B\u4E0D\u652F\u6301\u56FE\u50CF\u3002\u8BF7\u4E3A\u6B64\u64CD\u4F5C\u9009\u62E9\u89C6\u89C9\u6A21\u578B\u3002"
     }
   },
   statusBar: {
@@ -1732,6 +1786,7 @@ var zh_default = {
     visionProvider: "\u89C6\u89C9AI\u63D0\u4F9B\u5546",
     visionProviderDesc: "\u53EF\u9009\u3002\u6B64\u9009\u9879\u7528\u4E8E\u56FE\u7247\u3002\u5982\u679C\u672A\u8BBE\u7F6E\uFF0C\u5C06\u4F7F\u7528\u4E3B\u8981\u7684AI\u63D0\u4F9B\u5546\u3002",
     creativity: "\u521B\u9020\u529B",
+    actionModel: "AI \u63D0\u4F9B\u5546",
     creativityNone: "\u26AA \u65E0",
     creativityLow: "\uFE0F\u{1F4A1} \u4F4E",
     creativityMedium: "\u{1F3A8} \u4E2D",
@@ -2213,6 +2268,67 @@ var CONTEXT_KEYWORD = "{{=CONTEXT=}}";
 var CONTEXT_CONDITION_START = "{{=CONTEXT_START=}}";
 var CONTEXT_CONDITION_END = "{{=CONTEXT_END=}}";
 
+// src/actionModels.ts
+var ACTION_MODEL_SEPARATOR = "::";
+function collectActionModelChoices(providers) {
+  return providers.filter((provider) => Boolean(provider.id)).map((provider) => {
+    var _a7;
+    return {
+      selection: {
+        providerId: provider.id,
+        model: (_a7 = provider.model) != null ? _a7 : ""
+      },
+      label: provider.model ? [provider.name, provider.model].join(" ~ ") : provider.name
+    };
+  });
+}
+function encodeActionModelSelection(selection) {
+  if (!(selection == null ? void 0 : selection.providerId) || !selection.model) {
+    return "";
+  }
+  return `${selection.providerId}${ACTION_MODEL_SEPARATOR}${selection.model}`;
+}
+function decodeActionModelSelection(value) {
+  const separatorIndex = value.indexOf(ACTION_MODEL_SEPARATOR);
+  if (separatorIndex <= 0) {
+    return void 0;
+  }
+  const providerId = value.slice(0, separatorIndex);
+  const model = value.slice(separatorIndex + ACTION_MODEL_SEPARATOR.length);
+  if (!providerId || !model) {
+    return void 0;
+  }
+  return { providerId, model };
+}
+function resolveActionModel(service, selection, hasImages = false) {
+  var _a7, _b3, _c2;
+  const provider = service.providers.find(
+    (item) => item.id === selection.providerId
+  );
+  if (!provider || !((_a7 = selection.model) == null ? void 0 : _a7.trim())) {
+    throw new Error(
+      I18n.t("commands.actionPalette.actionModelUnavailable")
+    );
+  }
+  if (hasImages && ((_c2 = (_b3 = provider.modelCapabilities) == null ? void 0 : _b3[selection.model]) == null ? void 0 : _c2.vision) === false) {
+    throw new Error(I18n.t("commands.actionPalette.actionModelNoVision"));
+  }
+  return { ...provider, model: selection.model };
+}
+function actionModelLabel(action2, providers, settings) {
+  var _a7;
+  const selection = action2.modelSelection;
+  const provider = providers.find(
+    (item) => {
+      var _a8;
+      return item.id === ((_a8 = selection == null ? void 0 : selection.providerId) != null ? _a8 : settings.aiProviders.main);
+    }
+  );
+  const model = (_a7 = selection == null ? void 0 : selection.model) != null ? _a7 : provider == null ? void 0 : provider.model;
+  const label = provider && model ? `${provider.name} \xB7 ${model}` : I18n.t("commands.actionPalette.actionModelUnavailable");
+  return selection ? label : `${I18n.t("commands.actionPalette.actionModelDefault")} \xB7 ${label}`;
+}
+
 // src/LocalGPTSettingTab.ts
 var import_sdk2 = __toESM(require_dist());
 
@@ -2660,6 +2776,7 @@ var import_obsidian3 = require("obsidian");
 function renderActionEditor({
   reasoningModes = [],
   reasoningModeSources,
+  actionModelChoices = [],
   container,
   plugin,
   actionToEdit,
@@ -2729,6 +2846,35 @@ function renderActionEditor({
         delete actionToEdit.temperature;
       else
         actionToEdit.temperature = selection === "default" ? null : Number(selection);
+    });
+  });
+  const currentModelValue = encodeActionModelSelection(
+    actionToEdit.modelSelection
+  );
+  const hasCurrentModelChoice = actionModelChoices.some(
+    (choice) => encodeActionModelSelection(choice.selection) === currentModelValue
+  );
+  new import_obsidian3.Setting(container).setName(I18n.t("settings.actionModel")).setDesc(I18n.t("commands.actionPalette.changeActionModel")).addDropdown((dropdown) => {
+    dropdown.addOption("", I18n.t("settings.reasoningEffortInherit"));
+    for (const choice of actionModelChoices) {
+      dropdown.addOption(
+        encodeActionModelSelection(choice.selection),
+        choice.label
+      );
+    }
+    if (actionToEdit.modelSelection && !hasCurrentModelChoice) {
+      dropdown.addOption(
+        currentModelValue,
+        `${actionToEdit.modelSelection.providerId} ~ ${actionToEdit.modelSelection.model} (${I18n.t("settings.reasoningUnavailable")})`
+      );
+    }
+    dropdown.setValue(currentModelValue).onChange((value) => {
+      const selection = decodeActionModelSelection(value);
+      if (selection) {
+        actionToEdit.modelSelection = selection;
+      } else {
+        delete actionToEdit.modelSelection;
+      }
     });
   });
   const actionButtonsRow = new import_obsidian3.Setting(container).setName("");
@@ -5845,9 +5991,9 @@ function _generateId(el) {
   }
   return sum.toString(36);
 }
-function _saveInputCheckedState(root3) {
+function _saveInputCheckedState(root4) {
   savedInputChecked.length = 0;
-  var inputs = root3.getElementsByTagName("input");
+  var inputs = root4.getElementsByTagName("input");
   var idx = inputs.length;
   while (idx--) {
     var el = inputs[idx];
@@ -6237,6 +6383,7 @@ function renderActionsList(options) {
       renderActionEditor({
         reasoningModes: options.reasoningModes,
         reasoningModeSources: options.reasoningModeSources,
+        actionModelChoices: options.actionModelChoices,
         container: actionRow.infoEl,
         plugin: options.plugin,
         actionToEdit: action2,
@@ -6414,6 +6561,7 @@ var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
     this.modelsOptions = {};
     this.reasoningModes = [];
     this.reasoningModeSources = [];
+    this.actionModelChoices = [];
     // Controls visibility of the Advanced settings section
     this.isAdvancedMode = false;
     this.communityActionsStatusMessage = "";
@@ -6432,6 +6580,9 @@ var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
       this.reasoningModeSources = reasoningAvailable ? collectReasoningModeSources(aiProvidersResponse.providers) : [];
       this.reasoningModes = this.reasoningModeSources.map(
         (source2) => source2.mode
+      );
+      this.actionModelChoices = collectActionModelChoices(
+        aiProvidersResponse.providers
       );
       if (!reasoningAvailable) {
         new import_obsidian7.Setting(containerEl).setName(I18n.t("settings.aiProvidersUpdateHeading")).setDesc(aiProvidersUpgradeMessage());
@@ -6639,6 +6790,7 @@ var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
       renderActionEditor({
         reasoningModes: this.reasoningModes,
         reasoningModeSources: this.reasoningModeSources,
+        actionModelChoices: this.actionModelChoices,
         container: containerEl,
         plugin: this.plugin,
         actionToEdit: editingAction,
@@ -6651,6 +6803,7 @@ var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
     renderActionsList({
       reasoningModes: this.reasoningModes,
       reasoningModeSources: this.reasoningModeSources,
+      actionModelChoices: this.actionModelChoices,
       containerEl,
       plugin: this.plugin,
       editExistingAction: this.editExistingAction,
@@ -6734,10 +6887,15 @@ var LocalGPTSettingTab = class extends import_obsidian7.PluginSettingTab {
     }
   }
   async addNewAction(editingAction) {
-    const actionWithId = ensureActionId(editingAction);
     const alreadyExistingActionIndex = this.plugin.settings.actions.findIndex(
-      (action2) => action2.name === actionWithId.name
+      (action2) => action2.name === editingAction.name
     );
+    const existing = alreadyExistingActionIndex >= 0 ? this.plugin.settings.actions[alreadyExistingActionIndex] : void 0;
+    const actionWithId = ensureActionId({
+      ...editingAction,
+      ...(existing == null ? void 0 : existing.id) && !editingAction.id ? { id: existing.id } : {},
+      ...(existing == null ? void 0 : existing.modelSelection) && !editingAction.modelSelection ? { modelSelection: existing.modelSelection } : {}
+    });
     if (alreadyExistingActionIndex >= 0) {
       this.plugin.settings.actions[alreadyExistingActionIndex] = actionWithId;
       new import_obsidian7.Notice(
@@ -9136,11 +9294,11 @@ process_fn = function() {
   var effects = collected_effects = [];
   var render_effects = [];
   var updates = legacy_updates = [];
-  for (const root3 of roots) {
+  for (const root4 of roots) {
     try {
-      __privateMethod(this, _Batch_instances, traverse_fn).call(this, root3, effects, render_effects);
+      __privateMethod(this, _Batch_instances, traverse_fn).call(this, root4, effects, render_effects);
     } catch (e) {
-      reset_all(root3);
+      reset_all(root4);
       throw e;
     }
   }
@@ -9202,9 +9360,9 @@ process_fn = function() {
  * @param {Effect[]} effects
  * @param {Effect[]} render_effects
  */
-traverse_fn = function(root3, effects, render_effects) {
-  root3.f ^= CLEAN;
-  var effect2 = root3.first;
+traverse_fn = function(root4, effects, render_effects) {
+  root4.f ^= CLEAN;
+  var effect2 = root4.first;
   while (effect2 !== null) {
     var flags2 = effect2.f;
     var is_branch = (flags2 & (BRANCH_EFFECT | ROOT_EFFECT)) !== 0;
@@ -9298,8 +9456,8 @@ commit_fn = function() {
       }
       if (__privateGet(batch, _roots).length > 0) {
         batch.apply();
-        for (var root3 of __privateGet(batch, _roots)) {
-          __privateMethod(_a7 = batch, _Batch_instances, traverse_fn).call(_a7, root3, [], []);
+        for (var root4 of __privateGet(batch, _roots)) {
+          __privateMethod(_a7 = batch, _Batch_instances, traverse_fn).call(_a7, root4, [], []);
         }
         __privateSet(batch, _roots, []);
       }
@@ -10363,6 +10521,13 @@ function mutable_source(initial_value, immutable = false, trackable = true) {
   }
   return s;
 }
+function mutate(source2, value) {
+  set(
+    source2,
+    untrack(() => get(source2))
+  );
+  return value;
+}
 function set(source2, value, should_proxy = false) {
   if (active_reaction !== null && // since we are untracking the function inside `$inspect.with` we need to add this check
   // to ensure we error if state is set inside an inspect effect
@@ -10598,7 +10763,7 @@ function is_dirty(reaction) {
   }
   return false;
 }
-function schedule_possible_effect_self_invalidation(signal, effect2, root3 = true) {
+function schedule_possible_effect_self_invalidation(signal, effect2, root4 = true) {
   var reactions = signal.reactions;
   if (reactions === null) return;
   if (!async_mode_flag && current_sources !== null && includes.call(current_sources, signal)) {
@@ -10614,7 +10779,7 @@ function schedule_possible_effect_self_invalidation(signal, effect2, root3 = tru
         false
       );
     } else if (effect2 === reaction) {
-      if (root3) {
+      if (root4) {
         set_signal_status(reaction, DIRTY);
       } else if ((reaction.f & CLEAN) !== 0) {
         set_signal_status(reaction, MAYBE_DIRTY);
@@ -10959,6 +11124,9 @@ function depends_on_old_values(derived2) {
     }
   }
   return false;
+}
+function safe_get(signal) {
+  return signal && get(signal);
 }
 function untrack(fn) {
   var previous_untracking = untracking;
@@ -11598,6 +11766,25 @@ function from_html(content, flags2) {
     }
     return clone2;
   };
+}
+function text(value = "") {
+  if (!hydrating) {
+    var t = create_text(value + "");
+    assign_nodes(t, t);
+    return t;
+  }
+  var node = hydrate_node;
+  if (node.nodeType !== TEXT_NODE) {
+    node.before(node = create_text());
+    set_hydrate_node(node);
+  } else {
+    merge_text_nodes(
+      /** @type {Text} */
+      node
+    );
+  }
+  assign_nodes(node, node);
+  return node;
 }
 function comment() {
   if (hydrating) {
@@ -13581,6 +13768,149 @@ function get_custom_elements_slots(element2) {
   return result;
 }
 
+// node_modules/tslib/tslib.es6.mjs
+function __awaiter(thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function(resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function(resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+}
+
+// src/ui/SavedActionList.svelte
+var root_2 = from_html(`<span class="local-gpt-saved-action-model"> </span>`);
+var root_1 = from_html(`<div><button type="button" class="local-gpt-saved-action-run"><span class="local-gpt-saved-action-title"><span class="local-gpt-saved-action-icon" aria-hidden="true">\u203A</span> </span> <!></button></div>`);
+var root = from_html(`<div class="local-gpt-saved-actions"></div>`);
+function SavedActionList($$anchor, $$props) {
+  if (new.target) return createClassComponent({ component: SavedActionList, ...$$anchor });
+  push($$props, false);
+  var _a7 = mutable_source();
+  var _b3 = mutable_source();
+  let actions = prop($$props, "actions", 12);
+  let onRun = prop($$props, "onRun", 12);
+  let selectedIndex = prop($$props, "selectedIndex", 28, () => -1);
+  let containerElement = mutable_source(null);
+  function focusRowButton(index3) {
+    var _a8;
+    const buttons = get(containerElement) === null || get(containerElement) === void 0 ? void 0 : get(containerElement).querySelectorAll(".local-gpt-saved-action-run");
+    (_a8 = buttons === null || buttons === void 0 ? void 0 : buttons[index3]) === null || _a8 === void 0 ? void 0 : _a8.focus();
+  }
+  function handleRowKeydown(event2, index3) {
+    if (!actions().length) return;
+    if (event2.key === "ArrowDown") {
+      event2.preventDefault();
+      event2.stopPropagation();
+      const nextIndex = (index3 + 1) % actions().length;
+      selectedIndex(nextIndex);
+      focusRowButton(nextIndex);
+    } else if (event2.key === "ArrowUp") {
+      event2.preventDefault();
+      event2.stopPropagation();
+      const prevIndex = (index3 - 1 + actions().length) % actions().length;
+      selectedIndex(prevIndex);
+      focusRowButton(prevIndex);
+    }
+  }
+  legacy_pre_effect(
+    () => (get(containerElement), deep_read_state(selectedIndex()), deep_read_state(actions()), safe_get(_b3), safe_get(_a7)),
+    () => {
+      if (get(containerElement) && selectedIndex() >= 0 && selectedIndex() < actions().length) {
+        const rows = get(containerElement).querySelectorAll(".local-gpt-saved-action");
+        set(_b3, set(_a7, rows[selectedIndex()]) === null || safe_get(_a7) === void 0 ? void 0 : safe_get(_a7).scrollIntoView) === null || safe_get(_b3) === void 0 ? void 0 : safe_get(_b3).call(safe_get(_a7), { block: "nearest" });
+      }
+    }
+  );
+  legacy_pre_effect_reset();
+  var $$exports = {
+    get actions() {
+      return actions();
+    },
+    set actions($$value) {
+      actions($$value);
+      flushSync();
+    },
+    get onRun() {
+      return onRun();
+    },
+    set onRun($$value) {
+      onRun($$value);
+      flushSync();
+    },
+    get selectedIndex() {
+      return selectedIndex();
+    },
+    set selectedIndex($$value) {
+      selectedIndex($$value);
+      flushSync();
+    },
+    $set: update_legacy_props,
+    $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
+  };
+  init();
+  var div = root();
+  each(div, 7, actions, (action2) => action2.id, ($$anchor2, action2, index3) => {
+    var div_1 = root_1();
+    let classes;
+    var button = child(div_1);
+    var span = child(button);
+    var text2 = sibling(child(span), 1, true);
+    reset(span);
+    var node = sibling(span, 2);
+    {
+      var consequent = ($$anchor3) => {
+        var span_1 = root_2();
+        var text_1 = child(span_1, true);
+        reset(span_1);
+        template_effect(() => {
+          set_attribute2(span_1, "title", (get(action2), untrack(() => get(action2).modelLabel)));
+          set_text(text_1, (get(action2), untrack(() => get(action2).shortModelLabel || get(action2).modelLabel)));
+        });
+        append($$anchor3, span_1);
+      };
+      if_block(node, ($$render) => {
+        if (get(action2), untrack(() => get(action2).selection)) $$render(consequent);
+      });
+    }
+    reset(button);
+    reset(div_1);
+    template_effect(() => {
+      classes = set_class(div_1, 1, "local-gpt-saved-action", null, classes, {
+        "local-gpt-selected": get(index3) === selectedIndex(),
+        "is-selected": get(index3) === selectedIndex()
+      });
+      set_text(text2, (get(action2), untrack(() => get(action2).name)));
+    });
+    event("focus", button, () => selectedIndex(get(index3)));
+    event("keydown", button, (event2) => handleRowKeydown(event2, get(index3)));
+    event("click", button, () => onRun()(get(action2).id));
+    append($$anchor2, div_1);
+  });
+  reset(div);
+  bind_this(div, ($$value) => set(containerElement, $$value), () => get(containerElement));
+  append($$anchor, div);
+  return pop($$exports);
+}
+
 // src/ui/actionPaletteTypes.ts
 var MAX_DROPDOWN_RESULTS = 15;
 var FILE_MENTION_REGEX = /@([^@]+?\.[a-zA-Z0-9]+)(?=\s|$|@)/g;
@@ -13593,7 +13923,7 @@ var CLEAR_SYSTEM_PROMPT_ID = "__clear_system_prompt__";
 var SYSTEM_PREVIEW_LENGTH = 80;
 
 // src/ui/ActionPaletteDropdowns.svelte
-var root_1 = from_html(`<div class="local-gpt-dropdown-item local-gpt-dropdown-empty" role="status"> </div>`);
+var root_12 = from_html(`<div class="local-gpt-dropdown-item local-gpt-dropdown-empty" role="status"> </div>`);
 var root_3 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-file-name"> </span> <span class="local-gpt-file-path"> </span></div>`);
 var root_4 = from_html(`<div class="local-gpt-dropdown-item local-gpt-dropdown-empty" role="status"> </div>`);
 var root_6 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-command-name"> </span> <span class="local-gpt-command-description"> </span></div>`);
@@ -13604,7 +13934,7 @@ var root_13 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt
 var root_15 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-reasoning-name"> </span></div>`);
 var root_18 = from_html(`<span class="local-gpt-system-detail"> </span>`);
 var root_17 = from_html(`<div role="option" tabindex="-1"><span class="local-gpt-system-name"> </span> <!></div>`);
-var root = from_html(`<div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
+var root2 = from_html(`<div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"><!> <!></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div> <div class="local-gpt-dropdown"></div>`, 1);
 function ActionPaletteDropdowns($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPaletteDropdowns, ...$$anchor });
   push($$props, false);
@@ -13760,12 +14090,12 @@ function ActionPaletteDropdowns($$anchor, $$props) {
     $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
   };
   init();
-  var fragment = root();
+  var fragment = root2();
   var div = first_child(fragment);
   var node = child(div);
   {
     var consequent = ($$anchor2) => {
-      var div_1 = root_1();
+      var div_1 = root_12();
       var text2 = child(div_1, true);
       reset(div_1);
       template_effect(($0) => set_text(text2, $0), [
@@ -14087,10 +14417,10 @@ function cursorOffsetAmongChildren(element2, childOffset) {
   }
   return position;
 }
-function cursorOffsetAmongTextNodes(root3, target, offset) {
+function cursorOffsetAmongTextNodes(root4, target, offset) {
   var _a7;
   let position = 0;
-  const walker = document.createTreeWalker(root3, NodeFilter.SHOW_TEXT, null);
+  const walker = document.createTreeWalker(root4, NodeFilter.SHOW_TEXT, null);
   let textNode;
   while (textNode = walker.nextNode()) {
     if (textNode === target) return position + offset;
@@ -14098,9 +14428,9 @@ function cursorOffsetAmongTextNodes(root3, target, offset) {
   }
   return null;
 }
-function isInsideAtomicChip(node, root3) {
+function isInsideAtomicChip(node, root4) {
   let element2 = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-  while (element2 && element2 !== root3) {
+  while (element2 && element2 !== root4) {
     if (element2.getAttribute("contenteditable") === "false") {
       return element2;
     }
@@ -15007,23 +15337,44 @@ async function showProviderDropdown(context) {
     context.state.allProviders = await getProviders();
     applyProviderFilter(context);
     showLoadedDropdown(context, "provider", "No providers available");
+    highlightPreferredItem(context, "provider", [
+      context.options.getProviderId()
+    ]);
   } catch (error) {
     console.error("Error showing provider dropdown:", error);
   }
   context.commit();
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.cursorPosition >= 0 ? context.state.cursorPosition : context.state.textContent.length
+  );
 }
 async function showModelDropdown(context) {
+  var _a7, _b3;
   const getModels = context.options.getModels();
-  const providerId = context.options.getProviderId();
-  if (!getModels || !providerId) return;
+  if (!getModels) return;
+  let providerId = context.options.getProviderId();
+  if (!providerId) {
+    try {
+      const providers = await ((_a7 = context.options.getProviders()) == null ? void 0 : _a7());
+      providerId = (_b3 = providers == null ? void 0 : providers[0]) == null ? void 0 : _b3.id;
+    } catch (e) {
+      providerId = void 0;
+    }
+  }
   try {
-    context.state.allModels = await getModels(providerId);
+    context.state.allModels = await getModels(providerId || "");
     applyModelFilter(context);
     showLoadedDropdown(context, "model", "No models available");
+    highlightPreferredItem(context, "model", [context.state.modelName]);
   } catch (error) {
     console.error("Error showing model dropdown:", error);
   }
   context.commit();
+  restorePromptFocus(
+    () => context.options.getContentElement(),
+    context.state.cursorPosition >= 0 ? context.state.cursorPosition : context.state.textContent.length
+  );
 }
 async function showCreativityDropdown(context) {
   try {
@@ -15594,7 +15945,9 @@ var ActionPaletteController = class {
       return true;
     }
     dropdownController.refresh();
-    if (commandName === "creativity" || commandName === "reasoning") {
+    if (["creativity", "reasoning", "provider", "model"].includes(
+      commandName
+    )) {
       restorePromptFocus(
         () => this.options.getContentElement(),
         this.state.cursorPosition >= 0 ? this.state.cursorPosition : this.state.textContent.length
@@ -15714,17 +16067,22 @@ function obsidianIcon(node, iconId) {
 
 // src/ui/ActionPalette.svelte
 var nextLabelId = 0;
-var root_2 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
-var root_32 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
-var root_5 = from_html(`<div class="local-gpt-provider-badge-label"> </div>`);
-var root_62 = from_html(`<button type="button" class="local-gpt-creativity-badge"> </button>`);
-var root_7 = from_html(`<button type="button" class="local-gpt-reasoning-badge"> </button>`);
-var root_82 = from_html(`<button type="button"></button>`);
-var root_42 = from_html(`<div><!> <!> <!> <!></div>`);
-var root2 = from_html(`<div class="local-gpt-action-palette-shell"><span hidden=""> </span> <div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
+var root_32 = from_html(`<div><span class="local-gpt-system-indicator-label"> </span></div>`);
+var root_42 = from_html(`<div class="local-gpt-provider-badge-hint"> </div>`);
+var root_7 = from_html(`<button type="button" class="local-gpt-provider-badge-button"> </button>`);
+var root_92 = from_html(`<button type="button" class="local-gpt-model-badge-button"> </button>`);
+var root_62 = from_html(`<div class="local-gpt-provider-badge-label"><!><!><!></div>`);
+var root_10 = from_html(`<button type="button" class="local-gpt-creativity-badge"> </button>`);
+var root_112 = from_html(`<button type="button" class="local-gpt-reasoning-badge"> </button>`);
+var root_122 = from_html(`<button type="button"></button>`);
+var root_5 = from_html(`<div><!> <!> <!> <!></div>`);
+var root3 = from_html(`<div class="local-gpt-action-palette-shell"><div><!> <span hidden=""> </span> <div class="local-gpt-action-palette" contenteditable="true" role="textbox" tabindex="0" spellcheck="false"></div></div> <!> <div class="local-gpt-provider-badge"><!> <!></div></div>`);
 function ActionPalette($$anchor, $$props) {
   if (new.target) return createClassComponent({ component: ActionPalette, ...$$anchor });
   push($$props, false);
+  const hasNonFilePromptText = mutable_source();
+  const isCommandOnlyText = mutable_source();
+  const showSavedActions = mutable_source();
   const labelId = `local-gpt-action-palette-label-${++nextLabelId}`;
   let placeholder = prop($$props, "placeholder", 28, () => I18n.t("commands.actionPalette.placeholder"));
   let getReasoningSnapshot = prop($$props, "getReasoningSnapshot", 12, void 0);
@@ -15748,6 +16106,12 @@ function ActionPalette($$anchor, $$props) {
   let canReplaceSelection = prop($$props, "canReplaceSelection", 12, false);
   let replaceSelection = prop($$props, "replaceSelection", 12, false);
   let onReplaceSelectionChange = prop($$props, "onReplaceSelectionChange", 12, void 0);
+  let savedActions = prop($$props, "savedActions", 28, () => []);
+  let onRunSavedAction = prop($$props, "onRunSavedAction", 12, void 0);
+  let getActionModels = prop($$props, "getActionModels", 12, void 0);
+  let onActionModelChange = prop($$props, "onActionModelChange", 12, void 0);
+  void getActionModels();
+  void onActionModelChange();
   const replaceIconId = getReplaceSelectionIconId();
   const replaceHotkey = getReplaceSelectionHotkeyLabel();
   const dispatch = createEventDispatcher();
@@ -15761,6 +16125,18 @@ function ActionPalette($$anchor, $$props) {
   let creativityDropdownElement = mutable_source(null);
   let systemDropdownElement = mutable_source(null);
   let state2 = mutable_source(createActionPaletteState(value(), providerLabel(), providerDetails()));
+  const fallbackParts = !get(state2).providerName && !get(state2).modelName && savedActions().length > 0 && savedActions()[0].modelLabel ? savedActions()[0].modelLabel.split(" \xB7 ") : [];
+  if (!get(state2).providerName && fallbackParts[0]) {
+    mutate(state2, get(state2).providerName = fallbackParts[0]);
+  }
+  if (!get(state2).modelName && fallbackParts[1]) {
+    mutate(state2, get(state2).modelName = fallbackParts[1]);
+  }
+  let baseProviderId = providerId();
+  let baseProviderName = get(state2).providerName;
+  let baseModelName = get(state2).modelName;
+  let highlightedActionId = null;
+  let sessionOverrideSelection = null;
   let invalidateEpoch = 0;
   let fileItems = mutable_source([]);
   let commandItems = mutable_source([]);
@@ -15768,6 +16144,46 @@ function ActionPalette($$anchor, $$props) {
   let modelItems = mutable_source([]);
   let creativityItems = mutable_source([]);
   let systemItems = mutable_source([]);
+  function handlePaletteProviderChange(nextProviderId) {
+    return __awaiter(this, void 0, void 0, function* () {
+      const selectedProvider = get(state2).allProviders.find((item) => item.id === nextProviderId);
+      const nextModel = (selectedProvider === null || selectedProvider === void 0 ? void 0 : selectedProvider.name) || get(state2).modelName;
+      baseProviderId = nextProviderId;
+      baseProviderName = (selectedProvider === null || selectedProvider === void 0 ? void 0 : selectedProvider.providerName) || get(state2).providerName;
+      baseModelName = nextModel;
+      sessionOverrideSelection = nextModel ? { providerId: nextProviderId, model: nextModel } : null;
+      if (highlightedActionId) {
+        const idx = savedActions().findIndex((item) => item.id === highlightedActionId);
+        if (idx >= 0) set(selectedActionIndex, idx);
+      }
+      yield onProviderChange() === null || onProviderChange() === void 0 ? void 0 : onProviderChange()(nextProviderId);
+    });
+  }
+  function handlePaletteModelChange(nextModel) {
+    return __awaiter(this, void 0, void 0, function* () {
+      var _a7, _b3;
+      let effectiveProviderId = providerId() || baseProviderId || ((_a7 = get(state2).allProviders[0]) === null || _a7 === void 0 ? void 0 : _a7.id);
+      if (!effectiveProviderId && getProviders()) {
+        try {
+          const providers = yield getProviders()();
+          effectiveProviderId = (_b3 = providers[0]) === null || _b3 === void 0 ? void 0 : _b3.id;
+        } catch (_c2) {
+          effectiveProviderId = void 0;
+        }
+      }
+      const resolvedProviderId = effectiveProviderId || "default";
+      providerId(resolvedProviderId);
+      baseProviderId = resolvedProviderId;
+      baseProviderName = get(state2).providerName || baseProviderName;
+      baseModelName = nextModel;
+      sessionOverrideSelection = { providerId: resolvedProviderId, model: nextModel };
+      if (highlightedActionId) {
+        const idx = savedActions().findIndex((item) => item.id === highlightedActionId);
+        if (idx >= 0) set(selectedActionIndex, idx);
+      }
+      yield onModelChange() === null || onModelChange() === void 0 ? void 0 : onModelChange()(nextModel, effectiveProviderId);
+    });
+  }
   const controller = new ActionPaletteController(get(state2), {
     getValue: () => value(),
     getReasoningSnapshot: () => getReasoningSnapshot(),
@@ -15781,8 +16197,8 @@ function ActionPalette($$anchor, $$props) {
     getProviders: () => getProviders(),
     getModels: () => getModels(),
     getSystemPrompts: () => getSystemPrompts2(),
-    onProviderChange: () => onProviderChange(),
-    onModelChange: () => onModelChange(),
+    onProviderChange: () => handlePaletteProviderChange,
+    onModelChange: () => handlePaletteModelChange,
     onCreativityChange: () => onCreativityChange(),
     onSystemPromptChange: () => onSystemPromptChange(),
     onSubmit: () => onSubmit(),
@@ -15826,6 +16242,86 @@ function ActionPalette($$anchor, $$props) {
     controller.releaseFocusHold();
     controller.resetReasoning();
   });
+  let selectedActionIndex = mutable_source(-1);
+  function restoreBaseProviderPreview() {
+    highlightedActionId = null;
+    if (!sessionOverrideSelection) {
+      providerId(baseProviderId);
+      if ((baseProviderName || baseModelName) && (get(state2).providerName !== baseProviderName || get(state2).modelName !== baseModelName)) {
+        controller.setProviderBadgeLabel(baseProviderName, baseModelName);
+        set(state2, get(state2));
+      }
+    }
+  }
+  function syncSavedActionsState(visible, index3, actions, commandOnly, dropdown) {
+    var _a7, _b3, _c2, _d, _e;
+    if (!visible || actions.length === 0) {
+      if (get(selectedActionIndex) !== -1) {
+        set(selectedActionIndex, -1);
+      }
+      if (!commandOnly && dropdown === "none") {
+        restoreBaseProviderPreview();
+      }
+      return;
+    }
+    if (index3 >= actions.length) {
+      set(selectedActionIndex, actions.length - 1);
+      return;
+    }
+    let effectiveIndex = index3;
+    if (effectiveIndex < 0 && highlightedActionId) {
+      const restoredIndex = actions.findIndex((item) => item.id === highlightedActionId);
+      if (restoredIndex >= 0) {
+        set(selectedActionIndex, restoredIndex);
+        effectiveIndex = restoredIndex;
+      }
+    }
+    if (effectiveIndex >= 0 && effectiveIndex < actions.length) {
+      const activeAction = actions[effectiveIndex];
+      highlightedActionId = activeAction.id;
+      if (!sessionOverrideSelection) {
+        const defaultPrefix = `${I18n.t("commands.actionPalette.actionModelDefault")} \xB7 `;
+        const strippedLabel = ((_a7 = activeAction.modelLabel) === null || _a7 === void 0 ? void 0 : _a7.startsWith(defaultPrefix)) ? activeAction.modelLabel.slice(defaultPrefix.length) : activeAction.modelLabel;
+        const labelParts = strippedLabel ? strippedLabel.split(" \xB7 ") : [];
+        const nextProviderName = activeAction.effectiveProviderName || (labelParts.length > 1 ? labelParts[0] : baseProviderName || get(state2).providerName);
+        const nextModelName = ((_b3 = activeAction.selection) === null || _b3 === void 0 ? void 0 : _b3.model) || activeAction.effectiveModel || (labelParts.length > 1 ? labelParts.slice(1).join(" \xB7 ") : activeAction.shortModelLabel || strippedLabel || baseModelName || get(state2).modelName);
+        providerId((_e = (_d = (_c2 = activeAction.selection) === null || _c2 === void 0 ? void 0 : _c2.providerId) !== null && _d !== void 0 ? _d : activeAction.effectiveProviderId) !== null && _e !== void 0 ? _e : baseProviderId);
+        if (get(state2).providerName !== nextProviderName || get(state2).modelName !== nextModelName) {
+          controller.setProviderBadgeLabel(nextProviderName, nextModelName);
+          set(state2, get(state2));
+        }
+      }
+    } else {
+      restoreBaseProviderPreview();
+    }
+  }
+  function runSavedAction(id) {
+    if (sessionOverrideSelection) {
+      onRunSavedAction() === null || onRunSavedAction() === void 0 ? void 0 : onRunSavedAction()(id, get(state2).selectedFiles, sessionOverrideSelection);
+    } else {
+      onRunSavedAction() === null || onRunSavedAction() === void 0 ? void 0 : onRunSavedAction()(id, get(state2).selectedFiles);
+    }
+  }
+  function handlePromptKeydown(event2) {
+    if (get(showSavedActions) && savedActions().length > 0) {
+      if (event2.key === "ArrowDown") {
+        event2.preventDefault();
+        set(selectedActionIndex, get(selectedActionIndex) < 0 ? 0 : (get(selectedActionIndex) + 1) % savedActions().length);
+        return;
+      }
+      if (event2.key === "ArrowUp") {
+        event2.preventDefault();
+        set(selectedActionIndex, get(selectedActionIndex) < 0 ? savedActions().length - 1 : (get(selectedActionIndex) - 1 + savedActions().length) % savedActions().length);
+        return;
+      }
+      if (event2.key === "Enter" && !event2.shiftKey && get(selectedActionIndex) >= 0 && get(selectedActionIndex) < savedActions().length) {
+        event2.preventDefault();
+        void runSavedAction(savedActions()[get(selectedActionIndex)].id);
+        return;
+      }
+    }
+    controller.handleKeydown(event2);
+  }
   function handleSelection(item) {
     controller.handleSelection(item);
   }
@@ -15858,6 +16354,24 @@ function ActionPalette($$anchor, $$props) {
   legacy_pre_effect(() => get(state2), () => {
     set(systemItems, get(state2).activeDropdown === "system" ? get(state2).filteredItems : []);
   });
+  legacy_pre_effect(() => get(state2), () => {
+    set(hasNonFilePromptText, get(state2).textTokens.some((token) => token.type !== "file" && token.content.trim()));
+  });
+  legacy_pre_effect(() => (get(hasNonFilePromptText), get(state2)), () => {
+    set(isCommandOnlyText, !get(hasNonFilePromptText) || get(state2).textTokens.every((token) => token.type === "file" || token.type === "command" || !token.content.trim() || token.content.trim().startsWith("/")));
+  });
+  legacy_pre_effect(
+    () => (deep_read_state(savedActions()), get(hasNonFilePromptText), get(state2), deep_read_state(onRunSavedAction())),
+    () => {
+      set(showSavedActions, savedActions().length > 0 && !get(hasNonFilePromptText) && get(state2).activeDropdown === "none" && Boolean(onRunSavedAction()));
+    }
+  );
+  legacy_pre_effect(
+    () => (get(showSavedActions), get(selectedActionIndex), deep_read_state(savedActions()), get(isCommandOnlyText), get(state2)),
+    () => {
+      syncSavedActionsState(get(showSavedActions), get(selectedActionIndex), savedActions(), get(isCommandOnlyText), get(state2).activeDropdown);
+    }
+  );
   legacy_pre_effect_reset();
   var $$exports = {
     get placeholder() {
@@ -16014,19 +16528,74 @@ function ActionPalette($$anchor, $$props) {
       onReplaceSelectionChange($$value);
       flushSync();
     },
+    get savedActions() {
+      return savedActions();
+    },
+    set savedActions($$value) {
+      savedActions($$value);
+      flushSync();
+    },
+    get onRunSavedAction() {
+      return onRunSavedAction();
+    },
+    set onRunSavedAction($$value) {
+      onRunSavedAction($$value);
+      flushSync();
+    },
+    get getActionModels() {
+      return getActionModels();
+    },
+    set getActionModels($$value) {
+      getActionModels($$value);
+      flushSync();
+    },
+    get onActionModelChange() {
+      return onActionModelChange();
+    },
+    set onActionModelChange($$value) {
+      onActionModelChange($$value);
+      flushSync();
+    },
     $set: update_legacy_props,
     $on: ($$event_name, $$event_cb) => add_legacy_event_listener($$props, $$event_name, $$event_cb)
   };
   init();
-  var div = root2();
-  var span = child(div);
-  var text2 = child(span, true);
-  reset(span);
-  var div_1 = sibling(span, 2);
-  bind_this(div_1, ($$value) => set(contentElement, $$value), () => get(contentElement));
-  var node = sibling(div_1, 2);
+  var div = root3();
+  var div_1 = child(div);
+  let classes;
+  var node = child(div_1);
   {
     var consequent = ($$anchor2) => {
+      SavedActionList($$anchor2, {
+        onRun: (id) => void runSavedAction(id),
+        get actions() {
+          return savedActions();
+        },
+        set actions($$value) {
+          savedActions($$value);
+        },
+        get selectedIndex() {
+          return get(selectedActionIndex);
+        },
+        set selectedIndex($$value) {
+          set(selectedActionIndex, $$value);
+        },
+        $$legacy: true
+      });
+    };
+    if_block(node, ($$render) => {
+      if (get(showSavedActions) && onRunSavedAction()) $$render(consequent);
+    });
+  }
+  var span = sibling(node, 2);
+  var text2 = child(span, true);
+  reset(span);
+  var div_2 = sibling(span, 2);
+  bind_this(div_2, ($$value) => set(contentElement, $$value), () => get(contentElement));
+  reset(div_1);
+  var node_1 = sibling(div_1, 2);
+  {
+    var consequent_1 = ($$anchor2) => {
       ActionPaletteDropdowns($$anchor2, {
         get activeDropdown() {
           return get(state2), untrack(() => get(state2).activeDropdown);
@@ -16104,117 +16673,168 @@ function ActionPalette($$anchor, $$props) {
         $$legacy: true
       });
     };
-    if_block(node, ($$render) => {
-      if (get(state2), untrack(() => get(state2).activeDropdown !== "none")) $$render(consequent);
+    if_block(node_1, ($$render) => {
+      if (get(state2), untrack(() => get(state2).activeDropdown !== "none")) $$render(consequent_1);
     });
   }
-  var div_2 = sibling(node, 2);
-  var node_1 = child(div_2);
+  var div_3 = sibling(node_1, 2);
+  var node_2 = child(div_3);
   {
-    var consequent_1 = ($$anchor2) => {
-      var div_3 = root_2();
-      var span_1 = child(div_3);
+    var consequent_2 = ($$anchor2) => {
+      var div_4 = root_32();
+      var span_1 = child(div_4);
       var text_1 = child(span_1, true);
       reset(span_1);
-      reset(div_3);
+      reset(div_4);
       template_effect(() => {
-        set_class(div_3, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator"))));
+        set_class(div_4, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-system-indicator local-gpt-badge-highlight" : "local-gpt-system-indicator"))));
         set_text(text_1, (get(state2), untrack(() => get(state2).selectedSystemPromptName)));
       });
-      append($$anchor2, div_3);
+      append($$anchor2, div_4);
     };
     var alternate = ($$anchor2) => {
-      var div_4 = root_32();
-      var text_2 = child(div_4, true);
-      reset(div_4);
+      var div_5 = root_42();
+      var text_2 = child(div_5, true);
+      reset(div_5);
       template_effect(($0) => set_text(text_2, $0), [
         () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.hint")))
       ]);
-      append($$anchor2, div_4);
+      append($$anchor2, div_5);
     };
-    if_block(node_1, ($$render) => {
-      if (get(state2), untrack(() => get(state2).selectedSystemPromptName)) $$render(consequent_1);
+    if_block(node_2, ($$render) => {
+      if (get(state2), untrack(() => get(state2).selectedSystemPromptName)) $$render(consequent_2);
       else $$render(alternate, -1);
     });
   }
-  var node_2 = sibling(node_1, 2);
+  var node_3 = sibling(node_2, 2);
   {
-    var consequent_6 = ($$anchor2) => {
-      var div_5 = root_42();
-      var node_3 = child(div_5);
+    var consequent_10 = ($$anchor2) => {
+      var div_6 = root_5();
+      var node_4 = child(div_6);
       {
-        var consequent_2 = ($$anchor3) => {
-          var div_6 = root_5();
-          var text_3 = child(div_6, true);
-          reset(div_6);
-          template_effect(($0) => set_text(text_3, $0), [
-            () => (get(state2), untrack(() => [get(state2).providerName, get(state2).modelName].filter(Boolean).join(" \xB7 ")))
-          ]);
-          append($$anchor3, div_6);
+        var consequent_6 = ($$anchor3) => {
+          var div_7 = root_62();
+          var node_5 = child(div_7);
+          {
+            var consequent_3 = ($$anchor4) => {
+              var button = root_7();
+              var text_3 = child(button, true);
+              reset(button);
+              template_effect(
+                ($0) => {
+                  set_attribute2(button, "title", $0);
+                  set_text(text_3, (get(state2), untrack(() => get(state2).providerName)));
+                },
+                [
+                  () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.changeProvider")))
+                ]
+              );
+              event("click", button, () => controller.activateCommandDropdown("provider"));
+              append($$anchor4, button);
+            };
+            if_block(node_5, ($$render) => {
+              if (get(state2), untrack(() => get(state2).providerName)) $$render(consequent_3);
+            });
+          }
+          var node_6 = sibling(node_5);
+          {
+            var consequent_4 = ($$anchor4) => {
+              var text_4 = text();
+              text_4.nodeValue = " \xB7 ";
+              append($$anchor4, text_4);
+            };
+            if_block(node_6, ($$render) => {
+              if (get(state2), untrack(() => get(state2).providerName && get(state2).modelName)) $$render(consequent_4);
+            });
+          }
+          var node_7 = sibling(node_6);
+          {
+            var consequent_5 = ($$anchor4) => {
+              var button_1 = root_92();
+              var text_5 = child(button_1, true);
+              reset(button_1);
+              template_effect(
+                ($0) => {
+                  set_attribute2(button_1, "title", $0);
+                  set_text(text_5, (get(state2), untrack(() => get(state2).modelName)));
+                },
+                [
+                  () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.changeModel")))
+                ]
+              );
+              event("click", button_1, () => controller.activateCommandDropdown("model"));
+              append($$anchor4, button_1);
+            };
+            if_block(node_7, ($$render) => {
+              if (get(state2), untrack(() => get(state2).modelName)) $$render(consequent_5);
+            });
+          }
+          reset(div_7);
+          append($$anchor3, div_7);
         };
-        if_block(node_3, ($$render) => {
-          if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName)) $$render(consequent_2);
+        if_block(node_4, ($$render) => {
+          if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName)) $$render(consequent_6);
         });
       }
-      var node_4 = sibling(node_3, 2);
+      var node_8 = sibling(node_4, 2);
       {
-        var consequent_3 = ($$anchor3) => {
-          var button = root_62();
-          var text_4 = child(button, true);
-          reset(button);
+        var consequent_7 = ($$anchor3) => {
+          var button_2 = root_10();
+          var text_6 = child(button_2, true);
+          reset(button_2);
           template_effect(
             ($0) => {
-              set_attribute2(button, "title", $0);
-              set_text(text_4, (get(state2), untrack(() => get(state2).creativityBadge)));
+              set_attribute2(button_2, "title", $0);
+              set_text(text_6, (get(state2), untrack(() => get(state2).creativityBadge)));
             },
             [
               () => (deep_read_state(I18n), untrack(() => I18n.t("settings.creativity")))
             ]
           );
-          event("click", button, () => controller.activateCommandDropdown("creativity"));
-          append($$anchor3, button);
+          event("click", button_2, () => controller.activateCommandDropdown("creativity"));
+          append($$anchor3, button_2);
         };
-        if_block(node_4, ($$render) => {
-          if (get(state2), untrack(() => get(state2).creativityBadge)) $$render(consequent_3);
+        if_block(node_8, ($$render) => {
+          if (get(state2), untrack(() => get(state2).creativityBadge)) $$render(consequent_7);
         });
       }
-      var node_5 = sibling(node_4, 2);
+      var node_9 = sibling(node_8, 2);
       {
-        var consequent_4 = ($$anchor3) => {
-          var button_1 = root_7();
-          var text_5 = child(button_1);
-          reset(button_1);
+        var consequent_8 = ($$anchor3) => {
+          var button_3 = root_112();
+          var text_7 = child(button_3);
+          reset(button_3);
           template_effect(
             ($0) => {
               var _a7;
-              set_attribute2(button_1, "title", $0);
-              set_text(text_5, `\u{1F9E0} ${(_a7 = (get(state2), untrack(() => get(state2).reasoningLabel))) != null ? _a7 : ""}`);
+              set_attribute2(button_3, "title", $0);
+              set_text(text_7, `\u{1F9E0} ${(_a7 = (get(state2), untrack(() => get(state2).reasoningLabel))) != null ? _a7 : ""}`);
             },
             [
               () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.changeReasoning")))
             ]
           );
-          event("click", button_1, () => controller.activateCommandDropdown("reasoning"));
-          append($$anchor3, button_1);
+          event("click", button_3, () => controller.activateCommandDropdown("reasoning"));
+          append($$anchor3, button_3);
         };
-        if_block(node_5, ($$render) => {
-          if (get(state2), untrack(() => get(state2).reasoningLabel)) $$render(consequent_4);
+        if_block(node_9, ($$render) => {
+          if (get(state2), untrack(() => get(state2).reasoningLabel)) $$render(consequent_8);
         });
       }
-      var node_6 = sibling(node_5, 2);
+      var node_10 = sibling(node_9, 2);
       {
-        var consequent_5 = ($$anchor3) => {
-          var button_2 = root_82();
-          action(button_2, ($$node, $$action_arg) => {
+        var consequent_9 = ($$anchor3) => {
+          var button_4 = root_122();
+          action(button_4, ($$node, $$action_arg) => {
             var _a7;
             return (_a7 = obsidianIcon) == null ? void 0 : _a7($$node, $$action_arg);
           }, () => replaceIconId);
-          effect(() => event("click", button_2, () => controller.handleReplaceToggleClick()));
+          effect(() => event("click", button_4, () => controller.handleReplaceToggleClick()));
           template_effect(
             ($0) => {
-              set_class(button_2, 1, clsx2((get(state2), untrack(() => get(state2).replaceSelection ? "local-gpt-replace-toggle is-active" : "local-gpt-replace-toggle"))));
-              set_attribute2(button_2, "aria-pressed", (get(state2), untrack(() => get(state2).replaceSelection)));
-              set_attribute2(button_2, "title", $0);
+              set_class(button_4, 1, clsx2((get(state2), untrack(() => get(state2).replaceSelection ? "local-gpt-replace-toggle is-active" : "local-gpt-replace-toggle"))));
+              set_attribute2(button_4, "aria-pressed", (get(state2), untrack(() => get(state2).replaceSelection)));
+              set_attribute2(button_4, "title", $0);
             },
             [
               () => (deep_read_state(I18n), get(state2), untrack(() => I18n.t(
@@ -16223,39 +16843,40 @@ function ActionPalette($$anchor, $$props) {
               )))
             ]
           );
-          append($$anchor3, button_2);
+          append($$anchor3, button_4);
         };
-        if_block(node_6, ($$render) => {
-          if (get(state2), untrack(() => get(state2).replaceAvailable)) $$render(consequent_5);
+        if_block(node_10, ($$render) => {
+          if (get(state2), untrack(() => get(state2).replaceAvailable)) $$render(consequent_9);
         });
       }
-      reset(div_5);
-      template_effect(() => set_class(div_5, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-meta local-gpt-badge-highlight" : "local-gpt-provider-badge-meta")))));
-      append($$anchor2, div_5);
+      reset(div_6);
+      template_effect(() => set_class(div_6, 1, clsx2((get(state2), untrack(() => get(state2).badgeHighlight ? "local-gpt-provider-badge-meta local-gpt-badge-highlight" : "local-gpt-provider-badge-meta")))));
+      append($$anchor2, div_6);
     };
-    if_block(node_2, ($$render) => {
-      if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName || get(state2).creativityBadge || get(state2).reasoningLabel || get(state2).replaceAvailable)) $$render(consequent_6);
+    if_block(node_3, ($$render) => {
+      if (get(state2), untrack(() => get(state2).providerName || get(state2).modelName || get(state2).creativityBadge || get(state2).reasoningLabel || get(state2).replaceAvailable)) $$render(consequent_10);
     });
   }
-  reset(div_2);
+  reset(div_3);
   reset(div);
   template_effect(
     ($0) => {
+      classes = set_class(div_1, 1, "local-gpt-action-palette-surface", null, classes, { "has-saved-actions": get(showSavedActions) });
       set_attribute2(span, "id", labelId);
       set_text(text2, $0);
-      set_attribute2(div_1, "aria-labelledby", labelId);
-      set_attribute2(div_1, "data-placeholder", placeholder());
+      set_attribute2(div_2, "aria-labelledby", labelId);
+      set_attribute2(div_2, "data-placeholder", placeholder());
     },
     [
       () => (deep_read_state(I18n), untrack(() => I18n.t("commands.actionPalette.name")))
     ]
   );
-  event("keydown", div_1, (event2) => controller.handleKeydown(event2));
-  event("input", div_1, handleInput);
-  event("keyup", div_1, (event2) => controller.handleKeyup(event2));
-  event("focusin", div_1, () => beginHoldingPromptFocus(get(contentElement)));
-  event("focusout", div_1, (event2) => controller.handleFocusOut(event2));
-  event("click", div_1, (event2) => controller.handleContentClick(event2));
+  event("keydown", div_2, handlePromptKeydown);
+  event("input", div_2, handleInput);
+  event("keyup", div_2, (event2) => controller.handleKeyup(event2));
+  event("focusin", div_2, () => beginHoldingPromptFocus(get(contentElement)));
+  event("focusout", div_2, (event2) => controller.handleFocusOut(event2));
+  event("click", div_2, (event2) => controller.handleContentClick(event2));
   append($$anchor, div);
   return pop($$exports);
 }
@@ -16311,6 +16932,9 @@ var SvelteActionPaletteWidget = class extends import_view5.WidgetType {
     this.app = new ActionPalette({
       target: mountTarget,
       props: {
+        savedActions: this.options.savedActions,
+        onRunSavedAction: this.options.onRunSavedAction,
+        onActionModelChange: this.options.onActionModelChange,
         placeholder: this.options.placeholder || I18n.t("commands.actionPalette.placeholder"),
         providerLabel: this.options.modelLabel || "",
         providerDetails: this.options.providerDetails,
@@ -17385,15 +18009,27 @@ async function executeProviderRequest({
       abortController
     });
   } catch (error) {
-    if (!abortController.signal.aborted) {
-      new import_obsidian12.Notice(
-        I18n.t("notices.errorGenerating", {
-          message: error.message
-        })
-      );
-    }
+    notifyProviderError(error, abortController);
     logger.separator();
     return "";
+  }
+}
+function resolveExecutionProvider(service, settings, hasImages, selection, overrideProviderId, paletteModel = null, paletteModelProviderId = null) {
+  if (selection) return resolveActionModel(service, selection, hasImages);
+  return overrideProviderModel(
+    selectProvider2(service, settings, hasImages, overrideProviderId),
+    overrideProviderId,
+    paletteModel,
+    paletteModelProviderId
+  );
+}
+function notifyProviderError(error, abortController) {
+  if (!abortController.signal.aborted) {
+    new import_obsidian12.Notice(
+      I18n.t("notices.errorGenerating", {
+        message: error.message
+      })
+    );
   }
 }
 
@@ -17402,14 +18038,55 @@ var import_obsidian13 = require("obsidian");
 var import_sdk4 = __toESM(require_dist());
 
 // src/actionMenu.ts
-var populateActionContextMenu = (menu, actions, onAction) => {
+function collectProviderIdsForModel(model, actions, providers) {
+  var _a7, _b3;
+  const providerIds = /* @__PURE__ */ new Set();
+  for (const action2 of actions) {
+    if (!isSeparatorAction(action2) && ((_a7 = action2.modelSelection) == null ? void 0 : _a7.model) === model && action2.modelSelection.providerId) {
+      providerIds.add(action2.modelSelection.providerId);
+    }
+  }
+  for (const provider of providers != null ? providers : []) {
+    if (provider.model === model || ((_b3 = provider.availableModels) == null ? void 0 : _b3.includes(model))) {
+      providerIds.add(provider.id);
+    }
+  }
+  return providerIds;
+}
+function formatActionModelBadge(action2, actions, providers) {
+  var _a7, _b3;
+  const selection = action2.modelSelection;
+  if (!selection) {
+    return void 0;
+  }
+  const providerIds = collectProviderIdsForModel(
+    selection.model,
+    actions,
+    providers
+  );
+  if (providerIds.size > 1) {
+    const providerName = ((_b3 = (_a7 = providers == null ? void 0 : providers.find((provider) => provider.id === selection.providerId)) == null ? void 0 : _a7.name) == null ? void 0 : _b3.trim()) || selection.providerId;
+    return `${providerName} \xB7 ${selection.model}`;
+  }
+  return selection.model;
+}
+function formatContextMenuActionTitle(action2, actions, providers) {
+  const badge = formatActionModelBadge(action2, actions, providers);
+  return badge ? `${action2.name} \xB7 ${badge}` : action2.name;
+}
+var populateActionContextMenu = (menu, actions, onAction, providers) => {
   actions.forEach((action2) => {
     if (isSeparatorAction(action2)) {
       menu.addSeparator();
       return;
     }
     menu.addItem((item) => {
-      item.setTitle(action2.name).onClick(() => onAction(action2));
+      const title = formatContextMenuActionTitle(
+        action2,
+        actions,
+        providers
+      );
+      item.setTitle(title).onClick(() => onAction(action2));
     });
   });
 };
@@ -17424,15 +18101,24 @@ function registerContextMenuCommand(plugin) {
   plugin.addCommand({
     id: "context-menu",
     name: I18n.t("commands.showContextMenu"),
-    editorCallback: (editor) => {
+    editorCallback: async (editor) => {
+      var _a7;
       const editorView = editor.cm;
       const cursorPositionFrom = editor.getCursor("from");
       const cursorPositionTo = editor.getCursor("to");
       const contextMenu = new import_obsidian13.Menu();
+      let providers;
+      try {
+        const waiter = await (0, import_sdk4.waitForAI)();
+        providers = (_a7 = await (waiter == null ? void 0 : waiter.promise)) == null ? void 0 : _a7.providers;
+      } catch (e) {
+        providers = void 0;
+      }
       populateActionContextMenu(
         contextMenu,
         plugin.settings.actions,
-        (action2) => plugin.runAction(action2, editor)
+        (action2) => plugin.runAction(action2, editor),
+        providers
       );
       const fromRect = editorView.coordsAtPos(
         editor.posToOffset(cursorPositionFrom)
@@ -17475,8 +18161,56 @@ function registerActionPaletteCommand(plugin) {
         editor
       );
       const paletteLabel = await getActionPaletteLabel(plugin);
+      const service = await (await (0, import_sdk4.waitForAI)()).promise;
+      const initialFreeformProviderId = plugin.actionPaletteProviderId;
+      const initialFreeformModel = plugin.actionPaletteModel;
+      const initialFreeformModelProviderId = plugin.actionPaletteModelProviderId;
+      const savedActions = () => getRunnableActions(plugin.settings.actions).map((action2) => {
+        var _a8, _b4, _c2, _d, _e;
+        const effectiveProviderId = (_c2 = (_b4 = (_a8 = action2.modelSelection) == null ? void 0 : _a8.providerId) != null ? _b4 : plugin.settings.aiProviders.main) != null ? _c2 : void 0;
+        const effectiveProvider = service.providers.find(
+          (item) => item.id === effectiveProviderId
+        );
+        return {
+          id: getActionIdentifier(action2),
+          name: action2.name,
+          selection: action2.modelSelection,
+          effectiveProviderId,
+          effectiveProviderName: effectiveProvider == null ? void 0 : effectiveProvider.name,
+          effectiveModel: (_e = (_d = action2.modelSelection) == null ? void 0 : _d.model) != null ? _e : effectiveProvider == null ? void 0 : effectiveProvider.model,
+          shortModelLabel: formatActionModelBadge(
+            action2,
+            plugin.settings.actions,
+            service.providers
+          ),
+          modelLabel: actionModelLabel(
+            action2,
+            service.providers,
+            plugin.settings
+          )
+        };
+      });
       const canReplaceSelection = Boolean(editor.getSelection());
       showActionPalette(editorView, insertPos, {
+        savedActions: savedActions(),
+        onRunSavedAction: (id, selectedFiles, selectionOverride) => {
+          const action2 = plugin.settings.actions.find(
+            (item) => getActionIdentifier(item) === id
+          );
+          if (!action2) return;
+          if (selectionOverride) {
+            plugin.actionPaletteProviderId = initialFreeformProviderId;
+            plugin.actionPaletteModel = initialFreeformModel;
+            plugin.actionPaletteModelProviderId = initialFreeformModelProviderId;
+          }
+          hideActionPalette(editorView);
+          void plugin.runAction(
+            action2,
+            editor,
+            selectedFiles,
+            selectionOverride
+          );
+        },
         canReplaceSelection,
         replaceSelection: plugin.actionPaletteReplaceSelection,
         onReplaceSelectionChange: (replaceSelection) => {
@@ -17484,11 +18218,11 @@ function registerActionPaletteCommand(plugin) {
         },
         includeReasoning: plugin.reasoningApiAvailable,
         getReasoningSnapshot: plugin.reasoningApiAvailable ? async () => {
-          const service = await (await (0, import_sdk4.waitForAI)()).promise;
+          const service2 = await (await (0, import_sdk4.waitForAI)()).promise;
           const providerId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
           const provider = overrideProviderModel(
             selectProvider2(
-              service,
+              service2,
               plugin.settings,
               false,
               providerId
@@ -17542,8 +18276,11 @@ function registerActionPaletteCommand(plugin) {
           plugin.actionPaletteModel = null;
           plugin.actionPaletteModelProviderId = null;
         },
-        onModelChange: async (model) => {
-          const providerId = plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+        onModelChange: async (model, nextProviderId) => {
+          const providerId = nextProviderId || plugin.actionPaletteProviderId || plugin.settings.aiProviders.main;
+          if (nextProviderId) {
+            plugin.actionPaletteProviderId = nextProviderId;
+          }
           plugin.actionPaletteModel = model;
           plugin.actionPaletteModelProviderId = providerId;
         },
@@ -17624,7 +18361,14 @@ async function getActionPaletteModels(providerId) {
       (p) => p.id === providerId
     );
     if (!provider) return [];
-    const models = provider.availableModels || await aiProviders.fetchModels(provider);
+    const fetched = provider.availableModels || await aiProviders.fetchModels(provider);
+    const models = Array.isArray(fetched) ? [
+      ...new Set(
+        [provider.model, ...fetched].filter(
+          (model) => Boolean(model)
+        )
+      )
+    ] : provider.model ? [provider.model] : [];
     return models.map((m) => ({ id: m, name: m }));
   } catch (error) {
     console.error("Error fetching models:", error);
@@ -20970,13 +21714,13 @@ var __webpack_modules__ = {
     var $parse = function(source2, reviver) {
       source2 = toString(source2);
       var context = new Context(source2, 0, "");
-      var root3 = context.parse();
-      var value = root3.value;
-      var endIndex = context.skip(IS_WHITESPACE, root3.end);
+      var root4 = context.parse();
+      var value = root4.value;
+      var endIndex = context.skip(IS_WHITESPACE, root4.end);
       if (endIndex < source2.length) {
         throw new SyntaxError2('Unexpected extra character: "' + at(source2, endIndex) + '" after the parsed data at: ' + endIndex);
       }
-      return isCallable(reviver) ? internalize({ "": value }, "", reviver, root3) : value;
+      return isCallable(reviver) ? internalize({ "": value }, "", reviver, root4) : value;
     };
     var internalize = function(holder, name, reviver, node) {
       var val = holder[name];
@@ -21236,10 +21980,10 @@ var __webpack_modules__ = {
         else if (typeof element2 == "number" || classof(element2) === "Number" || classof(element2) === "String") push2(keys, toString(element2));
       }
       var keysLength = keys.length;
-      var root3 = true;
+      var root4 = true;
       return function(key2, value) {
-        if (root3) {
-          root3 = false;
+        if (root4) {
+          root4 = false;
           return value;
         }
         if (isArray(this)) return value;
@@ -22987,13 +23731,13 @@ var XfaLayer = class {
     var _a7, _b3;
     const storage = parameters.annotationStorage;
     const linkService = parameters.linkService;
-    const root3 = parameters.xfaHtml;
+    const root4 = parameters.xfaHtml;
     const intent = parameters.intent || "display";
-    const rootHtml = document.createElement(root3.name);
-    if (root3.attributes) {
+    const rootHtml = document.createElement(root4.name);
+    if (root4.attributes) {
       this.setAttributes({
         html: rootHtml,
-        element: root3,
+        element: root4,
         intent,
         linkService
       });
@@ -23009,11 +23753,11 @@ var XfaLayer = class {
       rootDiv.setAttribute("class", "xfaLayer xfaFont");
     }
     const textDivs = [];
-    if (root3.children.length === 0) {
-      if (root3.value) {
-        const node = document.createTextNode(root3.value);
+    if (root4.children.length === 0) {
+      if (root4.value) {
+        const node = document.createTextNode(root4.value);
         rootHtml.append(node);
-        if (isNotForRichText && XfaText.shouldBuildText(root3.name)) {
+        if (isNotForRichText && XfaText.shouldBuildText(root4.name)) {
           textDivs.push(node);
         }
       }
@@ -23021,7 +23765,7 @@ var XfaLayer = class {
         textDivs
       };
     }
-    const stack2 = [[root3, -1, rootHtml]];
+    const stack2 = [[root4, -1, rootHtml]];
     while (stack2.length > 0) {
       const [parent, i, html2] = stack2.at(-1);
       if (i + 1 === parent.children.length) {
@@ -39030,8 +39774,8 @@ openDropdown_fn = function(event2) {
     __privateGet(this, _dropdown).classList.remove("hidden");
     return;
   }
-  const root3 = __privateSet(this, _dropdown, __privateMethod(this, _ColorPicker_instances, getDropdownRoot_fn).call(this));
-  __privateGet(this, _button).append(root3);
+  const root4 = __privateSet(this, _dropdown, __privateMethod(this, _ColorPicker_instances, getDropdownRoot_fn).call(this));
+  __privateGet(this, _button).append(root4);
 };
 pointerDown_fn2 = function(event2) {
   var _a7;
@@ -42100,8 +42844,8 @@ var InkAnnotationElement = class extends AnnotationElement {
         width,
         height
       } = __privateMethod(this, _InkAnnotationElement_instances, getTransform_fn).call(this, this.data.rotation, rect);
-      const root3 = g.parentElement;
-      root3.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      const root4 = g.parentElement;
+      root4.setAttribute("viewBox", `0 0 ${width} ${height}`);
       g.setAttribute("transform", transform);
     }
   }
@@ -44980,10 +45724,10 @@ var DrawingOptions = class {
     __privateGet(this, _svgProperties)[name] = value;
   }
   toSVGProperties() {
-    const root3 = __privateGet(this, _svgProperties);
+    const root4 = __privateGet(this, _svgProperties);
     __privateSet(this, _svgProperties, /* @__PURE__ */ Object.create(null));
     return {
-      root: root3
+      root: root4
     };
   }
   reset() {
@@ -49022,9 +49766,9 @@ var _DrawLayer = class _DrawLayer {
     }
     if (__privateGet(this, _parent2) !== parent) {
       if (__privateGet(this, _mapping).size > 0) {
-        for (const root3 of __privateGet(this, _mapping).values()) {
-          root3.remove();
-          parent.append(root3);
+        for (const root4 of __privateGet(this, _mapping).values()) {
+          root4.remove();
+          parent.append(root4);
         }
       }
       __privateSet(this, _parent2, parent);
@@ -49035,9 +49779,9 @@ var _DrawLayer = class _DrawLayer {
   }
   draw(properties, isPathUpdatable = false, hasClip = false) {
     const id = __privateWrapper(_DrawLayer, _id5)._++;
-    const root3 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
+    const root4 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
     const defs = _DrawLayer._svgFactory.createElement("defs");
-    root3.append(defs);
+    root4.append(defs);
     const path = _DrawLayer._svgFactory.createElement("path");
     defs.append(path);
     const pathId = `path_${id}`;
@@ -49048,10 +49792,10 @@ var _DrawLayer = class _DrawLayer {
     }
     const clipPathId = hasClip ? __privateMethod(this, _DrawLayer_instances, createClipPath_fn).call(this, defs, pathId) : null;
     const use = _DrawLayer._svgFactory.createElement("use");
-    root3.append(use);
+    root4.append(use);
     use.setAttribute("href", `#${pathId}`);
-    this.updateProperties(root3, properties);
-    __privateGet(this, _mapping).set(id, root3);
+    this.updateProperties(root4, properties);
+    __privateGet(this, _mapping).set(id, root4);
     return {
       id,
       clipPathId: `url(#${clipPathId})`
@@ -49059,9 +49803,9 @@ var _DrawLayer = class _DrawLayer {
   }
   drawOutline(properties, mustRemoveSelfIntersections) {
     const id = __privateWrapper(_DrawLayer, _id5)._++;
-    const root3 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
+    const root4 = __privateMethod(this, _DrawLayer_instances, createSVG_fn).call(this);
     const defs = _DrawLayer._svgFactory.createElement("defs");
-    root3.append(defs);
+    root4.append(defs);
     const path = _DrawLayer._svgFactory.createElement("path");
     defs.append(path);
     const pathId = `path_${id}`;
@@ -49088,17 +49832,17 @@ var _DrawLayer = class _DrawLayer {
       use.classList.add("mask");
     }
     const use1 = _DrawLayer._svgFactory.createElement("use");
-    root3.append(use1);
+    root4.append(use1);
     use1.setAttribute("href", `#${pathId}`);
     if (maskId) {
       use1.setAttribute("mask", `url(#${maskId})`);
     }
     const use2 = use1.cloneNode();
-    root3.append(use2);
+    root4.append(use2);
     use1.classList.add("mainOutline");
     use2.classList.add("secondaryOutline");
-    this.updateProperties(root3, properties);
-    __privateGet(this, _mapping).set(id, root3);
+    this.updateProperties(root4, properties);
+    __privateGet(this, _mapping).set(id, root4);
     return id;
   }
   finalizeDraw(id, properties) {
@@ -49111,7 +49855,7 @@ var _DrawLayer = class _DrawLayer {
       return;
     }
     const {
-      root: root3,
+      root: root4,
       bbox,
       rootClass,
       path
@@ -49120,8 +49864,8 @@ var _DrawLayer = class _DrawLayer {
     if (!element2) {
       return;
     }
-    if (root3) {
-      __privateMethod(this, _DrawLayer_instances, updateProperties_fn).call(this, element2, root3);
+    if (root4) {
+      __privateMethod(this, _DrawLayer_instances, updateProperties_fn).call(this, element2, root4);
     }
     if (bbox) {
       __privateMethod(_a7 = _DrawLayer, _DrawLayer_static, setBox_fn).call(_a7, element2, bbox);
@@ -49144,13 +49888,13 @@ var _DrawLayer = class _DrawLayer {
     if (layer === this) {
       return;
     }
-    const root3 = __privateGet(this, _mapping).get(id);
-    if (!root3) {
+    const root4 = __privateGet(this, _mapping).get(id);
+    if (!root4) {
       return;
     }
-    __privateGet(layer, _parent2).append(root3);
+    __privateGet(layer, _parent2).append(root4);
     __privateGet(this, _mapping).delete(id);
-    __privateGet(layer, _mapping).set(id, root3);
+    __privateGet(layer, _mapping).set(id, root4);
   }
   remove(id) {
     __privateGet(this, _toUpdate).delete(id);
@@ -49162,8 +49906,8 @@ var _DrawLayer = class _DrawLayer {
   }
   destroy() {
     __privateSet(this, _parent2, null);
-    for (const root3 of __privateGet(this, _mapping).values()) {
-      root3.remove();
+    for (const root4 of __privateGet(this, _mapping).values()) {
+      root4.remove();
     }
     __privateGet(this, _mapping).clear();
     __privateGet(this, _toUpdate).clear();
@@ -50014,9 +50758,11 @@ var LocalGPT2 = class extends import_obsidian16.Plugin {
       editor
     );
   }
-  async runAction(action2, editor) {
+  async runAction(action2, editor, selectedFiles, modelSelectionOverride) {
     return this.executeAction(
       {
+        selectedFiles,
+        modelSelection: modelSelectionOverride != null ? modelSelectionOverride : action2.modelSelection,
         prompt: action2.prompt,
         reasoningEffort: action2.reasoningEffort,
         system: action2.system,
@@ -50066,8 +50812,17 @@ var LocalGPT2 = class extends import_obsidian16.Plugin {
       logger.debug("Selected text", cleanedText);
       const aiRequestWaiter = await (0, import_sdk5.waitForAI)();
       const aiProviders = await aiRequestWaiter.promise;
+      const adjustedProvider = resolveExecutionProvider(
+        aiProviders,
+        this.settings,
+        imagesInBase64.length > 0,
+        params.modelSelection,
+        params.overrideProviderId,
+        this.actionPaletteModel,
+        this.actionPaletteModelProviderId
+      );
       const embeddingProvider = aiProviders.providers.find(
-        (provider2) => provider2.id === this.settings.aiProviders.embedding
+        (provider) => provider.id === this.settings.aiProviders.embedding
       );
       const contextQuery = cleanedText.trim() ? cleanedText : params.prompt;
       const context = await this.enhanceWithContext(
@@ -50078,43 +50833,22 @@ var LocalGPT2 = class extends import_obsidian16.Plugin {
         params.selectedFiles,
         contextQuery
       );
-      const provider = selectProvider2(
+      const fullText = await executeProviderRequest({
         aiProviders,
-        this.settings,
-        imagesInBase64.length > 0,
-        params.overrideProviderId
-      );
-      const adjustedProvider = overrideProviderModel(
-        provider,
-        params.overrideProviderId,
-        this.actionPaletteModel,
-        this.actionPaletteModelProviderId
-      );
-      let fullText = "";
-      try {
-        fullText = await executeProviderRequest({
-          aiProviders,
-          provider: adjustedProvider,
-          settings: this.settings,
-          prompt: params.prompt,
-          system: params.system,
-          temperature: params.temperature,
-          reasoningEffort: params.reasoningEffort,
-          reasoningSelection: params.reasoningSelection,
-          onReasoningResolved,
-          selectedText: cleanedText,
-          context,
-          imagesInBase64,
-          abortController,
-          onUpdate
-        });
-      } finally {
-        hideSpinner && hideSpinner();
-        this.app.workspace.updateOptions();
-        this.abortControllers = this.abortControllers.filter(
-          (controller) => controller !== abortController
-        );
-      }
+        provider: adjustedProvider,
+        settings: this.settings,
+        prompt: params.prompt,
+        system: params.system,
+        temperature: params.temperature,
+        reasoningEffort: params.reasoningEffort,
+        reasoningSelection: params.reasoningSelection,
+        onReasoningResolved,
+        selectedText: cleanedText,
+        context,
+        imagesInBase64,
+        abortController,
+        onUpdate
+      });
       if (abortController.signal.aborted && !fullText.trim()) {
         return;
       }
@@ -50135,7 +50869,14 @@ var LocalGPT2 = class extends import_obsidian16.Plugin {
         mappedRange.from,
         insertionOffset
       );
+    } catch (error) {
+      notifyProviderError(error, abortController);
     } finally {
+      hideSpinner == null ? void 0 : hideSpinner();
+      this.app.workspace.updateOptions();
+      this.abortControllers = this.abortControllers.filter(
+        (controller) => controller !== abortController
+      );
       releaseSelectionTracker();
     }
   }

@@ -12661,8 +12661,54 @@ function stampDay(ctimeMs, mtimeMs) {
   const pick = c && m ? Math.min(c, m) : c || m;
   return pick ? localDay(pick) : "";
 }
-function resolveCreated(fm, basename, ctimeMs, mtimeMs) {
-  const f = day10(fm && fm.created) || day10(fm && fm.date);
+var LOOSE_DAY = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?:$|[T\s])/;
+function frontmatterDay(v) {
+  const strict = day10(v);
+  if (strict || typeof v !== "string") return strict;
+  const m = LOOSE_DAY.exec(v.trim().replace(/^\[\[|\]\]$/g, ""));
+  if (!m) return "";
+  const day = m[1] + "-" + m[2].padStart(2, "0") + "-" + m[3].padStart(2, "0");
+  return isRealDay(day) ? day : "";
+}
+function keyForm(key) {
+  return String(key).toLowerCase().replace(/[\s_-]+/g, " ").trim();
+}
+var DEFAULT_CREATED_KEYS = "created, date";
+var CREATED_VARIANTS = ["created at", "date created", "creation date", "created on", "createdat"];
+var TOUCHED_KEYS = [
+  "updated",
+  "modified",
+  "last modified",
+  "last updated",
+  "updated at",
+  "modified at",
+  "date modified",
+  "date updated",
+  "updated on",
+  "modified on"
+];
+function firstDay(fm, keys) {
+  if (!fm || typeof fm !== "object") return "";
+  const have = /* @__PURE__ */ new Map();
+  for (const k of Object.keys(fm)) {
+    const f = keyForm(k);
+    if (!have.has(f)) have.set(f, fm[k]);
+  }
+  for (const k of keys) {
+    const day = have.has(k) ? frontmatterDay(have.get(k)) : "";
+    if (day) return day;
+  }
+  return "";
+}
+function createdKeyList(list) {
+  const named = String(list == null ? DEFAULT_CREATED_KEYS : list).split(",").map(keyForm).filter(Boolean);
+  return Array.from(new Set(named.concat(CREATED_VARIANTS)));
+}
+function resolveTouched(fm, mtimeMs) {
+  return firstDay(fm, TOUCHED_KEYS) || (mtimeMs ? localDay(mtimeMs) : "");
+}
+function resolveCreated(fm, basename, ctimeMs, mtimeMs, keys) {
+  const f = firstDay(fm, keys || createdKeyList());
   if (f) return { day: f, source: "frontmatter" };
   const n = nameDay(basename);
   if (n) return { day: n, source: "filename" };
@@ -12916,12 +12962,13 @@ async function buildData(host, opts, version) {
   const index = /* @__PURE__ */ new Map();
   const nodes = [];
   const dates = dateTally();
+  const createdKeys = createdKeyList(opts.createdKeys);
   for (const file of files) {
     const cache2 = app.metadataCache.getFileCache(file) || {};
     const fm = cache2.frontmatter || {};
     const tags = normalizeTags(fm);
     const dirs = paraDirs(file.path, opts.flatMonths);
-    const dated = resolveCreated(fm, file.basename, file.stat.ctime, file.stat.mtime);
+    const dated = resolveCreated(fm, file.basename, file.stat.ctime, file.stat.mtime, createdKeys);
     dates[dated.source]++;
     index.set(file.path, nodes.length);
     nodes.push({
@@ -12933,7 +12980,7 @@ async function buildData(host, opts, version) {
       type: inferType(fm, file.path, tags, dailyDir, isTemplate),
       tags,
       created: dated.day,
-      touched: localDay(file.stat.mtime),
+      touched: resolveTouched(fm, file.stat.mtime),
       words: 0,
       _file: file
     });
@@ -13277,7 +13324,7 @@ var logo_mask_default = "iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAAAXNSR0I
 var whats_new_default = "<!--\n  The update note the plugin shows ONCE, on the first open after a MINOR or MAJOR update\n  (github#83, design/0016). Three line kinds, in any order after the heading:\n\n    # 2.6.0          the release this note is for -- one per file, and it must be the one\n                     being cut, or the strip stays silent rather than showing a stale note\n    - <text>         up to five bullets, plain text: what you can now do, not how it was\n                     built. No markup, no images, no links -- the strip builds its own\n    > vg-dim         up to four control ids from src/page.html: what this release ADDED.\n                     They pulse while the note is up and stop when it is dismissed. Leave\n                     the line out when a release adds no control of its own\n\n  The strip links out on its own: one link per release between the version last seen and\n  this one, oldest first, plus the feature gallery. The release branch rewrites this file\n  beside the CHANGELOG entry; a PATCH leaves it as it is, and shows nothing.\n  scripts/build-plugin.mjs refuses a file that breaks any of that.\n-->\n# 2.10.0\n- The layout engine under the disc was rebuilt to make room for what comes next; most views look just as they did.\n- A typical dot now draws at about the size its space allows, and it scales with the disc when you resize the window.\n- A filtered band fills the ring it owns, and a long tail of small tags or folders keeps its own wedges without drowning in gaps.\n- In the tag view, a new Parent tags chip folds every parent tag into one solid wedge.\n- Walking from note to note frames the whole visible neighbourhood in one camera move.\n> vg-parents\n";
 
 // vg::vg:releases
-var vg_releases_default = [{ "version": "2.10.0", "name": "Groundwork" }, { "version": "2.9.0", "name": "Mobile & Sort" }, { "version": "2.8.0", "name": "Recent" }, { "version": "2.7.0", "name": "Reader" }, { "version": "2.6.0", "name": "Minimap" }, { "version": "2.5.0", "name": "Tags" }, { "version": "2.4.1", "name": "" }, { "version": "2.4.0", "name": "Auto" }, { "version": "2.3.0", "name": "Gauge" }, { "version": "2.2.0", "name": "Fold" }, { "version": "2.1.0", "name": "Mobile" }, { "version": "2.0.0", "name": "Own Engine" }, { "version": "1.9.0", "name": "Belonging" }, { "version": "1.8.0", "name": "The Hub" }, { "version": "1.7.0", "name": "" }, { "version": "1.6.1", "name": "" }, { "version": "1.6.0", "name": "" }, { "version": "1.5.3", "name": "" }, { "version": "1.5.2", "name": "" }, { "version": "1.5.1", "name": "" }, { "version": "1.5.0", "name": "" }, { "version": "1.4.4", "name": "" }, { "version": "1.4.3", "name": "" }, { "version": "1.4.2", "name": "" }, { "version": "1.4.1", "name": "" }, { "version": "1.4.0", "name": "" }, { "version": "1.3.0", "name": "" }, { "version": "1.2.0", "name": "" }, { "version": "1.1.1", "name": "" }, { "version": "1.1.0", "name": "" }];
+var vg_releases_default = [{ "version": "2.10.1", "name": "" }, { "version": "2.10.0", "name": "Groundwork" }, { "version": "2.9.0", "name": "Mobile & Sort" }, { "version": "2.8.0", "name": "Recent" }, { "version": "2.7.0", "name": "Reader" }, { "version": "2.6.0", "name": "Minimap" }, { "version": "2.5.0", "name": "Tags" }, { "version": "2.4.1", "name": "" }, { "version": "2.4.0", "name": "Auto" }, { "version": "2.3.0", "name": "Gauge" }, { "version": "2.2.0", "name": "Fold" }, { "version": "2.1.0", "name": "Mobile" }, { "version": "2.0.0", "name": "Own Engine" }, { "version": "1.9.0", "name": "Belonging" }, { "version": "1.8.0", "name": "The Hub" }, { "version": "1.7.0", "name": "" }, { "version": "1.6.1", "name": "" }, { "version": "1.6.0", "name": "" }, { "version": "1.5.3", "name": "" }, { "version": "1.5.2", "name": "" }, { "version": "1.5.1", "name": "" }, { "version": "1.5.0", "name": "" }, { "version": "1.4.4", "name": "" }, { "version": "1.4.3", "name": "" }, { "version": "1.4.2", "name": "" }, { "version": "1.4.1", "name": "" }, { "version": "1.4.0", "name": "" }, { "version": "1.3.0", "name": "" }, { "version": "1.2.0", "name": "" }, { "version": "1.1.1", "name": "" }, { "version": "1.1.0", "name": "" }];
 
 // plugin/update-note.mjs
 var NOTE_MAX_BYTES = 4096;
@@ -13776,7 +13823,8 @@ var VaultGraphView = class _VaultGraphView extends import_obsidian.ItemView {
       ghosts: this.plugin.settings.ghosts,
       templates: this.plugin.settings.templates,
       flatMonths: this.plugin.settings.flatMonths,
-      words: this.plugin.settings.words
+      words: this.plugin.settings.words,
+      createdKeys: this.plugin.settings.createdKeys
     };
     this.rebuilding = true;
     try {
@@ -13998,6 +14046,8 @@ var DEFAULTS = {
   templates: false,
   flatMonths: false,
   words: true,
+  // github#205
+  createdKeys: DEFAULT_CREATED_KEYS,
   folderColors: {},
   subfolderColors: {},
   tagColors: {},
@@ -14037,6 +14087,14 @@ var FOLDER_ORDER_SETTING = {
   name: "Folder order",
   desc: "Which way the wedges run round the disc. Name is the vault's own folder order, numbers reading as numbers. File explorer follows a Custom File Explorer sorting sortspec -- pinned names first, then order-asc/order-desc a-z, by that plugin's own precedence; only the sections aimed at the vault root and at a top-level folder can reach the disc, and a spec that cannot be read falls back to Name. Size puts the biggest folder first. A folder keeps its colour whichever you pick.",
   options: { name: "Name", explorer: "File explorer", size: "Size" }
+};
+var CREATED_KEYS_SETTING = {
+  key: (
+    /** @type {const} */
+    "createdKeys"
+  ),
+  name: "Created date properties",
+  desc: "Note properties (frontmatter) read as a note's created date, first match wins, ignoring case. Created at, date created and the like are always tried after these. Without one, the date comes from the file name, then the file stamp -- which a copied vault resets. An updated or modified property sets the last-touched date the same way."
 };
 var BUILD_SETTINGS = [
   {
@@ -14216,6 +14274,20 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
     return [
       ...BUILD_SETTINGS.map((s) => toggle(s, false)),
       {
+        name: CREATED_KEYS_SETTING.name,
+        desc: CREATED_KEYS_SETTING.desc,
+        aliases: ["date", "created", "frontmatter", "yaml", "properties", "modified", "updated"],
+        control: {
+          type: (
+            /** @type {"text"} */
+            "text"
+          ),
+          key: CREATED_KEYS_SETTING.key,
+          defaultValue: DEFAULT_CREATED_KEYS,
+          placeholder: DEFAULT_CREATED_KEYS
+        }
+      },
+      {
         type: (
           /** @type {"group"} */
           "group"
@@ -14276,6 +14348,10 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
   }
   /** @param {string} key @param {unknown} value */
   async setControlValue(key, value) {
+    if (key === CREATED_KEYS_SETTING.key) {
+      await this.setCreatedKeys(String(value));
+      return;
+    }
     if (key === FOLDER_ORDER_SETTING.key) {
       await this.setFolderOrder(String(value));
       return;
@@ -14308,6 +14384,13 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
     }
     const api = view && view.handle && view.handle.api;
     if (api && def.api && api[def.api]) api[def.api](v);
+  }
+  // github#205
+  /** @param {string} v @param {boolean} [rebuild] */
+  async setCreatedKeys(v, rebuild = true) {
+    this.plugin.settings.createdKeys = v.trim() ? v : DEFAULT_CREATED_KEYS;
+    await this.plugin.saveSettings();
+    if (rebuild) await this.plugin.rebuildViews();
   }
   // github#71
   /** @param {string} v */
@@ -14347,6 +14430,14 @@ var VaultGraphSettingTab = class extends import_obsidian.PluginSettingTab {
         await this.plugin.rebuildViews();
       }));
     }
+    let builtWith = this.plugin.settings.createdKeys;
+    new import_obsidian.Setting(containerEl).setName(CREATED_KEYS_SETTING.name).setDesc(CREATED_KEYS_SETTING.desc).addText((x) => x.setPlaceholder(DEFAULT_CREATED_KEYS).setValue(this.plugin.settings.createdKeys).onChange(async (v) => {
+      await this.setCreatedKeys(v, false);
+    }).inputEl.addEventListener("blur", () => {
+      if (this.plugin.settings.createdKeys === builtWith) return;
+      builtWith = this.plugin.settings.createdKeys;
+      void this.plugin.rebuildViews();
+    }));
     new import_obsidian.Setting(containerEl).setName("View").setHeading();
     new import_obsidian.Setting(containerEl).setName(FOLDER_ORDER_SETTING.name).setDesc(FOLDER_ORDER_SETTING.desc).addDropdown((d) => d.addOptions(FOLDER_ORDER_SETTING.options).setValue(this.plugin.settings.folderOrder || this.liveFolderOrder() || "name").onChange(async (v) => {
       await this.setFolderOrder(v);

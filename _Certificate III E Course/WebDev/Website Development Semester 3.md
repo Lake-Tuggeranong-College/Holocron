@@ -55,9 +55,11 @@ You will be assessed via observation.
 
 ### Deliverable/s
 
-| Deliverables | Submitted via |
-| ------------ | ------------- |
-| Observations | N/A           |
+| Deliverables        | Submitted via    |
+| ------------------- | ---------------- |
+| Observations        | N/A              |
+| Planning Document   | Google Classroom |
+| Reflection Document | Google Classroom |
 
 ### Task 3.1 Competencies
 
@@ -92,10 +94,10 @@ This interview will be a combination of interview and observational assessment.
 
 ### Task 3.2 Competencies
 
-| Unit Code                                                                       | Unit Title                                        | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
-| ------------------------------------------------------------------------------- | ------------------------------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
-| [BSBXTW301](https://training.gov.au/Training/Details/BSBXTW301/unitdetails)     | Work in a team                                    |              |                  |       ✅       |                   |
-| [ICTSAS305](https://training.gov.au/Training/Details/ICTSAS305/unitdetails)     | Provide ICT advice to clients                     |              |                  |       ✅       |                   |
+| Unit Code                                                                   | Unit Title                    | Cert II Core | Cert II Elective | Cert III Core | Cert III Elective |
+| --------------------------------------------------------------------------- | ----------------------------- | :----------: | :--------------: | :-----------: | :---------------: |
+| [BSBXTW301](https://training.gov.au/Training/Details/BSBXTW301/unitdetails) | Work in a team                |              |                  |       ✅       |                   |
+| [ICTSAS305](https://training.gov.au/Training/Details/ICTSAS305/unitdetails) | Provide ICT advice to clients |              |                  |       ✅       |                   |
 
 
 ### Assessment Task

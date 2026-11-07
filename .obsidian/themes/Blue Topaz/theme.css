@@ -8481,7 +8481,7 @@ body.color-scheme-options-chocolate-topaz.theme-dark {
   --tag4: var(--color8);
   --tag5: var(--color7);
 
-  --tag-dailynote: var(--mian-color);
+  --tag-dailynote: var(--main-color);
   --tag-dailynote-bg: var(--color5);
   --tag-weeklynote: var(--color3);
   --tag-weeklynote-bg: var(--color6);
@@ -8796,7 +8796,7 @@ body.color-scheme-options-autumn-topaz.theme-dark {
   --tag3: var(--color9);
   --tag4: var(--color8);
   --tag5: var(--color7);
-  --tag-dailynote: var(--mian-color);
+  --tag-dailynote: var(--main-color);
   --tag-dailynote-bg: var(--color5);
   --tag-weeklynote: var(--color3);
   --tag-weeklynote-bg: var(--color6);
@@ -9729,7 +9729,7 @@ body.color-scheme-options-lillimon-topaz.theme-dark {
   --tag4: var(--color8);
   --tag5: var(--color7);
 
-  --tag-dailynote: var(--mian-color);
+  --tag-dailynote: var(--main-color);
   --tag-dailynote-bg: var(--color5);
   --tag-weeklynote: var(--color3);
   --tag-weeklynote-bg: var(--color6);
@@ -10406,7 +10406,7 @@ body.color-scheme-options-simplicity-topaz.theme-dark {
   --background-fifth: var(--simple-white-5);
   --background-sixth:	var(--simple-white-5);
 
-  --text-color-code:var(--simple-orang-1);
+  --text-color-code:var(--simple-orange);
   --text-normal: var(--simple-black-1);
   --text-error:	var(--simple-red-1);
 
@@ -11265,7 +11265,7 @@ body:not(.remove-cloze-style) .markdown-source-view.is-live-preview .cm-highligh
 body:not(.remove-cloze-style) .markdown-source-view.is-live-preview .cm-highlight.cm-strikethrough:hover {
   background-color: transparent !important;
   color: var(--text-normal) !important;
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 
@@ -12210,7 +12210,7 @@ body:not(.remove-cloze-style) .cm-s-obsidian .cm-formatting.cm-formatting-highli
 .markdown-source-view.cloze .cm-formatting.cm-formatting-highlight.cm-highlight~.cm-formatting.cm-formatting-strikethrough~span.cm-highlight.cm-strikethrough:not(.cm-em):hover {
   background-color: var(--bt-native-highlight-background, var(--text-highlight-bg));
   color: var(--text-normal);
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 body:not(.remove-cloze-style) :is(.markdown-preview-view,
@@ -12219,7 +12219,7 @@ body:not(.remove-cloze-style) :is(.markdown-preview-view,
 .markdown-rendered).cloze mark > del:hover {
   background-color: transparent;
   color: var(--accent-strong);
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 body:not(.remove-cloze-style) :is(.markdown-preview-view,
@@ -12246,7 +12246,7 @@ body:not(.remove-cloze-style) :is(.markdown-preview-view,
 .markdown-rendered).cloze em > mark > del:active {
   color: var(--accent-strong);
   background-color: transparent;
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 body:not(.remove-cloze-style) .cm-s-obsidian .cm-em.cm-formatting.cm-formatting-em.cm-em.cm-formatting.cm-formatting-em~.cm-em.cm-formatting.cm-formatting-highlight.cm-highlight~.cm-em.cm-formatting.cm-formatting-strikethrough.cm-highlight.cm-strikethrough~span.cm-em.cm-highlight.cm-strikethrough:not([class*="formatting"]),
@@ -12283,7 +12283,7 @@ body:not(.remove-cloze-style) :is(.markdown-preview-view,
 .markdown-rendered).cloze em > del:hover {
   background-color: transparent;
   color: var(--text-normal);
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 body:not(.remove-cloze-style) .markdown-source-view.is-live-preview .cm-em.cm-strikethrough,
@@ -12298,7 +12298,7 @@ body:not(.remove-cloze-style) .markdown-source-view.is-live-preview .cm-em.cm-st
 .markdown-source-view.is-live-preview.cloze .cm-em.cm-strikethrough:hover {
   background-color: transparent !important;
   color: var(--text-normal) !important;
-  transition: all 400ms ease-in-out;
+  transition: color 400ms ease-in-out, background-color 400ms ease-in-out;
 }
 
 body:not(.remove-cloze-style) .cm-em.cm-formatting.cm-formatting-em~.cm-em.cm-formatting.cm-formatting-strikethrough.cm-strikethrough,
@@ -13755,7 +13755,7 @@ body.code-theme-Gruvbox-dark {
 
 body.theme-light.code-theme-dracula {
   --background-code: #e6e6e671;
-  --code-normal: var(--tex-normal);
+  --code-normal: var(--text-normal);
   --code-string: var(--orange) ;
   --code-string-2: var(--orange-1) ;
   --code-variable: var(--blue-green);
@@ -13819,7 +13819,7 @@ body.code-theme-sublime {
 }
 
 .cm-s-obsidian span.cm-variable-3 {
-  color: var(---code-variable-3);
+  color: var(--code-variable-3);
 }
 .token.class,
 .token.class-name {
@@ -15003,6 +15003,12 @@ body.table-style-three .markdown-source-view table tbody>tr {
      used to push the note title underneath the left sidebar. */
   margin-left: max(0px, calc((100% - var(--file-line-width)) / 2));
 }
+:is(body.full-width-table,body.full-width-dvtable,body.full-width-callout,body.full-width-backlinks)   .markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer .inline-title
+{
+  /* #733: mirror the offset on the right so the auto-width title box stays
+     inside the readable column and centred text stays on the column centre. */
+  margin-right: max(0px, calc((100% - var(--file-line-width)) / 2));
+}
 
 :is(body.full-width-table,body.full-width-dvtable,body.full-width-callout,body.full-width-backlinks) .markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer,
 :is(body.full-width-table,body.full-width-dvtable,body.full-width-callout,body.full-width-backlinks) .markdown-source-view.mod-cm6.is-readable-line-width:not(.is-rtl) .cm-contentContainer,
@@ -15459,13 +15465,13 @@ a.internal-link,
   color: var(--text-accent);
   border-radius: var(--radius-xs);
   text-decoration: none !important;
-  transition: all 0.4s ease-in-out;
+  transition: color 0.4s ease-in-out, text-shadow 0.4s ease-in-out;
   text-shadow: var(--window-shadow-hover);
  
 }
 
-body.colorful-link-animation :is(.markdown-preview-view,.markdown-rendered) a:hover {
-  animation: 2s colorful-link infinite;
+.cm-url:hover {
+  transition: color 600ms;
 }
 
 @keyframes colorful-link {
@@ -15576,7 +15582,7 @@ body.embed-hd .markdown-embed :is(.markdown-preview-view,.markdown-rendered) :is
 
 body.embed-hover.theme-light :is(.markdown-preview-view,.markdown-rendered) .internal-embed .markdown-embed:hover {
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, .25);
-  transition: all .2s ease-in-out;
+  transition: box-shadow .2s ease-in-out, transform .2s ease-in-out;
   transform: translate3d(0px, -3px, 0px);
 }
 body.embed-hover.theme-light .markdown-source-view .internal-embed .markdown-embed:hover {
@@ -15842,22 +15848,26 @@ span.cm-formatting.cm-formatting-header {
   opacity: 0.45;
 }
 
-body.image-border img{
+/* Obsidian 1.14 renders the colored-highlight emoji marker as
+   span.cm-highlight-color-widget > img.highlight-swatch in live preview;
+   it is an inline UI swatch, not a document image, so every image rule
+   below excludes it to keep ==🟡…== working. */
+body.image-border img:not(.highlight-swatch){
   border: 1px solid rgba(var(--mono-rgb-100),0.1);
   filter: drop-shadow(0px 0px 3px rgba(var(--mono-rgb-100),0.2));
 }
 /* images : reduce displayed size of embedded files, zoom on hover */
-body:not(.obsidian-default-image) :is(.markdown-preview-view, .markdown-rendered) .workspace-leaf-content[data-type="markdown"] img:not([class*="emoji"]) {
+body:not(.obsidian-default-image) :is(.markdown-preview-view, .markdown-rendered) .workspace-leaf-content[data-type="markdown"] img:not([class*="emoji"]):not(.highlight-swatch) {
   max-width: var(--image-max-width);
   margin-left: auto;
   margin-right: auto;
 }
 
-body:not(.obsidian-default-image) .print :is(.markdown-preview-view, .markdown-rendered) img:not([class*="emoji"]) {
+body:not(.obsidian-default-image) .print :is(.markdown-preview-view, .markdown-rendered) img:not([class*="emoji"]):not(.highlight-swatch) {
   display: block;
 }
 
-body:not(.obsidian-default-image) .workspace-leaf-content[data-type="markdown"] .view-content :not(.canvas-node-content)>img:not([class*="emoji"]) {
+body:not(.obsidian-default-image) .workspace-leaf-content[data-type="markdown"] .view-content :not(.canvas-node-content)>img:not([class*="emoji"]):not(.highlight-swatch) {
   cursor: zoom-in;
   display: block;
   margin-left: auto ;
@@ -15890,7 +15900,7 @@ body:not(.image-zoom) .markdown-reading-view img:not([class*="emoji"]):active,
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDgwIDgwIj4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjJGNEY2Ii8+CiAgICA8ZyBmaWxsPSIjRkZGIj4KICAgICAgPHJlY3Qgd2lkdGg9IjIiIGhlaWdodD0iNzkiIHg9Ijc4Ii8+CiAgICAgIDxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjE5IiB4PSIxOSIvPgogICAgICA8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxOSIgeD0iMzkiLz4KICAgICAgPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTkiIHg9IjU5Ii8+CiAgICAgIDxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjE5IiB4PSIxOSIgeT0iMjAiLz4KICAgICAgPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTkiIHg9IjM5IiB5PSIyMCIvPgogICAgICA8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxOSIgeD0iNTkiIHk9IjIwIi8+CiAgICAgIDxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjE5IiB4PSIxOSIgeT0iNDAiLz4KICAgICAgPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTkiIHg9IjM5IiB5PSI0MCIvPgogICAgICA8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxOSIgeD0iNTkiIHk9IjQwIi8+CiAgICAgIDxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjE5IiB4PSIxOSIgeT0iNjAiLz4KICAgICAgPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMTkiIHg9IjM5IiB5PSI2MCIvPgogICAgICA8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxOSIgeD0iNTkiIHk9IjYwIi8+CiAgICAgIDxyZWN0IHdpZHRoPSI3OSIgaGVpZ2h0PSIxIiB5PSIxOSIvPgogICAgICA8cmVjdCB3aWR0aD0iNzkiIGhlaWdodD0iMSIgeT0iMzkiLz4KICAgICAgPHJlY3Qgd2lkdGg9Ijc5IiBoZWlnaHQ9IjEiIHk9IjU5Ii8+CiAgICA8L2c+CiAgICA8cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iMiIgeT0iNzgiIGZpbGw9IiNGRkYiLz4KICA8L2c+Cjwvc3ZnPgo=");
 }
 
-body:not(.obsidian-default-image)  .workspace-leaf-content[data-type="markdown"]  .internal-embed.image-embed.is-loaded img:not([class*="emoji"]) {
+body:not(.obsidian-default-image)  .workspace-leaf-content[data-type="markdown"]  .internal-embed.image-embed.is-loaded img:not([class*="emoji"]):not(.highlight-swatch) {
   max-width: var(--image-max-width);
  
   display: block;
@@ -15903,7 +15913,7 @@ body:not(.obsidian-default-image)  .workspace-leaf-content[data-type="markdown"]
   display: inline ;
 }
 
-body:not(.obsidian-default-image) .markdown-source-view.mod-cm6 img:not([class*="emoji"]) {
+body:not(.obsidian-default-image) .markdown-source-view.mod-cm6 img:not([class*="emoji"]):not(.highlight-swatch) {
   display: block;
   margin: auto !important;
   cursor: help;
@@ -16174,7 +16184,7 @@ body:not(.default-icons) .workspace-leaf-content[data-type=outline]  .tree-item.
   margin-left: 14px;
   border-left: 1px solid #94949433;
   border-radius: 0;
-  transition: all 400ms ease-in-out;
+  transition: border-color 400ms ease-in-out;
 }
 
 body.default-icons .workspace-leaf-content[data-type=outline]  .tree-item-children {
@@ -16297,7 +16307,7 @@ body.logseq-outline-style .workspace-leaf-content[data-type=outline] .view-conte
 .tag-container .tree-item-children {
   border-left: 1px solid #94949433;
   border-radius: 0 3px 3px 0;
-  transition: all 300ms ease-in-out;
+  transition: border-color 300ms ease-in-out;
 }
 
 .tag-container .tree-item-children > div[style="width: 1px; height: 0.1px; margin-bottom: 0px;"] {
@@ -17006,19 +17016,19 @@ body.resizable-mermaid .mermaid {
 
 .taskText.clickable {
   cursor: pointer !important;
-  fill: var(--interactive-accent_hover) !important;
+  fill: var(--interactive-accent-hover) !important;
   font-weight: bold !important;
 }
 
 .taskTextOutsideLeft.clickable {
   cursor: pointer !important;
-  fill: var(--interactive-accent_hover) !important;
+  fill: var(--interactive-accent-hover) !important;
   font-weight: bold !important;
 }
 
 .taskTextOutsideRight.clickable {
   cursor: pointer !important;
-  fill: var(--interactive-accent_hover) !important;
+  fill: var(--interactive-accent-hover) !important;
   font-weight: bold !important;
 }
 
@@ -22805,7 +22815,7 @@ body.background-settings-workplace-background-image .nav-folder.mod-root>.nav-fo
 
 body.background-settings-workplace-background-image {
   --tab-text-color-focused: var(--text-normal);
-  --titlebar-text-color-focused: var(--text-noraml);
+  --titlebar-text-color-focused: var(--text-normal);
   --canvas-background: transparent;
 }
 
@@ -23404,7 +23414,7 @@ opacity: var(--bg-markdown-page-opacity-cp,1);
   padding-left: 0;
   border-left: 1px solid var(--background-modifier-border);
   border-radius: 0;
-  transition: all 400ms ease-in;
+  transition: border-color 400ms ease-in;
 }
 
 .nav-view-outer .tree-item .tree-item .tree-item-children:hover {
@@ -23461,7 +23471,7 @@ body:not(.default-icons) .nav-view-outer .tree-item.is-collapsed .tree-item-icon
   padding-left: 0;
   border-left: 1px solid var(--background-modifier-border);
   border-radius: 0;
-  transition: all 400ms ease-in;
+  transition: border-color 400ms ease-in;
 }
 
 .outline-view-outer .tree-item.tree-item-children:hover {
@@ -28469,7 +28479,7 @@ body:not(.default-list-marker) .markdown-rendered .list-bullet::after {
   margin-left: 0.13em;
   /* margin-top: calc(0.466em * var(--line-height-list) - 0.286em); */
   line-height: 0.55;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, font-size 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 body:not(.default-list-marker) .list-bullet::after {
@@ -28486,7 +28496,7 @@ body:not(.default-list-marker) .list-bullet::after {
   justify-content: center;
   flex-direction: column;
   height: 43%;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, font-size 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 body.custom-unordered-list .markdown-rendered .has-list-bullet .has-list-bullet .has-list-bullet .has-list-bullet .list-bullet::after,
@@ -29658,7 +29668,7 @@ body.safari-tab-style .mod-root .workspace-tabs:not(.mod-stacked).mod-active .wo
 body.safari-tab-style .mod-root .workspace-tabs:not(.mod-stacked).mod-active .workspace-tab-header.is-active .workspace-tab-header-inner-title,
 body.safari-tab-style .mod-root .workspace-tabs:not(.mod-stacked).mod-active .workspace-tab-header.is-active .workspace-tab-header-inner-close-button,
 body.safari-tab-style .mod-root .workspace-tabs:not(.mod-stacked).mod-active .workspace-tab-header.is-active .workspace-tab-header-inner-icon {
-  color: var(--text-noraml);
+  color: var(--text-normal);
   font-weight:bold;
 }
 
@@ -29821,7 +29831,7 @@ body:not(.is-phone) .workspace-leaf.mod-active .tree-item-self.has-focus {
 
 body.bt-bubble-layout {
   --divider-color: transparent;
-  --divider-color-hover: var(--backgrouund-modifier-border);
+  --divider-color-hover: var(--background-modifier-border);
 }
 
 body:not(.bt-bubble-layout) .setting-item[data-id="bt-bubble-settings"],

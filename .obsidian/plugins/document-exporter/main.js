@@ -22,7 +22,7 @@ __export(main_exports, {
   default: () => DocumentExporterPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian10 = require("obsidian");
+var import_obsidian11 = require("obsidian");
 
 // src/types.ts
 var DEFAULT_SETTINGS = {
@@ -79,7 +79,7 @@ var PROFILE_LABELS = {
 var SETTING_META = {
   defaultOutputFolder: {
     name: "Output folder",
-    desc: "Exported files will be saved here (relative to vault root). You can change this path to any folder in your vault.",
+    desc: "Use a vault-relative folder, or an absolute system path on desktop. Home paths starting with ~/ are supported on desktop.",
     aliases: ["directory", "destination", "save location", "export path"]
   },
   defaultProfile: {
@@ -104,7 +104,7 @@ var SETTING_META = {
   },
   overwriteExisting: {
     name: "Overwrite existing exports",
-    desc: "Replace existing export files when enabled. When disabled and the destination already exists, the export uses a new timestamped folder for its documents, attachments and report.",
+    desc: "Replace existing export files when enabled. When disabled, empty destinations are reused. Conflicting exports and shared assets are protected using a timestamped folder inside the selected output folder.",
     aliases: ["replace", "timestamped folder"]
   }
 };
@@ -269,509 +269,6 @@ var DocumentExporterSettingTab = class extends import_obsidian.PluginSettingTab 
   }
 };
 
-// src/ui/ExportModal.ts
-var import_obsidian2 = require("obsidian");
-var PROFILE_OPTIONS = {
-  pdf: "PDF",
-  docx: "Word document",
-  epub: "EPUB e-book",
-  "markdown-bundle": "Markdown bundle",
-  "html-document": "HTML document"
-};
-var SOURCE_OPTIONS = {
-  "current-file": "Current file",
-  folder: "Folder",
-  files: "Selected files"
-};
-function deriveDefaultFilename(app, preselectedFile, preselectedFolder) {
-  var _a, _b;
-  if (preselectedFile)
-    return preselectedFile.basename;
-  if (preselectedFolder)
-    return preselectedFolder.name;
-  return (_b = (_a = app.workspace.getActiveFile()) == null ? void 0 : _a.basename) != null ? _b : "export";
-}
-function defaultMergeFilename(sourceType, folderPath) {
-  if (sourceType === "folder") {
-    return folderPath.split("/").pop() || "merged";
-  }
-  return "merged";
-}
-var ExportModal = class extends import_obsidian2.Modal {
-  constructor(app, settings, preselectedFile, preselectedFolder) {
-    super(app);
-    this.resolve = null;
-    this.sourceType = "current-file";
-    this.folderPath = "";
-    this.selectedFilePaths = [];
-    this.outputFolderName = "";
-    this.mergeIntoSingleFile = false;
-    this.settings = settings;
-    this.preselectedFile = preselectedFile;
-    this.preselectedFolder = preselectedFolder;
-    this.profile = resolveSupportedProfile(
-      settings.defaultProfile,
-      import_obsidian2.Platform.isDesktopApp
-    );
-    this.outputFolder = settings.defaultOutputFolder;
-    this.outputFilename = deriveDefaultFilename(
-      app,
-      preselectedFile,
-      preselectedFolder
-    );
-  }
-  onOpen() {
-    if (this.preselectedFile) {
-      this.sourceType = "current-file";
-    } else if (this.preselectedFolder) {
-      this.sourceType = "folder";
-      this.folderPath = this.preselectedFolder.path;
-    }
-    this.renderForm();
-  }
-  onClose() {
-    var _a;
-    this.contentEl.empty();
-    (_a = this.resolve) == null ? void 0 : _a.call(this, null);
-    this.resolve = null;
-  }
-  openForResult() {
-    return new Promise((resolve) => {
-      this.resolve = resolve;
-      this.open();
-    });
-  }
-  renderForm() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.createEl("h2", { text: "Export documents" });
-    const sourceRow = contentEl.createDiv({ cls: "export-modal-row" });
-    sourceRow.createEl("label", { text: "Source" });
-    const sourceSelect = sourceRow.createEl("select");
-    for (const [value, label] of Object.entries(SOURCE_OPTIONS)) {
-      const opt = sourceSelect.createEl("option", { text: label });
-      opt.value = value;
-    }
-    sourceSelect.value = this.sourceType;
-    const sourceFields = contentEl.createDiv({ cls: "export-modal-source-fields" });
-    const renderSourceFields = () => {
-      sourceFields.empty();
-      if (this.sourceType === "folder") {
-        sourceFields.removeClass("export-modal-source-fields");
-        this.renderFolderPicker(sourceFields, "Folder path", this.folderPath, (v) => {
-          this.folderPath = v;
-          renderNameField();
-        });
-      } else if (this.sourceType === "files") {
-        sourceFields.addClass("export-modal-source-fields");
-        const count = this.selectedFilePaths.length;
-        const btn = sourceFields.createEl("button", {
-          text: count > 0 ? `${count} file(s) selected` : "Choose files"
-        });
-        btn.addEventListener("click", () => {
-          const picker = new FilePickerModal(this.app, this.selectedFilePaths, (paths) => {
-            this.selectedFilePaths = paths;
-            btn.textContent = paths.length > 0 ? `${paths.length} file(s) selected` : "Choose files";
-          });
-          picker.open();
-        });
-      } else {
-        sourceFields.removeClass("export-modal-source-fields");
-      }
-    };
-    sourceSelect.addEventListener("change", () => {
-      this.sourceType = sourceSelect.value;
-      if (this.mergeIntoSingleFile) {
-        this.outputFilename = defaultMergeFilename(this.sourceType, this.folderPath);
-      }
-      renderSourceFields();
-      renderNameField();
-      updateDefaultFilename();
-    });
-    renderSourceFields();
-    const profileRow = contentEl.createDiv({ cls: "export-modal-row" });
-    profileRow.createEl("label", { text: "Format" });
-    const profileSelect = profileRow.createEl("select");
-    for (const value of getAvailableProfiles(import_obsidian2.Platform.isDesktopApp)) {
-      const opt = profileSelect.createEl("option", { text: PROFILE_OPTIONS[value] });
-      opt.value = value;
-    }
-    profileSelect.value = this.profile;
-    profileSelect.addEventListener("change", () => {
-      this.profile = profileSelect.value;
-    });
-    this.renderOutputFolderPicker(contentEl);
-    const nameFieldContainer = contentEl.createDiv();
-    let filenameInput = null;
-    const renderNameField = () => {
-      nameFieldContainer.empty();
-      const isBatch = this.sourceType !== "current-file";
-      if (isBatch) {
-        if (this.mergeIntoSingleFile) {
-          const nameRow = nameFieldContainer.createDiv({ cls: "export-modal-row" });
-          nameRow.createEl("label", { text: "File name" });
-          const input = nameRow.createEl("input", {
-            type: "text",
-            attr: { placeholder: "Merged" }
-          });
-          input.value = this.outputFilename;
-          input.addEventListener("input", (e) => {
-            this.outputFilename = e.target.value;
-          });
-          filenameInput = input;
-        } else {
-          this.updateDefaultFolderName();
-          const nameRow = nameFieldContainer.createDiv({ cls: "export-modal-row" });
-          nameRow.createEl("label", { text: "Folder name" });
-          const input = nameRow.createEl("input", {
-            type: "text",
-            attr: { placeholder: this.sourceType === "folder" ? "folder name" : "files" }
-          });
-          input.value = this.outputFolderName;
-          input.addEventListener("input", (e) => {
-            this.outputFolderName = e.target.value;
-          });
-          filenameInput = null;
-        }
-        const mergeRow = nameFieldContainer.createDiv({ cls: "export-modal-merge-row" });
-        const mergeLabel = mergeRow.createEl("label");
-        const checkbox = mergeLabel.createEl("input", { type: "checkbox" });
-        checkbox.checked = this.mergeIntoSingleFile;
-        mergeLabel.appendText(" Merge into a single file");
-        checkbox.addEventListener("change", () => {
-          this.mergeIntoSingleFile = checkbox.checked;
-          if (this.mergeIntoSingleFile) {
-            this.outputFilename = defaultMergeFilename(this.sourceType, this.folderPath);
-          }
-          renderNameField();
-        });
-      } else {
-        const row = nameFieldContainer.createDiv({ cls: "export-modal-row" });
-        row.createEl("label", { text: "File name" });
-        const input = row.createEl("input", {
-          type: "text",
-          attr: { placeholder: "Document" }
-        });
-        input.value = this.outputFilename;
-        input.addEventListener("input", (e) => {
-          this.outputFilename = e.target.value;
-        });
-        filenameInput = input;
-      }
-    };
-    renderNameField();
-    const updateDefaultFilename = () => {
-      var _a, _b;
-      if (this.sourceType === "current-file") {
-        const file = (_a = this.preselectedFile) != null ? _a : this.app.workspace.getActiveFile();
-        this.outputFilename = (_b = file == null ? void 0 : file.basename) != null ? _b : "export";
-        if (filenameInput)
-          filenameInput.value = this.outputFilename;
-      }
-    };
-    const buttonRow = contentEl.createDiv({ cls: "export-modal-buttons" });
-    const cancelButton = buttonRow.createEl("button", { text: "Cancel" });
-    cancelButton.addEventListener("click", () => {
-      this.resolve = null;
-      this.close();
-    });
-    const exportButton = buttonRow.createEl("button", { text: "Next", cls: "mod-cta" });
-    exportButton.addEventListener("click", () => {
-      const result = this.buildResult();
-      this.renderConfirmation(result);
-    });
-  }
-  renderFolderPicker(container, label, currentValue, onChange) {
-    const row = container.createDiv({ cls: "export-modal-row" });
-    row.createEl("label", { text: label });
-    const group = row.createDiv({ cls: "export-modal-input-group" });
-    const input = group.createEl("input", { type: "text" });
-    input.value = currentValue;
-    input.addEventListener("input", (e) => {
-      onChange(e.target.value);
-    });
-    const browseBtn = group.createEl("button", { text: "Browse", cls: "export-modal-browse-btn" });
-    browseBtn.addEventListener("click", () => {
-      const picker = new FolderPickerModal(this.app, input.value, (selected) => {
-        input.value = selected;
-        onChange(selected);
-      });
-      picker.open();
-    });
-  }
-  renderOutputFolderPicker(container) {
-    const onChange = (v) => {
-      this.outputFolder = v;
-    };
-    const row = container.createDiv({ cls: "export-modal-row" });
-    row.createEl("label", { text: "Output folder" });
-    const group = row.createDiv({ cls: "export-modal-input-group" });
-    const input = group.createEl("input", {
-      type: "text",
-      attr: { placeholder: import_obsidian2.Platform.isDesktopApp ? "Exports or /users/you/desktop/exports" : "Exports (vault-relative only)" }
-    });
-    input.value = this.outputFolder;
-    input.addEventListener("input", (e) => {
-      onChange(e.target.value);
-    });
-    const vaultBtn = group.createEl("button", { text: "Vault", cls: "export-modal-browse-btn" });
-    vaultBtn.addEventListener("click", () => {
-      const picker = new FolderPickerModal(this.app, input.value, (selected) => {
-        input.value = selected;
-        onChange(selected);
-      });
-      picker.open();
-    });
-    if (import_obsidian2.Platform.isDesktopApp) {
-      const sysBtn = group.createEl("button", { text: "Choose folder", cls: "export-modal-browse-btn" });
-      sysBtn.addEventListener("click", () => {
-        void (async () => {
-          var _a, _b;
-          try {
-            const g2 = typeof window !== "undefined" ? window : void 0;
-            const electron = g2 && "require" in g2 ? g2["require"]("electron") : void 0;
-            const dialog = (_b = (_a = electron == null ? void 0 : electron.remote) == null ? void 0 : _a.dialog) != null ? _b : electron == null ? void 0 : electron.dialog;
-            if (!dialog)
-              return;
-            const result = await dialog.showOpenDialog({
-              properties: ["openDirectory", "createDirectory"],
-              title: "Select output folder"
-            });
-            if (!result.canceled && result.filePaths[0]) {
-              input.value = result.filePaths[0];
-              onChange(result.filePaths[0]);
-            }
-          } catch (err) {
-            console.error("Document Exporter: failed to open folder dialog", err);
-          }
-        })();
-      });
-    }
-  }
-  renderConfirmation(result) {
-    var _a;
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.createEl("h2", { text: "Confirm export" });
-    const summary = contentEl.createDiv({ cls: "export-confirm-summary" });
-    summary.createEl("p", { text: `Format: ${PROFILE_OPTIONS[result.profile]}` });
-    const isSingleFile = result.source.type === "current-file";
-    if (isSingleFile) {
-      summary.createEl("p", { text: `Output: ${result.outputFolder}/${result.outputFilename}` });
-    } else if (result.mergeIntoSingleFile) {
-      summary.createEl("p", {
-        text: `Output: ${result.outputFolder}/${result.outputFilename} (merged into a single file)`
-      });
-    } else {
-      const folderName = (_a = result.outputFolderName) != null ? _a : "export";
-      summary.createEl("p", { text: `Output: ${result.outputFolder}/${folderName}/ (preserving directory structure)` });
-    }
-    summary.createEl("p", { text: `Source: ${SOURCE_OPTIONS[result.source.type]}` });
-    if (result.source.type === "folder") {
-      summary.createEl("p", { text: `Folder: ${result.source.path} (recursive: ${result.source.recursive})` });
-    }
-    const buttonRow = contentEl.createDiv({ cls: "export-modal-buttons" });
-    const backButton = buttonRow.createEl("button", { text: "Back" });
-    backButton.addEventListener("click", () => {
-      this.renderForm();
-    });
-    const confirmButton = buttonRow.createEl("button", { text: "Export", cls: "mod-cta" });
-    confirmButton.addEventListener("click", () => {
-      const resolveRef = this.resolve;
-      this.resolve = null;
-      this.close();
-      resolveRef == null ? void 0 : resolveRef(result);
-    });
-  }
-  updateDefaultFolderName() {
-    var _a;
-    if (this.sourceType === "folder" && this.folderPath) {
-      this.outputFolderName = (_a = this.folderPath.split("/").pop()) != null ? _a : "files";
-    } else {
-      this.outputFolderName = "files";
-    }
-  }
-  buildSource() {
-    var _a, _b;
-    switch (this.sourceType) {
-      case "current-file": {
-        const file = (_a = this.preselectedFile) != null ? _a : this.app.workspace.getActiveFile();
-        return { type: "current-file", path: (_b = file == null ? void 0 : file.path) != null ? _b : "" };
-      }
-      case "folder":
-        return { type: "folder", path: this.folderPath, recursive: true };
-      case "files":
-        return { type: "files", paths: [...this.selectedFilePaths] };
-    }
-    return { type: "current-file", path: "" };
-  }
-  buildResult() {
-    const isBatch = this.sourceType !== "current-file";
-    return {
-      source: this.buildSource(),
-      profile: this.profile,
-      outputFolder: this.outputFolder,
-      outputFilename: this.outputFilename || "export",
-      outputFolderName: isBatch && !this.mergeIntoSingleFile ? this.outputFolderName || "files" : void 0,
-      mergeIntoSingleFile: isBatch && this.mergeIntoSingleFile ? true : void 0
-    };
-  }
-};
-var FilePickerModal = class extends import_obsidian2.Modal {
-  constructor(app, currentPaths, onDone) {
-    super(app);
-    this.filterText = "";
-    this.listEl = null;
-    this.chosen = new Set(currentPaths);
-    this.onDone = onDone;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("file-picker-modal");
-    contentEl.createEl("h3", { text: "Select files" });
-    const input = contentEl.createEl("input", {
-      type: "text",
-      cls: "file-picker-filter",
-      attr: { placeholder: "Filter files..." }
-    });
-    input.addEventListener("input", () => {
-      this.filterText = input.value.toLowerCase();
-      this.renderList();
-    });
-    this.listEl = contentEl.createDiv({ cls: "file-picker-list" });
-    this.renderList();
-    const doneBtn = contentEl.createEl("button", { text: "Done", cls: "mod-cta file-picker-done-btn" });
-    doneBtn.addEventListener("click", () => {
-      this.close();
-    });
-  }
-  onClose() {
-    this.onDone(Array.from(this.chosen));
-  }
-  renderList() {
-    if (!this.listEl)
-      return;
-    this.listEl.empty();
-    const allFiles = collectMarkdownFiles(this.app.vault.getRoot());
-    const filtered = this.filterText ? allFiles.filter((f) => f.path.toLowerCase().includes(this.filterText)) : allFiles;
-    filtered.sort((a, b) => a.path.localeCompare(b.path));
-    for (const file of filtered) {
-      const row = this.listEl.createDiv({ cls: "file-picker-item" });
-      const label = row.createEl("label");
-      const checkbox = label.createEl("input", { type: "checkbox" });
-      checkbox.checked = this.chosen.has(file.path);
-      checkbox.addEventListener("change", () => {
-        if (checkbox.checked) {
-          this.chosen.add(file.path);
-        } else {
-          this.chosen.delete(file.path);
-        }
-      });
-      label.appendText(" " + file.path);
-    }
-  }
-};
-function collectMarkdownFiles(folder) {
-  const files = [];
-  for (const child of folder.children) {
-    if (child instanceof import_obsidian2.TFile && child.extension === "md") {
-      files.push(child);
-    } else if (child instanceof import_obsidian2.TFolder) {
-      files.push(...collectMarkdownFiles(child));
-    }
-  }
-  return files;
-}
-var FolderPickerModal = class extends import_obsidian2.FuzzySuggestModal {
-  constructor(app, currentPath, onSelect) {
-    super(app);
-    this.onSelect = onSelect;
-    this.setPlaceholder("Search folders...");
-    this.setInstructions([{ command: "Enter", purpose: "Select folder" }]);
-  }
-  getItems() {
-    return getAllFolders(this.app.vault.getRoot()).sort((a, b) => a.path.localeCompare(b.path));
-  }
-  getItemText(item) {
-    return item.path === "/" ? "/ (vault root)" : item.path;
-  }
-  onChooseItem(item) {
-    this.onSelect(item.path === "/" ? "" : item.path);
-  }
-};
-function getAllFolders(root) {
-  const result = [root];
-  for (const child of root.children) {
-    if (child instanceof import_obsidian2.TFolder) {
-      result.push(...getAllFolders(child));
-    }
-  }
-  return result;
-}
-
-// src/export/ExportSourceResolver.ts
-function isTFile(f) {
-  return f !== null && "extension" in f;
-}
-function isTFolder(f) {
-  return f !== null && "children" in f;
-}
-var ExportSourceResolver = class {
-  constructor(app) {
-    this.app = app;
-  }
-  resolve(source) {
-    return this.collectFiles(source);
-  }
-  collectFiles(source) {
-    switch (source.type) {
-      case "current-file":
-        return this.resolveCurrentFile(source.path);
-      case "files":
-        return this.resolveFiles(source.paths);
-      case "folder":
-        return this.resolveFolder(source.path, source.recursive);
-    }
-  }
-  resolveCurrentFile(path) {
-    if (!path)
-      return [];
-    const file = this.app.vault.getAbstractFileByPath(path);
-    if (isTFile(file) && file.extension === "md") {
-      return [file];
-    }
-    return [];
-  }
-  resolveFiles(paths) {
-    const files = [];
-    for (const path of paths) {
-      const file = this.app.vault.getAbstractFileByPath(path);
-      if (isTFile(file) && file.extension === "md") {
-        files.push(file);
-      }
-    }
-    return files;
-  }
-  resolveFolder(folderPath, recursive) {
-    const folder = this.app.vault.getAbstractFileByPath(folderPath);
-    if (!isTFolder(folder))
-      return [];
-    return this.collectMarkdownFiles(folder, recursive);
-  }
-  collectMarkdownFiles(folder, recursive) {
-    const files = [];
-    for (const child of folder.children) {
-      if (isTFile(child) && child.extension === "md") {
-        files.push(child);
-      } else if (recursive && isTFolder(child)) {
-        files.push(...this.collectMarkdownFiles(child, true));
-      }
-    }
-    return files;
-  }
-};
-
 // src/export/utils.ts
 function normalizePath(p) {
   const parts = p.split("/").filter(Boolean);
@@ -866,6 +363,31 @@ function relativePathBetween(from, to) {
   return ups ? `${ups}/${downParts}` : downParts;
 }
 
+// src/export/OutputPath.ts
+var import_obsidian2 = require("obsidian");
+function normalizeOutputFolder(value) {
+  let path = value.trim().replace(/\\/g, "/");
+  if (path === "~" || path.startsWith("~/")) {
+    if (import_obsidian2.Platform.isDesktop && import_obsidian2.Platform.isDesktopApp) {
+      const g2 = typeof window !== "undefined" ? window : void 0;
+      const require2 = g2 && "require" in g2 ? g2["require"] : void 0;
+      if (!require2)
+        throw new Error("Cannot resolve the home folder. Choose an absolute output folder.");
+      const home = require2("os").homedir().replace(/\\/g, "/");
+      path = home + path.slice(1);
+    } else {
+      throw new Error("Home paths require the desktop app. Use a vault-relative folder.");
+    }
+  } else if (/^(~|%|\$)/.test(path) || /^[A-Za-z]:(?!\/)/.test(path)) {
+    throw new Error("Unsupported system path. Choose a folder or enter an absolute path.");
+  }
+  if (Array.from(path).some((character) => character.charCodeAt(0) < 32))
+    throw new Error("Output folder contains invalid path characters.");
+  if (/^[A-Za-z]:\/$/.test(path))
+    return path;
+  return path.replace(/\/+$/, "") || (path.startsWith("/") ? "/" : "");
+}
+
 // src/export/ExportPlan.ts
 var INVALID_OUTPUT_NAME_RE = /[<>:"/\\|?*]/;
 var WINDOWS_RESERVED_NAME_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i;
@@ -914,7 +436,7 @@ var ExportPlanBuilder = class {
     this.app = app;
     this.source = source;
     this.profile = profile;
-    this.outputRoot = outputRoot;
+    this.outputRoot = normalizeOutputFolder(outputRoot);
     this.outputFilename = outputFilename;
     this.outputFolderName = outputFolderName;
   }
@@ -971,11 +493,688 @@ function validatePlan(plan) {
   return null;
 }
 
+// src/export/ExportSourceResolver.ts
+function isTFile(f) {
+  return f !== null && "extension" in f;
+}
+function isTFolder(f) {
+  return f !== null && "children" in f;
+}
+var ExportSourceResolver = class {
+  constructor(app) {
+    this.app = app;
+  }
+  resolve(source) {
+    return this.collectFiles(source);
+  }
+  collectFiles(source) {
+    switch (source.type) {
+      case "current-file":
+        return this.resolveCurrentFile(source.path);
+      case "files":
+        return this.resolveFiles(source.paths);
+      case "folder":
+        return this.resolveFolder(source.path, source.recursive);
+    }
+  }
+  resolveCurrentFile(path) {
+    if (!path)
+      return [];
+    const file = this.app.vault.getAbstractFileByPath(path);
+    if (isTFile(file) && file.extension === "md") {
+      return [file];
+    }
+    return [];
+  }
+  resolveFiles(paths) {
+    const files = [];
+    for (const path of paths) {
+      const file = this.app.vault.getAbstractFileByPath(path);
+      if (isTFile(file) && file.extension === "md") {
+        files.push(file);
+      }
+    }
+    return files;
+  }
+  resolveFolder(folderPath, recursive) {
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!isTFolder(folder))
+      return [];
+    return this.collectMarkdownFiles(folder, recursive);
+  }
+  collectMarkdownFiles(folder, recursive) {
+    const files = [];
+    for (const child of folder.children) {
+      if (isTFile(child) && child.extension === "md") {
+        files.push(child);
+      } else if (recursive && isTFolder(child)) {
+        files.push(...this.collectMarkdownFiles(child, true));
+      }
+    }
+    return files;
+  }
+};
+
+// src/export/OutputWriter.ts
+var import_obsidian3 = require("obsidian");
+var g = typeof window !== "undefined" ? window : void 0;
+var nodeFs = g && "require" in g ? g["require"]("fs") : null;
+var OutputWriter = class {
+  constructor(app, overwriteExisting = true) {
+    this.app = app;
+    this.overwriteExisting = overwriteExisting;
+  }
+  static supportsExternalPaths() {
+    return import_obsidian3.Platform.isDesktopApp;
+  }
+  async ensureFolder(folderPath) {
+    if (this.isExternal(folderPath)) {
+      const fs = this.getExternalFs();
+      fs.mkdirSync(folderPath, { recursive: true });
+      return;
+    }
+    const parts = folderPath.split("/").filter(Boolean);
+    let current = "";
+    for (const part of parts) {
+      current = current ? `${current}/${part}` : part;
+      const existing = this.app.vault.getAbstractFileByPath(current);
+      if (!existing) {
+        await this.app.vault.createFolder(current);
+      }
+    }
+  }
+  async writeText(filePath, content) {
+    if (this.isExternal(filePath)) {
+      const fs = this.getExternalFs();
+      fs.writeFileSync(filePath, content, {
+        encoding: "utf-8",
+        flag: this.overwriteExisting ? "w" : "wx"
+      });
+      return;
+    }
+    const existing = this.app.vault.getAbstractFileByPath(filePath);
+    if (existing) {
+      if (!this.overwriteExisting || !(existing instanceof import_obsidian3.TFile)) {
+        throw new Error(`Output already exists: ${filePath}`);
+      }
+      await this.app.vault.modify(existing, content);
+      return;
+    }
+    await this.app.vault.create(filePath, content);
+  }
+  async writeBinary(filePath, data) {
+    if (this.isExternal(filePath)) {
+      const fs = this.getExternalFs();
+      fs.writeFileSync(
+        filePath,
+        data instanceof Uint8Array ? data : new Uint8Array(data),
+        { flag: this.overwriteExisting ? "w" : "wx" }
+      );
+      return;
+    }
+    const buffer = data instanceof ArrayBuffer ? data : uint8ArrayToArrayBuffer(data);
+    const existing = this.app.vault.getAbstractFileByPath(filePath);
+    if (existing) {
+      if (!this.overwriteExisting || !(existing instanceof import_obsidian3.TFile)) {
+        throw new Error(`Output already exists: ${filePath}`);
+      }
+      await this.app.vault.modifyBinary(existing, buffer);
+      return;
+    }
+    await this.app.vault.createBinary(filePath, buffer);
+  }
+  async copyBinaryFile(sourcePath, destPath) {
+    const sourceFile = this.app.vault.getAbstractFileByPath(sourcePath);
+    if (!(sourceFile instanceof import_obsidian3.TFile)) {
+      throw new Error(`Attachment source not found: ${sourcePath}`);
+    }
+    const content = await this.app.vault.readBinary(sourceFile);
+    await this.writeBinary(destPath, content);
+  }
+  folderExists(folderPath) {
+    if (this.isExternal(folderPath)) {
+      return (nodeFs == null ? void 0 : nodeFs.existsSync(folderPath)) ? nodeFs.statSync(folderPath).isDirectory() : false;
+    }
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    return folder !== null && "children" in folder;
+  }
+  pathExists(path) {
+    var _a;
+    if (this.isExternal(path)) {
+      return (_a = nodeFs == null ? void 0 : nodeFs.existsSync(path)) != null ? _a : false;
+    }
+    return this.app.vault.getAbstractFileByPath(path) !== null;
+  }
+  timestampSuffix() {
+    return (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
+  }
+  timestampedFolder(basePath) {
+    return `${basePath}-${this.timestampSuffix()}`;
+  }
+  isFolderEmpty(folderPath) {
+    var _a;
+    if (this.isExternal(folderPath)) {
+      const entries = (_a = nodeFs == null ? void 0 : nodeFs.readdirSync(folderPath)) != null ? _a : [];
+      return entries.length === 0;
+    }
+    const folder = this.app.vault.getAbstractFileByPath(folderPath);
+    if (!folder || !("children" in folder))
+      return true;
+    return folder.children.length === 0;
+  }
+  isExternal(p) {
+    if (p.startsWith("/") || p.startsWith("\\\\"))
+      return true;
+    if (/^[A-Za-z]:[\\/]/.test(p))
+      return true;
+    return false;
+  }
+  getExternalFs() {
+    if (!nodeFs) {
+      throw new Error("External file system access is not available");
+    }
+    return nodeFs;
+  }
+};
+function uint8ArrayToArrayBuffer(data) {
+  const buffer = new ArrayBuffer(data.byteLength);
+  new Uint8Array(buffer).set(data);
+  return buffer;
+}
+
+// src/export/OutputDestination.ts
+function nextAvailablePath(candidate, writer) {
+  let path = candidate;
+  let sequence = 2;
+  while (writer.pathExists(path))
+    path = `${candidate}-${sequence++}`;
+  return path;
+}
+function resolveOutputPlan(plan, settings, writer) {
+  if (writer.pathExists(plan.outputRoot) && !writer.folderExists(plan.outputRoot)) {
+    throw new Error("Output destination is not a folder. Choose another output folder.");
+  }
+  if (settings.overwriteExisting)
+    return plan;
+  const root = plan.outputFolderName ? `${plan.outputRoot}/${plan.outputFolderName}` : plan.outputRoot;
+  const conflict = plan.outputFiles.some((path2) => writer.pathExists(path2)) || writer.pathExists(`${root}/assets`) || writer.pathExists(root) && !writer.folderExists(root);
+  if (!conflict)
+    return plan;
+  if (plan.source.type === "current-file" || plan.mergeIntoSingleFile || !plan.outputFolderName) {
+    const name = plan.outputFilename.replace(/\.(md|html|htm|pdf|docx|epub)$/i, "");
+    return relocatePlan(plan, nextAvailablePath(`${plan.outputRoot}/${name}-${writer.timestampSuffix()}`, writer));
+  }
+  const path = nextAvailablePath(`${root}-${writer.timestampSuffix()}`, writer);
+  return relocatePlan(plan, plan.outputRoot, path.slice(plan.outputRoot.length + 1));
+}
+
+// src/ui/ExportModal.ts
+var import_obsidian4 = require("obsidian");
+var PROFILE_OPTIONS = {
+  pdf: "PDF",
+  docx: "Word document",
+  epub: "EPUB e-book",
+  "markdown-bundle": "Markdown bundle",
+  "html-document": "HTML document"
+};
+var SOURCE_OPTIONS = {
+  "current-file": "Current file",
+  folder: "Folder",
+  files: "Selected files"
+};
+function deriveDefaultFilename(app, preselectedFile, preselectedFolder) {
+  var _a, _b;
+  if (preselectedFile)
+    return preselectedFile.basename;
+  if (preselectedFolder)
+    return preselectedFolder.name;
+  return (_b = (_a = app.workspace.getActiveFile()) == null ? void 0 : _a.basename) != null ? _b : "export";
+}
+function defaultMergeFilename(sourceType, folderPath) {
+  if (sourceType === "folder") {
+    return folderPath.split("/").pop() || "merged";
+  }
+  return "merged";
+}
+var ExportModal = class extends import_obsidian4.Modal {
+  constructor(app, settings, preselectedFile, preselectedFolder) {
+    super(app);
+    this.resolve = null;
+    this.sourceType = "current-file";
+    this.folderPath = "";
+    this.selectedFilePaths = [];
+    this.outputFolderName = "";
+    this.mergeIntoSingleFile = false;
+    this.settings = settings;
+    this.preselectedFile = preselectedFile;
+    this.preselectedFolder = preselectedFolder;
+    this.profile = resolveSupportedProfile(
+      settings.defaultProfile,
+      import_obsidian4.Platform.isDesktopApp
+    );
+    this.outputFolder = settings.defaultOutputFolder;
+    this.outputFilename = deriveDefaultFilename(
+      app,
+      preselectedFile,
+      preselectedFolder
+    );
+  }
+  onOpen() {
+    if (this.preselectedFile) {
+      this.sourceType = "current-file";
+    } else if (this.preselectedFolder) {
+      this.sourceType = "folder";
+      this.folderPath = this.preselectedFolder.path;
+    }
+    this.renderForm();
+  }
+  onClose() {
+    var _a;
+    this.contentEl.empty();
+    (_a = this.resolve) == null ? void 0 : _a.call(this, null);
+    this.resolve = null;
+  }
+  openForResult() {
+    return new Promise((resolve) => {
+      this.resolve = resolve;
+      this.open();
+    });
+  }
+  renderForm() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h2", { text: "Export documents" });
+    const sourceRow = contentEl.createDiv({ cls: "export-modal-row" });
+    sourceRow.createEl("label", { text: "Source" });
+    const sourceSelect = sourceRow.createEl("select");
+    for (const [value, label] of Object.entries(SOURCE_OPTIONS)) {
+      const opt = sourceSelect.createEl("option", { text: label });
+      opt.value = value;
+    }
+    sourceSelect.value = this.sourceType;
+    const sourceFields = contentEl.createDiv({ cls: "export-modal-source-fields" });
+    const renderSourceFields = () => {
+      sourceFields.empty();
+      if (this.sourceType === "folder") {
+        sourceFields.removeClass("export-modal-source-fields");
+        this.renderFolderPicker(sourceFields, "Folder path", this.folderPath, (v) => {
+          this.folderPath = v;
+          renderNameField();
+        });
+      } else if (this.sourceType === "files") {
+        sourceFields.addClass("export-modal-source-fields");
+        const count = this.selectedFilePaths.length;
+        const btn = sourceFields.createEl("button", {
+          text: count > 0 ? `${count} file(s) selected` : "Choose files"
+        });
+        btn.addEventListener("click", () => {
+          const picker = new FilePickerModal(this.app, this.selectedFilePaths, (paths) => {
+            this.selectedFilePaths = paths;
+            btn.textContent = paths.length > 0 ? `${paths.length} file(s) selected` : "Choose files";
+          });
+          picker.open();
+        });
+      } else {
+        sourceFields.removeClass("export-modal-source-fields");
+      }
+    };
+    sourceSelect.addEventListener("change", () => {
+      this.sourceType = sourceSelect.value;
+      if (this.mergeIntoSingleFile) {
+        this.outputFilename = defaultMergeFilename(this.sourceType, this.folderPath);
+      }
+      renderSourceFields();
+      renderNameField();
+      updateDefaultFilename();
+    });
+    renderSourceFields();
+    const profileRow = contentEl.createDiv({ cls: "export-modal-row" });
+    profileRow.createEl("label", { text: "Format" });
+    const profileSelect = profileRow.createEl("select");
+    for (const value of getAvailableProfiles(import_obsidian4.Platform.isDesktopApp)) {
+      const opt = profileSelect.createEl("option", { text: PROFILE_OPTIONS[value] });
+      opt.value = value;
+    }
+    profileSelect.value = this.profile;
+    profileSelect.addEventListener("change", () => {
+      this.profile = profileSelect.value;
+    });
+    this.renderOutputFolderPicker(contentEl);
+    const nameFieldContainer = contentEl.createDiv();
+    let filenameInput = null;
+    const renderNameField = () => {
+      nameFieldContainer.empty();
+      const isBatch = this.sourceType !== "current-file";
+      if (isBatch) {
+        if (this.mergeIntoSingleFile) {
+          const nameRow = nameFieldContainer.createDiv({ cls: "export-modal-row" });
+          nameRow.createEl("label", { text: "File name" });
+          const input = nameRow.createEl("input", {
+            type: "text",
+            attr: { placeholder: "Merged" }
+          });
+          input.value = this.outputFilename;
+          input.addEventListener("input", (e) => {
+            this.outputFilename = e.target.value;
+          });
+          filenameInput = input;
+        } else {
+          this.updateDefaultFolderName();
+          const nameRow = nameFieldContainer.createDiv({ cls: "export-modal-row" });
+          nameRow.createEl("label", { text: "Folder name" });
+          const input = nameRow.createEl("input", {
+            type: "text",
+            attr: { placeholder: this.sourceType === "folder" ? "folder name" : "files" }
+          });
+          input.value = this.outputFolderName;
+          input.addEventListener("input", (e) => {
+            this.outputFolderName = e.target.value;
+          });
+          filenameInput = null;
+        }
+        const mergeRow = nameFieldContainer.createDiv({ cls: "export-modal-merge-row" });
+        const mergeLabel = mergeRow.createEl("label");
+        const checkbox = mergeLabel.createEl("input", { type: "checkbox" });
+        checkbox.checked = this.mergeIntoSingleFile;
+        mergeLabel.appendText(" Merge into a single file");
+        checkbox.addEventListener("change", () => {
+          this.mergeIntoSingleFile = checkbox.checked;
+          if (this.mergeIntoSingleFile) {
+            this.outputFilename = defaultMergeFilename(this.sourceType, this.folderPath);
+          }
+          renderNameField();
+        });
+      } else {
+        const row = nameFieldContainer.createDiv({ cls: "export-modal-row" });
+        row.createEl("label", { text: "File name" });
+        const input = row.createEl("input", {
+          type: "text",
+          attr: { placeholder: "Document" }
+        });
+        input.value = this.outputFilename;
+        input.addEventListener("input", (e) => {
+          this.outputFilename = e.target.value;
+        });
+        filenameInput = input;
+      }
+    };
+    renderNameField();
+    const updateDefaultFilename = () => {
+      var _a, _b;
+      if (this.sourceType === "current-file") {
+        const file = (_a = this.preselectedFile) != null ? _a : this.app.workspace.getActiveFile();
+        this.outputFilename = (_b = file == null ? void 0 : file.basename) != null ? _b : "export";
+        if (filenameInput)
+          filenameInput.value = this.outputFilename;
+      }
+    };
+    const buttonRow = contentEl.createDiv({ cls: "export-modal-buttons" });
+    const cancelButton = buttonRow.createEl("button", { text: "Cancel" });
+    cancelButton.addEventListener("click", () => {
+      this.resolve = null;
+      this.close();
+    });
+    const exportButton = buttonRow.createEl("button", { text: "Next", cls: "mod-cta" });
+    exportButton.addEventListener("click", () => {
+      try {
+        const result = this.buildResult();
+        const files = new ExportSourceResolver(this.app).resolve(result.source);
+        const plan = new ExportPlanBuilder(
+          this.app,
+          result.source,
+          result.profile,
+          result.outputFolder,
+          result.outputFilename,
+          result.outputFolderName
+        ).setInputFiles(files.map((file) => file.path)).setMergeIntoSingleFile(result.mergeIntoSingleFile === true).build();
+        const error = validatePlan(plan);
+        if (error)
+          throw new Error(error);
+        const resolved = resolveOutputPlan(plan, this.settings, new OutputWriter(this.app));
+        this.renderConfirmation({
+          ...result,
+          outputFolder: resolved.outputRoot,
+          outputFolderName: resolved.outputFolderName
+        }, resolved.outputFiles);
+      } catch (error) {
+        new import_obsidian4.Notice(error instanceof Error ? error.message : String(error));
+      }
+    });
+  }
+  renderFolderPicker(container, label, currentValue, onChange) {
+    const row = container.createDiv({ cls: "export-modal-row" });
+    row.createEl("label", { text: label });
+    const group = row.createDiv({ cls: "export-modal-input-group" });
+    const input = group.createEl("input", { type: "text" });
+    input.value = currentValue;
+    input.addEventListener("input", (e) => {
+      onChange(e.target.value);
+    });
+    const browseBtn = group.createEl("button", { text: "Browse", cls: "export-modal-browse-btn" });
+    browseBtn.addEventListener("click", () => {
+      const picker = new FolderPickerModal(this.app, input.value, (selected) => {
+        input.value = selected;
+        onChange(selected);
+      });
+      picker.open();
+    });
+  }
+  renderOutputFolderPicker(container) {
+    const onChange = (v) => {
+      this.outputFolder = v;
+    };
+    const row = container.createDiv({ cls: "export-modal-row" });
+    row.createEl("label", { text: "Output folder" });
+    const group = row.createDiv({ cls: "export-modal-input-group" });
+    const input = group.createEl("input", {
+      type: "text",
+      attr: { placeholder: import_obsidian4.Platform.isDesktopApp ? "Exports or /users/you/desktop/exports" : "Exports (vault-relative only)" }
+    });
+    input.value = this.outputFolder;
+    input.addEventListener("input", (e) => {
+      onChange(e.target.value);
+    });
+    const vaultBtn = group.createEl("button", { text: "Vault", cls: "export-modal-browse-btn" });
+    vaultBtn.addEventListener("click", () => {
+      const picker = new FolderPickerModal(this.app, input.value, (selected) => {
+        input.value = selected;
+        onChange(selected);
+      });
+      picker.open();
+    });
+    if (import_obsidian4.Platform.isDesktopApp) {
+      const sysBtn = group.createEl("button", { text: "Choose folder", cls: "export-modal-browse-btn" });
+      sysBtn.addEventListener("click", () => {
+        void (async () => {
+          var _a, _b;
+          try {
+            const g2 = typeof window !== "undefined" ? window : void 0;
+            const electron = g2 && "require" in g2 ? g2["require"]("electron") : void 0;
+            const dialog = (_b = (_a = electron == null ? void 0 : electron.remote) == null ? void 0 : _a.dialog) != null ? _b : electron == null ? void 0 : electron.dialog;
+            if (!dialog)
+              return;
+            const result = await dialog.showOpenDialog({
+              properties: ["openDirectory", "createDirectory"],
+              title: "Select output folder"
+            });
+            if (!result.canceled && result.filePaths[0]) {
+              input.value = result.filePaths[0];
+              onChange(result.filePaths[0]);
+            }
+          } catch (err) {
+            console.error("Document Exporter: failed to open folder dialog", err);
+          }
+        })();
+      });
+    }
+  }
+  renderConfirmation(result, outputFiles) {
+    var _a;
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl("h2", { text: "Confirm export" });
+    const summary = contentEl.createDiv({ cls: "export-confirm-summary" });
+    summary.createEl("p", { text: `Format: ${PROFILE_OPTIONS[result.profile]}` });
+    const isSingleFile = result.source.type === "current-file";
+    if (isSingleFile) {
+      summary.createEl("p", { text: `Output: ${outputFiles[0]}` });
+    } else if (result.mergeIntoSingleFile) {
+      summary.createEl("p", {
+        text: `Output: ${outputFiles[0]} (merged into a single file)`
+      });
+    } else {
+      const folderName = (_a = result.outputFolderName) != null ? _a : "export";
+      summary.createEl("p", { text: `Output: ${result.outputFolder}/${folderName}/ (preserving directory structure)` });
+    }
+    summary.createEl("p", { text: `Source: ${SOURCE_OPTIONS[result.source.type]}` });
+    if (result.source.type === "folder") {
+      summary.createEl("p", { text: `Folder: ${result.source.path} (recursive: ${result.source.recursive})` });
+    }
+    const buttonRow = contentEl.createDiv({ cls: "export-modal-buttons" });
+    const backButton = buttonRow.createEl("button", { text: "Back" });
+    backButton.addEventListener("click", () => {
+      this.renderForm();
+    });
+    const confirmButton = buttonRow.createEl("button", { text: "Export", cls: "mod-cta" });
+    confirmButton.addEventListener("click", () => {
+      const resolveRef = this.resolve;
+      this.resolve = null;
+      this.close();
+      resolveRef == null ? void 0 : resolveRef(result);
+    });
+  }
+  updateDefaultFolderName() {
+    var _a;
+    if (this.sourceType === "folder" && this.folderPath) {
+      this.outputFolderName = (_a = this.folderPath.split("/").pop()) != null ? _a : "files";
+    } else {
+      this.outputFolderName = "files";
+    }
+  }
+  buildSource() {
+    var _a, _b;
+    switch (this.sourceType) {
+      case "current-file": {
+        const file = (_a = this.preselectedFile) != null ? _a : this.app.workspace.getActiveFile();
+        return { type: "current-file", path: (_b = file == null ? void 0 : file.path) != null ? _b : "" };
+      }
+      case "folder":
+        return { type: "folder", path: this.folderPath, recursive: true };
+      case "files":
+        return { type: "files", paths: [...this.selectedFilePaths] };
+    }
+    return { type: "current-file", path: "" };
+  }
+  buildResult() {
+    const isBatch = this.sourceType !== "current-file";
+    return {
+      source: this.buildSource(),
+      profile: this.profile,
+      outputFolder: this.outputFolder,
+      outputFilename: this.outputFilename || "export",
+      outputFolderName: isBatch && !this.mergeIntoSingleFile ? this.outputFolderName || "files" : void 0,
+      mergeIntoSingleFile: isBatch && this.mergeIntoSingleFile ? true : void 0
+    };
+  }
+};
+var FilePickerModal = class extends import_obsidian4.Modal {
+  constructor(app, currentPaths, onDone) {
+    super(app);
+    this.filterText = "";
+    this.listEl = null;
+    this.chosen = new Set(currentPaths);
+    this.onDone = onDone;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("file-picker-modal");
+    contentEl.createEl("h3", { text: "Select files" });
+    const input = contentEl.createEl("input", {
+      type: "text",
+      cls: "file-picker-filter",
+      attr: { placeholder: "Filter files..." }
+    });
+    input.addEventListener("input", () => {
+      this.filterText = input.value.toLowerCase();
+      this.renderList();
+    });
+    this.listEl = contentEl.createDiv({ cls: "file-picker-list" });
+    this.renderList();
+    const doneBtn = contentEl.createEl("button", { text: "Done", cls: "mod-cta file-picker-done-btn" });
+    doneBtn.addEventListener("click", () => {
+      this.close();
+    });
+  }
+  onClose() {
+    this.onDone(Array.from(this.chosen));
+  }
+  renderList() {
+    if (!this.listEl)
+      return;
+    this.listEl.empty();
+    const allFiles = collectMarkdownFiles(this.app.vault.getRoot());
+    const filtered = this.filterText ? allFiles.filter((f) => f.path.toLowerCase().includes(this.filterText)) : allFiles;
+    filtered.sort((a, b) => a.path.localeCompare(b.path));
+    for (const file of filtered) {
+      const row = this.listEl.createDiv({ cls: "file-picker-item" });
+      const label = row.createEl("label");
+      const checkbox = label.createEl("input", { type: "checkbox" });
+      checkbox.checked = this.chosen.has(file.path);
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          this.chosen.add(file.path);
+        } else {
+          this.chosen.delete(file.path);
+        }
+      });
+      label.appendText(" " + file.path);
+    }
+  }
+};
+function collectMarkdownFiles(folder) {
+  const files = [];
+  for (const child of folder.children) {
+    if (child instanceof import_obsidian4.TFile && child.extension === "md") {
+      files.push(child);
+    } else if (child instanceof import_obsidian4.TFolder) {
+      files.push(...collectMarkdownFiles(child));
+    }
+  }
+  return files;
+}
+var FolderPickerModal = class extends import_obsidian4.FuzzySuggestModal {
+  constructor(app, currentPath, onSelect) {
+    super(app);
+    this.onSelect = onSelect;
+    this.setPlaceholder("Search folders...");
+    this.setInstructions([{ command: "Enter", purpose: "Select folder" }]);
+  }
+  getItems() {
+    return getAllFolders(this.app.vault.getRoot()).sort((a, b) => a.path.localeCompare(b.path));
+  }
+  getItemText(item) {
+    return item.path === "/" ? "/ (vault root)" : item.path;
+  }
+  onChooseItem(item) {
+    this.onSelect(item.path === "/" ? "" : item.path);
+  }
+};
+function getAllFolders(root) {
+  const result = [root];
+  for (const child of root.children) {
+    if (child instanceof import_obsidian4.TFolder) {
+      result.push(...getAllFolders(child));
+    }
+  }
+  return result;
+}
+
 // src/export/ExportRunner.ts
-var import_obsidian8 = require("obsidian");
+var import_obsidian9 = require("obsidian");
 
 // src/export/EmbedExpander.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 var WIKI_EMBED_RE = /!\[\[([^\]]+)]]/g;
 var MAX_EMBED_DEPTH = 5;
 var EmbedExpander = class {
@@ -1019,7 +1218,7 @@ var EmbedExpander = class {
     var _a, _b, _c, _d;
     const keep = () => [{ markdown: `![[${link}]]`, sourcePath }];
     const [rawTarget] = link.split("|");
-    const { path: target, subpath } = (0, import_obsidian3.parseLinktext)(rawTarget);
+    const { path: target, subpath } = (0, import_obsidian5.parseLinktext)(rawTarget);
     if (/^#?\^/.test(subpath)) {
       warnings.push(`Block reference embeds are not supported: ${link}`);
       return keep();
@@ -1055,7 +1254,7 @@ var EmbedExpander = class {
     let content;
     if (subpath) {
       const cache = this.app.metadataCache.getFileCache(file);
-      const sub = cache ? (0, import_obsidian3.resolveSubpath)(cache, subpath) : null;
+      const sub = cache ? (0, import_obsidian5.resolveSubpath)(cache, subpath) : null;
       if (!sub || sub.type !== "heading") {
         warnings.push(`Heading not found in embed: ${link}`);
         return keep();
@@ -1738,134 +1937,6 @@ function slugify(text) {
   return text.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9一-鿿぀-ゟ゠-ヿ가-힯_-]+/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-// src/export/OutputWriter.ts
-var import_obsidian4 = require("obsidian");
-var g = typeof window !== "undefined" ? window : void 0;
-var nodeFs = g && "require" in g ? g["require"]("fs") : null;
-var OutputWriter = class {
-  constructor(app, overwriteExisting = true) {
-    this.app = app;
-    this.overwriteExisting = overwriteExisting;
-  }
-  static supportsExternalPaths() {
-    return import_obsidian4.Platform.isDesktopApp;
-  }
-  async ensureFolder(folderPath) {
-    if (this.isExternal(folderPath)) {
-      const fs = this.getExternalFs();
-      fs.mkdirSync(folderPath, { recursive: true });
-      return;
-    }
-    const parts = folderPath.split("/").filter(Boolean);
-    let current = "";
-    for (const part of parts) {
-      current = current ? `${current}/${part}` : part;
-      const existing = this.app.vault.getAbstractFileByPath(current);
-      if (!existing) {
-        await this.app.vault.createFolder(current);
-      }
-    }
-  }
-  async writeText(filePath, content) {
-    if (this.isExternal(filePath)) {
-      const fs = this.getExternalFs();
-      fs.writeFileSync(filePath, content, {
-        encoding: "utf-8",
-        flag: this.overwriteExisting ? "w" : "wx"
-      });
-      return;
-    }
-    const existing = this.app.vault.getAbstractFileByPath(filePath);
-    if (existing) {
-      if (!this.overwriteExisting || !(existing instanceof import_obsidian4.TFile)) {
-        throw new Error(`Output already exists: ${filePath}`);
-      }
-      await this.app.vault.modify(existing, content);
-      return;
-    }
-    await this.app.vault.create(filePath, content);
-  }
-  async writeBinary(filePath, data) {
-    if (this.isExternal(filePath)) {
-      const fs = this.getExternalFs();
-      fs.writeFileSync(
-        filePath,
-        data instanceof Uint8Array ? data : new Uint8Array(data),
-        { flag: this.overwriteExisting ? "w" : "wx" }
-      );
-      return;
-    }
-    const buffer = data instanceof ArrayBuffer ? data : uint8ArrayToArrayBuffer(data);
-    const existing = this.app.vault.getAbstractFileByPath(filePath);
-    if (existing) {
-      if (!this.overwriteExisting || !(existing instanceof import_obsidian4.TFile)) {
-        throw new Error(`Output already exists: ${filePath}`);
-      }
-      await this.app.vault.modifyBinary(existing, buffer);
-      return;
-    }
-    await this.app.vault.createBinary(filePath, buffer);
-  }
-  async copyBinaryFile(sourcePath, destPath) {
-    const sourceFile = this.app.vault.getAbstractFileByPath(sourcePath);
-    if (!(sourceFile instanceof import_obsidian4.TFile)) {
-      throw new Error(`Attachment source not found: ${sourcePath}`);
-    }
-    const content = await this.app.vault.readBinary(sourceFile);
-    await this.writeBinary(destPath, content);
-  }
-  folderExists(folderPath) {
-    var _a;
-    if (this.isExternal(folderPath)) {
-      return (_a = nodeFs == null ? void 0 : nodeFs.existsSync(folderPath)) != null ? _a : false;
-    }
-    const folder = this.app.vault.getAbstractFileByPath(folderPath);
-    return folder !== null && "children" in folder;
-  }
-  pathExists(path) {
-    var _a;
-    if (this.isExternal(path)) {
-      return (_a = nodeFs == null ? void 0 : nodeFs.existsSync(path)) != null ? _a : false;
-    }
-    return this.app.vault.getAbstractFileByPath(path) !== null;
-  }
-  timestampSuffix() {
-    return (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
-  }
-  timestampedFolder(basePath) {
-    return `${basePath}-${this.timestampSuffix()}`;
-  }
-  isFolderEmpty(folderPath) {
-    var _a;
-    if (this.isExternal(folderPath)) {
-      const entries = (_a = nodeFs == null ? void 0 : nodeFs.readdirSync(folderPath)) != null ? _a : [];
-      return entries.length === 0;
-    }
-    const folder = this.app.vault.getAbstractFileByPath(folderPath);
-    if (!folder || !("children" in folder))
-      return true;
-    return folder.children.length === 0;
-  }
-  isExternal(p) {
-    if (p.startsWith("/") || p.startsWith("\\\\"))
-      return true;
-    if (/^[A-Za-z]:[\\/]/.test(p))
-      return true;
-    return false;
-  }
-  getExternalFs() {
-    if (!nodeFs) {
-      throw new Error("External file system access is not available");
-    }
-    return nodeFs;
-  }
-};
-function uint8ArrayToArrayBuffer(data) {
-  const buffer = new ArrayBuffer(data.byteLength);
-  new Uint8Array(buffer).set(data);
-  return buffer;
-}
-
 // src/formats/markdown-bundle.ts
 async function renderMarkdownBundle(doc, plan, writer, outputFilePath) {
   const warnings = [];
@@ -1888,7 +1959,7 @@ async function renderMarkdownBundle(doc, plan, writer, outputFilePath) {
 }
 
 // src/formats/native-renderer.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 var POST_PROCESSOR_TIMEOUT = 5e3;
 var DEBOUNCE_INTERVAL = 200;
 async function renderMarkdownNative(app, markdown, sourcePath, timeout = POST_PROCESSOR_TIMEOUT) {
@@ -1901,10 +1972,10 @@ async function renderMarkdownNative(app, markdown, sourcePath, timeout = POST_PR
     width: "800px",
     visibility: "hidden"
   });
-  const component = new import_obsidian5.Component();
+  const component = new import_obsidian6.Component();
   component.load();
   try {
-    await import_obsidian5.MarkdownRenderer.render(app, markdown, container, sourcePath, component);
+    await import_obsidian6.MarkdownRenderer.render(app, markdown, container, sourcePath, component);
     const completed = await waitForPostProcessors(container, timeout);
     if (!completed) {
       warnings.push(`Post-processor timeout for "${sourcePath}" \u2014 some content may be incomplete`);
@@ -2257,10 +2328,10 @@ main.markdown-rendered, main.markdown-rendered section { display: block !importa
 main.markdown-rendered img { max-width: 384px; height: auto; }`;
 
 // src/formats/pdf.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 async function renderPdf(doc, plan, writer, app, outputFilePath) {
   var _a, _b;
-  if (!import_obsidian6.Platform.isDesktopApp) {
+  if (!import_obsidian7.Platform.isDesktopApp) {
     throw new Error("PDF export requires the desktop app.");
   }
   const warnings = [];
@@ -2273,7 +2344,7 @@ async function renderPdf(doc, plan, writer, app, outputFilePath) {
     for (const att of doc.attachments) {
       try {
         const file = app.vault.getAbstractFileByPath(att.sourcePath);
-        if (file instanceof import_obsidian6.TFile) {
+        if (file instanceof import_obsidian7.TFile) {
           const buffer = await app.vault.readBinary(file);
           const ext = (_b = (_a = att.sourcePath.split(".").pop()) == null ? void 0 : _a.toLowerCase()) != null ? _b : "";
           const dataUri = encodeAttachmentDataUri(buffer, ext);
@@ -2390,7 +2461,7 @@ function createPdfPrintOptions() {
   };
 }
 async function printViaBrowserWindow(htmlBody, css, title) {
-  if (!import_obsidian6.Platform.isDesktop) {
+  if (!import_obsidian7.Platform.isDesktop) {
     throw new Error("PDF export requires the desktop app.");
   }
   const fullHtml = buildPdfHtml(htmlBody, css, title);
@@ -2614,7 +2685,7 @@ function encodeBase64(bytes) {
 }
 
 // src/formats/docx.ts
-var import_obsidian7 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/formats/zip.ts
 var encoder = new TextEncoder();
@@ -2758,7 +2829,7 @@ async function collectImages(attachments, app, warnings) {
       continue;
     try {
       const file = app.vault.getAbstractFileByPath(att.sourcePath);
-      if (!(file instanceof import_obsidian7.TFile))
+      if (!(file instanceof import_obsidian8.TFile))
         continue;
       const buffer = await app.vault.readBinary(file);
       const data = new Uint8Array(buffer);
@@ -3528,7 +3599,7 @@ var ExportRunner = class {
     let reportPath;
     let enteredOutputStage = false;
     this.cancelled = false;
-    if (!isProfileSupported(plan.profile, import_obsidian8.Platform.isDesktopApp)) {
+    if (!isProfileSupported(plan.profile, import_obsidian9.Platform.isDesktopApp)) {
       return this.failedPreflight(plan, ["PDF export requires the desktop app."]);
     }
     if (!OutputWriter.supportsExternalPaths() && writer.isExternal(plan.outputRoot)) {
@@ -3553,7 +3624,12 @@ var ExportRunner = class {
     if (files.length > 500) {
       allWarnings.push(`Large export: ${files.length} files. This may take a while.`);
     }
-    const effectivePlan = this.resolveEffectivePlan(plan, settings, writer);
+    let effectivePlan;
+    try {
+      effectivePlan = resolveOutputPlan(plan, settings, writer);
+    } catch (error) {
+      return this.failedPreflight(plan, [error instanceof Error ? error.message : String(error)]);
+    }
     const outputRoot = effectivePlan.outputRoot;
     const exportedPaths = new Set(effectivePlan.inputFiles);
     const assetsRoot = effectivePlan.outputFolderName ? `${outputRoot}/${effectivePlan.outputFolderName}` : outputRoot;
@@ -3816,41 +3892,6 @@ var ExportRunner = class {
     }
     return false;
   }
-  resolveEffectivePlan(plan, settings, writer) {
-    var _a;
-    if (settings.overwriteExisting)
-      return plan;
-    if (plan.source.type === "current-file" || plan.mergeIntoSingleFile) {
-      if (!writer.pathExists(plan.outputRoot))
-        return plan;
-      const candidateRoot = this.nextAvailablePath(
-        writer.timestampedFolder(plan.outputRoot),
-        writer
-      );
-      return relocatePlan(plan, candidateRoot);
-    }
-    const batchRoot = plan.outputFolderName ? `${plan.outputRoot}/${plan.outputFolderName}` : plan.outputRoot;
-    if (!writer.pathExists(batchRoot))
-      return plan;
-    const baseFolderName = `${(_a = plan.outputFolderName) != null ? _a : "files"}-${writer.timestampSuffix()}`;
-    const availablePath = this.nextAvailablePath(
-      `${plan.outputRoot}/${baseFolderName}`,
-      writer
-    );
-    const folderName = availablePath.slice(plan.outputRoot.length + 1);
-    return relocatePlan(plan, plan.outputRoot, folderName);
-  }
-  nextAvailablePath(candidate, writer) {
-    if (!writer.pathExists(candidate))
-      return candidate;
-    let sequence = 2;
-    let available = `${candidate}-${sequence}`;
-    while (writer.pathExists(available)) {
-      sequence++;
-      available = `${candidate}-${sequence}`;
-    }
-    return available;
-  }
   // Pick a report path that cannot collide with any planned primary output
   // or an existing file/directory. Case-insensitive reservation is
   // deliberately conservative for case-insensitive filesystems.
@@ -3876,7 +3917,7 @@ function numbered(items) {
 }
 
 // src/ui/ProgressNotice.ts
-var import_obsidian9 = require("obsidian");
+var import_obsidian10 = require("obsidian");
 var PROGRESS_BAR_CLASS = "de-progress-bar";
 var PROGRESS_FILL_CLASS = "de-progress-fill";
 var PROGRESS_PCT_CLASS = "de-progress-pct";
@@ -3930,7 +3971,7 @@ var ProgressNotice = class {
     this.fillEl = null;
     this.pctEl = null;
     this.phaseEl = null;
-    new import_obsidian9.Notice(finalMessage, 5e3);
+    new import_obsidian10.Notice(finalMessage, 5e3);
     this.notifyWhenUnfocused(finalMessage);
   }
   notifyWhenUnfocused(message) {
@@ -3972,7 +4013,7 @@ var ProgressNotice = class {
     if (this.notice) {
       this.notice.hide();
     }
-    this.notice = new import_obsidian9.Notice("", 0);
+    this.notice = new import_obsidian10.Notice("", 0);
     const noticeEl = this.notice.noticeEl;
     noticeEl.empty();
     noticeEl.classList.add("de-progress-notice");
@@ -4039,7 +4080,7 @@ function isNotebookNavigatorMenus(value) {
   const menus = value;
   return (typeof menus.registerFileMenu === "function" || typeof menus.registerFileMenu === "undefined") && (typeof menus.registerFolderMenu === "function" || typeof menus.registerFolderMenu === "undefined");
 }
-var DocumentExporterPlugin = class extends import_obsidian10.Plugin {
+var DocumentExporterPlugin = class extends import_obsidian11.Plugin {
   async onload() {
     this.settings = await loadSettings(this);
     this.addRibbonIcon("file-output", "Export documents", () => {
@@ -4052,12 +4093,12 @@ var DocumentExporterPlugin = class extends import_obsidian10.Plugin {
     });
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian10.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian11.TFile && file.extension === "md") {
           menu.addItem((item) => {
             item.setTitle("Export this file").setIcon("file-output").onClick(() => this.openExportModal(file, void 0));
           });
         }
-        if (file instanceof import_obsidian10.TFolder) {
+        if (file instanceof import_obsidian11.TFolder) {
           menu.addItem((item) => {
             item.setTitle("Export this folder").setIcon("file-output").onClick(() => this.openExportModal(void 0, file));
           });
@@ -4086,7 +4127,7 @@ var DocumentExporterPlugin = class extends import_obsidian10.Plugin {
         if (((_a = context.selection) == null ? void 0 : _a.mode) !== "single")
           return;
         const file = context.file;
-        if (!(file instanceof import_obsidian10.TFile) || file.extension !== "md")
+        if (!(file instanceof import_obsidian11.TFile) || file.extension !== "md")
           return;
         context.addItem((item) => {
           item.setTitle("Export this file").setIcon("file-output").onClick(() => this.openExportModal(file, void 0));
@@ -4097,7 +4138,7 @@ var DocumentExporterPlugin = class extends import_obsidian10.Plugin {
     if (typeof nnMenus.registerFolderMenu === "function") {
       const dispose = nnMenus.registerFolderMenu((context) => {
         const folder = context.folder;
-        if (!(folder instanceof import_obsidian10.TFolder))
+        if (!(folder instanceof import_obsidian11.TFolder))
           return;
         context.addItem((item) => {
           item.setTitle("Export this folder").setIcon("file-output").onClick(() => this.openExportModal(void 0, folder));

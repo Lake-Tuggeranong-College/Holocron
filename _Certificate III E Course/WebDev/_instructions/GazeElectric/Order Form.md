@@ -53,13 +53,16 @@ SET time_zone = "+00:00";
 -- Table structure for table `orders`
 --
 
-CREATE TABLE `orders` (
-  `order_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
-  `customer_name` varchar(255) NOT NULL,
-  `delivery_address` text NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp()
+  `full_name` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `paid` int(11) NOT NULL DEFAULT 0,
+  `order_date` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`order_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
@@ -68,20 +71,18 @@ CREATE TABLE `orders` (
 -- Table structure for table `order_items`
 --
 
-CREATE TABLE `orders` (
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `full_name` varchar(255) NOT NULL,
-  `address` text NOT NULL,
-  `total_amount` decimal(10,2) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
-  `paid` int(11) NOT NULL DEFAULT 0
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price_at_time` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 
---
--- Indexes for dumped tables
---
 
 --
 -- Indexes for table `orders`
